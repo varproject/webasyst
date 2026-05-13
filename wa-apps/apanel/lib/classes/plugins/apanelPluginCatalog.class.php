@@ -22,6 +22,7 @@ class apanelPluginCatalog
 
         foreach ($items as $plugin_id => &$item) {
             $item = $this->normalizeRuntimeState($plugin_id, $item);
+            $item = $this->prepareTableItem($plugin_id, $item);
         }
         unset($item);
 
@@ -52,11 +53,7 @@ class apanelPluginCatalog
             throw new waException('Plugin not installed', 404);
         }
 
-        $plugin = wa(self::APP_ID)->getPlugin($plugin_id);
-
-        if (!$plugin) {
-            throw new waException('Plugin not found', 404);
-        }
+        $plugin = $this->getPlugin($plugin_id);
 
         $this->disable($plugin_id);
 
@@ -88,6 +85,20 @@ class apanelPluginCatalog
         }
 
         return $plugin;
+    }
+
+    public function getPluginInfo($plugin_id)
+    {
+        $plugin = $this->getPlugin($plugin_id);
+        $info = $plugin->getInfo();
+
+        return [
+            'id'          => $plugin_id,
+            'name'        => $plugin->getName(),
+            'description' => $this->stringValue(ifset($info['description'], '')),
+            'version'     => $plugin->getVersion(),
+            'vendor'      => $this->stringValue(ifset($info['vendor'], '')),
+        ];
     }
 
     public function getSettingsControls($plugin_id)
@@ -322,6 +333,90 @@ class apanelPluginCatalog
         return $item;
     }
 
+    protected function prepareTableItem($plugin_id, array $item)
+    {
+        $installed = !empty($item['installed']);
+        $enabled = !empty($item['enabled']);
+
+        $item['id'] = $plugin_id;
+        $item['_row_id'] = $plugin_id;
+        $item['name'] = $this->stringValue(ifset($item['name'], $plugin_id));
+        $item['description'] = $this->stringValue(ifset($item['description'], ''));
+        $item['version'] = $this->stringValue(ifset($item['version'], '—'));
+        $item['vendor'] = $this->stringValue(ifset($item['vendor'], '—'));
+        $item['state_html'] = $this->getStateHtml($item);
+        $item['actions_html'] = $this->getActionsHtml($plugin_id, $item);
+        $item['sort_weight'] = $this->getSortWeight($item);
+
+        return $item;
+    }
+
+    protected function getStateHtml(array $item)
+    {
+        if (!empty($item['installed']) && !empty($item['enabled'])) {
+            return '<span class="text-success">Установлен и включён</span>';
+        }
+
+        if (!empty($item['installed'])) {
+            return '<span class="text-muted">Установлен, выключен</span>';
+        }
+
+        if (!empty($item['commercial']) && empty($item['purchased'])) {
+            return '<span class="text-warning">Доступен к покупке</span>';
+        }
+
+        return '<span class="text-primary">Доступен к установке</span>';
+    }
+
+    protected function getActionsHtml($plugin_id, array $item)
+    {
+        $app_url = wa()->getAppUrl(self::APP_ID) . 'settings/plugins/';
+        $installed = !empty($item['installed']);
+        $enabled = !empty($item['enabled']);
+
+        $html = '<div class="d-inline-flex gap-1 justify-content-end align-items-center">';
+
+        if ($installed) {
+            $html .= '<a href="' . htmlspecialchars($app_url . '?modal=plugin-settings&id=' . rawurlencode($plugin_id), ENT_QUOTES, 'UTF-8') . '" class="btn btn-outline-primary btn-sm" hx-boost="true">';
+            $html .= 'Настройки';
+            $html .= '</a>';
+
+            if ($enabled) {
+                $html .= '<form method="post" action="' . htmlspecialchars($app_url . $plugin_id . '/disable/', ENT_QUOTES, 'UTF-8') . '" class="m-0">';
+                $html .= $this->csrfHtml();
+                $html .= apanelUi::getControl('button', 'plugin_disable_' . $plugin_id, [
+                    'label' => 'Выключить',
+                    'class' => 'btn btn-outline-warning btn-sm',
+                    'type'  => 'submit',
+                ]);
+                $html .= '</form>';
+            } else {
+                $html .= '<form method="post" action="' . htmlspecialchars($app_url . $plugin_id . '/enable/', ENT_QUOTES, 'UTF-8') . '" class="m-0">';
+                $html .= $this->csrfHtml();
+                $html .= apanelUi::getControl('button', 'plugin_enable_' . $plugin_id, [
+                    'label' => 'Включить',
+                    'class' => 'btn btn-outline-success btn-sm',
+                    'type'  => 'submit',
+                ]);
+                $html .= '</form>';
+            }
+
+            $html .= '<a href="' . htmlspecialchars($app_url . '?modal=plugin-remove&id=' . rawurlencode($plugin_id), ENT_QUOTES, 'UTF-8') . '" class="btn btn-outline-danger btn-sm" hx-boost="true">';
+            $html .= 'Удалить';
+            $html .= '</a>';
+        } else {
+            $label = (!empty($item['commercial']) && empty($item['purchased'])) ? 'Купить' : 'Установить';
+
+            $html .= '<a href="' . htmlspecialchars($this->getInstallUrl($plugin_id), ENT_QUOTES, 'UTF-8') . '" class="btn btn-primary btn-sm">';
+            $html .= htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
+            $html .= '</a>';
+        }
+
+        $html .= '</div>';
+
+        return $html;
+    }
+
     protected function isCompleteInstallerProduct($plugin_id, array $plugin)
     {
         if ($this->isInstalled($plugin_id)) {
@@ -481,6 +576,13 @@ class apanelPluginCatalog
         }
 
         return 30;
+    }
+
+    protected function csrfHtml()
+    {
+        $token = waRequest::cookie('_csrf', '', waRequest::TYPE_STRING_TRIM);
+
+        return '<input type="hidden" name="_csrf" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
     }
 
     protected function stringValue($value)

@@ -1,15 +1,18 @@
 <?php
 
-class apanelPluginsEnableController extends waController
+class apanelPluginsSettingsSaveController extends waController
 {
     public function execute()
     {
         $this->checkRights();
         $this->checkPostMethod();
 
-        $this->getCatalog()->enable($this->getPluginId());
+        $plugin_id = waRequest::param('id', '', waRequest::TYPE_STRING_TRIM);
+        $settings = waRequest::post('settings', [], waRequest::TYPE_ARRAY_TRIM);
 
-        $this->redirect($this->getPluginsUrl());
+        $this->getCatalog()->saveSettings($plugin_id, $settings);
+
+        $this->redirect(wa()->getAppUrl('apanel') . 'settings/plugins/');
     }
 
     protected function checkPostMethod()
@@ -17,16 +20,6 @@ class apanelPluginsEnableController extends waController
         if (waRequest::method() !== waRequest::METHOD_POST) {
             throw new waException('Method not allowed', 405);
         }
-    }
-
-    protected function getPluginId()
-    {
-        return waRequest::param('id', '', waRequest::TYPE_STRING_TRIM);
-    }
-
-    protected function getPluginsUrl()
-    {
-        return wa()->getAppUrl('apanel') . 'settings/plugins/';
     }
 
     protected function getCatalog()
