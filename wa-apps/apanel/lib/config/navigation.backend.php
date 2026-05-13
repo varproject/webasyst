@@ -10,6 +10,9 @@ return [
             'storefront' => [
                 'name' => 'Витрина',
             ],
+            'plugins' => [
+                'name' => 'Плагины',
+            ],
         ],
     ],
 ];
