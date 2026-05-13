@@ -2,6 +2,8 @@
 
 class apanelPluginsRemoveDialogAction extends waViewAction
 {
+    const APP_ID = 'apanel';
+
     public function execute()
     {
         $this->checkRights();
@@ -15,7 +17,7 @@ class apanelPluginsRemoveDialogAction extends waViewAction
         }
 
         try {
-            $plugin = wa('apanel')->getPlugin($plugin_id);
+            $plugin = wa(self::APP_ID)->getPlugin($plugin_id);
         } catch (Exception $e) {
             throw new waException('Plugin not found', 404);
         }
@@ -27,6 +29,7 @@ class apanelPluginsRemoveDialogAction extends waViewAction
         $info = $plugin->getInfo();
 
         $description = '';
+
         if (isset($info['description']) && !is_array($info['description']) && !is_object($info['description'])) {
             $description = (string) $info['description'];
         }
@@ -37,8 +40,8 @@ class apanelPluginsRemoveDialogAction extends waViewAction
             'plugin_description' => $description,
             'modal_title'        => 'Удаление плагина',
             'modal_size'         => 'modal-md',
-            'post_action_url'    => wa()->getAppUrl('apanel') . 'settings/plugins/' . $plugin_id . '/remove/',
-            'close_button_url'   => wa()->getAppUrl('apanel') . 'settings/plugins/',
+            'post_action_url'    => wa()->getAppUrl(self::APP_ID) . 'settings/plugins/' . $plugin_id . '/remove/',
+            'close_button_url'   => wa()->getAppUrl(self::APP_ID) . 'settings/plugins/',
         ]);
     }
 

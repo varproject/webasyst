@@ -60,7 +60,7 @@ class apanelPluginsListController extends waViewController
                 'state_html' => [
                     'title'   => 'Состояние',
                     'type'    => 'html',
-                    'thclass' => 'width-10',
+                    'thclass' => 'width-12',
                 ],
 
                 'actions_html' => [
@@ -93,14 +93,22 @@ class apanelPluginsListController extends waViewController
             }
         }
 
-        uasort($items, function ($a, $b) {
-            return strcasecmp((string) ifset($a['name'], ''), (string) ifset($b['name'], ''));
-        });
-
         foreach ($items as $plugin_id => &$item) {
+            $item = $this->normalizeRuntimeState($plugin_id, $item);
             $item = $this->prepareTableItem($plugin_id, $item);
         }
         unset($item);
+
+        uasort($items, function ($a, $b) {
+            $a_weight = (int) ifset($a['sort_weight'], 100);
+            $b_weight = (int) ifset($b['sort_weight'], 100);
+
+            if ($a_weight !== $b_weight) {
+                return $a_weight <=> $b_weight;
+            }
+
+            return strcasecmp((string) ifset($a['name'], ''), (string) ifset($b['name'], ''));
+        });
 
         return $items;
     }
@@ -124,18 +132,8 @@ class apanelPluginsListController extends waViewController
             ]);
 
             if (!empty($apps[self::APP_ID]['plugins']) && is_array($apps[self::APP_ID]['plugins'])) {
-                foreach ($apps[self::APP_ID]['plugins'] as $plugin_id => $plugin) {
-                    if (!is_array($plugin)) {
-                        continue;
-                    }
-
-                    $plugin_id = $this->normalizePluginId($plugin_id, $plugin);
-
-                    if ($plugin_id === '') {
-                        continue;
-                    }
-
-                    $plugins[$plugin_id] = $this->normalizeStorePlugin($plugin_id, $plugin);
+                foreach ($apps[self::APP_ID]['plugins'] as $plugin_key => $plugin) {
+                    $this->appendStorePlugin($plugins, $plugin_key, $plugin);
                 }
             }
 
@@ -147,21 +145,8 @@ class apanelPluginsListController extends waViewController
             ]);
 
             if (!empty($extras[self::APP_ID]['plugins']) && is_array($extras[self::APP_ID]['plugins'])) {
-                foreach ($extras[self::APP_ID]['plugins'] as $plugin_id => $plugin) {
-                    if (!is_array($plugin)) {
-                        continue;
-                    }
-
-                    $plugin_id = $this->normalizePluginId($plugin_id, $plugin);
-
-                    if ($plugin_id === '') {
-                        continue;
-                    }
-
-                    $plugins[$plugin_id] = array_replace(
-                        ifset($plugins[$plugin_id], []),
-                        $this->normalizeStorePlugin($plugin_id, $plugin)
-                    );
+                foreach ($extras[self::APP_ID]['plugins'] as $plugin_key => $plugin) {
+                    $this->appendStorePlugin($plugins, $plugin_key, $plugin);
                 }
             }
         } catch (Exception $e) {
@@ -171,6 +156,72 @@ class apanelPluginsListController extends waViewController
         wa($old_app, true);
 
         return $plugins;
+    }
+
+    protected function appendStorePlugin(array &$plugins, $plugin_key, $plugin)
+    {
+        if (!is_array($plugin)) {
+            return;
+        }
+
+        $plugin_id = $this->normalizePluginId($plugin_key, $plugin);
+
+        if ($plugin_id === '') {
+            return;
+        }
+
+        if (!$this->isCompletePluginProduct($plugin_id, $plugin)) {
+            return;
+        }
+
+        $plugins[$plugin_id] = array_replace(
+            ifset($plugins[$plugin_id], []),
+            $this->normalizeStorePlugin($plugin_id, $plugin)
+        );
+    }
+
+    protected function isCompletePluginProduct($plugin_id, array $plugin)
+    {
+        if ($this->isLocalPluginInstalled($plugin_id)) {
+            return true;
+        }
+
+        if (!empty($plugin['installed']) && is_array($plugin['installed'])) {
+            return true;
+        }
+
+        $name = $this->stringValue(ifset($plugin['name'], ''));
+        $description = $this->stringValue(ifset($plugin['description'], ifset($plugin['summary'], '')));
+        $version = $this->stringValue(ifset($plugin['version'], ''));
+        $vendor = $this->stringValue(ifset($plugin['vendor_name'], ifset($plugin['vendor'], '')));
+
+        if ($name !== '' || $description !== '' || $version !== '' || $vendor !== '') {
+            return true;
+        }
+
+        if (!empty($plugin['commercial']) || !empty($plugin['purchased'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function normalizeStorePlugin($plugin_id, array $plugin)
+    {
+        return [
+            'id'          => $plugin_id,
+            'name'        => $this->stringValue(ifset($plugin['name'], $plugin_id)),
+            'description' => $this->stringValue(ifset($plugin['description'], ifset($plugin['summary'], ''))),
+            'version'     => $this->getStorePluginVersion($plugin),
+            'vendor'      => $this->stringValue(ifset($plugin['vendor_name'], ifset($plugin['vendor'], ''))),
+            'installed'   => false,
+            'enabled'     => false,
+            'commercial'  => !empty($plugin['commercial']),
+            'purchased'   => !empty($plugin['purchased']),
+            'applicable'  => array_key_exists('applicable', $plugin) ? !empty($plugin['applicable']) : true,
+            'slug'        => $this->stringValue(ifset($plugin['slug'], self::APP_ID . '/plugins/' . $plugin_id)),
+            'source'      => 'store',
+        ];
     }
 
     protected function getLocalPlugins()
@@ -219,7 +270,7 @@ class apanelPluginsListController extends waViewController
                     'version'     => $plugin->getVersion(),
                     'vendor'      => $this->stringValue(ifset($info['vendor'], '')),
                     'installed'   => true,
-                    'enabled'     => $this->isPluginEnabled($plugin_id),
+                    'enabled'     => false,
                     'source'      => 'local',
                 ];
             } catch (Exception $e) {
@@ -232,39 +283,87 @@ class apanelPluginsListController extends waViewController
         return $plugins;
     }
 
-    protected function normalizeStorePlugin($plugin_id, array $plugin)
+    protected function normalizeRuntimeState($plugin_id, array $item)
     {
-        $installed = !empty($plugin['installed']) || is_dir(wa()->getAppPath('plugins/' . $plugin_id, self::APP_ID));
+        $local_installed = $this->isLocalPluginInstalled($plugin_id);
+        $enabled = $local_installed && $this->isPluginEnabled($plugin_id);
 
-        return [
-            'id'          => $plugin_id,
-            'name'        => $this->stringValue(ifset($plugin['name'], $plugin_id)),
-            'description' => $this->stringValue(ifset($plugin['description'], ifset($plugin['summary'], ''))),
-            'version'     => $this->stringValue(ifset($plugin['installed']['version'], ifset($plugin['version'], ''))),
-            'vendor'      => $this->stringValue(ifset($plugin['vendor_name'], ifset($plugin['vendor'], ''))),
-            'installed'   => $installed,
-            'enabled'     => $installed ? $this->isPluginEnabled($plugin_id) : false,
-            'commercial'  => !empty($plugin['commercial']),
-            'purchased'   => !empty($plugin['purchased']),
-            'applicable'  => array_key_exists('applicable', $plugin) ? !empty($plugin['applicable']) : true,
-            'slug'        => $this->stringValue(ifset($plugin['slug'], self::APP_ID . '/plugins/' . $plugin_id)),
-            'source'      => 'store',
-        ];
+        $item['installed'] = $local_installed;
+        $item['enabled'] = $enabled;
+        $item['deleted'] = !$local_installed && !empty($item['source']) && $item['source'] === 'store';
+
+        return $item;
     }
 
-    protected function normalizePluginId($plugin_id, array $plugin)
+    protected function normalizePluginId($plugin_key, array $plugin)
     {
-        if (!empty($plugin['id']) && is_scalar($plugin['id'])) {
-            $plugin_id = (string) $plugin['id'];
+        $candidates = [];
+
+        if (!empty($plugin['slug']) && is_scalar($plugin['slug'])) {
+            $slug = trim((string) $plugin['slug']);
+
+            if (class_exists('installerHelper')) {
+                list($app_id, $ext_id, $type) = installerHelper::parseSlug($slug);
+
+                if ($app_id === self::APP_ID && $type === 'plugin' && $ext_id) {
+                    $candidates[] = $ext_id;
+                }
+            }
+
+            if (preg_match('~^' . preg_quote(self::APP_ID, '~') . '/plugins/([a-z0-9_]+)$~i', $slug, $matches)) {
+                $candidates[] = $matches[1];
+            }
         }
 
-        $plugin_id = trim((string) $plugin_id);
+        foreach (['id', 'plugin_id'] as $field) {
+            if (!empty($plugin[$field]) && is_scalar($plugin[$field])) {
+                $value = trim((string) $plugin[$field]);
 
-        if (!preg_match('~^[a-z0-9_]+$~i', $plugin_id)) {
-            return '';
+                if (preg_match('~^' . preg_quote(self::APP_ID, '~') . '/plugins/([a-z0-9_]+)$~i', $value, $matches)) {
+                    $candidates[] = $matches[1];
+                } else {
+                    $candidates[] = $value;
+                }
+            }
         }
 
-        return $plugin_id;
+        if (is_scalar($plugin_key)) {
+            $value = trim((string) $plugin_key);
+
+            if (preg_match('~^' . preg_quote(self::APP_ID, '~') . '/plugins/([a-z0-9_]+)$~i', $value, $matches)) {
+                $candidates[] = $matches[1];
+            } else {
+                $candidates[] = $value;
+            }
+        }
+
+        foreach ($candidates as $candidate) {
+            $candidate = trim((string) $candidate);
+
+            if (preg_match('~^[a-z0-9_]+$~i', $candidate)) {
+                return $candidate;
+            }
+        }
+
+        return '';
+    }
+
+    protected function isLocalPluginInstalled($plugin_id)
+    {
+        return is_file(wa()->getAppPath('plugins/' . $plugin_id . '/lib/config/plugin.php', self::APP_ID));
+    }
+
+    protected function getStorePluginVersion(array $plugin)
+    {
+        if (!empty($plugin['installed']) && is_array($plugin['installed']) && isset($plugin['installed']['version'])) {
+            return $this->stringValue($plugin['installed']['version']);
+        }
+
+        if (isset($plugin['version'])) {
+            return $this->stringValue($plugin['version']);
+        }
+
+        return '—';
     }
 
     protected function prepareTableItem($plugin_id, array $item)
@@ -280,8 +379,26 @@ class apanelPluginsListController extends waViewController
         $item['vendor'] = $this->stringValue(ifset($item['vendor'], '—'));
         $item['state_html'] = $this->getStateHtml($installed, $enabled, $item);
         $item['actions_html'] = $this->getPluginActionsHtml($plugin_id, $item);
+        $item['sort_weight'] = $this->getSortWeight($installed, $enabled, $item);
 
         return $item;
+    }
+
+    protected function getSortWeight($installed, $enabled, array $item)
+    {
+        if ($installed && $enabled) {
+            return 10;
+        }
+
+        if ($installed) {
+            return 20;
+        }
+
+        if (!empty($item['commercial']) && empty($item['purchased'])) {
+            return 40;
+        }
+
+        return 30;
     }
 
     protected function getStateHtml($installed, $enabled, array $item)
@@ -304,7 +421,7 @@ class apanelPluginsListController extends waViewController
     protected function getPluginActionsHtml($plugin_id, array $item)
     {
         $app_url = wa()->getAppUrl(self::APP_ID) . 'settings/plugins/';
-        $installer_plugin_url = wa()->getConfig()->getBackendUrl(true) . 'installer/store/plugin/' . self::APP_ID . '/' . rawurlencode($plugin_id) . '/';
+        $installer_plugin_url = $this->getInstallerPluginUrl($plugin_id);
 
         $installed = !empty($item['installed']);
         $enabled = !empty($item['enabled']);
@@ -348,11 +465,31 @@ class apanelPluginsListController extends waViewController
         return $html;
     }
 
+    protected function getInstallerPluginUrl($plugin_id)
+    {
+        $store_url = wa()->getConfig()->getBackendUrl(true)
+            . 'installer/store/plugin/'
+            . self::APP_ID . '/'
+            . rawurlencode($plugin_id) . '/';
+
+        $return_url = wa()->getAppUrl(self::APP_ID) . 'settings/plugins/';
+
+        return $store_url . '?' . http_build_query([
+            'in_app' => 1,
+            'return_url' => $return_url,
+            'go_return_hash_after_installation' => 1,
+        ]);
+    }
+
     protected function isPluginEnabled($plugin_id)
     {
-        $enabled = $this->getEnabledPlugins();
+        $plugins = $this->getEnabledPlugins();
 
-        return isset($enabled[$plugin_id]);
+        if (array_key_exists($plugin_id, $plugins)) {
+            return !empty($plugins[$plugin_id]);
+        }
+
+        return in_array($plugin_id, $plugins, true);
     }
 
     protected function getEnabledPlugins()
@@ -377,7 +514,23 @@ class apanelPluginsListController extends waViewController
 
     protected function stringValue($value)
     {
-        if (is_array($value) || is_object($value)) {
+        if (is_array($value)) {
+            $locale = wa()->getLocale();
+
+            if (isset($value[$locale]) && is_scalar($value[$locale])) {
+                return (string) $value[$locale];
+            }
+
+            foreach ($value as $item) {
+                if (is_scalar($item)) {
+                    return (string) $item;
+                }
+            }
+
+            return '';
+        }
+
+        if (is_object($value)) {
             return '';
         }
 

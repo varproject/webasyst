@@ -3,6 +3,5 @@
 return array (
   'shop' => true,
   'myplugin' => true,
-  'test' => true,
+  'test' => false,
 );
-//EOF
