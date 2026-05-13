@@ -13,7 +13,7 @@ class apanelPluginsListController extends waViewController
 
         // Внутреннее дерево слева тоже не нужно.
         $this->layout->assign('main_body_tree_enabled', false);
-        $this->layout->assign('main_body_table_enabled', true);
+        // $this->layout->assign('main_body_table_enabled', true);
 
         $this->prepareModal();
 
@@ -202,7 +202,7 @@ class apanelPluginsListController extends waViewController
                 'label' => 'Выключить',
                 'class' => 'btn btn-outline-warning btn-sm',
                 'type'  => 'submit',
-                'title' => 'Выключить плагин',
+                // 'title' => 'Выключить плагин',
             ]);
             $html .= '</form>';
         } else {
@@ -212,21 +212,14 @@ class apanelPluginsListController extends waViewController
                 'label' => 'Включить',
                 'class' => 'btn btn-outline-success btn-sm',
                 'type'  => 'submit',
-                'title' => 'Включить плагин',
+                // 'title' => 'Включить плагин',
             ]);
             $html .= '</form>';
         }
 
-        $html .= '<form method="get" action="' . htmlspecialchars($app_url, ENT_QUOTES, 'UTF-8') . '" class="m-0">';
-        $html .= '<input type="hidden" name="modal" value="plugin-remove">';
-        $html .= '<input type="hidden" name="id" value="' . $plugin_id_escaped . '">';
-        $html .= apanelUi::getControl('button', 'plugin_remove_' . $plugin_id, [
-            'label' => 'Удалить',
-            'class' => 'btn btn-outline-danger btn-sm',
-            'type'  => 'submit',
-            'title' => 'Удалить плагин',
-        ]);
-        $html .= '</form>';
+        $html .= '<a href="' . htmlspecialchars($app_url . '?modal=plugin-remove&id=' . rawurlencode($plugin_id), ENT_QUOTES, 'UTF-8') . '" class="btn btn-outline-danger btn-sm" hx-boost="true" title="Удалить плагин">';
+        $html .= 'Удалить';
+        $html .= '</a>';
 
         $html .= '</div>';
 

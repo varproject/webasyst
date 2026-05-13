@@ -24,19 +24,21 @@ class apanelPluginsRemoveDialogAction extends waViewAction
             throw new waException('Plugin not found', 404);
         }
 
+        $info = $plugin->getInfo();
+
+        $description = '';
+        if (isset($info['description']) && !is_array($info['description']) && !is_object($info['description'])) {
+            $description = (string) $info['description'];
+        }
+
         $this->view->assign([
             'plugin_id'          => $plugin_id,
             'plugin_name'        => $plugin->getName(),
-            'plugin_description' => (string) ifset($plugin->getInfo('description'), ''),
+            'plugin_description' => $description,
             'modal_title'        => 'Удаление плагина',
             'modal_size'         => 'modal-md',
             'post_action_url'    => wa()->getAppUrl('apanel') . 'settings/plugins/' . $plugin_id . '/remove/',
             'close_button_url'   => wa()->getAppUrl('apanel') . 'settings/plugins/',
-            'remove_button_html' => apanelUi::getControl('button', 'plugin_remove_confirm', [
-                'label' => 'Удалить',
-                'class' => 'btn btn-danger btn-sm',
-                'type'  => 'submit',
-            ]),
         ]);
     }
 

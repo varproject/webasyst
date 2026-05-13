@@ -5,3 +5,4 @@ return array (
   'myplugin' => true,
   'test' => true,
 );
+//EOF

@@ -10,14 +10,7 @@ class apanelPluginsRemoveController extends waController
         $plugin_id = $this->getPluginId();
         $plugin = $this->getPlugin($plugin_id);
 
-        $plugin_name = $plugin->getName();
-
-        $this->removePlugin($plugin);
-
-        $this->logAction('plugin_remove', [
-            'plugin_id'   => $plugin_id,
-            'plugin_name' => $plugin_name,
-        ]);
+        $this->removePlugin($plugin_id, $plugin);
 
         $this->redirect($this->getPluginsUrl());
     }
@@ -55,16 +48,16 @@ class apanelPluginsRemoveController extends waController
         return $plugin;
     }
 
-    protected function removePlugin(waPlugin $plugin)
+    protected function removePlugin($plugin_id, waPlugin $plugin)
     {
         $enabled_plugins = $this->getEnabledPlugins();
-        unset($enabled_plugins[$plugin->getId()]);
+        unset($enabled_plugins[$plugin_id]);
 
         $this->saveEnabledPlugins($enabled_plugins);
 
         $plugin->uninstall();
 
-        $plugin_path = $plugin->getPath();
+        $plugin_path = wa()->getAppPath('plugins/' . $plugin_id, 'apanel');
 
         if (is_dir($plugin_path)) {
             waFiles::removeDir($plugin_path);
@@ -97,6 +90,8 @@ class apanelPluginsRemoveController extends waController
         $content = "<?php\n\nreturn " . var_export($plugins, true) . ";\n";
 
         file_put_contents($path . 'plugins.php', $content);
+
+        wa('apanel')->getConfig()->clearCache();
     }
 
     protected function getPluginsUrl()

@@ -5,37 +5,50 @@ class apanelPluginsEnableController extends waController
     public function execute()
     {
         $this->checkRights();
+        $this->checkPostMethod();
 
+        $plugin_id = $this->getPluginId();
+        $this->getPlugin($plugin_id);
+
+        $enabled_plugins = $this->getEnabledPlugins();
+        $enabled_plugins[$plugin_id] = true;
+
+        $this->saveEnabledPlugins($enabled_plugins);
+
+        $this->redirect($this->getPluginsUrl());
+    }
+
+    protected function checkPostMethod()
+    {
         if (waRequest::method() !== waRequest::METHOD_POST) {
             throw new waException('Method not allowed', 405);
         }
+    }
 
+    protected function getPluginId()
+    {
         $plugin_id = waRequest::param('id', '', waRequest::TYPE_STRING_TRIM);
 
         if (!$plugin_id || !preg_match('~^[a-z0-9_]+$~i', $plugin_id)) {
             throw new waException('Invalid plugin ID', 400);
         }
 
+        return $plugin_id;
+    }
+
+    protected function getPlugin($plugin_id)
+    {
         try {
             $plugin = wa('apanel')->getPlugin($plugin_id);
-            if (!$plugin) {
-                throw new waException('Plugin not found', 404);
-            }
-
-            $enabled_plugins = $this->getEnabledPlugins();
-            $enabled_plugins[$plugin_id] = true;
-
-            $this->saveEnabledPlugins($enabled_plugins);
-
-            $this->logAction('plugin_enable', array(
-                'plugin_id'   => $plugin_id,
-                'plugin_name' => $plugin->getName(),
-            ));
         } catch (Exception $e) {
-            throw new waException($e->getMessage(), 500);
+            throw new waException('Plugin not found', 404);
         }
 
-        $this->redirect(wa()->getAppUrl('apanel') . 'plugins/');
+        if (!$plugin) {
+            throw new waException('Plugin not found', 404);
+        }
+
+        return $plugin;
     }
 
     protected function getEnabledPlugins()
@@ -43,14 +56,15 @@ class apanelPluginsEnableController extends waController
         $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/apanel/plugins.php';
 
         if (!is_file($path)) {
-            return array();
+            return [];
         }
 
         $plugins = include($path);
-        return is_array($plugins) ? $plugins : array();
+
+        return is_array($plugins) ? $plugins : [];
     }
 
-    protected function saveEnabledPlugins($plugins)
+    protected function saveEnabledPlugins(array $plugins)
     {
         $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/apanel/';
 
@@ -59,9 +73,15 @@ class apanelPluginsEnableController extends waController
         }
 
         $content = "<?php\n\nreturn " . var_export($plugins, true) . ";\n";
+
         file_put_contents($path . 'plugins.php', $content);
 
         wa('apanel')->getConfig()->clearCache();
+    }
+
+    protected function getPluginsUrl()
+    {
+        return wa()->getAppUrl('apanel') . 'settings/plugins/';
     }
 
     protected function checkRights()
