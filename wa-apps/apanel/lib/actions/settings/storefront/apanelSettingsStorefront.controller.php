@@ -37,7 +37,7 @@ class apanelSettingsStorefrontController extends waViewController
 
         // dd(apanelSettings::get('ui'));
         $resolver = new apanelStorefrontResolver();
-        dd($resolver->resolve());
+
     }
 
     // Подготовить модальное окно страницы.

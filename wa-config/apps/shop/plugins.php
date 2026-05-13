@@ -9,4 +9,5 @@ return array (
   'skcatimage' => true,
   'lk' => true,
   'salesanalytics' => true,
+  'shoporders' => true,
 );

@@ -2,6 +2,32 @@
 
 class apanelPluginsListController extends waViewController
 {
+    public function preExecute()
+    {
+        $params = [
+            'limit'  => 500,
+            'offset' => 0,
+        ];
+        $result = wa('apanel')->event('storefront_shop_orders', $params);
+
+        $orders = [];
+
+        foreach ($result as $plugin_id => $plugin_result) {
+            if (!empty($plugin_result['orders']) && is_array($plugin_result['orders'])) {
+                foreach ($plugin_result['orders'] as $order) {
+                    $orders[] = $order;
+                }
+            }
+        }
+
+        dd($result);
+    }
+
+
+
+
+
+
     public function execute()
     {
         $this->checkRights();
