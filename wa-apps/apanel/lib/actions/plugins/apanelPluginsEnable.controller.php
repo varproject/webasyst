@@ -2,20 +2,39 @@
 
 class apanelPluginsEnableController extends waController
 {
+    const APP_ID = 'apanel';
+
     public function execute()
     {
         $this->checkRights();
         $this->checkPostMethod();
 
         $plugin_id = $this->getPluginId();
-        $this->getPlugin($plugin_id);
-
-        $enabled_plugins = $this->getEnabledPlugins();
-        $enabled_plugins[$plugin_id] = true;
-
-        $this->saveEnabledPlugins($enabled_plugins);
+        $this->setPluginStatus($plugin_id, true);
 
         $this->redirect($this->getPluginsUrl());
+    }
+
+    protected function setPluginStatus($plugin_id, $status)
+    {
+        $old_app = wa()->getApp();
+
+        wa('installer', true);
+
+        try {
+            $result = installerHelper::pluginSetStatus(self::APP_ID, $plugin_id, $status);
+        } catch (Exception $e) {
+            wa($old_app, true);
+            throw $e;
+        }
+
+        wa($old_app, true);
+
+        if ($result !== true) {
+            throw new waException(implode("\n", (array) $result), 500);
+        }
+
+        wa(self::APP_ID)->event('plugin.enable');
     }
 
     protected function checkPostMethod()
@@ -36,52 +55,9 @@ class apanelPluginsEnableController extends waController
         return $plugin_id;
     }
 
-    protected function getPlugin($plugin_id)
-    {
-        try {
-            $plugin = wa('apanel')->getPlugin($plugin_id);
-        } catch (Exception $e) {
-            throw new waException('Plugin not found', 404);
-        }
-
-        if (!$plugin) {
-            throw new waException('Plugin not found', 404);
-        }
-
-        return $plugin;
-    }
-
-    protected function getEnabledPlugins()
-    {
-        $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/apanel/plugins.php';
-
-        if (!is_file($path)) {
-            return [];
-        }
-
-        $plugins = include($path);
-
-        return is_array($plugins) ? $plugins : [];
-    }
-
-    protected function saveEnabledPlugins(array $plugins)
-    {
-        $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/apanel/';
-
-        if (!is_dir($path)) {
-            waFiles::create($path);
-        }
-
-        $content = "<?php\n\nreturn " . var_export($plugins, true) . ";\n";
-
-        file_put_contents($path . 'plugins.php', $content);
-
-        wa('apanel')->getConfig()->clearCache();
-    }
-
     protected function getPluginsUrl()
     {
-        return wa()->getAppUrl('apanel') . 'settings/plugins/';
+        return wa()->getAppUrl(self::APP_ID) . 'settings/plugins/';
     }
 
     protected function checkRights()

@@ -2,6 +2,8 @@
 
 class apanelPluginsRemoveController extends waController
 {
+    const APP_ID = 'apanel';
+
     public function execute()
     {
         $this->checkRights();
@@ -13,6 +15,24 @@ class apanelPluginsRemoveController extends waController
         $this->removePlugin($plugin_id, $plugin);
 
         $this->redirect($this->getPluginsUrl());
+    }
+
+    protected function removePlugin($plugin_id, waPlugin $plugin)
+    {
+        $enabled_plugins = $this->getEnabledPlugins();
+        unset($enabled_plugins[$plugin_id]);
+
+        $this->saveEnabledPlugins($enabled_plugins);
+
+        $plugin->uninstall();
+
+        $plugin_path = wa()->getAppPath('plugins/' . $plugin_id, self::APP_ID);
+
+        if (is_dir($plugin_path)) {
+            waFiles::delete($plugin_path, true);
+        }
+
+        wa(self::APP_ID)->getConfig()->clearCache();
     }
 
     protected function checkPostMethod()
@@ -36,7 +56,7 @@ class apanelPluginsRemoveController extends waController
     protected function getPlugin($plugin_id)
     {
         try {
-            $plugin = wa('apanel')->getPlugin($plugin_id);
+            $plugin = wa(self::APP_ID)->getPlugin($plugin_id);
         } catch (Exception $e) {
             throw new waException('Plugin not found', 404);
         }
@@ -48,27 +68,9 @@ class apanelPluginsRemoveController extends waController
         return $plugin;
     }
 
-    protected function removePlugin($plugin_id, waPlugin $plugin)
-    {
-        $enabled_plugins = $this->getEnabledPlugins();
-        unset($enabled_plugins[$plugin_id]);
-
-        $this->saveEnabledPlugins($enabled_plugins);
-
-        $plugin->uninstall();
-
-        $plugin_path = wa()->getAppPath('plugins/' . $plugin_id, 'apanel');
-
-        if (is_dir($plugin_path)) {
-            waFiles::removeDir($plugin_path);
-        }
-
-        wa('apanel')->getConfig()->clearCache();
-    }
-
     protected function getEnabledPlugins()
     {
-        $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/apanel/plugins.php';
+        $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/' . self::APP_ID . '/plugins.php';
 
         if (!is_file($path)) {
             return [];
@@ -81,7 +83,7 @@ class apanelPluginsRemoveController extends waController
 
     protected function saveEnabledPlugins(array $plugins)
     {
-        $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/apanel/';
+        $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/' . self::APP_ID . '/';
 
         if (!is_dir($path)) {
             waFiles::create($path);
@@ -91,12 +93,12 @@ class apanelPluginsRemoveController extends waController
 
         file_put_contents($path . 'plugins.php', $content);
 
-        wa('apanel')->getConfig()->clearCache();
+        wa(self::APP_ID)->getConfig()->clearCache();
     }
 
     protected function getPluginsUrl()
     {
-        return wa()->getAppUrl('apanel') . 'settings/plugins/';
+        return wa()->getAppUrl(self::APP_ID) . 'settings/plugins/';
     }
 
     protected function checkRights()
