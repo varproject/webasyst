@@ -1,0 +1,16 @@
+/*
+// .sa-dash
+*/
+@use '../custom-variables' as vs;
+
+.sa-dash {
+    width: 1rem;
+    height: 1px; // SKIP-PIXELS
+    background: vs.$sa-dash--color;
+    opacity: .5;
+    display: inline-block;
+    vertical-align: middle;
+}
+.sa-dash--size--small {
+    width: .75rem;
+}

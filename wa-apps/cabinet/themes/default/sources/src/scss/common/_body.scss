@@ -1,0 +1,27 @@
+@use 'sass:map';
+@use '../custom-variables' as vs;
+@use '../mixins/loader';
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+body {
+    backface-visibility: hidden;
+    overflow-y: scroll;
+}
+:root {
+    // light
+    --sa-scheme-light--main-color: #{map.get(vs.$sa-scheme-light, main-color)};
+    --sa-scheme-light--opposite-color: #{map.get(vs.$sa-scheme-light, opposite-color)};
+    // dark
+    --sa-scheme-dark--main-color: #{map.get(vs.$sa-scheme-dark, main-color)};
+    --sa-scheme-dark--opposite-color: #{map.get(vs.$sa-scheme-dark, opposite-color)};
+    // theme
+    --sa-scheme-theme--main-color: #{map.get(vs.$sa-scheme-theme, main-color)};
+    --sa-scheme-theme--opposite-color: #{map.get(vs.$sa-scheme-theme, opposite-color)};
+}
+
+@include loader.loader-animation;

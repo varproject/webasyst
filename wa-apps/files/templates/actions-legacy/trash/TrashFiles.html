@@ -1,0 +1,70 @@
+{capture assign="before_links_block"}
+    <div class="f-ibutton-checkbox" style="width: 500px; font-size: 0.5em; font-weight: normal;">
+        <ul class="menu-h" style="">
+            <li class="f-trash-type-all">
+                <label for="f-trash-type">
+                    <span {if $type === filesFileModel::TRASH_TYPE_PERSONAL}class="f-unselected"{/if}>
+                        [`All delete files`]
+                    </span>
+                </label>
+            </li>
+            <li>
+                <input type="checkbox" name="type" id="f-trash-type" value="{filesFileModel::TRASH_TYPE_PERSONAL}" {if $type === filesFileModel::TRASH_TYPE_PERSONAL}checked="checked"{/if} id="f-trash-filter">
+            </li>
+            <li class="f-trash-type-personal">
+                <label for="f-trash-type">
+                    <span {if $type !== filesFileModel::TRASH_TYPE_PERSONAL}class="f-unselected"{/if}>
+                        [`My private files`]
+                    </span>
+                </label>
+            </li>
+        </ul>
+    </div>
+{/capture}
+
+
+{include file="../../files-legacy/include.files.html"
+    hidden_cols=['link', 'favorite', 'share']
+    operations=['restore', 'delete']
+    before_links_block=$before_links_block
+    is_trash=true
+inline}
+
+<script>
+    $(function() {
+
+        $.files.config.getSidebar().trigger('notify', {
+            hash: 'trash',
+            counters: {
+                trash: {$total_count}
+            }
+        });
+
+        $.files.iButton($(':checkbox[name="type"]'))
+            .change(function(e, nosend) {
+                var el = $(this);
+                var block = el.closest('.f-ibutton-checkbox');
+                var all = block.find('.f-trash-type-all span');
+                var personal = block.find('.f-trash-type-personal span');
+                var checked = false;
+                if (!el.is(':checked')) {
+                    all.removeClass('f-unselected');
+                    personal.addClass('f-unselected');
+                    checked = false;
+                } else {
+                    all.addClass('f-unselected');
+                    personal.removeClass('f-unselected');
+                    checked = true;
+                }
+                if (!nosend) {
+                    $.files.jsonPost({
+                        url: '?module=trash&action=save',
+                        data: { type: checked ? el.val() : '' },
+                        onAlways: function() {
+                            $.files.controller.reloadPage();
+                        }
+                    });
+                }
+            }).trigger('change', [true]);
+    });
+</script>

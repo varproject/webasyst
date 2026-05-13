@@ -1,0 +1,1955 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tasks\n"
+"POT-Creation-Date: 2015-11-28 20:34+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: tasks\n"
+"Language-Team: tasks\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+msgid "Loading..."
+msgstr ""
+
+msgid "New task"
+msgstr ""
+
+msgid "Inbox"
+msgstr ""
+
+msgid "Hidden"
+msgstr ""
+
+msgid "Outbox"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Urgent"
+msgstr ""
+
+msgid "Milestones"
+msgstr ""
+
+msgid "Agile"
+msgstr ""
+
+msgid "Logs"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Unassigned"
+msgstr ""
+
+msgid "Nobody"
+msgstr ""
+
+msgid "Invite"
+msgstr ""
+
+msgid "Team"
+msgstr ""
+
+msgid "Projects"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "from"
+msgstr ""
+
+msgid "to"
+msgstr ""
+
+msgid "by day"
+msgstr ""
+
+msgid "by month"
+msgstr ""
+
+msgid "All time"
+msgstr ""
+
+msgid "Select dates..."
+msgstr ""
+
+msgid "Status:"
+msgstr ""
+
+msgid "Assigned:"
+msgstr ""
+
+msgid "Empty assignment"
+msgstr ""
+
+msgid "%s of %d"
+msgstr ""
+
+msgid "Load more..."
+msgstr ""
+
+msgid "Last %d day"
+msgid_plural "Last %d days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d record"
+msgid_plural "%d records"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Due"
+msgstr ""
+
+msgid "New milestone"
+msgstr ""
+
+msgid "Milestone successfully saved"
+msgstr ""
+
+msgid "(no name)"
+msgstr ""
+
+msgid "Create milestone"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Project"
+msgstr ""
+
+msgid "Due date"
+msgstr ""
+
+msgid "Milestone is closed"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Settings successfully updated"
+msgstr ""
+
+msgid "Archive datetime"
+msgstr ""
+
+msgid "Archive"
+msgstr ""
+
+msgid "New project"
+msgstr ""
+
+msgid "Project name"
+msgstr ""
+
+msgid "Color"
+msgstr ""
+
+msgid "Icon"
+msgstr ""
+
+msgid "Or enter image URL (image will be scaled to 16x16px)"
+msgstr ""
+
+msgid "Workflow"
+msgstr ""
+
+msgid "Customize..."
+msgstr ""
+
+msgid "Status name"
+msgstr ""
+
+msgid "Button label"
+msgstr ""
+
+msgid "Caption for the button that sends a task into this status"
+msgstr ""
+
+msgid "Task title style"
+msgstr ""
+
+msgid "Italic"
+msgstr ""
+
+msgid "Bold"
+msgstr ""
+
+msgid "Task title color"
+msgstr ""
+
+msgid "Button color"
+msgstr ""
+
+msgid "Assignment"
+msgstr ""
+
+msgid "Do not change assignment"
+msgstr ""
+
+msgid "Assign to user who created the task"
+msgstr ""
+
+msgid "Assign to specific user"
+msgstr ""
+
+msgid "Show assignment selector every time"
+msgstr ""
+
+msgid "Clear assignment"
+msgstr ""
+
+msgid "Allow to clear assignment"
+msgstr ""
+
+msgid "Comment form"
+msgstr ""
+
+msgid "Show comment form"
+msgstr ""
+
+msgid "Status settings"
+msgstr ""
+
+msgid "Add Status"
+msgstr ""
+
+msgid "Project ordering"
+msgstr ""
+
+msgid "Projects are sorted by name. You can select important projects to show them before everything else. Important projects can be manually reordered via drag-and-drop."
+msgstr ""
+
+msgid "Show %d archived project"
+msgid_plural "Show %d archived projects"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Show %d archived projects"
+msgstr ""
+
+msgid "Manage project ordering"
+msgstr ""
+
+msgid "[`Show %d archived project`]"
+msgid_plural "[`Show %d archived projects`]"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Create a project first"
+msgstr ""
+
+msgid "unassigned"
+msgstr ""
+
+msgid "Add tag"
+msgstr ""
+
+msgid "Custom tag..."
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Edit task"
+msgstr ""
+
+msgid "Set favorite"
+msgstr ""
+
+msgid "Comments"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Assignment removed"
+msgstr ""
+
+msgid "There are no comments for this task yet."
+msgstr ""
+
+msgid "Please click or drop image file here"
+msgstr ""
+
+msgid "%d task"
+msgid_plural "%d tasks"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "no tasks"
+msgstr ""
+
+msgid "You are about to abandon task editor without saving the task. All unsaved data will be lost. Are you sure?"
+msgstr ""
+
+msgid "Input task name"
+msgstr ""
+
+msgid "Input task description"
+msgstr ""
+
+msgid "Click to select files or drag them here"
+msgstr ""
+
+msgid "Assign to"
+msgstr ""
+
+msgid "me"
+msgstr ""
+
+msgid "Show all"
+msgstr ""
+
+msgid "No milestone"
+msgstr ""
+
+msgid "Choose a date"
+msgstr ""
+
+msgid "Save task"
+msgstr ""
+
+msgid "Create task"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "SMS"
+msgstr ""
+
+msgid "More fields"
+msgstr ""
+
+msgid "Forward to"
+msgstr ""
+
+msgid "Choose user"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "Input your comment"
+msgstr ""
+
+msgid "cancel"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "Newest"
+msgstr ""
+
+msgid "Oldest"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Forward (%d)"
+msgstr ""
+
+msgid "Return to"
+msgstr ""
+
+msgid "Return"
+msgstr ""
+
+msgid "A task has been assigned to you."
+msgstr ""
+
+msgid "Go to inbox"
+msgstr ""
+
+msgid "%d task has been assigned to you"
+msgid_plural "%d tasks has been assigned to you"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "A task you created has been marked as done."
+msgstr ""
+
+msgid "Error Comment ID"
+msgstr ""
+
+msgid "Either text or attachment is required to add comment."
+msgstr ""
+
+msgid "Select Project"
+msgstr ""
+
+msgid "Your browser does not support File API!"
+msgstr ""
+
+msgid "File not found"
+msgstr ""
+
+msgid "Failed to upload file %s."
+msgstr ""
+
+msgid "Not found"
+msgstr ""
+
+msgid "Milestone not found"
+msgstr ""
+
+msgid "This field is required."
+msgstr ""
+
+msgid "Access denied"
+msgstr ""
+
+msgid "All projects"
+msgstr ""
+
+msgid "All statuses"
+msgstr ""
+
+msgid "All open"
+msgstr ""
+
+msgid "All including closed"
+msgstr ""
+
+msgid "Any milestone"
+msgstr ""
+
+msgid "Everyone"
+msgstr ""
+
+msgid "Your inbox is empty"
+msgstr ""
+
+msgid "Inbox automatically collects all tasks assigned to you, and is currently empty."
+msgstr ""
+
+msgid "Your favorites list is empty"
+msgstr ""
+
+msgid "To add a task to your personal favorite list, click on a tiny star icon next to task name."
+msgstr "To start watching on a task progress, press ‘Watch’ button next to a task title."
+
+msgid "Task list is empty"
+msgstr ""
+
+msgid "No tasks matching your search criteria."
+msgstr "No tasks matching this search criteria."
+
+msgid "Task not found"
+msgstr ""
+
+msgid "You can't hide high priority task"
+msgstr ""
+
+msgid "Unable to return task because someome modified it."
+msgstr ""
+
+msgid "Unable to return task because contact has been deleted. Use forward action instead."
+msgstr ""
+
+msgid "%d min"
+msgid_plural "%d mins"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d hr"
+msgid_plural "%d hrs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d mo"
+msgid_plural "%d mo"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d yr"
+msgid_plural "%d yrs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "New"
+msgstr ""
+
+msgid "done"
+msgstr "closed the task"
+
+msgid "Just now"
+msgstr ""
+
+msgid "%d d"
+msgstr ""
+
+msgid "%d task has been completed"
+msgid_plural "%d tasks has been completed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "A task has been assigned to you"
+msgstr ""
+
+msgid "The task has been completed"
+msgstr ""
+
+msgid "High"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Low"
+msgstr ""
+
+msgid "Can manage projects"
+msgstr ""
+
+msgid "No access"
+msgstr ""
+
+msgid "Self tasks only"
+msgstr "Assigned tasks only"
+
+msgid "Full access"
+msgstr ""
+
+msgid "Create task from this"
+msgstr ""
+
+msgid "created"
+msgstr "sent the new task to"
+
+msgid "added comment"
+msgstr "commented"
+
+msgid "forwarded"
+msgstr "assigned the task to"
+
+msgid "returned"
+msgstr "returned the task to"
+
+msgid "edited"
+msgstr "edited the task"
+
+msgid "Drop anywhere to upload"
+msgstr ""
+
+msgid "Use <b>Contacts app</b> to provide access to Tasks app for your teammates."
+msgstr ""
+
+msgid "Create a project by clicking the green tiny icon above."
+msgstr ""
+
+msgid "Clear filters"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Archived"
+msgstr ""
+
+msgid "Enable this when this milestone is not actual anymore."
+msgstr ""
+
+msgid "New status"
+msgstr ""
+
+msgid "Task statuses"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "edit"
+msgstr ""
+
+msgid "Enter your comment"
+msgstr ""
+
+msgid "Double-click to change task priority"
+msgstr ""
+
+msgid "Forward"
+msgstr ""
+
+msgid "History &amp; Comments"
+msgstr ""
+
+msgid "Hide history"
+msgstr ""
+
+msgid "You can only hide tasks assigned to you."
+msgstr ""
+
+msgid "Hidden until"
+msgstr ""
+
+msgid "Do not change"
+msgstr ""
+
+msgid "Filter tasks"
+msgstr ""
+
+msgid "Set priority"
+msgstr ""
+
+msgid "Change priority"
+msgstr ""
+
+msgid "User %s sent you a new task"
+msgstr "%s sent you the new task"
+
+msgid "via Tasks app"
+msgstr ""
+
+msgid "<a href=\"%s\">%d new task</a> from %s"
+msgid_plural "<a href=\"%s\">%d new tasks</a> from %s"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "User %s edited a task you are assigned to:"
+msgstr "%s edited the task you are assigned to:"
+
+msgid "User %s has just completed a task"
+msgstr "%s has completed the task"
+
+msgid "Inbox automatically collects all tasks assigned to you. No tasks are assigned to you right now :-)"
+msgstr "No tasks are assigned to you at the moment. Ask your teammates to send you a task or simply do this on your own."
+
+msgid "Your outbox is empty"
+msgstr ""
+
+msgid "Outbox automatically collects all tasks you’ve created."
+msgstr "Outbox automatically collects all tasks you’ve been participating."
+
+msgid "Your favorite task list is empty"
+msgstr "Your watch list is empty"
+
+msgid "Use projects to organize tasks and manage access rights for your teammates."
+msgstr ""
+
+msgid "There are no tasks in this project that require your attention at the moment. If you think its by mistake, ask the account admin to check your access rights."
+msgstr "There are no tasks in this project that require your attention at the moment. If you think something’s missing here, ask the account admin to check your access rights."
+
+msgid "No tasks match your search criteria."
+msgstr ""
+
+msgid "ASSIGNED: %d task was assigned to you"
+msgid_plural "ASSIGNED: %d tasks were assigned to you"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "DONE: %d task was completed"
+msgid_plural "DONE: %d tasks were completed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "ASSIGNED: %s %s"
+msgstr ""
+
+msgid "DONE: %s was completed"
+msgstr "DONE: %s"
+
+msgid "DONE: %s %s"
+msgstr "CLOSED: %s %s"
+
+msgid "EDIT: %s was edited"
+msgstr "UPDATE: %s"
+
+msgid "EDIT: %s %s"
+msgstr "UPDATED: %s %s"
+
+msgid "created a task"
+msgstr ""
+
+msgid "edited a task"
+msgstr ""
+
+msgid "deleted a task"
+msgstr ""
+
+msgid "forwarded a task"
+msgstr ""
+
+msgid "returned a task"
+msgstr ""
+
+msgid "performed action with a task"
+msgstr ""
+
+msgid "commented on a task"
+msgstr ""
+
+msgid "forwarded several tasks"
+msgstr ""
+
+msgid "marked several tasks as done"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Closed"
+msgstr ""
+
+msgid "In %d day"
+msgid_plural "In %d days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Unhide"
+msgstr ""
+
+msgid "Testing"
+msgstr ""
+
+msgid "Logbook"
+msgstr ""
+
+msgid "Archive this project"
+msgstr ""
+
+msgid "You have unsaved changes. Are you sure you want to leave?"
+msgstr ""
+
+msgid "%d new task"
+msgid_plural "%d new tasks"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "<a href=\"%s\">%s</a> from %s"
+msgstr ""
+
+msgid "User %s sent you your task."
+msgstr "%s sent you the task you created."
+
+msgid "User %s sent you a task."
+msgstr "%s sent you the task."
+
+msgid "User %s sent a task to %s."
+msgstr "%s forwarded the task to %s."
+
+msgid "User %s edited a task you created:"
+msgstr "%s edited the task you created:"
+
+msgid "User %s edited a task:"
+msgstr "%s edited the task:"
+
+msgid "User %s wrote a comment to a task you are assigned to:"
+msgstr "%s commented on the task you are assigned to:"
+
+msgid "User %s wrote a comment to a task you created:"
+msgstr "%s commented on the task you created:"
+
+msgid "User %s wrote a comment:"
+msgstr "%s commented:"
+
+msgid "Files"
+msgstr ""
+
+msgid "User %s sent you your task"
+msgstr "%s sent you the task you created"
+
+msgid "User %s sent a new task to user %s"
+msgstr "%s sent the new task to %s"
+
+msgid "Scopes"
+msgstr ""
+
+msgid "Hide archived project"
+msgid_plural "Hide archived projects"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Show %d archived scope"
+msgid_plural "Show %d archived scopes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Hide archived scope"
+msgid_plural "Hide archived scopes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "My preferences"
+msgstr ""
+
+msgid "Notifications"
+msgstr ""
+
+msgid "Send me notification in case of"
+msgstr ""
+
+msgid "Any action"
+msgstr ""
+
+msgid "Assignment only"
+msgstr ""
+
+msgid "Switch off"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Notify me about next kind of tasks"
+msgstr ""
+
+msgid "Assigned to me"
+msgstr ""
+
+msgid "Created by me"
+msgstr ""
+
+msgid "Selected projects"
+msgstr ""
+
+msgid "Save settings"
+msgstr ""
+
+msgid "Save comment"
+msgstr ""
+
+msgid "Cannot create a list from another list."
+msgstr ""
+
+msgid "Set deadline"
+msgstr ""
+
+msgid "Remove from my lists"
+msgstr ""
+
+msgid "Save in my lists"
+msgstr ""
+
+msgid "Start typing in the search field to find a tag."
+msgstr ""
+
+msgid "There are more than %u tags."
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Search tag..."
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "You need to %sadd your first project%s to be able to create tasks."
+msgstr ""
+
+msgid "Confirm the action"
+msgstr ""
+
+msgid "The task is assigned now to:"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "invert"
+msgstr ""
+
+msgid "remove link"
+msgstr ""
+
+msgid "Parent task"
+msgstr ""
+
+msgid "Child task"
+msgstr ""
+
+msgid "Add comment"
+msgstr ""
+
+msgid "Involve %s to the teamwork just by sending a new task."
+msgstr "Create a new task and involve %s to the teamwork."
+
+msgid "You are about to leave the page without saving the task. Are you sure?"
+msgstr ""
+
+msgid "There are unsaved task draft."
+msgstr ""
+
+msgid "Do you want to continue editing?"
+msgstr ""
+
+msgid "Task title"
+msgstr ""
+
+msgid "Invalid date."
+msgstr ""
+
+msgid "All <strong>%s</strong> in this project will be archived and won't be listed anymore. Are you sure?"
+msgstr ""
+
+msgid "My lists"
+msgstr ""
+
+msgid "Date is not set."
+msgstr ""
+
+msgid "No active work scopes are defined."
+msgstr ""
+
+msgid "Use <strong>app \"%s\"</strong> to provide access to Tasks app for your teammates."
+msgstr "Use <strong>the %s app</strong> to provide access to tasks for your teammates."
+
+msgid "New scope"
+msgstr ""
+
+msgid "Scope successfully saved"
+msgstr ""
+
+msgid "Restore this scope"
+msgstr ""
+
+msgid "Archive this scope"
+msgstr ""
+
+msgid "A tiny hint describing this scope."
+msgstr ""
+
+msgid "edited comment"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "Tomorrow"
+msgstr ""
+
+msgid "unknown status_id=%d"
+msgstr ""
+
+msgid "NEW: %s %s"
+msgstr ""
+
+msgid "Any scope"
+msgstr ""
+
+msgid "No scope"
+msgstr ""
+
+msgid "No tasks are assigned to %s right now."
+msgstr ""
+
+msgid "There are currently no tasks in %s status."
+msgstr ""
+
+msgid "%s's task list is empty"
+msgstr ""
+
+msgid "No tasks in %s project"
+msgstr ""
+
+msgid "No tasks in %s status"
+msgstr ""
+
+msgid "You do not have sufficient access rights to view this task."
+msgstr ""
+
+msgid "Cannot return this task because another user has modified it."
+msgstr ""
+
+msgid "Helpdesk request: %s"
+msgstr ""
+
+msgid "Hub topic: %s"
+msgstr ""
+
+msgid "Create list"
+msgstr ""
+
+msgid "Delete list “%s”"
+msgstr ""
+
+msgid "A list name is required."
+msgstr ""
+
+msgid "Scope not found"
+msgstr ""
+
+msgid "Personal settings"
+msgstr ""
+
+msgid "Scopes are not set."
+msgstr ""
+
+msgid "Add a milestone to group tasks into time-based activities such as sprints, releases, or subprojects."
+msgstr ""
+
+msgid "Show %d completed milestone"
+msgid_plural "Show %d completed milestones"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Hide completed milestone"
+msgid_plural "Hide completed milestones"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "My notification preferences"
+msgstr ""
+
+msgid "Notify me on"
+msgstr ""
+
+msgid "All updates and comments"
+msgstr ""
+
+msgid "Assignments only"
+msgstr ""
+
+msgid "Turn off all notifications"
+msgstr ""
+
+msgid "Which tasks"
+msgstr ""
+
+msgid "Tasks assigned to me"
+msgstr ""
+
+msgid "Tasks created by me"
+msgstr ""
+
+msgid "Tasks I’m watching"
+msgstr ""
+
+msgid "Tasks from selected projects"
+msgstr ""
+
+msgid "Button name"
+msgstr ""
+
+msgid "Caption on a button that sends a task into this status. Sometimes it matches the status name, but in most cases, it's a verb."
+msgstr ""
+
+msgid "Background color"
+msgstr ""
+
+msgid "Text color"
+msgstr ""
+
+msgid "Keep the assignee unchanged"
+msgstr ""
+
+msgid "Assign to the user who created the task"
+msgstr ""
+
+msgid "Force assign to"
+msgstr ""
+
+msgid "Allow to select the assignee"
+msgstr ""
+
+msgid "Allow making the task unassigned"
+msgstr ""
+
+msgid "Below is the global list of all statuses a task can pass through. On a project level, custom workflow can be set up by selecting particular statuses only and skipping the unwanted ones."
+msgstr ""
+
+msgid "Commit changes by clicking “Save” when done editing."
+msgstr ""
+
+msgid "All done!"
+msgstr ""
+
+msgid "Congratulations! Everything set to be done in this milestone is marked as complete."
+msgstr ""
+
+msgid "Go to settings"
+msgstr ""
+
+msgid "Set due date"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Remove from my filters"
+msgstr ""
+
+msgid "Save to my custom filters"
+msgstr ""
+
+msgid "Selected tasks"
+msgstr ""
+
+msgid "Close tasks"
+msgstr ""
+
+msgid "Delete tasks"
+msgstr ""
+
+msgid "Tag tasks"
+msgstr ""
+
+msgid "All tags"
+msgstr ""
+
+msgid "Show all tags"
+msgstr ""
+
+msgid "Find tag"
+msgstr ""
+
+msgid "Watching"
+msgstr ""
+
+msgid "Return to status"
+msgstr ""
+
+msgid "Return task"
+msgstr ""
+
+msgid "The task is now assigned to:"
+msgstr ""
+
+msgid "Watch"
+msgstr ""
+
+msgid "No due date"
+msgstr ""
+
+msgid "Create new tag"
+msgstr ""
+
+msgid "Popular tags:"
+msgstr ""
+
+msgid "Unlink"
+msgstr ""
+
+msgid "Linked task"
+msgstr ""
+
+msgid "Pin"
+msgstr ""
+
+msgid "Pinned"
+msgstr ""
+
+msgid "Task summary"
+msgstr ""
+
+msgid "Attach files"
+msgstr ""
+
+msgid "Show everyone"
+msgstr ""
+
+msgid "Forward task"
+msgstr ""
+
+msgid "Highlight color for the main task list and the kanban board."
+msgstr ""
+
+msgid "Logo"
+msgstr ""
+
+msgid "Image URL to be used as a tiny project icon all around."
+msgstr ""
+
+msgid "Similar to %s"
+msgstr ""
+
+msgid "DANGER: Deletion will be permanent with no ability to roll back. Are you sure?"
+msgstr ""
+
+msgid "Menu"
+msgstr ""
+
+msgid "Updates"
+msgstr ""
+
+msgid "Kanban"
+msgstr ""
+
+msgid "My filters"
+msgstr ""
+
+msgid "%d open / %d closed"
+msgstr ""
+
+msgid "Add a project to start creating tasks."
+msgstr ""
+
+msgid "Edit custom filter"
+msgstr ""
+
+msgid "Save custom filter"
+msgstr ""
+
+msgid "Only you will see this filter in the app navigation."
+msgstr ""
+
+msgid "Show unassigned"
+msgstr ""
+
+msgid "Assigned to %s %s ago"
+msgstr ""
+
+msgid "Unassigned task"
+msgstr ""
+
+msgid "Restore this milestone"
+msgstr ""
+
+msgid "Mark as complete"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "A tiny hint describing your teammates what this milestone is all about."
+msgstr ""
+
+msgid "Doing"
+msgstr ""
+
+msgid "Start doing"
+msgstr ""
+
+msgid "To test"
+msgstr ""
+
+msgid "On fire!"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Deleted contact"
+msgstr ""
+
+msgid "All milestones"
+msgstr ""
+
+msgid "All assignees"
+msgstr ""
+
+msgid "Failed to upload image %s."
+msgstr ""
+
+msgid "Save to my filters"
+msgstr ""
+
+msgid "Backlog"
+msgstr ""
+
+msgid "Hide tasks from your inbox for a specific period of time to focus on other important tasks. Your teammates will continue to see your hidden tasks as open and visible."
+msgstr ""
+
+msgid "Template"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Select tasks"
+msgstr ""
+
+msgid "No activity yet"
+msgstr ""
+
+msgid "This screen will collect and present everything you and your team are doing with tasks."
+msgstr ""
+
+msgid "DANGER: Task will be deleted without the ability to restore. Delete?"
+msgstr ""
+
+msgid "Join the %s team on Webasyst to start working on the task:"
+msgstr ""
+
+msgid "Accept invitation"
+msgstr ""
+
+msgid "Text editor"
+msgstr ""
+
+msgid "WYSIWYG"
+msgstr "Full-featured editor (WYSIWYG)"
+
+msgid "Markdown"
+msgstr "Markdown (plain text)"
+
+msgid "Status not found"
+msgstr ""
+
+msgid "No access to project"
+msgstr ""
+
+msgid "Contact not found"
+msgstr ""
+
+msgid "You cannot edit task"
+msgstr ""
+
+msgid "Contact cannot view task"
+msgstr ""
+
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Email not send"
+msgstr "Email not sent"
+
+msgid "This contact was banned"
+msgstr ""
+
+msgid "Already in our team!"
+msgstr "The user is in your team already!"
+
+msgid "Invitation token can't created"
+msgstr "Invitation token can't be created"
+
+msgid "This is a required field."
+msgstr "Required field"
+
+msgid "This does not look like a valid email"
+msgstr ""
+
+msgid "Unarchive"
+msgstr ""
+
+msgid "The user will get an invitation to join your team on Webasyst and to start working on this task."
+msgstr ""
+
+msgid "Minimal access"
+msgstr ""
+
+msgid "Access to all projects"
+msgstr ""
+
+msgid "Full access to all projects &amp; settings"
+msgstr ""
+
+msgid "%s %s"
+msgstr ""
+
+msgid "User %s sent you a task"
+msgstr "New task from %s"
+
+msgid "User %s sent a task to %s"
+msgstr "%s sent the task to %s"
+
+msgid "User %s wrote a comment to a task you are assigned to"
+msgstr "%s commented on the task you are assigned to"
+
+msgid "User %s wrote a comment to a task you created"
+msgstr "%s commented on the task you’ve created"
+
+msgid "User %s wrote a comment."
+msgstr "%s commented"
+
+msgid "User %s edited a task you are assigned to"
+msgstr "%s edited the task you are assigned to"
+
+msgid "User %s edited a task you created"
+msgstr "%s edited the task you’ve created"
+
+msgid "User %s edited a task"
+msgstr "%s edited"
+
+msgid "User %s mentioned you in a task"
+msgstr "%s mentioned you in a task"
+
+msgid "All senders"
+msgstr ""
+
+msgid "invited"
+msgstr ""
+
+msgid "Mobile app"
+msgstr ""
+
+msgid "Android is available free today! iOS is coming soon."
+msgstr ""
+
+msgid "iOS TestFlight public beta:"
+msgstr ""
+
+msgid "publicLinksError400"
+msgstr "To get a public link to this task, add (settle) the Teamwork app into your site structure using the Site app."
+
+msgid "Disable public link"
+msgstr ""
+
+msgid "Enable public link"
+msgstr ""
+
+msgid "Get a public link for tracking task status and updates with no access to Webasyst backend."
+msgstr ""
+
+msgid "copied"
+msgstr "Copied!"
+
+msgid "https://www.webasyst.com/store/app/tasks/"
+msgstr ""
+
+msgid "To attach a Pocket Lists checklist, save the task first."
+msgstr ""
+
+msgid "Hashtag, task number, order ID, etc."
+msgstr ""
+
+msgid "Set milestone"
+msgstr ""
+
+msgid "Spellcheck"
+msgstr "Check spelling"
+
+msgid "Task fields"
+msgstr ""
+
+msgid "Please select task type"
+msgstr ""
+
+msgid "404"
+msgstr ""
+
+msgid "Install Webasyst Teamwork mobile app on your phone today:"
+msgstr ""
+
+msgid "Task types"
+msgstr ""
+
+msgid "App icon badge"
+msgstr ""
+
+msgid "Urgent open tasks assigned to me"
+msgstr ""
+
+msgid "Unread @mentions"
+msgstr ""
+
+msgid "Both settings are force-set to on for every user on your team."
+msgstr ""
+
+msgid "Push & Email"
+msgstr ""
+
+msgid "To receive push notifications, make sure the <a href=\"https://www.webasyst.com/mobile/\" target=\"_blank\">%s Webasyst Teamwork mobile app</a> is installed on your device with push notifications enabled/allowed."
+msgstr ""
+
+msgid "New @mentions"
+msgstr ""
+
+msgid "Notifications on new mentions are always on for every user on your team."
+msgstr ""
+
+msgid "https://www.webasyst.com/my/buy/upgrade-to-premium/tasks/"
+msgstr ""
+
+msgid "Upgrade to premium"
+msgstr ""
+
+msgid "lifetime"
+msgstr ""
+
+msgid "%s limited offer for upgrading existing app license to the premium version"
+msgstr ""
+
+msgid "special offer!"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Available now"
+msgstr ""
+
+msgid "You are all set!"
+msgstr ""
+
+msgid "Thank you for being a premium user and for supporting the project."
+msgstr ""
+
+msgid "With premium, you are among the first to have access to all features."
+msgstr ""
+
+msgid "Advanced features for efficient teamwork and productive teams"
+msgstr ""
+
+msgid "All scheduled features will be delivered as free updates via Installer."
+msgstr ""
+
+msgid "See the roadmap below for the planned feature delivery timeline."
+msgstr ""
+
+msgid "Gantt chart"
+msgstr ""
+
+msgid "Visualize working progress based on scopes/milestones."
+msgstr ""
+
+msgid "Specify any custom task type list: dev, bug, feature, story, epic, lead, whatever."
+msgstr ""
+
+msgid "Custom fields"
+msgstr ""
+
+msgid "Configure custom task fields based on a task type."
+msgstr ""
+
+msgid "AI assistant"
+msgstr ""
+
+msgid "Spellcheck & improve your texts in the task editor with a click. Powered by Webasyst AI."
+msgstr ""
+
+msgid "Reports & visuals"
+msgstr ""
+
+msgid "Track  working progress with CFD and LTDC charts, task completion tables, more."
+msgstr ""
+
+msgid "Project summary private links"
+msgstr ""
+
+msgid "Soon"
+msgstr ""
+
+msgid "Showcase project & its tasks current status to your client via a private link (Teamwork app frontend). View only access with no need to sign up and get extra access to your Webasyst backend."
+msgstr ""
+
+msgid "In-project limited access for clients"
+msgstr ""
+
+msgid "With the basic version, you can invite your clients to your Webasyst backend using the free Team app and grant full access to a specific project. With premium, more sophisticated in-project access rights option will be available, such as view, comment, and follow specific tasks only."
+msgstr ""
+
+msgid "Project templates"
+msgstr ""
+
+msgid "Later"
+msgstr ""
+
+msgid "Quickly start new projects with a pre-defined set of template-based tasks & workflows."
+msgstr ""
+
+msgid "Per-task time tracking"
+msgstr ""
+
+msgid "Track working time within an individual task (in integration with the Status app)."
+msgstr ""
+
+msgid "Suggest a feature"
+msgstr ""
+
+msgid "Share your feedback and suggestions, <a href=\"https://support.webasyst.com/forum/ideas/\" target=\"_blank\">post your ideas on the foum &rsaquo;</a>"
+msgstr ""
+
+msgid "Premium"
+msgstr ""
+
+msgid "No milestones available."
+msgstr ""
+
+msgid "Teamwork"
+msgstr ""
+
+msgid "Install Webasyst Teamwork mobile app on your phone."
+msgstr ""
+
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Any type"
+msgstr ""
+
+msgid "Types"
+msgstr ""
+
+msgid "Please select a task type"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Watchers"
+msgstr ""
+
+msgid "Tags and links"
+msgstr ""
+
+msgid "Checklist"
+msgstr ""
+
+msgid "Check spelling"
+msgstr ""
+
+msgid "More options"
+msgstr ""
+
+msgid "Premium only"
+msgstr ""
+
+msgid "Upgrade to premium to have the feature enabled and this message to disappear permanently."
+msgstr ""
+
+msgid "See what’s there in premium"
+msgstr ""
+
+msgid "Task types enable custom fields functionality and additional task filters. Task type examples: <em>story, bug, issue, feedback, memo, etc.</em>"
+msgstr ""
+
+msgid "New type"
+msgstr ""
+
+msgid "Delete logo"
+msgstr ""
+
+msgid "Save project to commit logo deletion."
+msgstr ""
+
+msgid "Gantt"
+msgstr ""
+
+msgid "Reports"
+msgstr ""
+
+msgid "%d%% completed: %d open / %d closed"
+msgstr ""
+
+msgid "Color settings"
+msgstr ""
+
+msgid "Or enter a color value"
+msgstr ""
+
+msgid "Open settings"
+msgstr ""
+
+msgid "Number of days in this status"
+msgstr ""
+
+msgid "Hide new & completed"
+msgstr ""
+
+msgid "Add scope"
+msgstr ""
+
+msgid "Zoom"
+msgstr ""
+
+msgid "%s mo."
+msgstr ""
+
+msgid "Plan"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "End"
+msgstr ""
+
+msgid "Planned dates identify this scope on a Gantt chart."
+msgstr ""
+
+msgid "Due date is a milestone when all scope tasks are supposed to be completed."
+msgstr ""
+
+msgid "Parent scope"
+msgstr ""
+
+msgid "Not specified"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Field name"
+msgstr ""
+
+msgid "Task custom fields depend on task types so make sure create at least one task type first."
+msgstr ""
+
+msgid "New field"
+msgstr ""
+
+msgid "CFD"
+msgstr ""
+
+msgid "LTDC"
+msgstr ""
+
+msgid "Cumulative flow diagram"
+msgstr ""
+
+msgid "Dates"
+msgstr ""
+
+msgid "Number of tasks"
+msgstr ""
+
+msgid "Initial status"
+msgstr ""
+
+msgid "Target status"
+msgstr ""
+
+msgid "Lead time distribution chart"
+msgstr ""
+
+msgid "Total tasks"
+msgstr ""
+
+msgid "Production time (calendar days from obligation to delivery)"
+msgstr ""
+
+msgid "Number of items with specified production time"
+msgstr ""
+
+msgid "Hello, World!"
+msgstr ""
+
+msgid "This is a demo task. Go ahead and click “Doing” or just close it. #webasyst #demo"
+msgstr ""
+
+msgid "@ %s %s"
+msgstr ""
+
+msgid "%d.%d %s"
+msgstr ""
+
+msgid "User %s mentioned you in a task."
+msgstr ""
+
+msgid "Promocode"
+msgstr ""
+
+msgid "Webasyst ID auth is required to be enabled to send an invitation"
+msgstr ""
+
+msgid "Gravity"
+msgstr ""
+
+msgid "Planned time costs"
+msgstr ""
+
+msgid "Actual time costs"
+msgstr ""
+
+msgid "Affected version"
+msgstr ""
+
+msgid "Result"
+msgstr ""
+
+msgid "Unable to process image file"
+msgstr ""
+
+msgid "Reports are available in the Webasyst 2 interface only."
+msgstr ""
+
+msgid "Bad parameters"
+msgstr ""
+
+msgid "All task types"
+msgstr ""
+
+msgid "1 day"
+msgstr ""
+
+msgid "3 days"
+msgstr ""
+
+msgid "1 week"
+msgstr ""
+
+msgid "2 weeks"
+msgstr ""
+
+msgid "AI response"
+msgstr ""
+
+msgid "Get the entire text"
+msgstr ""
+
+msgid "Hide completed scopes"
+msgstr ""
+
+msgid "Show completed scopes"
+msgstr ""
+
+msgid "Client"
+msgstr ""
+
+msgid "Assistant"
+msgstr ""
+
+msgid "Decision maker"
+msgstr ""
+
+msgid "Supervisor"
+msgstr ""
+
+msgid "Progress"
+msgstr ""
+
+msgid "Roles"
+msgstr ""
+
+msgid "All inclusive in the cloud"
+msgstr ""
+
+msgid "upgrade to premium"
+msgstr ""
+
+msgid "In Webasyst Cloud, simply upgrade to the <b>Premium</b> plan and get all premium features at once with no extra purchase required."
+msgstr ""
+
+msgid "Per-server license for the entire company. Unlimited users, all premium features, free updates forever."
+msgstr ""
+
+msgid "Write and spellcheck task content with just few clicks. Powered by Webasyst AI."
+msgstr ""
+
+msgid "Limited access & user roles"
+msgstr ""
+
+msgid "Better tools for better results"
+msgstr ""
+
+msgid "Early launch offer gets you the best premium upgrade conditions possible."
+msgstr ""
+
+msgid "%d features available now, +%d more to come shortly."
+msgstr ""
+
+msgid "Write task with AI"
+msgstr ""
+
+msgid "Briefly describe the task goal. Webasyst AI will continue writing and suggest you the complete task text template."
+msgstr ""
+
+msgid "Write a task about..."
+msgstr ""
+
+msgid "Write with AI"
+msgstr ""
+
+msgid "Get a public link for tracking entire project status and updates with no access to Webasyst backend."
+msgstr ""
+
+msgid "Get a public link for tracking entire milestone status and updates with no access to Webasyst backend."
+msgstr ""
+
+msgid "Private link is a premium feature"
+msgstr ""
+
+msgid "Access:"
+msgstr ""
+
+msgid "This task only"
+msgstr ""
+
+msgid "All tasks in this project"
+msgstr ""
+
+msgid "Full access to all projects"
+msgstr ""
+
+msgid "Save the task to invite."
+msgstr ""
+
+msgid "Following"
+msgstr ""
+
+msgid "Following task updates"
+msgstr ""
+
+msgid "Follow"
+msgstr ""
+
+msgid "I’m following"
+msgstr ""
+
+msgid "Mention"
+msgstr ""
+
+msgid "Role name"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Specify how users in this role will interact with tasks in addition to being able to just view & comment on them:"
+msgstr ""
+
+msgid "User roles"
+msgstr ""
+
+msgid "Custom user roles allow adding individual users with limited access to specific tasks and to better describe specific user roles within tasks and projects."
+msgstr ""
+
+msgid "New role"
+msgstr ""
+
+msgid "Will see tasks in personal inbox"
+msgstr ""
+
+msgid "Will receive notifications on task updates (unless unsubscribed intentionally)"
+msgstr ""
+
+msgid "To invite someone, click (+) to create a new task > select ‘Invite’ > enter an email address and save. Or use the Webasyst Teamwork mobile app to invite with a 8-digit code."
+msgstr ""
+
+msgid "Link to more projects"
+msgstr ""
+
+msgid "Self & assigned tasks only"
+msgstr ""
+
+msgid "No access: user %s is not eligible for the specified role in this task"
+msgstr ""
+
+msgid "Unknown role"
+msgstr ""

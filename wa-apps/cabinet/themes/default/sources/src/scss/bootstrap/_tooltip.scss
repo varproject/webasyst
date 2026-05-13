@@ -1,0 +1,121 @@
+/*
+// tooltip
+*/
+@use 'sass:math';
+@use '../functions' as func;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.tooltip-arrow {
+    $local-size: .375rem;
+    $local-size-unitless: math.div($local-size, func.rem(1));
+    $local-container-size: ($local-size * 2) + 1rem;
+    $local-arrow-size: math.sqrt(math.pow($local-size-unitless, 2) * 2) * 1rem;
+
+    --sa-tooltip-arrow-container-size: #{$local-container-size};
+    --sa-tooltip-arrow-box-size: #{$local-arrow-size};
+    --sa-tooltip-arrow-size: #{$local-size};
+    --sa-tooltip-arrow-container-offset: calc(var(--sa-tooltip-arrow-container-size) / 4 * -1 + #{func.rem(1)});
+}
+
+.bs-tooltip-end > .tooltip-arrow,
+.bs-tooltip-start > .tooltip-arrow,
+.bs-tooltip-top > .tooltip-arrow,
+.bs-tooltip-bottom > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=right] > .tooltip-arrow, // SKIP-RTL
+.bs-tooltip-auto[data-popper-placement^=left] > .tooltip-arrow, // SKIP-RTL
+.bs-tooltip-auto[data-popper-placement^=top] > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=bottom] > .tooltip-arrow {
+    overflow: hidden;
+    pointer-events: none;
+
+    &:before {
+        content: none;
+    }
+    &:after {
+        content: '';
+        display: block;
+        border: none;
+        position: absolute;
+        width: var(--sa-tooltip-arrow-box-size);
+        height: var(--sa-tooltip-arrow-box-size);
+        background: bt.$tooltip-arrow-color;
+    }
+}
+
+.bs-tooltip-end > .tooltip-arrow,
+.bs-tooltip-start > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=right] > .tooltip-arrow, // SKIP-RTL
+.bs-tooltip-auto[data-popper-placement^=left] > .tooltip-arrow { // SKIP-RTL
+    width: calc(var(--sa-tooltip-arrow-container-size) / 2);
+    height: var(--sa-tooltip-arrow-container-size);
+
+    &:after {
+        top: 50%;
+    }
+}
+
+.bs-tooltip-top > .tooltip-arrow,
+.bs-tooltip-bottom > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=top] > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=bottom] > .tooltip-arrow {
+    width: var(--sa-tooltip-arrow-container-size);
+    height: calc(var(--sa-tooltip-arrow-container-size) / 2);
+
+    &:after {
+        left: 50%; // SKIP-RTL
+    }
+}
+
+.bs-tooltip-end > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=right] > .tooltip-arrow { // SKIP-RTL
+    @include dir.scope {
+        #{dir.$inset-inline-start}: var(--sa-tooltip-arrow-container-offset);
+        #{dir.$inset-inline-end}: auto;
+    }
+    &:after {
+
+        @include dir.scope {
+            transform-origin: top #{dir.$inline-start};
+            transform: rotateZ(#{-45deg * dir.$transform-direction});
+            #{dir.$inset-inline-start}: calc(100% - var(--sa-tooltip-arrow-size));
+        }
+    }
+}
+.bs-tooltip-start > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=left] > .tooltip-arrow { // SKIP-RTL
+    @include dir.scope {
+        #{dir.$inset-inline-start}: auto;
+        #{dir.$inset-inline-end}: var(--sa-tooltip-arrow-container-offset);
+    }
+
+    &:after {
+        @include dir.scope {
+            transform-origin: top #{dir.$inline-end};
+            transform: rotateZ(#{45deg * dir.$transform-direction});
+            #{dir.$inset-inline-end}: calc(100% - var(--sa-tooltip-arrow-size));
+        }
+    }
+}
+.bs-tooltip-top > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=top] > .tooltip-arrow {
+    top: auto;
+    bottom: var(--sa-tooltip-arrow-container-offset);
+
+    &:after {
+        transform-origin: bottom left; // SKIP-RTL
+        transform: rotateZ(-45deg);
+        bottom: calc(100% - var(--sa-tooltip-arrow-size));
+    }
+}
+.bs-tooltip-bottom > .tooltip-arrow,
+.bs-tooltip-auto[data-popper-placement^=bottom] > .tooltip-arrow {
+    top: var(--sa-tooltip-arrow-container-offset);
+    bottom: auto;
+
+    &:after {
+        transform-origin: top left; // SKIP-RTL
+        transform: rotateZ(45deg);
+        top: calc(100% - var(--sa-tooltip-arrow-size));
+    }
+}

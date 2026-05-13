@@ -1,0 +1,107 @@
+<div class="modal-dialog {$moda_size|default:''}">
+    <div class="modal-content category-form-wrapper">
+
+        <div class="modal-header">
+            <h1 class="modal-title fs-5">{$modal_title|escape}</h1>
+        </div>
+
+
+
+
+
+        <div class="modal-body">
+
+            <ul class="nav nav-tabs border-1 mb-4" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#t-gen"
+                        type="button">Основное</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#t-params"
+                        type="button">Параметры</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#t-seo" type="button">SEO</button>
+                </li>
+            </ul>
+
+            <form method="POST" action="{$post_action_url|escape}" id="catalog_form">
+                {$wa->csrf()}
+                <div class="tab-content">
+
+
+                    <div class="tab-pane fade show active" id="t-gen">
+
+                        {* Наименование *}
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">Название категории</label>
+                            <input type="text" class="form-control" id="categoryName" name="category[name]" value=""
+                                placeholder="Например: Телевизоры" autofocus required>
+                        </div>
+
+                        {* Родительская категория *}
+                        {* <div class="mb-3">
+                            <input type="hidden" name="parent_id" id="selected-parent-id" value="">
+                            <div class="field-value">
+                                <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                                    <i class="bi bi-folder-symlink"></i> Родительская категория</button>
+                            </div>
+                        </div> *}
+
+                        {* Описание *}
+                        <div class="mb-3">
+                            <label for="categoryDescription" class="form-label">Описание</label>
+                            <textarea class="form-control" id="categoryDescription" name="category[description]"
+                                rows="3" placeholder="Краткое описание"></textarea>
+                        </div>
+
+                        {* Дополнительно *}
+                        <div class="mb-3 form-check">
+                            <label class="form-check-label" for="categoryShowProductsSubcat">
+                                Скрыть товары из подкатегорий
+                            </label>
+                            <input type="checkbox" class="form-check-input" id="categoryShowProductsSubcat"
+                                aria-describedby="categoryShowProductsSubcatHelp" checked>
+                            <div id="categoryShowProductsSubcatHelp" class="form-text"
+                                name="category[show_products_subcat]">
+                                Если включена, то в текущей категории не будут показаны товары из подкатегорий.
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+
+
+
+
+
+        <div class="modal-footer justify-content-start user-select-none">
+            <div class="field-group w-100">
+                <a href="{$close_button_url|escape}" class="btn btn-secondary btn-sm me-2" hx-boost="true">Закрыть</a>
+                <button type="submit" form="catalog_form" class="btn btn-success btn-sm">
+                    {$save_button_name|escape}
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+    aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Дерево категории</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+    </div>
+    <div class="offcanvas-body">
+        {$tree_panel}
+    </div>
+</div>

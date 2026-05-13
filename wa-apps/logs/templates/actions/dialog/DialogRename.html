@@ -1,0 +1,58 @@
+<div>
+    {if isset($error)}
+        <header class="dialog-header">
+            <h1>[`Error`]</h1>
+        </header>
+        <div class="dialog-content">
+            <div class="fields">
+                <div class="field">
+                    <div class="value">
+                        <span class="state-error">{$error}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {else}
+        <div>
+            <header class="dialog-header">
+                <h1>{$title}</h1>
+            </header>
+            <div class="dialog-content">
+                {if !empty($item.warnings)}
+                    <div class="alert small">
+                        {foreach $item.warnings as $warning}
+                            <p>
+                                <i class="fas fa-info-circle text-blue"></i>
+                                {$warning}
+                            </p>
+                        {/foreach}
+                    </div>
+                {/if}
+
+                <form>
+                    <div class="fields">
+                        <div class="field">
+                            <div class="name">[`Path`]</div>
+                            <div class="value">
+                                <strong class="break-all">{if strlen($item.folder|default:'')}<span class="gray">{$item.folder}</span>{/if}{$item.name}</strong>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="name">[`Name`]</div>
+                            <div class="value">
+                                <input type="text" name="name" value="{$item.edit_name|escape}" autocomplete="off" class="long">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="value">
+                                <span class="state-error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="path" value="{$path|escape}">
+                </form>
+            </div>
+        </div>
+    {/if}
+</div>

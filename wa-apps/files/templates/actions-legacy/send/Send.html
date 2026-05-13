@@ -1,0 +1,125 @@
+{$dialog_id = uniqid('f-send-dialog-')}
+
+{function form_begin}
+    {if $allowed}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $allowed}</form>{/if}
+{/function}
+
+{function size}
+    {if $allowed && $files}width600px height400px{else}width400px height200px{/if}
+{/function}
+
+<div class="dialog {size} f-send-dialog" id="{$dialog_id}" style="display:no1ne;">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent fields width100px">
+                    <h1>[`Send as attachment`]</h1>
+
+                    {if $allowed}
+                        <div class="field">
+                            <div class="name">[`To:`]</div>
+                            <div class="value">
+                                <textarea name="data[to]" style="height: 3.2em;"></textarea>
+                            </div>
+                            <div class="value">
+                                <div class="hint">[`One email per line or separated by a ";"`]</div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="name">[`Subject:`]</div>
+                            <div class="value">
+                                <input name="data[subject]" value="{if count($files) == 1}{$_f = current($files)}{$_f.name|escape}{/if}" class="f-send-subject" />
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="name">[`Text:`]</div>
+                            <div class="value">
+                                <textarea name="data[text]" class="f-send-text"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="name">[`Attachments:`]</div>
+                            <div class="value">
+                                {_w('%d file', '%d files', count($files))} ({$size_str})
+                            </div>
+                        </div>
+                    {else}
+                        <div class="field">
+                            <div class="name"></div>
+                            <div class="value">
+                                <p class="errormsg">
+                                    [`File size exceeds the limit set for email messages.`]
+                                </p>
+                            </div>
+                        </div>
+                    {/if}
+
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    {if $allowed && $files}
+                        <input class="button green" type="submit" value="[`Send`]">
+                        <i class="icon16 loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                        <input type="hidden" name="data[files]" value="{join(',', array_keys($files))}" />
+                    {else}
+                        <input class="button red cancel" type="button" value="[`Cancel`]">
+                    {/if}
+                </div>
+            </div>
+        </div>
+    {form_end}
+</div>
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-send-dialog').not(dialog).remove();
+        {if $allowed && $files}
+            dialog.filesDialog({
+                onSubmit: function() {
+                    $('#{$dialog_id} .errormsg').remove();
+                    $('#{$dialog_id} .error').removeClass('error');
+                    $('.loading').show();
+
+                    $.files.jsonPost({
+                        url: '?module=send&action=files',
+                        data: $('#{$dialog_id} form').serialize(),
+                        onSuccess: function(r) {
+                            if (r.status === 'ok') {
+                                $.files.refreshSidebar();
+                                dialog.trigger('close');
+                                $.files.controller.reloadPage();
+                            } else {
+                                $('.loading').hide();
+                                for(var i in r.errors) {
+                                    $('#{$dialog_id} [name="data[' + r.errors[i][1] + ']"]').addClass('error').after(' <span class="errormsg">' + r.errors[i][0] + '</span>');
+                                }
+                                //$.files.alertError(r.errors[0][0]);
+                            }
+                        },
+                        onFailure: function(r) {
+                            $.files.alertError('[`Server error`]', r);
+                            dialog.trigger('close');
+                        },
+                        //onAlways: function() {
+                        //    dialog.trigger('close');
+                        //}
+                    });
+                    return false;
+                }
+            });
+        {else}
+            dialog.filesDialog();
+        {/if}
+    });
+</script>

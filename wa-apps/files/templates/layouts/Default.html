@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="{if $wa->locale()}{$wa->locale()|substr:0:2}{else}ru{/if}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; user-scalable=0;">
+    <title></title>
+    {$wa->css()}
+    <link href="{$wa_app_static_url}css/files.css?v{$wa->version()}" rel="stylesheet" type="text/css" />
+    <link href="{$wa_url}wa-content/css/jquery-ui/base/jquery.ui.autocomplete.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{$wa_url}wa-content/js/jquery-plugins/jquery-tagsinput/jquery.tagsinput.css">
+    <link rel="stylesheet" href="{$wa_url}wa-content/js/jquery-plugins/ibutton/jquery.ibutton.min.css">
+    <link rel="stylesheet" href="{$wa_url}wa-content/js/prettify/prettify.css">
+
+    <script src="{$wa_url}wa-content/js/jquery/jquery-3.6.0.min.js"></script>
+    <script src="{$wa_url}wa-content/js/jquery/jquery-migrate-3.3.2.min.js"></script>
+    <script src="{$wa_url}wa-content/js/jquery-wa/wa.js?v={$wa->version(true)}"></script>
+    <script src="{$wa_url}wa-content/js/prettify/prettify.js"></script>
+    <script src="{$wa_app_static_url}js/files.min.js?v{$wa->version()}"></script>
+    <script type="text/javascript" src="?action=loc&amp;v{$wa->version()}"></script>
+
+    {$wa->js()}
+
+    <!-- plugin hook: 'backend_assets' -->
+    {* @event backend_assets.%plugin_id% Extra head tag content *}
+    {foreach $backend_assets as $item}
+        {$item}
+    {/foreach}
+
+</head>
+<body>
+
+    <div id="wa">
+        {$wa->header()}
+        <div class="flexbox wrap-mobile" id="wa-app">
+            {if !empty($sidebar)}
+                <aside class="sidebar flexbox overflow-visible width-adaptive-wider mobile-friendly js-app-sidebar" id="f-sidebar">
+                    <nav class="sidebar-mobile-toggle">
+                        <div class="box align-center">
+                            <a href="javascript:void(0);">
+                                <i class="fas fa-bars"></i>&nbsp;Показать меню</a>
+                        </div>
+                    </nav>
+                    {$sidebar|default:''}
+                </aside>
+            {/if}
+
+            <main class="f-content-wrapper content blank" id="f-core">
+                <div class="box contentbox f-core-content f-load-block">
+                    <div class="f-loading">
+                        [`Loading...`]<i class="fas fa-spinner fa-spin custom-ml-4"></i>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div class="f-file-dragover-wrapper">
+            <div class="f-message-wrapper">
+                [`Drop anywhere to upload`]
+            </div>
+        </div>
+    </div>
+
+    {$uploader}
+
+    <div class="f-dialogs-section">
+        {include file="../include.dialogs.html" inline}
+    </div>
+
+    <script>
+        (function($) {
+            $.files.init({
+                config: $.extend({$js_options|json_encode}, {
+                    sidebar_id: 'f-sidebar',
+                    file_list_id: 'f-catalog-wrapper',
+                    main_container_id: 'f-core',
+                    contact_id: {$wa->user('id')},
+                    statistics_container_id: 'f-statistics-container',
+                    source_count: (parseInt('{$source_count}', 10) || 0),
+                })
+            });
+
+            {if !empty($sidebar)}
+                $('.js-app-sidebar').waShowSidebar();
+            {/if}
+        })(jQuery);
+    </script>
+
+    <!-- plugin hook: 'backend_layout' -->
+    {* @event backend_layout.%plugin_id%. Custom HTML blocks from plugins *}
+    {foreach $backend_layout_blocks as $html}
+        {$html}
+    {/foreach}
+
+</body>
+</html>

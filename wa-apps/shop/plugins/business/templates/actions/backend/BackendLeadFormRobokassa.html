@@ -1,0 +1,23 @@
+{if !empty($assets)}{$assets}{/if}
+<div id="lead-form-robokassa" class="s-business-lead-form">
+    <div class="s-business-lead-form__header">
+        {$is_plugin_setup = $is_closable || $is_collapsible}
+        <h2>{if $is_plugin_setup}Подключиться к {/if}Робокасса</h2>
+        <a href="javascript:void(0)" class="js-hide-business-lead-form s-business-lead-form__close-btn"{if !$is_closable} style="display: none;"{/if}><i class="fas fa-times"></i></a>
+        <a href="javascript:void(0)" class="js-collapse-business-lead-form s-business-lead-form__close-btn"{if !$is_collapsible} style="display: none;"{/if}><i class="fas fa-chevron-up fa-xs"></i></a>
+    </div>
+
+    <div class="s-business-lead-form__content custom-mt-16">
+        <p class="small">
+            Подключайтесь к Робокассе через Webasyst и <b>получите ставку <mark>2,7%</mark> навсегда</b> за прием платежей картами РФ.
+        </p>
+        <p class="small">
+            <b>С Робокассой онлайн-касса не потребуется!</b> Нет необходимости в покупке или аренде отдельной онлайн-кассы, так как сервис автоматически обеспечивает фискальную регистрацию всех платежей с услугой «Робочеки».
+        </p>
+        <ul class="list s-business-lead-form__links">
+            {foreach $links as $product => $url}
+                <li><a href="{$url}" target="_blank" class="semibold">{$product} <i class="fas fa-external-link-alt fa-xs opacity-40 custom-ml-4"></i></a></li>
+            {/foreach}
+        </ul>
+    </div>
+</div>

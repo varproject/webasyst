@@ -1,0 +1,12 @@
+<!-- css -->
+<link href="{$wa_active_theme_url}default.files.css?v{$wa_theme_version}" rel="stylesheet" type="text/css" />
+
+<!-- js -->
+<script type="text/javascript" src="{$wa_active_theme_url}default.files.js?v{$wa_theme_version}"></script>
+<script type="text/javascript" src="{$wa_app_static_url}js/lazy.load.js?v{$wa->version()}"></script>
+
+<!-- plugin hook: 'frontend_assets' -->
+{* @event frontend_assets.%plugin_id% Extra head tag content *}
+{foreach $frontend_assets as $item}
+    {$item}
+{/foreach}

@@ -1,0 +1,118 @@
+{$container_id = uniqid('f-filter-settings-')}
+
+<div class="f-filter-settings" id="{$container_id}" style="width: 100%; float:left;">
+    <div class="fields form width100px">
+
+        {if $filter.id}
+            <a href="javascript:void(0);" class="f-filter-delete">
+                <i class="icon16 delete"></i>
+                [`Delete filter`]
+            </a>
+        {/if}
+
+        <div class="field {if $wa->param('style') === 'inline'}{/if}">
+            <div class="name">
+                [`Name`]
+            </div>
+            <div class="value">
+                <input type="text" name="name" value="{$filter.name|escape}" class="large bold long">
+            </div>
+        </div>
+
+        {if $is_admin}
+            <div class="field">
+                <div class="name">
+                    [`Visibility`]
+                </div>
+                <div class="value f-ibutton-checkbox">
+                    <ul class="menu-h">
+                        <li class="f-filter-type-my-only">
+                            <label for="{$container_id}-filter-type">
+                                <span {if $filter.access_type === filesFilterModel::ACCESS_TYPE_SHARED}class="f-unselected"{/if}>
+                                    [`Me only`]
+                                </span>
+                            </label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="access_type" value="{filesFilterModel::ACCESS_TYPE_SHARED}" {if $filter.access_type === filesFilterModel::ACCESS_TYPE_SHARED}checked="checked"{/if} id="{$container_id}-filter-type">
+                        </li>
+                        <li class="f-filter-type-everyone">
+                            <label for="{$container_id}-filter-type">
+                                <span {if $filter.access_type !== filesFilterModel::ACCESS_TYPE_SHARED}class="f-unselected"{/if}>
+                                    [`Everyone`]
+                                </span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        {/if}
+
+        {if !$filter.icon_url}
+            <div class="field">
+                <div class="name">
+                    [`Icon`]
+                </div>
+                <div class="value">
+                    <ul class="menu-h f-filter-icons">
+                        {foreach $icons as $icon}
+                            <li {if (!$filter.icon && $icon@index == 0) || $filter.icon == $icon}class="selected"{/if} data-val="{$icon}"><a href="javascript:void(0)"><i class="icon16 {$icon}"></i></a></li>
+                        {/foreach}
+                    </ul>
+                    <input type="hidden" name="icon" value="{$filter.icon|default:$icons[0]}">
+                </div>
+            </div>
+        {/if}
+
+        {if $filter.acting_type === filesFilterModel::ACTING_TYPE_SEARCH}
+            {include file="./include.search_settings.html" inline}
+        {/if}
+
+        <input type="hidden" name="acting_type" value="{$filter.acting_type}">
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        (function(container) {
+            container.find(':input[name="name"]').focus();
+
+            {if !$filter.icon_url}
+                var list = $('.f-filter-icons', container);
+                $('li', list).click(function() {
+                    $('li.selected', list).removeClass('selected');
+                    $(this).addClass('selected');
+                    container.find(':input[name="icon"]').val($(this).data('val'));
+                });
+            {/if}
+
+            var initIButtons = function() {
+                $.files.iButton($(':checkbox[name="access_type"]'))
+                    .change(function() {
+                        var el = $(this);
+                        var block = el.closest('.f-ibutton-checkbox');
+                        var my_only = block.find('.f-filter-type-my-only span');
+                        var everyone = block.find('.f-filter-type-everyone span');
+                        if (!el.is(':checked')) {
+                            my_only.removeClass('f-unselected');
+                            everyone.addClass('f-unselected');
+                        } else {
+                            my_only.addClass('f-unselected');
+                            everyone.removeClass('f-unselected');
+                        }
+                    });
+            };
+            initIButtons();
+
+            container.bind('reinit_ibuttons', function() {
+                var input = $(':checkbox[name="access_type"]').clone();
+                var li = $(':checkbox[name="access_type"]').closest('.ibutton-container').closest('li');
+                $(':checkbox[name="access_type"]').closest('.ibutton-container').remove();
+                li.append(input);
+                initIButtons();
+            });
+
+        })($('#{$container_id}'));
+    });
+</script>

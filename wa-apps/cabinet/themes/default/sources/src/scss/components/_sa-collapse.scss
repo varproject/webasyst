@@ -1,0 +1,25 @@
+/*
+// .sa-collapse
+*/
+
+$local-collapse-expand: .5rem;
+
+.sa-collapse {
+    min-height: ($local-collapse-expand * 2);
+    margin: -$local-collapse-expand 0;
+    pointer-events: none;
+}
+.sa-collapse__body {
+    margin: 0 -$local-collapse-expand;
+    padding: 0 $local-collapse-expand;
+
+    &:before,
+    &:after {
+        display: block;
+        content: '';
+        height: $local-collapse-expand;
+    }
+}
+.sa-collapse__content {
+    pointer-events: auto;
+}

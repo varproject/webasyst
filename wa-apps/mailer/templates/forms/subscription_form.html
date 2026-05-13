@@ -1,0 +1,5 @@
+{if ifset($params._version) == '2'}
+    {include file="./subscription_form.current.html"}
+{else}
+    {include file="./subscription_form.previous.html"}
+{/if}

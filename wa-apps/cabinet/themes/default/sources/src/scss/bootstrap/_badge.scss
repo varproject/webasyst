@@ -1,0 +1,17 @@
+/*
+// badge
+*/
+@use 'sass:map';
+@use '../custom-variables' as vs;
+
+.badge-sa-pill {
+    border-radius: 50rem;
+    padding: vs.$sa-badge-pill--padding-y vs.$sa-badge-pill--padding-x;
+}
+
+@each $style, $variables in vs.$sa-badge--styles {
+    .badge-#{$style} {
+        background: map.get($variables, bg-color);
+        color: map.get($variables, font-color);
+    }
+}

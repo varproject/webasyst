@@ -1,0 +1,64 @@
+<section>
+    <div class="dialog-content">
+        <div data-pl2-wrapper="pocket-settings-dialog">
+
+            {if $pocket->getId()}
+                <h1 class="custom-mt-0">{$pocket->getName()|default:'[`(unnamed pocket)`]'|escape|truncate:32}</h1>
+            {else}
+                <h1 class="custom-mt-0">[`New pocket`]</h1>
+            {/if}
+
+            <div class="fields form">
+                <input type="hidden" name="pocket[id]" value="{$pocket->getId()|default:0}"/>
+
+                <div class="field">
+                    <div class="name nowrap for-input">
+                        [`Pocket name`]
+                    </div>
+                    <div class="value">
+                        <input type="text" class="large bold" name="pocket[name]"
+                               value="{$pocket->getName()|escape}"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">
+                        [`Color`]
+                    </div>
+                    <div class="value" id="pl-pocket-color">
+                        <input type="hidden" name="pocket[color]" value="{$pocket->getColor()}"/>
+                        {foreach pocketlistsStoreColor::getColors() as $color => $name}
+                            <a href="#" {if $pocket->getColor() == $color}class="selected"{/if}
+                               data-pl-pocket-color="{$color}">
+                                    <span class="icon size-32 custom-mr-4"><i class="rounded pl-dark-{$color}"></i></span></a>
+                        {/foreach}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name for-checkbox">
+                        [`Access rights`]
+                    </div>
+                    <div class="value">
+                        <p class="gray small">{sprintf('[`Use <a href="%s">Team app</a> to configure access: select a user or a group of users &gt; Access tab &gt; Pocket Lists app &gt; apply the proper access level.`]', $wa_backend_url|cat:'team/')}</p>
+                    </div>
+                </div>
+
+                <!-- plugin hook: 'backend_pocket_dialog' -->
+                {* @event backend_pocket_dialog.%plugin_id% *}
+                {if !empty($backend_pocket_dialog)}{foreach $backend_pocket_dialog as $_}{ifset($_)}{/foreach}{/if}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog-buttons">
+        <div class="flexbox middle">
+            <div class="wide">
+                <input type="submit" value="[`Save`]" class="button green"/>
+                <a class="cancel button light-gray" href="#">[`Cancel`]</a>
+            </div>
+            {if $pocket->getId()}
+                <a href="#" class="button light-gray text-red" data-pl2-action="delete-pocket"><i class="fas fa-trash-alt"></i> [`Delete pocket`]</a>
+            {/if}
+        </div>
+    </div>
+</section>

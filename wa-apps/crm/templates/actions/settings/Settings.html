@@ -1,0 +1,175 @@
+{$title = "[`Settings`]"}
+
+<div class="c-settings-page shadowed" id="c-settings-page">
+
+    <script>
+        ( function($) {
+            $.crm.title.set({$title|json_encode});
+        })(jQuery);
+    </script>
+
+    {capture assign="settings_content"}
+        <div class="content not-blank content-mobile-friendly">
+            <div class="article">
+                <div class="article-body">
+                {if isset($settings_html) && is_string($settings_html)}
+                    {$settings_html}
+                {else}
+                    {include file="$settings_template"}
+                {/if}
+                </div>
+            </div>
+        </div>
+    {/capture}
+
+
+    {if $is_admin}
+        <div class="flexbox">
+            <div class="sidebar blank width-20rem" id="c-sidebar-wrapper">
+                {* SIDEBAR MENU ONLY FOR ADMIN *}
+
+                {$_menu = [
+                    [
+                        "icon" => "fa-user-cog",
+                        "name" => "[`Personal settings`]",
+                        "uri" => "`$wa_app_url`settings/"
+                    ],
+                    [
+                        "icon" => "fa-sliders-h",
+                        "name" => "[`General settings`]",
+                        "uri" => "`$wa_app_url`settings/general/"
+                    ],
+                    [
+                        "icon" => "fa-university",
+                        "name" => "[`Companies`]",
+                        "uri" => "`$wa_app_url`settings/companies/"
+                    ],
+                    [
+                        "icon" => "fa-inbox",
+                        "name" => "[`Lead forms`]",
+                        "uri" => "`$wa_app_url`settings/form/"
+                    ],
+                    [
+                        "icon" => "fa-receipt",
+                        "name" => "[`Invoices`]",
+                        "uri" => "`$wa_app_url`settings/templates/"
+                    ],
+                    [
+                        "icon" => "fa-ruble-sign",
+                        "name" => "[`Currencies`]",
+                        "uri" => "`$wa_app_url`settings/currencies/"
+                    ],
+                    [
+                        "icon" => "fa-credit-card",
+                        "name" => "[`Payment`]",
+                        "uri" => "`$wa_app_url`settings/payment/"
+                    ],
+                    [
+                        "icon" => "fa-users",
+                        "name" => "[`Vaults`]",
+                        "uri" => "`$wa_app_url`settings/vaults/"
+                    ],
+                    [
+                        "icon" => "fa-user-check",
+                        "name" => "[`Fields`]",
+                        "uri" => "`$wa_app_url`settings/field/"
+                    ],
+                    [
+                        "icon" => "fa-briefcase",
+                        "name" => "[`Sales funnels`]",
+                        "uri" => "`$wa_app_url`settings/funnels/"
+                    ],
+                    [
+                        "icon" => "fa-recycle",
+                        "name" => "[`Deal results`]",
+                        "uri" => "`$wa_app_url`settings/lostReasons/"
+                    ],
+                    [
+                        "icon" => "fa-robot",
+                        "name" => "[`Automation`]",
+                        "uri" => "`$wa_app_url`settings/notifications/",
+                        "premium_enabled" => true
+                    ],
+                    [
+                        "icon" => "fa-at",
+                        "name" => "[`Email`]",
+                        "uri" => "`$wa_app_url`settings/message-sources/email/"
+                    ],
+                    [
+                        "icon" => "fa-comments",
+                        "name" => "[`Messengers`]",
+                        "uri" => "`$wa_app_url`settings/message-sources/im/"
+                    ],
+                    [
+                        "icon" => "fa-sms",
+                        "name" => "[`SMS`]",
+                        "uri" => "`$wa_app_url`settings/sms/"
+                    ],
+                    [
+                        "icon" => "fa-phone-alt",
+                        "name" => "[`PBX`]",
+                        "uri" => "`$wa_app_url`settings/pbx/"
+                    ],
+                    [
+                        "icon" => "fa-hashtag",
+                        "name" => "[`Tags`]",
+                        "uri" => "`$wa_app_url`settings/tags/"
+                    ]
+                ]}
+                {if $shop_app_exists}
+                    {$_menu[] = [
+                        "icon" => "fa-shopping-cart",
+                        "name" => "Shop-Script",
+                        "uri" => "`$wa_app_url`settings/shop/",
+                        "premium_enabled" => true
+                    ]}
+                {/if}
+
+                {$cron_indicator_icon = ""}
+                {if !crmSourceWorker::isCliOk() || !crmNotificationBirthdayWorker::isCliOk() || !crmRemindersRecap::isCliOk()
+                    || !crmInvoice::isCliOk() || !crmDeal::isCliOk() || !crmShop::isCliOk()}
+                    {$cron_indicator_icon = "<span class='error indicator inline'>!</span>"}
+                {/if}
+                {$_menu[] = [
+                    "icon" => "fa-clock",
+                    "name" => "[`Cron Jobs`] `$cron_indicator_icon`",
+                    "uri" => "`$wa_app_url`settings/cron/",
+                    "li_class" => "c-settings-sidebar-cron-job-item"
+                ]}
+                <div class="align-center custom-my-12 mobile-only">
+                    <button class="button small circle light-gray js-expand-sidebar"><i class="fas fa-arrow-right"></i></button>
+                </div>
+                <aside class="c-settings-sidebar" id="c-settings-sidebar">
+                    <ul class="menu large">
+                        {foreach $_menu as $_item}
+                            <li class="{$_item.li_class|default:''}">
+                                <a href="{$_item.uri}"{if !empty($alias) && $_item.uri == $alias} data-alias="{$alias}"{/if}>
+                                    {if !empty($_item.icon)}
+                                        <i class="fas {$_item.icon}"></i>
+                                    {/if}
+                                    <span class="c-settings-sidebar-name">{$_item.name}</span>
+                                    {if !empty($_item.premium_enabled) && !$wa->crm->isPremium()}
+                                        <span class="count small"><i class="fas fa-star text-light-gray"></i></span>
+                                    {/if}
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </aside>
+
+            </div>
+            {$settings_content}
+        </div>
+        <script>
+            ( function($) {
+                new CRMSettings({
+                    $wrapper: $("#c-settings-page"),
+                    $sidebar: $("#c-settings-sidebar")
+                });
+            })(jQuery);
+        </script>
+    {else}
+        {$settings_content}
+    {/if}
+
+</div>

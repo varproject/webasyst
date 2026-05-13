@@ -1,0 +1,163 @@
+{if $wa->get('mode', '') == 'search' && strlen($wa->get('query', '')) && $items}
+    <div{if $wa->isMobile()} class="box"{/if}>
+        <h3 class="custom-mb-0">{sprintf_wp('Search by “%s”', waString::escape($wa->get('query', '')))}</h3>
+        <div class="hint">[`Only the last line matching the search query is shown per found file.`]</div>
+    </div>
+{else}
+    {strip}
+        <h3 class="no-logs-message box{if $items} hidden{/if}">
+            {if in_array($wa->get('mode', ''), ['search', 'product'])}
+                [`No logs found.`]
+            {else}
+                [`No logs.`]
+            {/if}
+        </h3>
+    {/strip}
+{/if}
+
+{if $premium}
+    {if $wa->user()->getRights('logs', 'delete_files')}
+        {$item_types = array_unique(array_column($items, 'type'))}
+
+        {* Do not show if only user actions are available *}
+        {if count(array_diff($item_types, [logsItems::ENTRY_ACTIONS, logsItems::ENTRY_ACTION]))}
+            <div class="select-all custom-ml-8-mobile">
+                <label>
+                    <span class="wa-checkbox custom-mr-8">
+                        <input type="checkbox">
+                        <span>
+                            <span class="icon">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+
+                <ul class="action-menu">
+                    <li>
+                        <span class="logs-action-delete-bulk">
+                            <i class="fas fa-trash-alt logs-action-icon" title="[`Delete selected`]" style="width: 0;"></i>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        {/if}
+    {/if}
+{/if}
+
+<ul class="zebra item-list custom-m-0 custom-mx-8-mobile {$mode}{if $wa->get('mode', '') == 'search'} text-search-results{/if}">
+    {foreach $items as $item}
+        {capture name="markers"}
+            {if $item.tracked|default:false}
+                <i class="fas fa-flag tracked-marker{if $item.updated|default:false} tracked-marker-updated{/if}" title="{if $item.updated|default:false}[`Updated tracked file`]{else}[`Tracked file`]{/if}"></i>
+            {/if}
+
+            {if $item.published|default:false}
+                <i class="fas fa-globe published-marker" title="[`Published file`]"></i>
+            {/if}
+        {/capture}
+
+        {$markers = $smarty.capture.markers|trim}
+
+        {capture name="action_buttons"}
+            {if $wa->isMobile() && in_array($item.type, [logsItems::ENTRY_FILE, logsItems::ENTRY_DIRECTORY])}
+                <span class="gray item-actions-buttons-expander">
+                    <i class="fas fa-ellipsis-h"></i>
+                </span>
+            {/if}
+
+            <span class="item-actions item-actions-buttons"{if $wa->isMobile()} style="display: none;"{/if}>
+                {if $item.type == logsItems::ENTRY_FILE}
+                    <span class="item-action">
+                        <a href="?action=download&path={$item.path|escape}" title="[`Download`]" class="item-list-item-download-link"><i class="fas fa-download"></i></a>
+                    </span>
+                {/if}
+
+                {if $wa->user()->getRights('logs', 'rename') &&  in_array($item.type, [logsItems::ENTRY_FILE, logsItems::ENTRY_DIRECTORY])}
+                    <span class="item-action logs-action-rename">
+                        <i class="fas fa-edit logs-action-icon" data-path="{$item.path|escape}" title="[`Rename`]"></i>
+                    </span>
+                {/if}
+
+                {if in_array($item.type, [logsItems::ENTRY_FILE, logsItems::ENTRY_DIRECTORY]) && $wa->user()->getRights('logs', 'delete_files')}
+                    <span class="item-action logs-action-delete">
+                        <i class="fas fa-trash logs-action-icon" data-path="{$item.path|escape}" title="[`Delete`]"></i>
+                    </span>
+                {/if}
+            </span>
+        {/capture}
+
+        <li class="item-list-item flexbox" data-path="{$item.path|default:''}">
+            {if $premium}
+                {if $wa->user()->getRights('logs', 'delete_files')}
+                    {$is_selectable_item = in_array($item.type, [logsItems::ENTRY_FILE, logsItems::ENTRY_DIRECTORY])}
+
+                    <label{if !$is_selectable_item} style="visibility: hidden;"{/if}>
+                        <span class="wa-checkbox custom-mr-8">
+                            {if $is_selectable_item}
+                                <input type="checkbox" class="item-select-checkbox" name="paths[]" value="{$item.path}">
+                            {/if}
+                            <span>
+                                <span class="icon">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                            </span>
+                        </span>
+                    </label>
+                {/if}
+            {/if}
+
+            <span class="item-list-item-icon">
+                <i class="item-icon {$item.icon_class}" title="{$item.icon_title}"></i>
+            </span>
+            <div class="wide">
+                <span class="flexbox">
+                    <span class="wide">
+                        <a href="?{$item.url}" class="item-open-link{if !$wa->isMobile()} large{/if}{if isset($item.class)} {$item.class}{/if}" title="[`Open`]">
+                            {if $mode == 'directory'}
+                                <span class="rename-part">{$item.name}</span>
+                            {elseif $mode == 'items'}
+                                {strip}
+                                    {if ifset($item.folder, null)}
+                                        <span class="folder">{$item.folder}</span>
+                                    {/if}
+                                    <span class="file{if $item.type != logsItems::ENTRY_ACTION} rename-part{/if}">{$item.name}</span>
+                                {/strip}
+                            {/if}
+                        </a>
+                    </span>
+
+                    {if $item.type == logsItems::ENTRY_FILE}
+                        {if !empty($markers)}
+                            <span class="item-markers nowrap">{$markers}</span>
+                        {/if}
+                    {else}
+                        {$smarty.capture.action_buttons}
+                    {/if}
+                </span>
+
+                {if !empty($item.data.text)}
+                    <blockquote class="break-all">{$item.data.text}</blockquote>
+                {/if}
+
+                {if $wa->get('mode', '') != 'search'}
+                    {if $item.type == logsItems::ENTRY_FILE}
+                        <div class="flexbox custom-mt-8">
+                            <span class="item-list-item-data wide{if $wa->isMobile()} smaller{else} small{/if}">
+                                {if isset($item.data.size)}
+                                    <span class="badge{if $wa->get('mode', '') == 'size'} highlighted{/if}" title="[`Size`]">{$item.data.size}</span>
+                                {/if}
+
+                                {if isset($item.data.updatetime)}
+                                    <span class="badge{if $wa->get('mode', '') == 'updatetime'} highlighted{/if}" title="[`Latest update time`]">{$item.data.updatetime}</span>
+                                {/if}
+                            </span>
+
+                            {$smarty.capture.action_buttons}
+                        </div>
+                    {/if}
+                {/if}
+            </div>
+        </li>
+    {/foreach}
+</ul>

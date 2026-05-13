@@ -1,0 +1,24 @@
+/*
+// offcanvas
+*/
+@use '../custom-variables' as vs;
+
+.offcanvas-sa-card {
+    width: 20rem;
+    max-width: calc(100% - 2rem);
+    box-shadow: vs.$sa-card--shadow;
+
+    & + .offcanvas-backdrop {
+        background: vs.$sa-body--backdrop-color;
+    }
+    .offcanvas-header {
+        border-bottom: 1px solid vs.$sa-card--divider-color;
+    }
+    .offcanvas-body {
+        height: 0;
+    }
+
+    .simplebar-track {
+        --simplebar-track--color: #{vs.$sa-card--scrollbar-color};
+    }
+}

@@ -1,0 +1,729 @@
+<div class="article" id="hub-hub-settings-form">
+    <div class="article-body custom-pb-0 break-word">
+        {include file="./Sidebar.html" inline}
+
+        <h2 class="js-page-title">{if empty($hub.id)}[`New hub`]{else}{$hub.name|default:'[`(no name)`]'|escape}{/if}</h2>
+
+        <form method="post" action="?module=settings&action=hubSave&id={$hub.id|default:'new'}">
+            <div class="fields form">
+                <div class="fields-group">
+                    <div class="field">
+                        <div class="name">
+                            [`Hub name`]
+                        </div>
+                        <div class="value bold">
+                            <input type="text" class="bold width-100-mobile" name="hub[name]" value="{$hub.name|default:''|escape}" placeholder="[`Hub name`]">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name">
+                            [`Privacy`]
+                        </div>
+                        <div class="value">
+                            <div>
+                                <label class="small">
+                                    <span class="wa-radio">
+                                        <input type="radio" name="hub[status]" value="0" {if empty($hub.status)} checked="checked" {/if}>
+                                        <span></span>
+                                    </span>
+
+                                    <span class="semibold">[`Private`]</span>
+
+                                    <i class="fas fa-lock small"></i>
+                                </label>
+
+                                <div class="hint">
+                                    [`Topics are visible to backend users only.`]
+                                </div>
+                            </div>
+
+                            <div class="custom-mt-8">
+                                <label class="small">
+                                    <span class="wa-radio">
+                                        <input type="radio" name="hub[status]" {if !empty($hub.status)} checked="checked" {/if} value="1">
+                                        <span></span>
+                                    </span>
+
+                                    <span class="semibold">[`Public`]</span>
+                                </label>
+
+                                {if !empty($routes)}
+                                <div class="hint"{if empty($hub.status)} style="display: none;"{/if}>
+                                    [`Topics are published on the website:`]
+                                    {foreach $routes as $route}
+                                    <br><a href="{$route.url|escape}" class="underline break-all" target="_blank">{$route.url|escape}</a> <i class="fas fa-link"></i>
+                                    {/foreach}
+                                </div>
+                                {else if !empty($hub.id)}
+                                <div class="state-caution-hint"{if empty($hub.status)} style="display: none;"{/if}>
+                                    {sprintf('[`This hub is not visible on your sites now, because there were no routing rules added for Hub app with this particular hub. To make this hub visible on your site, create a route using the form below or using <a href="%s">Site app</a> routing settings.`]', "../site/#/routing/")}
+                                </div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="js-hub-settings-public">
+                    {if empty($routes) && $domains}
+                    <div class="field custom-mt-16" id="route-selector">
+                        <div class="name"></div>
+
+                        <div class="value">
+                            <div class="block h-settle-new-hub">
+                                <p class="small text-gray custom-mb-4">[`Specify the public URL for this new hub on your site:`]</p>
+                                <div>
+                                    <label class="small">
+                                        <span class="wa-radio">
+                                            <input type="radio" name="route_enabled" value="" checked>
+                                            <span></span>
+                                        </span>
+                                        [`Do not publish this hub on the site just yet`]
+                                    </label>
+                                </div>
+
+                                <div class="flexbox custom-mt-8">
+                                    {if count($domains) > 1}
+                                    <label class="small custom-mt-4 custom-mr-4">
+                                        <span class="wa-radio">
+                                            <input type="radio" name="route_enabled" value="1">
+                                            <span></span>
+                                        </span>
+                                    </label>
+
+                                    <div class="flexbox wrap custom-ml-4-mobile">
+                                        <div class="wa-select smaller custom-mb-8">
+                                            <select name="route_domain">
+                                                {foreach $domains as $d}
+                                                <option value="{$d|escape}">{$d|escape}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
+                                    {else}
+                                    <div class="flexbox wrap custom-mb-8 custom-ml-4-mobile">
+                                        <input type="hidden" name="route_domain" value="{$domains[0]|escape}">
+                                        <label>
+                                            <span class="wa-radio">
+                                                <input type="radio" name="route_enabled" value="1">
+                                                <span></span>
+                                            </span>
+                                            {$domains[0]|escape}
+                                        </label>
+                                    {/if}
+
+                                        <span class="custom-mr-4">/</span>
+                                        <input type="text" class="short smaller custom-mb-8" name="route_url" placeholder="*">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+
+                    <div class="field">
+                        <div class="name">
+                            [`Kudos`]
+                        </div>
+                        <div class="value">
+                            <label class="small">
+                                <span class="wa-checkbox">
+                                    <input type="checkbox" name="hub_params[kudos]"{if !empty($hub_params.kudos)} checked="checked"{/if} value="1">
+                                    <span>
+                                        <span class="icon">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                    </span>
+                                </span>
+                                [`Enable kudos in this hub`]
+                            </label>
+                            <p class="hint">[`Kudos are a rating based on user activity in discussions and community, and on how it’s rated by other users.`]</p>
+
+                            <div class="small custom-my-12 js-hub-settings-kudos">
+                                <strong>[`Topics`]:</strong> {sprintf('[`+1 vote for user’s topic gives +%s kudos`]', sprintf('<input type="text" class="numerical shortest small" name="hub_params[kudos_per_topic]" value="%s">', $hub_params.kudos_per_topic|default:'2'|escape))}
+                            </div>
+                            <div class="small custom-my-12 js-hub-settings-kudos">
+                                <strong>[`Answers`]:</strong> {sprintf('[`+1 vote for user’s answer gives +%s kudos`]', sprintf('<input type="text" class="numerical shortest small" name="hub_params[kudos_per_answer]" value="%s">', $hub_params.kudos_per_answer|default:'3'|escape))}
+                            </div>
+                            <div class="small custom-my-12 js-hub-settings-kudos">
+                                <strong>[`Comments`]:</strong> {sprintf('[`+1 vote for user’s comment gives +%s kudos`]', sprintf('<input type="text" class="numerical shortest small" name="hub_params[kudos_per_comment]" value="%s">', $hub_params.kudos_per_comment|default:'1'|escape))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name">
+                            [`Staff`]
+                        </div>
+                        <div class="value js-hub-settings-staff" style="position: relative;">
+                            <p class="small custom-mb-12">[`List key users who participate in hub frontend discussions so their topics are marked with special badges.`]</p>
+                            <div class="h-hub-setting-staff">
+                                <table class="borderless custom-my-0 custom-ml-0">
+                                    <thead>
+                                        <tr>
+                                            <th>[`User name`]</th>
+                                            <th>[`Badge (role)`]</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="small">
+                                        {foreach $staff as $contact_id=>$staff_member}
+                                        <tr>
+                                            <td>
+                                                <div class="flexbox space-12 middle">
+                                                    <i class="fas fa-grip-vertical text-gray sort" style="cusro: move;"></i>
+                                                    <div class="wide">
+                                                        <input type="text" class="bold width-100" name="staff[{$contact_id}][name]" value="{$staff_member.name|escape}" placeholder="{$staff_member.contact.name|escape}">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="colorpicker">
+                                                <div class="flexbox space-8 middle">
+                                                    <input type="text" class="width-100" name="staff[{$contact_id}][badge]" value="{$staff_member.badge|escape}" placeholder="{$wa->accountName()|escape}">
+
+                                                    <div class="h-hub-settings-color-picker js-color-picker" data-color="{$staff_member.badge_color|escape}" data-id="{$contact_id}" style="background-color: {$staff_member.badge_color|escape};"></div>
+                                                    <input type="hidden" class="js-hub-staff-color" name="staff[{$contact_id}][badge_color]" value="{$staff_member.badge_color|escape}">
+                                                </div>
+                                            </td>
+                                            <td class="min-width">
+                                                    <a href="#"><i class="fas fa-trash-alt text-red delete"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {/foreach}
+                                    </tbody>
+
+                                    <tfoot class="small">
+                                        <tr data-url="{$wa_backend_url}contacts/#/contact/">
+                                            <td>
+                                                <div class="flexbox space-12 middle">
+                                                    <i class="fas fa-grip-vertical text-gray sort" style="display: none; cursor: move;"></i>
+                                                    <i class="fas fa-plus smaller text-gray js-hub-settings-hide"></i>
+
+                                                    <div class="wide">
+                                                        <input type="text" class="bold width-100" placeholder="[`Start typing user name...`]" name="staff[0][name]">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="colorpicker">
+                                                <div class="flexbox space-8 middle">
+                                                    <input type="text" class="width-100" placeholder="{$wa->accountName()}" name="staff[0][badge]">
+
+                                                    <div class="h-hub-settings-color-picker js-color-picker" data-color="#ffffff" data-id="0" style="background-color: #ffffff;"></div>
+                                                    <input type="hidden" class="js-hub-staff-color" name="staff[0][badge_color]" value="#ffffff">
+                                                </div>
+                                            </td>
+                                            <td class="min-width">
+                                                <a href="#" style="display: none;"><i class="fas fa-trash-alt text-red delete"></i></a>
+                                                <i class="fas fa-trash-alt text-red delete js-hub-settings-hide" style="visibility: hidden;"></i>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="js-hub-settings-save-remind" style="display: none;">
+                                            <td colspan="3"><em class="highlighted">[`Click “Save” button below to commit changes.`]</em></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fields-group js-hub-settings-private">
+                    <div class="field">
+                        <div class="name">
+                            [`Access rights`]
+                        </div>
+                        <div class="value">
+                            <p class="hint"><i class="fas fa-lock"></i> [`Access to this hub will be restricted to backend users only. Use Team app to customize user access rights to this hub.`]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fields-group">
+                    <div class="field">
+                        <div class="name">
+                            [`Hub color marker`]
+                        </div>
+                        <div class="value">
+                            <ul class="flexbox middle wrap custom-mb-8 h-settings-colorbox">
+                                {$colors = ['white', 'gray', 'yellow', 'red', 'green', 'blue', 'purple']}
+                                {foreach $colors as $color}
+                                <li class="h-hub-color h-hub-color-{$color} custom-my-0 custom-mr-8 flexbox middle{if ifset($hub_params.color) == $color} selected{/if}" data-color="{$color}">
+                                    {if $color == 'white'}
+                                    <i class="fas fa-ban small text-white"></i>
+                                    {else}
+                                    <i class="fas fa-check small text-white"></i>
+                                    {/if}
+                                </li>
+                                {/foreach}
+                            </ul>
+                            <input type="hidden" name="hub_params[color]" class="js-hub-selected-color" value="{$color}">
+
+                            <p class="hint">[`Backend only. All topics of this hub will be marked with the selected color. Recommended if you have multiple hubs.`]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fields-group">
+                    <div class="field">
+                        <div class="name">
+                            [`Allowed topic types`]
+                        </div>
+                        <div class="value">
+                            <div>
+                                <label class="small">
+                                    <span class="wa-radio">
+                                        <input type="radio" name="hub_params[all_types]" value="1" {if empty($hub.id) || !empty($hub_params.all_types)} checked{/if}>
+                                        <span></span>
+                                    </span>
+                                    [`All topic types`]
+                                </label>
+                            </div>
+
+                            <div>
+                                <label class="small">
+                                    <span class="wa-radio">
+                                        <input type="radio" name="hub_params[all_types]" value="0" {if !empty($hub.id) && empty($hub_params.all_types)} checked{/if}>
+                                        <span></span>
+                                    </span>
+                                    [`Selected only`]
+                                </label>
+                            </div>
+
+                            <div class="custom-mt-8 custom-ml-20 js-hub-param-all-types">
+                                {foreach $types as $t}
+                                <div class="small">
+                                    <label>
+                                        <span class="wa-checkbox">
+                                            <input name="type_id[{$t.id}]" value="{$t.id}" type="checkbox"{if in_array($t.id, $hub_types)} checked="checked"{/if}>
+                                            <span>
+                                                <span class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        <span>{$t.name|escape}</span>
+                                    </label>
+                                </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fields-group">
+                    <div class="field">
+                        <div class="name">[`Allowed actions for authorized website visitors`]</div>
+
+                        <div class="value">
+                            <div>
+                                <label class="small">
+                                    {$_checked = $hub.params.frontend_allow_delete_topic|default:''}
+                                    <input type="hidden" name="hub_params[frontend_allow_delete_topic]" value="0">
+
+                                    <span class="wa-checkbox">
+                                        <input type="checkbox" name="hub_params[frontend_allow_delete_topic]" value="1"{if $_checked} checked="checked"{/if}>
+                                        <span>
+                                            <span class="icon">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    [`deletion of own topics`]
+                                </label>
+                            </div>
+
+                            <div>
+                                <label class="small">
+                                    {$_checked = $hub.params.frontend_allow_edit_topic|default:''}
+                                    <input type="hidden" name="hub_params[frontend_allow_edit_topic]" value="0">
+
+                                    <span class="wa-checkbox">
+                                        <input type="checkbox" name="hub_params[frontend_allow_edit_topic]" value="1"{if $_checked} checked="checked"{/if}>
+                                        <span>
+                                            <span class="icon">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    [`editing of own topics`]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="bottombar bottombar--shadowless sticky bordered-top flexbox middle custom-mt-32">
+    <div class="article width-100">
+        <div class="article-body custom-py-0">
+            <div class="flexbox middle space-12">
+                <div class="wide">
+                    <button type="submit" class="button js-form-submit">
+                        [`Save`]
+                        <span class="js-hub-settings-message"></span>
+                    </button>
+                </div>
+
+                {if !empty($hub.id)}
+                <button data-href="#/settings/hub/{$hub.id}/" class="button red outlined js-hub-delete">
+                    <i class="fas fa-trash-alt delete"></i>
+                    <span class="desktop-and-tablet-only">[`Delete hub`]</span>
+                </button>
+                {/if}
+            </div>
+        </div>
+    </div>
+</div>
+
+{if !empty($hub.id)}
+<div class="dialog" id="h-hub-delete-dialog">
+    <div class="dialog-background"></div>
+
+    <div class="dialog-body">
+        <header class="dialog-header">
+            <h2>[`Delete hub`]</h2>
+        </header>
+
+        <div class="dialog-content">
+            <form method="post" action="?module=settings&action=hubDelete" class="js-dialog-hub-delete">
+                <input type="hidden" name="id" value="{$hub.id}">
+                {if $hub.topics_count}
+                <div>{sprintf('[`Number of topics in this hub: <strong>%d</strong>. By deleting this hub you can either move topics to another hub or delete them entirely.`]',$hub.topics_count,$hub.name|escape)}</div>
+
+                <p class="custom-mb-12">
+                    <label>
+                        <span class="wa-radio">
+                            <input type="radio" name="delete" checked="checked" value="move">
+                            <span></span>
+                        </span>
+                        [`Move topics to another hub`]:
+                    </label>
+                </p>
+
+                <div class="wa-select custom-ml-20">
+                    <select name="target_hub_id"{if false} disabled="disabled"{/if}>
+                    {foreach $hubs as $_hub_id => $_hub}
+                    <option value="{$_hub_id}"{if $_hub_id eq $hub.id} disabled="disabled"{/if}>{$_hub.name|escape}</option>
+                    {/foreach}
+                    </select>
+                </div>
+
+                <p>
+                    <label>
+                        <span class="wa-radio">
+                            <input type="radio" name="delete"{if false} checked="checked"{/if} value="delete">
+                            <span></span>
+                        </span>
+                        [`Delete permanently`]
+                    </label>
+                </p>
+                {else}
+                <input type="hidden" name="delete" value="safe">
+                <div>[`This hub does not contain any topics, so you can safely delete it. No topics will be affected.`]</div>
+                {/if}
+                <span class="errormsg state-error"></span>
+            </form>
+        </div>
+
+        <footer class="dialog-footer">
+            <div class="dialog-buttons-gradient">
+                <button type="submit" class="button red js-hub-delete-confirm">[`Delete`]</button>
+                <button class="button light-gray js-dialog-close">[`Cancel`]</button>
+            </div>
+        </footer>
+    </div>
+</div>
+{/if}
+
+<script type="text/javascript">
+    $(function () {
+        const $form = $('#hub-hub-settings-form');
+        const $saveButton = $('.js-form-submit');
+
+        // Change form when user changes public/privare hub status
+        (function() {
+            var delay = 0;
+            $form.find(':input[name="hub\\[status\\]"]').change(function (event) {
+                if (this.checked && (this.value == 1)) {
+                    $form.find('.js-hub-settings-private').slideUp(delay);
+                    $form.find('.js-hub-settings-public').slideDown(delay);
+                } else {
+                    $form.find('.js-hub-settings-public').slideUp(delay);
+                    $form.find('.js-hub-settings-private').slideDown(delay);
+                }
+
+            }).change();
+            $form.find(':input[name="hub_params\\[kudos\\]"]').change(function (event) {
+                if (this.checked) {
+                    $form.find('.js-hub-settings-kudos').slideDown(delay);
+                } else {
+                    $form.find('.js-hub-settings-kudos').slideUp(delay);
+                }
+
+            }).change();
+            delay = 300;
+        })();
+
+        /* make staff list sortable */
+        var $staff_sortable = $form.find('.js-hub-settings-staff tbody').sortable({
+            direction: 'vertical',
+            handle: '.sort',
+            onUpdate() {
+                $form.find('.js-hub-settings-save-remind:first').show();
+            }
+        });
+        $staff_sortable.on('click', 'a > .delete', function (event) {
+            event.preventDefault();
+            $(this).closest('tr').remove();
+            $form.find('.js-hub-settings-save-remind').show();
+        });
+
+        /* enable contact search */
+        const $autocomplete = $form.find(':input[name="staff\\[0\\]\\[name\\]"]').autocomplete({
+            source: '?action=autocomplete&type=contact',
+            minLength: 2,
+            delay: 300,
+            select: function (event, ui) {
+                this.value = '';
+                const $context = $(this).parents('table').find('tbody:first');
+                const $exist = $context.find(':input[name="staff\\[' + ui.item.value + '\\]\\[name\\]"]:first');
+                if ($exist.length) {
+                    $autocomplete.autocomplete('close');
+                    setTimeout(function () {
+                        $exist.focus();
+                    }, 500);
+
+                } else {
+                    const $tr = $(this).parents('tr').clone(false);
+                    $context.append($tr);
+                    $tr.attr('class', false);
+                    $tr.find(':hidden').show();
+                    $tr.find('.js-hub-settings-hide').remove();
+                    $tr.find(':input').each(function (index, el) {
+                        const $el = $(el);
+                        $el.attr('name', $el.attr('name').replace(/\[0\]/, '[' + ui.item.value + ']'));
+                    });
+                    $tr.find(':input[name$="\\[name\\]"]').val(ui.item.name).attr('placeholder', ui.item.name);
+                    $tr.find('.js-color-picker')[0].dataset.id = ui.item.value;
+                    $staff_sortable.sortable('refresh');
+                    $form.find('.js-hub-settings-save-remind:first').show();
+                    $autocomplete.autocomplete('close');
+
+                    setTimeout(function () {
+                        $tr.find('input:text[name$="[badge]"]').focus();
+                    }, 0);
+                }
+
+                return false;
+            },
+            focus: function (event, ui) {
+                this.value = ui.item.name;
+                return false;
+            }
+        });
+
+        // Color picker for badges
+        (function() {
+            const colorPickers = [];
+            const $wrapper = $('.js-hub-settings-staff');
+
+            $wrapper.on('click', '.js-color-picker', function(event) {
+                const $this = $(this);
+                const id = $this.data('id');
+
+                const existingColorPicker = colorPickers.find(item => item.id === id);
+                if (existingColorPicker) {
+                    existingColorPicker.colorPicker.show();
+                    return;
+                }
+
+                const defaultColor = $(this).data('color');
+
+                const colorPicker = Pickr.create({
+                    el: $this[0],
+                    theme: 'classic',
+                    appClass: 'wa-pcr-app small',
+                    lockOpacity: true,
+                    position: 'bottom-middle',
+                    useAsButton: true,
+                    container: $wrapper[0],
+                    default: defaultColor || '#42445a',
+                    components: {
+                        palette: true,
+                        hue: true,
+                        interaction: {
+                            input: true,
+                        }
+                    }
+                }).on('change', (color) => {
+                    let color_hex;
+                    if (color.hasOwnProperty('toHEXA')) {
+                        color_hex = color.toHEXA().toString(0);
+                    } else {
+                        color_hex = color.target.value;
+                    }
+                    $this.css('background-color', color_hex);
+                    $this.data('color', color_hex);
+                    $this.next('.js-hub-staff-color').val(color_hex);
+                }).on('changestop', (event, pickr) => pickr.hide());
+
+                colorPickers.push({
+                  id,
+                  colorPicker
+                });
+                colorPicker.show();
+            });
+        })();
+
+        // Show / hide list of types when user switches between ALl topic types / Selected only.
+        $form.find(':input[name="hub_params\\[all_types\\]"]').change(function (event) {
+            var $div = $form.find('.js-hub-param-all-types:first');
+            if (this.checked) {
+                if (this.value == 1) {
+                    if (event.originalEvent) {
+                        $div.find(':input[type="checkbox"]').each(function (index, el) {
+                            el.checked = true;
+                        });
+                        $div.slideUp();
+                    } else {
+                        $div.hide();
+                    }
+                } else {
+                    if (event.originalEvent) {
+                        $div.find(':input[type="checkbox"]').each(function (index, el) {
+                            if (el.checked && !el.defaultChecked) {
+                                el.checked = false;
+                            }
+                        });
+                        $div.slideDown();
+                    } else {
+                        $div.show();
+                    }
+                }
+            }
+
+        }).change();
+
+        {if !empty($hub.id)}
+            // Link to delete hub
+            let deleteHubDialog;
+
+            $('.js-hub-delete').on('click', function (event) {
+                event.preventDefault();
+
+                if (deleteHubDialog) {
+                    deleteHubDialog.show();
+                    return;
+                }
+
+                deleteHubDialog = $.waDialog({
+                    $wrapper: $('#h-hub-delete-dialog'),
+                    onOpen($dialog, dialog) {
+                        $('#h-hub-delete-dialog').find('.errormsg').text('');
+                        $('.js-hub-delete-confirm').on('click', function() {
+                            dialog.$content.find(':input.error').removeClass('error');
+
+                            const $dialogForm = $('.js-dialog-hub-delete');
+                            $.post($dialogForm.attr('action'), $dialogForm.serialize(), function (r) {
+                                if (r.status === 'ok') {
+                                    $.sidebar.reload();
+                                    dialog.close();
+                                    window.location.hash = '/settings/'
+                                } else {
+                                    dialog.$content.find('.errormsg').text(r.errors.join("\n"));
+                                    console.log(r.errors);
+                                }
+                            }, 'json');
+                        });
+                    },
+                    onClose(dialog) {
+                        dialog.hide();
+                        return false;
+                    }
+                });
+            });
+        {/if}
+
+        // Color settings
+        const $colorInput = $('.js-hub-selected-color');
+        $form.find('.h-settings-colorbox').on('click', 'li', function(e) {
+            e.preventDefault();
+            $(this).addClass('selected').siblings().removeClass('selected');
+            $colorInput.val($(this).data('color'));
+        });
+
+        // Controller for creation of new route for this hub
+        (function() {
+            var $route_wrapper = $('#route-selector');
+            if (!$route_wrapper.length) {
+                return;
+            }
+
+            var $route_enabled_radio = $route_wrapper.find('input:radio[value=1]');
+            $route_wrapper.on('keyup change', 'select, input:text', function() {
+                $route_enabled_radio.prop('checked', 1);
+            });
+        })();
+
+        // Save form via AJAX when submitted
+        $saveButton.on('click', function(event) {
+            event.preventDefault();
+
+            const $submitButton = $(this);
+            const $message = $submitButton.find('.js-hub-settings-message');
+            $message.html('<i class="fas fa-spinner fa-spin"></>');
+
+            if ($submitButton.is(':disabled')) {
+                return;
+            }
+
+            $submitButton.prop('disabled', true);
+
+            $.ajax({
+                url: $form.find('form').attr('action'),
+                dataType: 'json',
+                type: 'post',
+                data: $form.find('form').serialize()
+            }).always(function(r, msg) {
+                $submitButton.removeClass('yellow');
+                $submitButton.prop('disabled', false);
+                $message.html('<i class="fas fa-check-circle"></i>');
+
+                if (msg != 'success' || r.status != 'ok') {
+                    console.log('Error saving hub', r); // !!!
+                    return;
+                }
+
+                $.sidebar.reload();
+                $form.find('.js-hub-settings-save-remind:first').hide();
+
+                // Reload form and sidebar content, then show success indicator
+                $(window).one('wa_loaded', function() {
+                    $message.html('');
+                });
+
+                if (r.data.hash) {
+                    window.location.hash = r.data.hash;
+                } else {
+                    $.hub.redispatch();
+                }
+            });
+        });
+
+        $form.find('input:text:visible:first').focus();
+
+        {if !empty($hub.id)}
+        $.sidebar.setHub('{$hub.id}');
+        {/if}
+
+        $form.on('change', function(event) {
+            $saveButton.addClass('yellow');
+        });
+    });
+</script>

@@ -1,0 +1,253 @@
+<div class="dialog f-drop-files-here-zone f-uploader" id="f-uploader">
+    <form class="f-fileupload" action="?module=upload&action=files" method="POST" enctype="multipart/form-data">
+        {$wa->csrf()}
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <div class="dialog-content hide-scrollbar">
+
+                <!-- #1 -->
+                <div class="align-center box uploadbox f-upload-step1">
+                    <div class="upload custom-mt-48">
+                        <label class="button f-fileinput-button f-upload-step1-select-files">
+                            <span>[`Select files`]</span>
+                            <input type="file" name="files[]" multiple="">
+                        </label>
+                    </div>
+                    <p class="small gray custom-mb-48">[`or drag files here`]</p>
+                </div>
+
+                <!-- #2 -->
+                <div class="f-upload-step2" style="display: none;">
+                    <h3 data-tmpl="[`Upload files (%d)`]">
+                        <span class="f-title"></span>
+                        <span class="hint"></span>
+                    </h3>
+                    <div class="f-upload-step-main-content"></div>
+                    <div class="f-upload-step-name-conflict-content"></div>
+                </div>
+
+                <!-- #3 -->
+                <div class="f-upload-step3" style="display: none;">
+                    <div class="f-upload-filelist">
+                        <div class="files"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <a class="js-close-dialog button light-gray f-upload-step1-buttons" href="javascript:void(0);">[`Cancel`]</a>
+
+                <div class="f-upload-step2-buttons" style="display: none;">
+                    <input type="button" class="button blue start f-start-upload-button" value="[`Start upload`]">
+                    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+                </div>
+
+                <div class="f-upload-step3-buttons" style="display: none;">
+                    <div class="flexbox space-12">
+                        <div class="wide custom-pt-4 custom-pb-4">
+                            <div class="progressbar">
+                                <div class="progressbar-line-wrapper text-outside">
+                                    <div class="progressbar-outer">
+                                        <div class="progressbar-inner f-fileupload-progressbar">
+                                            <div class="progressbar-text width-50 f-upload-filescount">0%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:none" class="f-upload-error state-error">
+                                [`Files uploaded with errors`]
+                            </div>
+                        </div>
+                        <div>
+                            <a href="#" class="button light-gray js-close-dialog cancel">[`Stop upload`]</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/html" id="f-template-upload">
+{literal}
+    {% for (var i=0, files=o.files, l=files.length, file=files[0]; i<l; file=files[++i]) { %}
+    <div class="f-template-upload">
+        <span class="bold">{%=file.name%}</span>
+        <span class="hint">{%=o.formatFileSize(file.size)%}</span>
+        <div class="progressbar custom-my-8">
+            <div class="progressbar-line-wrapper text-inside">
+                <div class="progressbar-outer">
+                    <div class="progressbar-inner"></div>
+                </div>
+            </div>
+        </div>
+        <span class="start"></span>
+        <span class="cancel"></span>
+    </div>
+    {% } %}
+{/literal}
+</script>
+
+<script type="text/html" id="f-template-download">
+{literal}
+    {% for (var i=0, files=o.files, l=files.length, file=files[0]; i<l; file=files[++i]) { %}
+    <div class="f-template-upload {% if (file.error) { %}error{% } %}">
+        {% if (file.error) { %}
+            <span class="bold">{%=file.name%}</span>
+            <div class="progressbar custom-my-8">
+                <div class="progressbar-line-wrapper text-inside">
+                    <div class="progressbar-outer">
+                        <div class="progressbar-inner bg-red" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="state-error-hint">
+                {% if (typeof file.error === 'object' && file.error instanceof SyntaxError) { %}
+                {% if (file.responseText) { %}
+                {%#file.responseText%}
+                {% } else { %}
+                {%=$_('Unidentified error')%}.
+                {% } %}
+                {% } else if (fileUploadErrors[file.error]) { %}
+                {%=fileUploadErrors[file.error]%}
+                {% } else { %}
+                {%=file.error%}
+                {% } %}
+            </div>
+        {% } else { %}
+            <span class="bold">{%=file.name%}</span>
+            <span class="hint">{%=o.formatFileSize(file.size)%}</span>
+            <div class="progressbar custom-mt-8">
+                <div class="progressbar-line-wrapper text-inside">
+                    <div class="progressbar-outer">
+                        <div class="progressbar-inner bg-green" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        {% } %}
+        &nbsp;
+    </div>
+    {% } %}
+{/literal}
+</script>
+
+<script type="text/javascript">
+    const fileUploadErrors = {
+        maxFileSize: '[`File size exceeds the limit`]',
+        minFileSize: '',
+        acceptFileTypes: '[`Not allowed file type`]',
+        maxNumberOfFiles: '[`Max number of files exceeded`]',
+        uploadedBytes: '[`Uploaded bytes exceed file size`]',
+        emptyResult: '[`Unidentified error`]'
+    };
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        const dialog = $('#f-uploader');
+        $('.f-fileupload').fileupload({
+            minFileSize: -1,
+            maxFileSize: {$max_file_size},
+            dialog
+        });
+
+        dialog.on('openUploader', function() {
+            $(this).filesDialog({
+                onOpen: function($dialog, dialog_instance) {
+
+                    if ($dialog.find('.f-upload-step2').find('.f-access-denied').length) {
+                        return;
+                    }
+
+                    $dialog.find('.f-upload-step1').show();
+                    $dialog.find('.f-upload-step2').hide();
+                    $dialog.find('.f-upload-step2 .f-upload-step-name-conflict-content').empty();
+                    $dialog.find('.f-upload-step3').hide();
+                    $dialog.find('.f-upload-filelist .files').empty();
+                    $dialog.find('.f-upload-step2-buttons').hide();
+                    $dialog.find('.f-upload-step3-buttons').hide();
+
+                    function loadPath(storage_id, folder_id)
+                    {
+                        let url = '?module=upload&action=path';
+                        if (folder_id) {
+                            url += '&folder_id=' + folder_id;
+                        } else {
+                            url += '&storage_id=' + storage_id;
+                        }
+                        const content = $dialog.find('.f-upload-step2 .f-upload-step-main-content')
+                            .html('<i class="icon16 loading fas fa-spin fa-spinner"></i>');
+                        const xhr = $.get(url, function(html) {
+                            content.html(html);
+                        });
+                        $dialog.data('step2xhr', xhr);
+                    }
+
+                    loadPath(
+                        $.files.controller.getCurrentStorageId(),
+                        $.files.controller.getCurrentFolderId()
+                    );
+
+                    $dialog.off('click', '.f-upload-path-change').on('click', '.f-upload-path-change',
+                        function() {
+                            const step2content = $dialog.find('.f-upload-step2 .f-upload-step-main-content');
+                            const folder_id = step2content.find('[name=folder_id]').val() || '';
+                            const storage_id = step2content.find('[name=storage_id]').val() || '';
+                            $.files.loadDialog('?module=upload&action=changePath&folder_id=' + folder_id + '&storage_id=' + storage_id, {
+                                onOpen: function($dialog, dialog) {
+                                    dialog_instance.hide();
+                                    $dialog.on('change', function(e, info) {
+                                        step2content.find('[name=folder_id]').val(info.folder_id);
+                                        step2content.find('[name=storage_id]').val(info.storage_id);
+                                        loadPath(info.storage_id, info.folder_id);
+                                    });
+                                },
+                                onClose() {
+                                    dialog_instance.show();
+                                }
+                            });
+                        });
+                },
+                onClose(dialog) {
+                    dialog.$wrapper.removeClass('dialog-opened is-animated').attr('style', '');
+                    dialog.$body.removeClass('is-locked').attr('style', '');
+                    dialog.$block.find('.f-upload-step1-buttons').show();
+                    return false;
+                }
+            });
+        });
+        dialog.on('finishUploader', function(e, result) {
+            $.files.refreshSidebar();
+
+            if (!$.isEmptyObject(result)) {
+
+                $.files.controller.afterLoadOnce = function() {
+                    if (result.files_count) {
+                        $.wa.notify({
+                            content: `<i class="fas fa-check-circle text-green"></i> ${ $.files.loc(result.files_count, 'Uploaded %d files') }`,
+                            class: 'success',
+                            isCloseable: false,
+                            timeout: 5000,
+                        });
+                    }
+                };
+
+                // go to proper page
+                if (result.folder_id) {
+                    $.files.controller.gotoFolderPage(result.folder_id);
+                } else if (result.storage_id) {
+                    $.files.controller.gotoStoragePage(result.storage_id);
+                } else {
+                    $.files.controller.reloadPage();
+                }
+
+            } else {
+                $.files.controller.reloadPage();
+            }
+
+            setTimeout(()=> {
+                $(this).data("dialog").close();
+            }, 2000)
+        });
+    });
+</script>

@@ -1,0 +1,43 @@
+<div class="dialog devapi-dialog-edit-account" id="devapi-dialog-edit-account">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <form class="acc-data">
+            <header class="dialog-header">
+                <h3 id="acc-name" style="display: inline;"></h3>
+                <span class="switch custom-ml-48 bottom">
+                    <input type="checkbox" name="" checked>
+                </span>
+                <span class="small gray custom-ml-12">[`Удаленное соединение`]</span>
+            </header>
+            <div class="dialog-content custom-p12">
+                <div class="fields vertical">
+                    <div class="field">
+                        <div class="name">[`Название`]</div>
+                        <div class="value">
+                            <input name="id" type="hidden">
+                            <input name="is_remote" type="hidden">
+                            <input name="name" type="text" class="longer">
+                        </div>
+                        <div class="field">
+                            <div class="name">[`URL для подключения`]</div>
+                            <div class="value">
+                                <input name="remote_url" type="text" class="longer" placeholder="https://site.ru/">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="name">[`Токен`]</div>
+                            <div class="value">
+                                <input name="token" type="password" class="longer" placeholder="Если не хотите изменять токен, оставьте поле пустым">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <button id="account-save" class="button smaller"><i class="fas fa-save"></i>&nbsp;&nbsp;[`Сохранить`]</button>
+                <button class="js-close-dialog custom-ml-48 gray smaller"><i class="far fa-times-circle"></i>&nbsp;&nbsp;[`Отмена`]
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

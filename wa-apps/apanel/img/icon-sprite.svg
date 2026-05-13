@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+
+    <symbol id="apanel-icon-folder" viewBox="0 0 24 24" fill="currentColor">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M9 3a1 1 0 0 1 .608 .206l.1 .087l2.706 2.707h6.586a3 3 0 0 1 2.995 2.824l.005 .176v8a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-11a3 3 0 0 1 2.824 -2.995l.176 -.005h4z" />
+    </symbol>
+
+    <symbol id="apanel-icon-folder-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" />
+    </symbol>
+
+
+    <symbol id="apanel-icon-grip-vertical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M8 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M8 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M8 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M14 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M14 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M14 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+    </symbol>
+
+     <symbol id="apanel-icon-grip-horizontal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M4 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M4 15a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M11 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M11 15a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M18 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M18 15a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+    </symbol>
+
+    <symbol id="apanel-icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" />
+        <path d="M16 5l3 3" />
+    </symbol>
+
+    <symbol id="apanel-icon-settings" viewBox="0 0 24 24" fill="currentColor">
+        <path
+            d="M14.647 4.081a.724 .724 0 0 0 1.08 .448c2.439 -1.485 5.23 1.305 3.745 3.744a.724 .724 0 0 0 .447 1.08c2.775 .673 2.775 4.62 0 5.294a.724 .724 0 0 0 -.448 1.08c1.485 2.439 -1.305 5.23 -3.744 3.745a.724 .724 0 0 0 -1.08 .447c-.673 2.775 -4.62 2.775 -5.294 0a.724 .724 0 0 0 -1.08 -.448c-2.439 1.485 -5.23 -1.305 -3.745 -3.744a.724 .724 0 0 0 -.447 -1.08c-2.775 -.673 -2.775 -4.62 0 -5.294a.724 .724 0 0 0 .448 -1.08c-1.485 -2.439 1.305 -5.23 3.744 -3.745a.722 .722 0 0 0 1.08 -.447c.673 -2.775 4.62 -2.775 5.294 0zm-2.647 4.919a3 3 0 1 0 0 6a3 3 0 0 0 0 -6" />
+    </symbol>
+
+    <symbol id="apanel-icon-settings-outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path
+            d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+        <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+    </symbol>
+
+     <symbol id="apanel-icon-settings-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path
+            d="M11.482 20.924a1.666 1.666 0 0 1 -1.157 -1.241a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.312 .318 1.644 1.794 .995 2.697" />
+        <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+        <path d="M20 21l2 -2l-2 -2" />
+        <path d="M17 17l-2 2l2 2" />
+    </symbol>
+
+    <symbol id="apanel-icon-shield-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
+        <path d="M11 11a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        <path d="M12 12l0 2.5" />
+    </symbol>
+
+    <symbol id="apanel-icon-user-scan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 9a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+        <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+        <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+        <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+        <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
+        <path d="M8 16a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2" />
+    </symbol>
+
+    <symbol id="apanel-icon-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+        <path d="M9 12h12l-3 -3" />
+        <path d="M18 15l3 -3" />
+    </symbol>
+
+
+
+
+
+
+    <!-- меню -->
+    <symbol id="apanel-icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+        <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+        <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+    </symbol>
+
+    <symbol id="apanel-icon-building-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M3 21l18 0" />
+        <path d="M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4" />
+        <path d="M5 21l0 -10.15" />
+        <path d="M19 21l0 -10.15" />
+        <path d="M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4" />
+    </symbol>
+
+    <symbol id="apanel-icon-building-warehouse" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M3 21v-13l9 -4l9 4v13" />
+        <path d="M13 13h4v8h-10v-6h6" />
+        <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
+    </symbol>
+
+     <symbol id="apanel-icon-automatic-gearbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M17 17v4h1a2 2 0 1 0 0 -4h-1" />
+        <path d="M17 11h1.5a1.5 1.5 0 0 0 0 -3h-1.5v5" />
+        <path d="M3 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+        <path d="M5 7v3a1 1 0 0 0 1 1h3v7a1 1 0 0 0 1 1h3" />
+        <path d="M9 11h4" />
+    </symbol>
+
+
+    <symbol id="apanel-icon-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9" />
+        <path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2" />
+        <path d="M12 12l0 .01" />
+        <path d="M3 13a20 20 0 0 0 18 0" />
+    </symbol>
+
+    <symbol id="apanel-icon-brand-google-analytics" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path
+            d="M10 10.105a1.105 1.105 0 0 1 1.105 -1.105h1.79a1.105 1.105 0 0 1 1.105 1.105v9.79a1.105 1.105 0 0 1 -1.105 1.105h-1.79a1.105 1.105 0 0 1 -1.105 -1.105l0 -9.79" />
+        <path
+            d="M17 4.105a1.105 1.105 0 0 1 1.105 -1.105h1.79a1.105 1.105 0 0 1 1.105 1.105v15.79a1.105 1.105 0 0 1 -1.105 1.105h-1.79a1.105 1.105 0 0 1 -1.105 -1.105l0 -15.79" />
+        <path d="M3 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+    </symbol>
+
+    <symbol id="apanel-icon-calculator" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M4 5a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -14" />
+        <path d="M8 8a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1l0 -1" />
+        <path d="M8 14l0 .01" />
+        <path d="M12 14l0 .01" />
+        <path d="M16 14l0 .01" />
+        <path d="M8 17l0 .01" />
+        <path d="M12 17l0 .01" />
+        <path d="M16 17l0 .01" />
+    </symbol>
+
+    <symbol id="apanel-icon-shopping-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M4 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+        <path d="M15 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+        <path d="M17 17h-11v-14h-2" />
+        <path d="M6 5l14 1l-1 7h-13" />
+    </symbol>
+
+    <symbol id="apanel-icon-packages" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M7 16.5l-5 -3l5 -3l5 3v5.5l-5 3l0 -5.5" />
+        <path d="M2 13.5v5.5l5 3" />
+        <path d="M7 16.545l5 -3.03" />
+        <path d="M17 16.5l-5 -3l5 -3l5 3v5.5l-5 3l0 -5.5" />
+        <path d="M12 19l5 3" />
+        <path d="M17 16.5l5 -3" />
+        <path d="M12 13.5v-5.5l-5 -3l5 -3l5 3v5.5" />
+        <path d="M7 5.03v5.455" />
+        <path d="M12 8l5 -3" />
+    </symbol>
+
+    <symbol id="apanel-icon-receipt-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
+        <path d="M14 8h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5m2 0v1.5m0 -9v1.5" />
+    </symbol>
+
+
+
+</svg>

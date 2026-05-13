@@ -1,0 +1,40 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Фон -->
+    <rect width="800" height="400" fill="#0d1228" />
+
+    <!-- Градиент для B2B -->
+    <defs>
+        <linearGradient id="gradB" x1="20%" y1="20%" x2="40%" y2="50%">
+            <stop offset="0%" stop-color="#1FE4FF" />
+            <stop offset="100%" stop-color="#7A22FF" />
+        </linearGradient>
+    </defs>
+
+    <defs>
+        <linearGradient id="grad2" x1="30%" y1="30%" x2="70%" y2="70%">
+            <stop offset="0%" stop-color="#1FE4FF" />
+            <stop offset="100%" stop-color="#7A22FF" />
+        </linearGradient>
+    </defs>
+
+    <!-- Текст B2B -->
+    <text x="80" y="245" font-family="Helvetica, Arial, sans-serif" font-size="160" font-weight="700"
+        fill="url(#gradB)">
+        B
+    </text>
+    <text x="190" y="245" font-family="Helvetica, Arial, sans-serif" font-size="160" font-weight="700"
+        fill="url(#grad2)">
+        2
+    </text>
+
+    <text x="275" y="245" font-family="Helvetica, Arial, sans-serif" font-size="160" font-weight="700"
+        fill="url(#gradB)">
+        B
+    </text>
+
+    <!-- Текст cabinet -->
+    <text x="400" y="242" font-family="Helvetica, Arial, sans-serif" font-size="90" font-weight="400" fill="#E5E7EB"
+        letter-spacing="1">
+        cabinet
+    </text>
+</svg>

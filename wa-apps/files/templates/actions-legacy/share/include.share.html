@@ -1,0 +1,17 @@
+<div class="block not-padded">
+    {if $file.storage.access_type === filesStorageModel::ACCESS_TYPE_EVERYONE}
+        {sprintf('[`Currently shared with <strong>%s</strong>`]', '[`All backend users`]')}
+    {else}
+        {*
+        {if empty($setted_groups)}
+            <a href="javascript:void(0)" class="f-share-block-trigger inline-link"><b><i>[`Share with the team`]</i></b></a>
+        {else}
+            {sprintf('[`Currently shared with <strong>%s</strong>`]', join(', ', $setted_groups)|escape)}
+            <a href="javascript:void(0)" class="f-share-block-trigger inline-link"><b><i>[`Customize`]</i></b></a>
+        {/if}
+        *}
+        <div class="f-groups-block">
+            {include file="./include.settings.html" inline}
+        </div>
+    {/if}
+</div>

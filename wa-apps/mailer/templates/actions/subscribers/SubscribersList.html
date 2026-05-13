@@ -1,0 +1,656 @@
+<header{if $list_id == 0} class="flexbox middle full-width wrap"{/if}>
+    {if $list_id == 0}
+        <h1 class="all-subscribers custom-m-0 h2 custom-mr-12">
+            [`All subscribers`]
+            <i class="fas fa-spinner fa-spin loading smaller" style="display: none;"></i>
+        </h1>
+    {elseif $list_id > 0}
+        <form class="js-save-list">
+            <div class="list-edit-name" data="editable">
+                <h1 class="flexbox cursor-pointer h3" data-action="edit" title="[`Edit`]">
+                    <span class="custom-mt-4">{$subscribe_list.name|escape}</span>
+                    <i class="fas fa-spinner fa-spin loading" style="display: none;"></i>
+                    <span class="smaller">
+                        <button type="button" class="button light-gray text-blue circle custom-ml-16">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </span>
+                </h1>
+                <div>
+                    {if empty($subscribe_list.forms)}
+                        <span class="state-error-hint">[`This list is not associated with any subscription form.`]</span>
+                    {else}
+                        [`Subscription forms`]:
+                        {foreach $subscribe_list.forms as $form}
+                            <a href="{$wa_app_url}#/subscribers/form/{$form.id}">{$form.name}</a>{if !$form@last}, {/if}
+                        {/foreach}
+                    {/if}
+                </div>
+            </div>
+            <div class="list-edit-buttons" data="inputs">
+                <h4>
+                    <input class="full-width bold" type="text" name="list[name]" value="{$subscribe_list.name|escape}" autocomplete="off">
+                </h4>
+                <input type="hidden" value="{$list_id}" name="id"/>
+
+                {if !empty($all_forms)}
+                    <div class="custom-mt-16">
+                        <div class="small text-gray">[`Choose forms which will add subscribers to this list`]:</div>
+                        <ul class="menu custom-mt-8 custom-mb-24">
+                            {foreach $all_forms as $form}
+                                <li{if !$form@last} class="custom-mb-8"{/if}>
+                                    <label>
+                                        <span class="wa-checkbox">
+                                            <input data-lists="list" type="checkbox" name="list[forms][]" value="{$form.id}"{if isset($form.checked)} checked{/if}>
+                                            <span>
+                                                <span class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        {$form.name}
+                                    </label>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+
+                <div class="flexbox custom-mb-32">
+                    <button type="submit" class="button" data-action="save">[`Save`]</button>
+                    <button type="button" class="button light-gray" data-action="cancel">[`Cancel`]</button>
+                    <button type="button" class="button red custom-ml-auto outlined" data-action="delete">[`Delete list`]</button>
+                </div>
+            </div>
+        </form>
+    {else}
+        <form class="js-save-list">
+            <h1 class="h4 flexbox middle">
+                <input type="text" class="full-width bold" name="list[name]" value="[`New list`]" autocomplete="off"> <i class="fas fa-spinner fa-spin loading" style="display: none;"></i>
+            </h1>
+            <input type="hidden" name="id" value="-1"/>
+            {if !empty($all_forms)}
+                <div class="custom-mt-16">
+                    <div class="small text-gray">[`Choose forms which will add subscribers to this list`]:</div>
+                    <ul class="menu custom-mt-8 custom-mb-24">
+                        {foreach $all_forms as $form}
+                            <li{if !$form@last} class="custom-mb-8"{/if}>
+                                <label>
+                                    <span class="wa-checkbox">
+                                        <input data-lists="list" type="checkbox" name="list[forms][]" value="{$form.id}">
+                                        <span>
+                                            <span class="icon">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    {$form.name}
+                                </label>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            {/if}
+        </form>
+
+        <button type="submit" class="button js-form-editor-save">[`Save`]</button>
+    {/if}
+    {if $list_id == 0}
+        <div class="state-with-inner-icon right small custom-my-12">
+            <input id="search-subscribers" class="long" type="search" placeholder="[`search by name or email`]" value="{$search|escape|urldecode}">
+            <button type="button" class="icon"><i class="fas fa-search"></i></button>
+        </div>
+    {/if}
+</header>
+
+{if $list_id > -1 && !empty($list)}
+    <table class="zebra" id="subscribers-list-table">
+        <thead>
+        <tr>
+            {foreach $cols as $id => $name}
+                <th{if $name@first} class="m-first"{/if}>
+                    {if $order == $id}
+                        <a data-order="!{$id}" href="javascript:void(0)" class="nowrap">{$name} <i class="fas fa-caret-up"></i></a>
+                    {elseif $order == "!`$id`"}
+                        <a data-order="{$id}" href="javascript:void(0)" class="nowrap">{$name} <i class="fas fa-caret-down"></i></a>
+                    {else}
+                        <a data-order="{$id}" href="javascript:void(0)">{$name}</a>
+                    {/if}
+                </th>
+            {/foreach}
+            <th class="min-width m-last"></th>
+        </tr>
+        </thead>
+        <tbody class="small">
+        {foreach $list as $row}
+            <tr rel="{$row.contact_email_id}" data-subscriber-id="{$row.contact_id}">
+                <td class="m-first">
+                    {if $row.contact_email_id > 0}
+                        {$row.name|escape}
+                    {else}
+                        &lt;[`contact deleted`]&gt;
+                    {/if}
+                </td>
+                <td class="email-field">{$row.email|escape}</td>
+                <td>{$row.datetime|wa_datetime}</td>
+                <td class="min-width m-last">
+                    <a href="javascript:void(0)" title="[`Remove from subscribers`]"><i class="fas fa-times-circle text-red js-delete"></i></a>
+                    <span class="hidden name-field">{$row.name|escape}</span>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    <div class="js-paging flexbox full-width wrap small text-gray">
+        <div class="custom-mb-4 custom-mr-12 flexbox wrap">
+            <span class="custom-mr-12 custom-mt-4 custom-mb-8">[`Total addresses`]: <span id="total-addresses-list">{$total_rows}</span></span>
+            {if count($pagination) > 1}
+                <ul class="paging custom-mb-8">
+                    {if $current_page != 1}
+                        <li>
+                            <a href="javascript:void(0)" data-start="{$start-$records}">
+                                <i class="fas fa-long-arrow-alt-left"></i>
+                            </a>
+                        </li>
+                    {/if}
+                    {foreach $pagination as $page => $offset}
+                        {if $offset !== false}
+                            <li{if $current_page == $page} class="selected"{/if}>
+                                <a href="javascript:void(0)" data-start="{$offset}">{$page}</a>
+                            </li>
+                        {else}
+                            <li><span>...</span></li>
+                        {/if}
+                    {/foreach}
+                    {if $current_page != $page}
+                        <li>
+                            <a href="javascript:void(0)" data-start="{$start+$records}">
+                                <i class="fas fa-long-arrow-alt-right"></i>
+                            </a>
+                        </li>
+                    {/if}
+                </ul>
+            {/if}
+        </div>
+        <div class="custom-mb-12">
+            [`Show`]
+            {$records_on_page = [30, 50, 100, 200, 500]}
+            <div class="wa-select">
+                <select id="records-per-page">
+                    {foreach $records_on_page as $onpage}
+                        <option value="{$onpage}"{if $records==$onpage} selected="selected"{/if}>{$onpage}</option>
+                    {/foreach}
+                </select>
+            </div>
+            [`records`]
+        </div>
+    </div>
+
+{elseif $list_id == -1}
+
+{elseif empty($list)}
+    <div class="custom-my-16">
+        {if $search}
+            <p class="alert info small">[`No subscribers match search criteria.`]</p>
+        {else}
+            {if $list_id == 0}
+                <p class="no-allsubscribers alert info small">[`Subscribers are the persons who have expressly opted for receiving email messages from you by submitting their email addresses via a subscription form on your website. To collect subscribers’ email addresses, <a href="javascript:void(0)">create a form</a> and publish it on your website or blog.`]</p>
+            {else}
+                {if empty($subscribe_list.forms)}
+                    <p class="alert info small">[`To collect subscribers’ email addresses to this list, enable this list in your subscription form settings.`]</p>
+                {else}
+                    <p class="alert info small">[`No subscribers in this list.`]</p>
+                {/if}
+            {/if}
+        {/if}
+    </div>
+{/if}
+
+{capture assign=deletion_list_confirm_text}
+    <p>[`Do you really want to delete this list?`]</p>
+    {if  $list_id > 0 && !empty($list)}
+        <p>[`Contacts will NOT be deleted.`]</p>
+    {/if}
+{/capture}
+
+{capture assign=deletion_subscriber_confirm_text}
+    {if $list_id == 0}
+        <p>{sprintf_wp('Do you really want to eliminate contact %s from all subscribers?', '<span id="delete-contact-name-email"></span>')}</p>
+        <p class="state-caution">[`This contact will not be deleted. It will be only removed from all subscription lists.`]</p>
+    {else}
+        <p>{sprintf_wp('Do you really want to eliminate contact %s from this subscribers list?', '<span id="delete-contact-name-email"></span>')}</p>
+        <p class="state-caution">[`This contact will not be deleted. It will be only eliminated from this subscription list.`]</p>
+    {/if}
+    <p>
+        <label>
+            <span class="wa-checkbox">
+                <input type="checkbox">
+                <span>
+                    <span class="icon">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </span>
+            </span>
+            [`Do not show this question any more`]
+        </label>
+    </p>
+{/capture}
+{capture assign=deletion_subscriber_confirm_button_text}
+    {if $list_id == 0}
+        [`Remove from all subscribers`]
+    {else}
+        [`Remove from this subscribers list`]
+    {/if}
+{/capture}
+
+<script>
+    (function($) { "use strict";
+        const $subscribers_body = $('.js-subscribers-content'), // in Subscribers.html
+            $loading = $subscribers_body.find('h1 .loading').first();
+
+        $('.no-allsubscribers').on('click', 'a', () => $('.forms-subscribers-group').find('[data-formid="-1"]').trigger('click'));
+
+        {if $list_id > -1}
+            const _start = '{$start|default:0}',
+                _order = '{$order|default:"name"}',
+                _records = '{$records|default:30}',
+                _search = '{$search|escape|default:""}',
+                _id = '{$list_id|default:0}';
+
+            const edit_list = function(el){
+                const $form = $(el),
+                    $edit = $form.find('[data-action="edit"]'),
+                    $delete = $form.find('[data-action="delete"]'),
+                    $save = $form.find('[data-action="save"]'),
+                    $cancel = $form.find('[data-action="cancel"]'),
+                    $editable = $form.find('[data="editable"]'),
+                    $inputs = $form.find('[data="inputs"]'),
+                    $input_name = $inputs.find('[type="text"]'),
+                    old_name = $input_name.val();
+
+                const save = function($button) {
+                    $.wa.mailer.buttonLoader({
+                        $button,
+                        status: 'loader'
+                    });
+                    $.post('?module=subscribers&action=listsave', $form.serialize(), function(data){
+                        if (data.status === 'ok') {
+                            $('.lists-subscribers-group').find('[data-listid="{$list_id}"]').html(`<i class="fas fa-file-alt text-blue"></i><span>${ data.data.name }</span>`);
+                            $.wa.mailer.buttonLoader({
+                                $button,
+                                status: 'success',
+                                callback() {
+                                    $.wa.mailer.redispatch();
+                                }
+                            });
+                        }else{
+                            $.wa.mailer.buttonLoader({
+                                $button,
+                                status: 'failed'
+                            });
+                        }
+                    }, 'json');
+                };
+
+                const setname = function(name) {
+                    $input_name.val(name);
+                    $inputs.hide();
+                    $editable.show()
+                        .find('h1').html(`<span class="custom-mt-4">${ name }</span> <i class="fas fa-spinner fa-spin loading" style="display: none;"></i> <span class="smaller"><button type="button" class="button light-gray text-blue circle custom-ml-16"><i class="fas fa-cog"></i></button></span>`);
+                };
+                const discard = function() {
+                    setname(old_name);
+                };
+
+                const remove = function(){
+                    $.post('?module=subscribers&action=listdelete',
+                        {
+                            id : $inputs.find('[name="id"]').val()
+                        },
+                        function(data){
+                            if (data.status === 'ok') {
+                                window.location.hash = '#/subscribers';
+                                $.wa.mailer.redispatch();
+                            }
+                        }, 'json')
+                        .fail(data => console.error(data));
+                };
+
+                $delete.on('click', () => $.waDialog.confirm({
+                        title: "",
+                        text: {$deletion_list_confirm_text|json_encode},
+                        success_button_title: '[`Delete list`]',
+                        success_button_class: 'danger',
+                        cancel_button_title: '[`Cancel`]',
+                        cancel_button_class: 'light-gray',
+                        onSuccess() {
+                            remove();
+                        }
+                    }));
+
+                $edit.on('click', function(){
+                    $('.subscribers-list-search').hide();
+                    $form.find('[data="inputs"]').show();
+                    $editable.hide();
+                    $inputs.show();
+                });
+
+                $save.on('click', function(e){
+                    e.preventDefault();
+                    save($(this));
+                    return false;
+                });
+
+                $inputs.on('keydown', '[type="text"]', function(e){
+                    const code = e.keyCode || e.which;
+                    switch (code) {
+                        //                case 13: //save on enter
+                        //                    return;
+                        case 27: //discard on esc
+                            discard();
+                            return;
+                        default:
+                            break;
+                    }
+                });
+
+                $form.on('submit', function(e){
+                    e.preventDefault();
+
+                    save();
+                    return false;
+                });
+
+                $cancel.on('click', function(){
+                    $('.subscribers-list-search').show();
+                    discard();
+                });
+            };
+            edit_list('.js-save-list')
+
+            $('.lists-subscribers-group').find('[data-listid="{$list_id}"]').siblings('.count').text({$total_rows});
+
+            // paging
+            $subscribers_body.find('.js-paging a').on('click', function(e) {
+                const $this = $(this),
+                    start = $this.data('start');
+
+                e.preventDefault();
+
+                $loading.show();
+                $.get("?module=subscribers&action=list", {
+                    start :     start,
+                    order :     _order,
+                    search :    _search,
+                    id :        _id,
+                    records :   _records
+                })
+                    .done(function(data){
+                        $subscribers_body.html(data);
+                        $.wa.mailer.stopDispatch(1);
+                        window.location.hash = '#/subscribers/list/'+_id+'/'+start+'/'+_order+'/'+_records+'/' + encodeURIComponent(_search);
+                    })
+                    .fail(data => console.error(data))
+                    .always(() => $loading.hide());
+            });
+
+            // rows on page
+            $subscribers_body.find('#records-per-page').on('change', function(e) {
+                const $this = $(this),
+                    records = $this.val();
+
+                $loading.show();
+                $.get("?module=subscribers&action=list", {
+                    start :     0,
+                    order :     _order,
+                    search :    _search,
+                    id :        _id,
+                    records :   records
+
+                })
+                    .done(function(data){
+                        $subscribers_body.html(data);
+                        $.storage.set('mailer/subscribers_records',records);
+                        $.wa.mailer.stopDispatch(1);
+                        window.location.hash = '#/subscribers/list/'+_id+'/'+0+'/'+_order+'/'+records+'/' + encodeURIComponent(_search);
+                    })
+                    .fail(data => console.error(data))
+                    .always(() => $loading.hide());
+            });
+
+            // order
+            $subscribers_body.find('thead a').on('click', function(e){
+                const $this = $(this),
+                    order = $this.data('order');
+
+                e.preventDefault();
+                $loading.show();
+                $.get("?module=subscribers&action=list",{
+                    start :     _start,
+                    order :     order,
+                    search :    _search,
+                    id :        _id,
+                    records :   _records
+                })
+                    .done(function(data){
+                        $subscribers_body.html(data);
+                        $.wa.mailer.stopDispatch(1);
+                        window.location.hash = '#/subscribers/list/'+_id+'/'+_start+'/'+order+'/'+_records+'/' + encodeURIComponent(_search);
+                    })
+                    .fail(data => console.error(data))
+                    .always(() => $loading.hide());
+            });
+
+            // search
+            const submitSearch = function() {
+                const input = $(this),
+                    search_string = input.val() ?? '';
+
+                var new_hash = $.wa.mailer.cleanHash('#/subscribers/list/'+_id+'/0/'+_order+'/'+_records+'/' + encodeURIComponent(search_string));
+                if ($.wa.mailer.getHash() != new_hash) {
+                    input.prev('.icon16').removeClass('search').addClass('loading');
+                    $.get('?module=subscribers&action=list',{
+                        start :     0,
+                        order :     _order,
+                        search :    search_string,
+                        id :        _id,
+                        records :   _records
+                    })
+                        .done(data => {
+                            $subscribers_body.html(data);
+                            $.wa.mailer.stopDispatch(1);
+                            window.location.hash = '#/subscribers/list/'+_id+'/0/'+_order+'/'+_records+'/' + encodeURIComponent(search_string);
+                        })
+                        .fail(data => console.error(data))
+                        .always(() => $loading.hide());
+                }
+                return false;
+            };
+            const $search_input = $('#search-subscribers');
+            $search_input
+                .keyup(function(e) {
+                    if (e.which != 13 && e.which != 10) {
+                        return false;
+                    }
+                    return submitSearch.apply(this);
+                })
+                .on('search', submitSearch)
+                .next('button')
+                .on('click', submitSearch.bind($search_input));
+
+            // Initialize <td>s of a table to be clickable (middle-click friendly)
+            const makeClickable = () => {
+                $('#subscribers-list-table td').each(function() {
+                    const td = $(this);
+                    if (td.children('a').length > 0) {
+                        return;
+                    }
+                    const contact_id = td.parent().data('subscriber-id');
+                    if (contact_id > 0) {
+                        const a = $('<a style="color:inherit!important"></a>').attr('href', '{mailerHelper::getContactsAppUrl()}#/contact/'+contact_id+'/').html(td.html());
+                        td.empty().append(a);
+                    }
+                });
+            };
+            makeClickable();
+
+            // Click on a .delete icon opens dialog for deletion
+            let deletion_contact_id = null;
+            const removeSelectedSubscriber = dialog => {
+                if (dialog) {
+                    if (dialog.find(':checkbox:checked').length > 0) {
+                        $.storage.set('mailer/subscribers/skip_deletion_confirm', true);
+                    }
+                }
+
+                const $subscriber = $('#subscribers-list-table tr[rel="'+deletion_contact_id+'"]');
+                $subscriber.remove();
+                $.post('?module=subscribers&action=delete', { contact_email_id: deletion_contact_id, list_id: '{$list_id}' }, function() {
+                    if ($('#subscribers-list-table tbody tr:first').length <= 0) {
+                        $.wa.mailer.redispatch();
+                    }
+                });
+                deletion_contact_id = null;
+
+                const total = $('#total-addresses-list').text() - 1;
+                $('#total-addresses-list').text(total);
+                $('.lists-subscribers-group .selected .count').html(total);
+            };
+            $('#subscribers-list-table').on('click', '.js-delete', function() {
+                var tr = $(this).parents('tr');
+                deletion_contact_id = tr.attr('rel');
+                if (!deletion_contact_id) {
+                    return;
+                }
+
+                // If user previously checked "never ask me again", then remove without confirmation
+                if ($.storage.get('mailer/subscribers/skip_deletion_confirm')) {
+                    removeSelectedSubscriber();
+                    return;
+                }
+
+                // Show confirmation dialog
+                $.waDialog.confirm({
+                    title: "",
+                    text: {$deletion_subscriber_confirm_text|json_encode},
+                    success_button_title: {$deletion_subscriber_confirm_button_text|json_encode},
+                    success_button_class: 'danger',
+                    cancel_button_title: '[`Cancel`]',
+                    cancel_button_class: 'light-gray',
+                    onSuccess($dialog) {
+                        removeSelectedSubscriber($dialog.$block);
+                    },
+                    onCancel() {
+                        return false;
+                    }
+                });
+
+                $('#delete-contact-name-email').text(tr.find('.name-field').text() + ' <' + tr.find('.email-field').text() + '>');
+            });
+
+            // Hack for subscribe form: make it so the subscriber instantly appears in the table after form submit.
+            $('#mailer-frontend-subscribe-form').on('wa.submitted', function() {
+                // Update sidebar count
+                var sb_count = $('#total-addresses-list').text() - 0 + 1;
+                $('#subscribers-sb-link .count').html(sb_count);
+                $('#total-addresses-list').text(sb_count);
+
+                // Update table
+                $.get("?module=subscribers&action=list{if $start}&start={$start}{/if}{if $order}&order={$order}{/if}{if $search}&search={$search|escape}{/if}", { }, function(r) {
+                    var content = $('<div></div>').html(r.replace(/<script>[\s\S]+?<[\/]script>/ig, '')).find('.subscribers-body');
+                    $('.subscribers-body').empty().append(content.children());
+                    makeClickable();
+                });
+            });
+
+        {else} // new subscribers list //
+
+            $('[name="list[name]"]').focus().select();
+            const $form = $('.js-save-list'),
+                $button = $('.js-form-editor-save');
+
+            const validateFromSave = function(){
+                const $name = $('[name="list[name]"]');
+
+                $name.removeClass('state-error');
+                if ($name.val().length === 0){
+                    $name.addClass('state-error');
+                    $('html, body').animate({
+                        scrollTop: $name.offset().top
+                    });
+                    return false;
+                }
+                return true;
+            };
+
+            // save action
+            $button.on('click', function(e){
+                e.preventDefault();
+                const $this = $(this);
+
+                if (!validateFromSave()){
+                    return false;
+                }
+
+                $.wa.mailer.buttonLoader({
+                    $button: $this,
+                    status: 'loader'
+                });
+                $.post('?module=subscribers&action=listsave', $form.serialize(), function(data){
+                    if (data.status === 'ok') {
+                        $button.removeClass('yellow');
+                        $form.removeClass('modified');
+                        $.wa.mailer.buttonLoader({
+                            $button: $this,
+                            status: 'success',
+                            callback() {
+                                window.location.hash = '#/subscribers/list/'+data.data.id;
+                            }
+                        });
+                    }else{
+                        $.wa.mailer.buttonLoader({
+                            $button: $this,
+                            status: 'failed'
+                        });
+                    }
+                }, 'json')
+                    .fail(data => {
+                        console.error(data);
+                        $.wa.mailer.buttonLoader({
+                            $button: $this,
+                            status: 'failed'
+                        });
+                    });
+            });
+            $form.on('submit',function(e){
+                e.preventDefault();
+                $button.trigger('click');
+                return false;
+            })
+
+            setTimeout(() => {
+                $form.on('change', 'input,textarea,select', function() {
+                    if (!$button.hasClass('yellow')) {
+                        $button.addClass('yellow');
+                        $form.addClass('modified');
+                    }
+                });
+                $form.on('keyup', 'input:text,textarea', function() {
+                    $(this).removeClass('state-error');
+                    if (!$button.hasClass('yellow')) {
+                        $button.addClass('yellow');
+                    }
+                    $form.addClass('modified');
+                });
+            });
+
+            // Confirmation before user leaves the page
+            $.wa.mailer.confirmLeave(function() {
+                return $form.hasClass('modified') && $form.closest('html').length;
+            }, "[`Unsaved changes will be lost if you leave this page now.`]", "[`Are you sure?`]");
+        {/if}
+
+        $.wa.mailer.setTitle();
+    })($);
+</script>

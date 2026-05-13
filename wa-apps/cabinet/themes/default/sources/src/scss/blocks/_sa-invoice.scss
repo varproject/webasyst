@@ -1,0 +1,204 @@
+/*
+// .sa-invoice
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-invoice {
+    --sa-invoice--padding: 3rem;
+
+    padding: 2rem;
+    max-width: 64rem;
+    margin: 0 auto;
+}
+.sa-invoice__card {
+    padding: var(--sa-invoice--padding);
+    background: vs.$sa-card--bg-color;
+    box-shadow: vs.$sa-card--shadow;
+}
+.sa-invoice__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 var(--sa-invoice--padding);
+}
+.sa-invoice__title {
+    font-weight: bt.$font-weight-medium;
+    text-transform: uppercase;
+
+    @include bt.font-size(1.75rem);
+}
+.sa-invoice__meta-items {
+    margin-top: .375rem;
+
+    span {
+        color: bt.$text-muted;
+    }
+}
+.sa-invoice__address {
+    text-align: center;
+    color: bt.$text-muted;
+    margin-top: 1rem;
+    font-size: func.rem(15);
+    line-height: 1.5rem;
+}
+.sa-invoice__disclaimer {
+    font-size: func.rem(13);
+    margin-top: 2rem;
+    color: bt.$text-muted;
+}
+.sa-invoice__sides {
+    font-size: func.rem(14);
+    padding: calc(var(--sa-invoice--padding) - .25rem) var(--sa-invoice--padding);
+    margin: 0 calc(var(--sa-invoice--padding) * -1) var(--sa-invoice--padding);
+    display: flex;
+    justify-content: space-between;
+    background: vs.$sa-invoice__sides--bg-color;
+}
+.sa-invoice__side {
+    width: calc(50% - 2.5rem);
+}
+.sa-invoice__side-title {
+    color: bt.$text-muted;
+    text-transform: uppercase;
+    font-size: func.rem(13);
+    font-weight: bt.$font-weight-medium;
+    margin-bottom: 1rem;
+}
+.sa-invoice__side-name {
+    font-size: func.rem(17);
+    font-weight: bt.$font-weight-medium;
+    margin: 0 0 .5rem;
+}
+.sa-invoice__side-meta {
+    color: bt.$text-muted;
+    font-size: func.rem(14);
+    line-height: 1.5rem;
+}
+.sa-invoice__side-meta + .sa-invoice__side-meta {
+    margin-top: .25rem;
+}
+.sa-invoice__table-container {
+    overflow-x: auto;
+}
+.sa-invoice__table {
+    width: 100%;
+
+    tr > * + * {
+        @include dir.scope {
+            #{dir.$padding-inline-start}: 1rem;
+        }
+    }
+}
+.sa-invoice__table-head {
+    th {
+        font-weight: bt.$font-weight-medium;
+        padding-top: .375rem;
+        padding-bottom: .375rem;
+        border-bottom: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    }
+}
+.sa-invoice__table-body {
+    th,
+    td {
+        padding-top: .625rem;
+        padding-bottom: .625rem;
+        border-bottom: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    }
+}
+.sa-invoice__table-totals {
+    th {
+        font-weight: bt.$font-weight-medium;
+    }
+
+    th,
+    td {
+        padding-top: .125rem;
+        padding-bottom: .125rem;
+    }
+
+    tr:first-child {
+        th,
+        td {
+            padding-top: .75rem;
+        }
+    }
+
+    tr:last-child {
+        th,
+        td {
+            padding-bottom: .75rem;
+        }
+    }
+}
+.sa-invoice__table-column--type--product {
+    min-width: 16rem;
+}
+.sa-invoice__table-column--type--unit,
+.sa-invoice__table-column--type--price,
+.sa-invoice__table-column--type--quantity,
+.sa-invoice__table-column--type--total {
+    @include dir.scope {
+        text-align: dir.$inline-end;
+    }
+}
+.sa-invoice__table-column--type--header {
+    @include dir.scope {
+        text-align: dir.$inline-end;
+    }
+}
+.sa-invoice__total {
+    border-top: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    padding-top: 1.5rem;
+    font-weight: bt.$font-weight-medium;
+
+    @include dir.scope {
+        text-align: dir.$inline-end;
+    }
+}
+.sa-invoice__total-title {
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: bt.$text-muted;
+}
+.sa-invoice__total-value {
+    @include bt.font-size(2rem);
+}
+
+
+@include bt.media-breakpoint-down(lg) {
+    .sa-invoice {
+        --sa-invoice--padding: 2rem;
+
+        padding: 1.5rem;
+    }
+    .sa-invoice__side-title {
+        margin-bottom: .5rem;
+    }
+}
+@include bt.media-breakpoint-down(md) {
+    .sa-invoice {
+        --sa-invoice--padding: 1.5rem;
+
+        padding: 0;
+    }
+    .sa-invoice__card {
+        box-shadow: none;
+    }
+}
+@include bt.media-breakpoint-down(sm) {
+    .sa-invoice__logo {
+        display: none;
+    }
+    .sa-invoice__sides {
+        display: block;
+    }
+    .sa-invoice__side {
+        width: 100%;
+    }
+    .sa-invoice__side + .sa-invoice__side {
+        margin-top: 1.5rem;
+    }
+}

@@ -1,0 +1,130 @@
+{if $copytask_process_id > 0}
+    {$dialog_id = uniqid('f-move-process-dialog-')}
+    {$dialog_class = 'f-move-process-dialog'}
+{else}
+    {$dialog_id = uniqid('f-move-process-empty-dialog')}
+    {$dialog_class = 'f-move-process-empty-dialog'}
+{/if}
+
+<div class="dialog width650px height350px {$dialog_class}" id="{$dialog_id}" style="display:none;">
+    <form>
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+
+                    <h1>[`Move files`]</h1>
+
+                    <div class="f-progress-block" style="margin-top: 40px;">
+                        <div class="progressbar blue float-left" style="min-width: 300px; width: 70%;">
+                            <div class="progressbar-outer">
+                                <div class="progressbar-inner" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <img style="float:left; margin-top:8px;" src="{$wa_url}wa-content/img/loading32.gif" />
+                        <p style="display: block; float: left;">
+                            [`Move process may take several minutes.`]
+                        </p>
+                        <div class="f-ready-report" style="display: none;"></div>
+                    </div>
+
+                </div>
+            </div>
+            {if $copytask_process_id > 0}
+                <div class="dialog-buttons">
+                    <div class="dialog-buttons-gradient">
+                        {$wa->csrf()}
+                        <input class="button green f-continue" type="button" value="[`Continue in background`]"> [`or`]
+                        <a class="cancel" href="javascript:void(0)">[`cancel`]</a>
+                    </div>
+                </div>
+            {/if}
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.{$dialog_class}').not(dialog).remove();
+
+        var runCopyFiles = function (process_id) {
+
+            var url = '?module=move&action=process';
+
+            var pull_process = new LongActionProcess({
+                url: url,
+                post_data: { copytask_process_id: process_id },
+                onProgress: function (r) {
+                    if (r.progress) {
+                        $('.progressbar .progressbar-inner', dialog).css('width', r.progress_str);
+                    }
+                },
+                onReady: function(r) {
+                    $('.progressbar .progressbar-inner', dialog).css('width', '100%');
+                    if (r.report) {
+                        $('.f-ready-report', dialog).html(r.report);
+                    }
+                },
+                onCleanup: function(r) {
+                    $.files.refreshSidebar();
+                    $.files.controller.reloadPage();
+                    setTimeout(function () {
+                        dialog.trigger('close');
+                    }, 1000);
+                },
+                onError: function(r) {
+                    dialog.trigger('close');
+                    $.files.alertError((r && r.error) || 'Server error');
+                }
+            });
+
+            pull_process.start();
+
+            var buttons_block = dialog.find('.dialog-buttons');
+            buttons_block.find('.cancel').click(function () {
+
+                dialog.trigger('close');
+                pull_process.stop();
+
+                $.files.confirm('[`Cancel the copy process? All files that is not finished will be deleted`]',
+                    function () {
+                        pull_process.stop();
+                        dialog.trigger('close');
+                        $.files.jsonPost({
+                            url: url,
+                            data: {
+                                copytask_process_id: process_id,
+                                cancel_copytask: 1
+                            },
+                            onAlways: function () {
+                                $.files.refreshSidebar();
+                                $.files.controller.reloadPage();
+                            }
+                        });
+                    },
+                    function () {
+                        dialog.trigger('open');
+                        pull_process.start();
+                    }
+                );
+                return false;
+            });
+
+            buttons_block.find('.f-continue').click(function() {
+                pull_process.stop();
+                dialog.trigger('close');
+                pull_process = null;
+            });
+        };
+
+        dialog.filesDialog({
+            disableButtonsOnSubmit: true,
+            onFirstLoad: function() {
+                {if $copytask_process_id > 0}
+                    runCopyFiles({$copytask_process_id});
+                {/if}
+            }
+        });
+    });
+</script>

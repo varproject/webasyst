@@ -1,0 +1,70 @@
+/*
+// .sa-invoice-logo
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-invoice-logo {}
+.sa-invoice-logo__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 func.rem(35);
+}
+.sa-invoice-logo__letters {
+    fill: vs.$sa-invoice-logo--main-color;
+}
+.sa-invoice-logo__ribbon {
+    display: flex;
+    margin-top: .75rem;
+    position: relative;
+}
+.sa-invoice-logo__ribbon svg {
+    display: block;
+}
+.sa-invoice-logo__ribbon-middle {
+    height: 1.25rem;
+    background: vs.$sa-invoice-logo--ribbon-bg-color;
+    color: vs.$sa-invoice-logo--ribbon-font-color;
+    font-size: func.rem(11);
+    font-weight: bt.$font-weight-medium;
+    text-transform: uppercase;
+    padding: .0625rem 1rem 0;
+    display: flex;
+    align-items: center;
+}
+.sa-invoice-logo__ribbon-start,
+.sa-invoice-logo__ribbon-end {
+    fill: vs.$sa-invoice-logo--ribbon-bg-color;
+
+}
+.sa-invoice-logo__ribbon-start {
+    @include dir.scope {
+        transform: scaleX(#{1 * dir.$transform-direction}); // SKIP-RTL
+    }
+}
+.sa-invoice-logo__ribbon-end {
+    @include dir.scope {
+        transform: scaleX(#{-1 * dir.$transform-direction}); // SKIP-RTL
+    }
+}
+.sa-invoice-logo__ribbon-drawer {
+    position: absolute;
+    top: -.25rem;
+
+    @include dir.scope {
+        #{dir.$inset-inline-start}: calc(100% + #{func.rem(3)});
+        transform: scaleX(#{1 * dir.$transform-direction}); // SKIP-RTL
+    }
+}
+.sa-roller-sponge {
+    fill: vs.$sa-invoice-logo--ribbon-bg-color;
+}
+.sa-roller-stripes {
+    fill: vs.$sa-invoice-logo--main-color;
+}
+.sa-roller-handle {
+    fill: vs.$sa-invoice-logo--main-color;
+}

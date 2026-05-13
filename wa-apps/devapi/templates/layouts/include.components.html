@@ -1,0 +1,17 @@
+<script>
+    $(function () {
+        $.wa.loadSources( [
+            { id: 'devapi-wrl-dates', type: 'js', uri: '{$wa_app_static_url}js/wrlDates.js?v={$appVersion}'},
+            { id: 'devapi-charts-umd', type: 'js', uri: '{$wa_app_static_url}js/vendors/chart/chart.umd.js?v={$appVersion}'},
+        ] ).done( function() {
+            {include '../components/menu/settings/settings.js'}
+            {include '../components/menu/summary/summary.js'}
+            {include '../components/menu/accounts/accounts.js'}
+            {include '../components/menu/reports/reports.js'}
+            {include '../components/actionButton/actionButton.js'}
+            {include '../components/backUsers/backUsers.js'}
+            {include '../components/dropdown/dropdown.js'}
+            {include './devapi.js'}
+        } );
+    });
+</script>

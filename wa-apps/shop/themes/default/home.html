@@ -1,0 +1,162 @@
+{*
+    storefront homepage
+*}
+
+{$_content_exist = true}
+
+{if $theme_settings.homepage_sidebar_layout != 'hidden'}
+<div class="row gap32 cols2{if $theme_settings.homepage_sidebar_layout == 'right'} right-sidebar{/if}{if $theme_settings.homepage_sidebar_layout == 'left'} left-sidebar{/if} cols1-mobile cols1-tablet">
+    {strip}
+    <div class="sidebar col w3">
+
+    <!-- ROOT CATEGORIES -->
+    {if $theme_settings.homepage_sidebar_categories}
+        {$categories = $wa->shop->categories(0, 0, true)}
+        {if count($categories)}
+            <ul class="tree">
+                {foreach $categories as $cat}
+                    <li>
+                        <a href="{$cat.url}">{$cat.name}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        {/if}
+    {/if}
+
+    <!-- BULLETS -->
+    <section class="bullets">
+        {if !empty($theme_settings.homepage_bullet_title_1)}
+            <figure class="bullet">
+                <svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMinYMin">
+                    <use xlink:href="#img-delivery"></use>
+                </svg>
+                <h4>{$theme_settings.homepage_bullet_title_1}</h4>
+                <p>{$theme_settings.homepage_bullet_body_1}</p>
+            </figure>
+        {/if}
+        {if !empty($theme_settings.homepage_bullet_title_2)}
+            <figure class="bullet">
+                <svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMinYMin">
+                    <use xlink:href="#img-pay"></use>
+                </svg>
+                <h4>{$theme_settings.homepage_bullet_title_2}</h4>
+                <p>{$theme_settings.homepage_bullet_body_2}</p>
+            </figure>
+        {/if}
+        {if !empty($theme_settings.homepage_bullet_title_3)}
+            <figure class="bullet">
+                <svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMinYMin">
+                    <use xlink:href="#img-point"></use>
+                </svg>
+                <h4>{$theme_settings.homepage_bullet_title_3}</h4>
+                <p>{$theme_settings.homepage_bullet_body_3}</p>
+            </figure>
+        {/if}
+    </section>
+
+    {*
+        <!-- FOLLOW -->
+        <aside class="connect">
+            <div class="likebox">
+                 your custom social code widgets
+            </div>
+        </aside>
+    *}
+
+</div>
+    {/strip}
+{/if}
+
+<div class="content{if $theme_settings.homepage_sidebar_layout != 'hidden'} col w9{/if}">
+
+    {if !empty($theme_settings.homepage_promos_thumbs) && $theme_settings.homepage_promos_thumbs == 'source'}
+        {$promocards = $wa->shop->promos('link')}
+    {else}
+        {$promocards = $wa->shop->promos('link', '0x840')}
+    {/if}
+
+    {$bestsellers = null}
+    {if !empty($theme_settings.homepage_productset_bestsellers)}
+        {$bestsellers = $wa->shop->productSet( $theme_settings.homepage_productset_bestsellers )}
+    {/if}
+
+    {if empty($promocards) && empty($bestsellers)}
+
+        {* DUMMY WELCOME SCREEN *}
+        {$_content_exist = false}
+        <article class="welcome">
+            <h1>[`Created with Shop-Script`]</h1>
+            <p>{$theme_settings.homepage_welcome_note}</p>
+        </article>
+
+    {else}
+
+        {* PROMO CARDS SLIDER *}
+        {if !empty($promocards)}
+            {include file="./home.slider.html" inline}
+        {/if}
+
+        {* BESTSELLERS *}
+        {if !empty($bestsellers) && !empty($theme_settings.homepage_productset_bestsellers)}
+            <section class="bestsellers wa-pt-16">
+                {if !empty($theme_settings.homepage_bestsellers_title)}
+                    <h5 class="bestsellers-header">{str_replace('{$date}', $smarty.now|wa_datetime:"humandate", $theme_settings.homepage_bestsellers_title)}</h5>
+                {/if}
+                {include file="list-thumbs.html" products=$bestsellers has_sidebar=($theme_settings.homepage_sidebar_layout != 'hidden')}
+            </section>
+        {/if}
+    {/if}
+
+    <!-- plugin hook: 'frontend_homepage' -->
+    {* @event frontend_homepage.%plugin_id% *}
+    {foreach $frontend_homepage as $_}{$_}{/foreach}
+
+</div>
+
+{if $theme_settings.homepage_sidebar_layout != 'hidden'}
+    </div>
+{/if}
+
+{if !empty($_content_exist)}
+    <!-- ON SALE product list -->
+    {if !empty($theme_settings.homepage_productset_onsale)}
+        {$onsale = $wa->shop->productSet( $theme_settings.homepage_productset_onsale )}
+        {if !empty($onsale)}
+            <section class="onsale related">
+                {if $theme_settings.homepage_onsale_title}
+                    <h4 class="section-header">{str_replace('{$date}', $smarty.now|wa_datetime:"humandate", $theme_settings.homepage_onsale_title)}</h4>
+                {/if}
+                {include file="list-thumbs-mini.html" products=$onsale ulclass="onsale-bxslider"}
+            </section>
+        {/if}
+    {/if}
+
+    <!-- BLOG posts -->
+    {if $theme_settings.homepage_blogposts && $wa->blog}
+        {$blog_posts = $wa->blog->posts(null,3)}
+        {if is_countable($blog_posts) && count($blog_posts)}
+            <h4 class="section-header">[`Latest blog updates`]</h4>
+            <ul class="blog-posts unstyled row gap20 cols1-mobile cols2-tablet wa-pt-16">
+                {foreach $blog_posts as $post}
+                    <li class="col w4 wa-flex wa-flex-column">
+                        {if !empty($post.thumb_image)}
+                            <img class="wa-mb-16" src="{$post.thumb_image}" alt="{$post.title}">
+                        {/if}
+                        <div class="wa-flex wa-flex-column">
+                            <p class="text-gray wa-mb-8 small">{$post.datetime|wa_datetime:"humandate"}</p>
+                            <a href="{$post.link}" title="{$post.title|escape}" class="semibold text-black-auto large wa-mb-12">{$post.title|escape}</a>
+                            <p class="gray">{strip_tags($post.text)|truncate:128}</p>
+                        </div>
+                    </li>
+                {/foreach}
+            </ul>
+        {/if}
+    {/if}
+
+    <!-- WELCOME note -->
+    {if !empty($theme_settings.homepage_welcome_note)}
+        <div class="welcome-note large">
+            {$theme_settings.homepage_welcome_note}
+        </div>
+    {/if}
+{/if}

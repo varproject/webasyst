@@ -1,0 +1,11 @@
+<header class="crm-dialog-header">
+    <h1>[`Change deal stage`]</h1>
+</header>
+
+<div class="crm-dialog-content">
+    <p>
+        {sprintf_wp('Shop-Script order %s is in <strong>%s</strong> state.', $order_number, $state_name|escape)}<br>
+        {sprintf_wp('Action <strong>%s</strong> is not available. Order will remain unchanged.', $action_name|escape)}<br>
+        {sprintf_wp('Move this deal to stage <strong>%s</strong>?', $stage_name|escape)}
+    </p>
+</div>

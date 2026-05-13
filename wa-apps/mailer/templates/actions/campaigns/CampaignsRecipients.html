@@ -1,0 +1,394 @@
+<div class="article">
+            <div class="article-body">
+
+                <form id="form-campaign" action="?module=campaigns&action=recipients&" method="post" class="fields">
+                    <div class="flexbox middle custom-mb-32 step-tab">
+                    {if !empty($campaign.id)}
+                        <ul class="tabs wide overflow-arrows">
+                            <li class="m-first-step">
+                                <a href="#/campaigns/letter/{$campaign.id}/">
+                                    <span class="icon rounded bg-light-gray custom-p-8 custom-mr-4">
+                                        <i class="fas fa-pen-alt text-white" style="font-size: 87.5%;"></i>
+                                    </span>
+                                    <span class="text">[`Compose message`]</span>
+                                </a>
+                            </li>
+                            <li class="m-second-step selected">
+                                <i class="fas fa-arrow-right"></i>
+                                <a href="#/campaigns/recipients/{$campaign.id}/">
+                                    <span class="icon rounded bg-blue custom-p-8 custom-mr-4">
+                                        <i class="fas fa-users text-white" style="font-size: 87.5%;"></i>
+                                    </span>
+                                    <span class="text">[`Choose recipients`]</span>
+                                </a>
+                                <i class="fas fa-arrow-right"></i>
+                            </li>
+                            <li class="m-third-step">
+                                <a id="right-sidebar-send-link" href="#/campaigns/send/{$campaign.id}/" class="text-gray">
+                                    <span class="icon rounded bg-light-gray custom-p-8 custom-mr-4">
+                                        <i class="fas fa-paper-plane text-white" style="font-size: 87.5%;"></i>
+                                    </span>
+                                    <span class="text">[`Check &amp; send`]</span>
+                                </a>
+                            </li>
+                        </ul>
+                    {else}
+                        <ul class="tabs wide overflow-arrows">
+                            <li class="m-first-step selected">
+                                <a href="javascript:void(0)">
+                                    <span class="icon rounded bg-blue custom-p-8 custom-mr-4">
+                                        <i class="fas fa-pen-alt text-white" style="font-size: 87.5%;"></i>
+                                    </span>
+                                    <span class="text">[`Compose message`]</span>
+                                </a>
+                            </li>
+                            <li class="m-second-step m-disabled">
+                                <a href="javascript:void(0)" class="text-gray">
+                                    <span class="icon rounded bg-light-gray custom-p-8 custom-mr-4">
+                                        <i class="fas fa-users text-white" style="font-size: 87.5%;"></i>
+                                    </span>
+                                    <span class="text">[`Choose recipients`]</span>
+                                </a>
+                            </li>
+                            <li class="m-third-step m-disabled">
+                                <a href="javascript:void(0)" class="text-gray">
+                                    <span class="icon rounded bg-light-gray custom-p-8 custom-mr-4">
+                                        <i class="fas fa-paper-plane text-white" style="font-size: 87.5%;"></i>
+                                    </span>
+                                    <span class="text">[`Check &amp; send`]</span>
+                                </a>
+                            </li>
+                        </ul>
+                    {/if}
+                    {include file="templates/actions/campaigns/includes/CampaignsActions.html" is_round_button=true}
+                    </div>
+                    <div class="campaign-header">
+                        <h1 class="h3">{ifempty($campaign.subject, "[`<no subject>`]")|escape}</h1>
+                        <input type="hidden" name="id" value="{$campaign.id}">
+                    </div>
+
+                    <input type="hidden" name="campaign_id" value="{$campaign.id}">
+
+                    <p class="small text-gray">[`A campaign can be sent to selected contact groups or segments, including additional recipients added manually.`]</p>
+
+                    <div class="recipients-groups">
+                        <div class="recipients-group" id="recipients-group-all-contacts">
+
+                            <div>
+                                {*
+                                 * Checkbox to select all contacts.
+                                 *}
+                                {if $has_check_all_contacts_rights}
+                                    {if $all_contacts_selected_id}
+                                        <input type="hidden" name="remove_ids[]" value="{$all_contacts_selected_id}">
+                                    {/if}
+                                    <label>
+                                        <span class="wa-checkbox">
+                                            <input type="checkbox" name="add_values[]" value="/"{if $all_contacts_selected_id} checked{/if}>
+                                            <span>
+                                                <span class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        <span class="bold{if $all_contacts_selected_id}  highlighted{/if}">[`All contacts`] ({$contacts_count})</span>
+                                    </label>
+                                {else}
+                                    <label>
+                                        <span class="wa-checkbox">
+                                            <input type="checkbox"{if $all_contacts_selected_id} checked{/if} disabled>
+                                            <span>
+                                                <span class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        <span class="bold{if $all_contacts_selected_id} highlighted{/if}">[`All contacts`] ({$contacts_count})</span>
+                                    </label>
+                                {/if}
+
+                                {if !$all_contacts_selected_id}
+                                    <span class="custom-mx-8">[`or`]</span>
+                                    <div class="dropdown clickable more-recipients">
+                                        <a href="#" class="open-menu dropdown-toggle semibold">
+                                            <i class="fas fa-plus-circle middle custom-mr-4"></i> [`Select groups`]
+                                        </a>
+                                        <div class="dropdown-body js-more z-10">
+                                            <ul class="menu">
+                                                {foreach $recipients_groups as $g_id => $g}
+                                                    <li id="add-recipients-group-{$g_id}">
+                                                        <a href="#" class="open-dialog" data-open-group="{$g_id}">{$g.name}</a>
+                                                    </li>
+                                                {/foreach}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+
+                        {*
+                         * Other recipient selection criteria: categories, subscribers, etc.
+                         *}
+                        {if $recipients}
+                            <ul class="menu zebra custom-mt-24 custom-mb-32">
+                                {foreach $recipients as $recipient_criteria}
+                                    {$counter = "<span class=\"count\">`$recipient_criteria.count`</span><span class=\"count action cursor-pointer custom-ml-16\" data-remove-list-id=\"`$recipient_criteria.id`\"><i class=\"fas fa-times-circle text-red js-remove\"></i></span>"}
+                                    <li>
+                                        {if isset($recipient_criteria.link)}
+                                            <a href="{$recipient_criteria.link}" target="_blank">
+                                                <span>{$recipient_criteria.short|default:''}{if isset($recipient_criteria.short)}:{/if} {$recipient_criteria.name}</span>
+
+                                                <span class="count">{$recipient_criteria.count}</span>
+                                                <span class="count action cursor-pointer custom-ml-16">
+                                                    <i class="fas fa-external-link-alt text-blue"></i>
+                                                </span>
+                                                <span class="count action cursor-pointer custom-ml-16" data-remove-list-id="{$recipient_criteria.id}">
+                                                    <i class="fas fa-times-circle text-red js-remove"></i>
+                                                </span>
+                                            </a>
+                                        {else}
+                                            {if isset($recipient_criteria.dialog)}
+                                                <a href="#" class="open-dialog" data-open-group="flat_list">
+                                                    <span>{$recipient_criteria.name}</span>
+                                                    <span class="count">{$recipient_criteria.count}</span>
+                                                    <span class="count action cursor-pointer custom-ml-16">
+                                                        <i class="fas fa-pen text-blue"></i>
+                                                    </span>
+                                                    <span class="count action cursor-pointer custom-ml-16" data-remove-list-id="{$recipient_criteria.id}">
+                                                    <i class="fas fa-times-circle text-red js-remove"></i>
+                                                </span>
+                                                </a>
+                                            {else}
+                                                <a href="javascript:void(0)">
+                                                    <span>{$recipient_criteria.short|default:''}{if isset($recipient_criteria.short)}:{/if} {$recipient_criteria.name}</span>
+                                                    <span class="count">{$recipient_criteria.count}</span>
+                                                    <span class="count action cursor-pointer custom-ml-48" data-remove-list-id="{$recipient_criteria.id}">
+                                                    <i class="fas fa-times-circle text-red js-remove"></i>
+                                                </span>
+                                                </a>
+                                            {/if}
+                                        {/if}
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        {/if}
+
+                        {if $all_contacts_selected_id && !$recipients_groups.flat_list.count}
+                            <a href="#" class="small semibold custom-mt-16 inlinebox inline open-dialog" data-open-group="flat_list">
+                                <i class="fas fa-plus-circle custom-mt-4"></i> [`Additional emails`]
+                            </a>
+                        {/if}
+                    </div>
+
+                    {if $recipients}
+                        <a href="#" id="m-recipients-stat-show" class="small semibold">[`Show recipient list with unique email addresses`]</a>
+                        <div id="m-recipients-stat" class="recipients-stat shadowed hidden">
+                            <div class="recipients-stat-content">
+                                <div class="preparing-recipient-list small">
+                                    <i class="fas fa-spin fa-spinner loading"></i> [`Preparing recipient list`]
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+                    <div id="save-button-block" style="display: none">
+                        <input type="submit" class="button" value="[`Save`]">
+                        <a href="javascript:$.wa.mailer.redispatch()" class="js-close-dialog button light-gray">[`Cancel`]</a>
+                    </div>
+                    {if !empty($campaign.id) && ($recipients || $all_contacts_selected_id)}
+                        <section class="bottombar sticky js-actions-wrapper shadowless flexbox middle">
+                            <a href="#/campaigns/send/{$campaign.id}/" class="button light-gray">
+                                [`Next`]
+                                <i class="fas fa-arrow-right fa-xs"></i>
+                            </a>
+                        </section>
+                    {/if}
+                </form>
+
+                {foreach $recipients_groups as $g_id => $g}
+                    <div class="dialog recipients_group_other" id="group_{$g_id}" data-group="{$g_id}" data-group-content="{$g_id}">
+                        <div class="dialog-background"></div>
+                        <div class="dialog-body recipients-group{if !empty($g.opened)} close{/if}">
+                            <h3 class="dialog-header recipients-group-header"><span>[`{$g.name}`]</span></h3>
+                            <div class="dialog-content recipients-group-content">
+                                {if !empty($g.comment)}
+                                    <p class="hint">[`{$g.comment}`]</p>
+                                {/if}
+                                {if !empty($g.content)}
+                                    {$g.content}
+                                {/if}
+                            </div>
+                            <footer class="dialog-footer">
+                                <button class="js-close-dialog button light-gray">[`Close`]</button>
+                            </footer>
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+        </div>
+<script>
+    (function() { "use strict";
+        const $form = $('#form-campaign');
+
+        $(".more-recipients").waDropdown();
+
+        // Form submit
+        const sendForm = params => {
+            $('#m-recipients-stat').addClass('hidden').find('.recipients-stat-content').empty();
+
+            return $.post($form.attr('action'), params, response => {
+                $form.trigger('mailer.recipients.saved');
+                $("#content").html(response);
+            }, 'html');
+        };
+
+        $form.on('submit', function() {
+            const $loading = $('<i class="fas fa-spin fa-spinner"></i>');
+            let form_params = { };
+            // if 'All contacts' - delete all other criteries except flat list
+            if ($('#recipients-group-all-contacts :checkbox').is(':checked')) {
+                form_params = {
+                    'all_contacts': 1,
+                    'add_values[]': '/',
+                    'campaign_id': '{$campaign.id}'
+                };
+                // else let'em be serialized
+            } else {
+                $('#recipients-group-all-contacts')
+                        .siblings('.included_in_all_contacts')
+                        .find(':checkbox').prop({
+                            disabled: false
+                        });
+                $('#flat-list-textarea').prop('disabled', false);
+                form_params = $form.serialize();
+            }
+
+            $('#recipients-group-all-contacts label:first').after($loading);
+            $.when(sendForm(form_params)).always(() => $loading.remove());
+            return false;
+        });
+
+        // "All contacts" checkbox hides categories and other contacts-based criteria
+        $('#recipients-group-all-contacts :checkbox').change(() => $form.submit());
+
+        $('#m-recipients-stat-show').on('click', function (event) {
+            event.preventDefault();
+            const $recipients_stat = $('#m-recipients-stat'),
+                $this = $(this);
+            $recipients_stat.removeClass('hidden');
+            $this.remove();
+            $.get('?module=campaigns&action=recipientsStat&campaign_id={$campaign.id}', response => {
+                $recipients_stat.find('.preparing-recipient-list').remove();
+                $recipients_stat.find('.recipients-stat-content').html(response);
+            });
+        });
+
+        $('.more-recipients').on('click', '.open-menu', function(event){
+            event.preventDefault(); event.stopPropagation();
+            const $more_recipients = $('.more-recipients');
+            $(this).siblings('.js-more').toggle();
+            if (!$more_recipients.data('clicked')) {
+                $(window).on('click', () => $more_recipients.find('.js-more').hide());
+                $more_recipients.data('clicked', true);
+            }
+        });
+
+        $('[data-remove-group]').on('click', function(event) {
+            event.preventDefault();
+            const group = $(this).data('remove-group'),
+                $group_wrapper = $('[data-group="'+group+'"]');
+
+            $group_wrapper.removeClass('shown-group')
+                    .find(':checkbox').prop({
+                        checked: false,
+                        disabled: false
+                    })
+                    .end()
+                    .find('textarea').prop({
+                        disabled: false
+                    }).val('');
+
+            $form.submit();
+        });
+
+        $('[data-remove-list-id]').on('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const $this = $(this),
+                id = parseInt($this.data('remove-list-id'), 10),
+                $icon = $this.find('.js-remove'),
+                $loading = $('<i class="fas fa-spin fa-spinner"></i>');
+
+            $icon.hide().after($loading);
+            $.when(sendForm({
+                        delete: 1,
+                        list_id: id,
+                        campaign_id: '{$campaign.id}'
+                    })).always(() => {
+                        $loading.remove();
+                        $icon.show();
+                    });
+        });
+
+        $('[data-open-group]').on('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const group = $(this).data('open-group');
+            const content = $('[data-group-content="'+group+'"]');
+            const $btns = $('#save-button-block');
+
+            const saveForm = params => {
+                $('#m-recipients-stat').addClass('hidden').find('.recipients-stat-content').empty();
+                return $.post($form.attr('action'), params, response => $("#content").html(response), 'html');
+            };
+
+            $.waDialog({
+                $wrapper: content.clone(),
+                onOpen($dialog, dialog) {
+                    const $footer = $dialog.find('.dialog-footer')
+                    const $buttons = $btns.find('input').val('[`Save`]').end().html()
+                    $footer.empty().append($buttons)
+
+                    const $checkboxes         = $dialog.find('input[type="checkbox"]');
+                    const $additional_emails  = $dialog.find('textarea');
+
+                    if ($additional_emails.length) {
+                        $dialog.find('textarea').val($additional_emails.val());
+                        $additional_emails.prop('disabled', false);
+                    }
+
+                    $checkboxes.each((_, el) => $(el).prop('disabled', false).closest('li').removeClass('checked'));
+
+                    $dialog.find('#recipients-subscriptions input[value="0"]:checked').trigger('change');
+
+                    $dialog.find('#c-search-buttons').hide();
+
+                    $('#c-search-block').find('h1').remove();
+
+                    $dialog.find('[type="submit"]').prop('disabled', $dialog.find('.mailer-empty').length);
+
+
+
+                    const $submit = $dialog.find('[type="submit"]')
+                    $submit.on('click', event => {
+                        event.preventDefault();
+                        $dialog.find('[type="submit"]').parent().append('<i class="fas fa-spin fa-spinner custom-ml-8 js-loading"></i>');
+                        let params = 'campaign_id={$campaign.id}&' + $dialog.find( "input, textarea, select" ).serialize();
+                        $.when(saveForm(params)).then(() => dialog.close());
+                    })
+                },
+                onClose(_, dialog) {
+                    $.when(saveForm({ 'campaign_id' : '{$campaign.id}' })).then(() => dialog.close());
+                }
+            });
+        });
+
+        setTimeout(() => $form.trigger('wa.ready'), 0);
+
+        $(".tabs").waTabs({
+            arrows_side: 'both'
+        });
+
+        $.wa.mailer.setTitle();
+    })();
+</script>

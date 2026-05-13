@@ -1,0 +1,58 @@
+<table class="">
+
+    <tr>
+        <th class="min-width"><input type="checkbox"></th>
+        <th><span>№ <i class="fas fa-caret-down"></i></span></th>
+        <th>Статус</th>
+        <th>Время</th>
+        <th>Контрагент</th>
+        <th class="align-right">Сумма</th>
+        <th class="align-right">Оплачено</th>
+        <th class="align-right">Отгружено</th>
+        <th class="align-right">Резерв</th>
+        <th>Склад отгрузки</th>
+        <th>Комментарий</th>
+    </tr>
+
+    {foreach $orders as $order}
+        <tr>
+            <td class="min-width"><input type="checkbox"></td>
+            <td>
+                <a href="{$order.id}">
+                    {* {cabinet_random len=10 alphabet="0123456789"}_{$order.id} *}
+                </a>
+            </td>
+            <td class="nowrap">
+                <span class="badge squared smaller {$order.status}">
+                    {* {$order.status|cabinet_status_name} *}
+                </span>
+            </td>
+            <td class="nowrap">{$order.create_datetime|wa_date:'datetime'}</td>
+            <td class="nowrap">
+                {* <a href="{$order.counterparty_id}">{$order.counterparty_name}</a> *}
+            </td>
+            <td class="nowrap align-right">{$order.grand_total|wa_format:2}</td>
+            <td class="nowrap align-right">-</td>
+            <td class="nowrap align-right">-</td>
+            <td class="nowrap align-right">-</td>
+            <td class="nowrap">Центральный</td>
+            {* <td class="text-ellipsis">{$order.comment}</td> *}
+        </tr>
+    {/foreach}
+    
+</table>
+
+
+<style>
+    /* #cabinet table .badge {
+        line-height: 1em;
+        padding: 0.215em 0.4375em;
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    #cabinet table td {
+        padding: 0.322em 0.75em;
+        font-size: 14px;
+    } */
+</style>

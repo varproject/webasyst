@@ -1,0 +1,101 @@
+/*
+// .sa-example
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-example {
+    --sa-example--parent-bg-color: #{vs.$sa-example--parent-bg-color};
+
+    border: 1px solid vs.$sa-example--border-color; // SKIP-PIXELS
+    border-radius: .125rem;
+    position: relative;
+}
+.sa-example__legend {
+    position: absolute;
+    top: -.3125rem;
+    line-height: 1;
+    font-size: .625rem;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: vs.$sa-example__legend--font-color;
+    background: var(--sa-example--parent-bg-color);
+    z-index: 1;
+    padding: 0 .25rem;
+
+    @include dir.scope {
+        #{dir.$inset-inline-start}: .75rem;
+    }
+}
+.sa-example__body {
+    padding: 1.5rem;
+}
+.sa-example__button {
+    display: block;
+    background: transparent;
+    background-clip: padding-box;
+    border: none;
+    border-top: 1px solid vs.$sa-example--border-color; // SKIP-PIXELS
+    width: 100%;
+    font-size: .625rem;
+    text-transform: uppercase;
+    color: vs.$sa-example__button--font-color;
+    padding: .25rem 1.25rem;
+    text-align: center;
+    transition: background-color .12s;
+
+    &:hover,
+    &:focus {
+        background-color: vs.$sa-example__button--hover-bg-color;
+    }
+    &:active {
+        transition-duration: 0s;
+        background-color: vs.$sa-example__button--touch-bg-color;
+    }
+    &:focus {
+        outline: none;
+    }
+}
+.sa-example__code {
+    &:before {
+        content: '';
+        display: block;
+        border-top: 1px solid vs.$sa-example--border-color; // SKIP-PIXELS
+    }
+
+    pre {
+        margin: 0;
+    }
+
+    code {
+        background: vs.$sa-example__code--bg-color;
+        font-size: func.rem(13);
+        line-height: func.rem(17);
+        letter-spacing: -.01em;
+        padding: 1.25rem;
+        overflow: auto;
+    }
+}
+
+@include bt.media-breakpoint-down(sm) {
+    $local-expand: 1.5rem;
+
+    .sa-example {
+        border-radius: 0;
+        border-left: none; // SKIP-RTL
+        border-right: none; // SKIP-RTL
+        margin-left: -$local-expand; // SKIP-RTL
+        margin-right: -$local-expand; // SKIP-RTL
+    }
+    .sa-example__body {
+        padding-left: $local-expand; // SKIP-RTL
+        padding-right: $local-expand; // SKIP-RTL
+    }
+    .sa-example__legend {
+        @include dir.scope {
+            #{dir.$inset-inline-start}: .5rem + $local-expand;
+        }
+    }
+}

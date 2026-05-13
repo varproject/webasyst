@@ -1,0 +1,26 @@
+/*
+// .sa-hero-header
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+
+.sa-hero-header {
+    text-align: center;
+}
+.sa-hero-header__title {
+    & > * {
+        font-weight: bt.$font-weight-bold;
+        color: vs.$sa-header--font-color;
+    }
+}
+.sa-hero-header__subtitle {
+    color: bt.$text-muted;
+    font-size: func.rem(15);
+}
+.sa-hero-header__controls {
+    margin-top: 1.25rem;
+}
+
+
+

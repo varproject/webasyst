@@ -1,0 +1,510 @@
+{$_me = $wa->user()}
+
+{$_active_funnel = reset($funnels)}
+{if !empty($funnel)}{$_active_funnel = $funnel}{/if}
+{$_active_stage = reset($_active_funnel.stages)}
+
+{function name="_renderStage"}
+    {if empty($_stage)}
+        {$_stage = [
+            "id" => "%id%",
+            "name" => "%name%",
+            "color" => "%color%"
+        ]}
+    {/if}
+
+    <li class="{if $_active_stage.id == $_stage.id}selected{/if}" xmlns="http://www.w3.org/1999/html">
+        <a href="javascript:void(0);" data-id="{$_stage.id}">
+            {if !empty($_stage.color)}
+            <i class="fas fa-circle custom-pr-4 funnel-state" style="color: {$_stage.color}"></i>
+            {/if}
+            <span>{$_stage.name|escape}</span>
+        </a>
+    </li>
+{/function}
+
+{capture assign="_stage_template_html"}{_renderStage _stage=[]}{/capture}
+
+<div class="dialog crm-create-order-dialog" id="js-crm-create-order-dialog">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <form method="post" action="{$wa_backend_url}crm/?module=deal&action=create">
+
+            <div class="dialog-content">
+
+                    {if !empty($open_deals)}
+                        <div class="dialog-content-indent">
+                            <h2>[`Deal in CRM`]</h2>
+
+                            <div class="flexbox vertical space-16 js-deals-options-wrapper">
+                                <div class="c-deals-options-list" data-name="[`Create`]">
+                                    <div class="c-list is-active">
+                                        <div class="flexbox">
+                                            <div class="c-column custom-mr-8">
+                                                <input id="c-add-new-deal-field" type="radio" name="data[deal_id]" value="new" checked>
+                                            </div>
+                                            <div class="c-column">
+                                                <label for="c-add-new-deal-field">[`Create new deal`]</label>
+
+                                                <div class="flexbox middle wrap space-16 custom-my-16">
+                                                    <div class="c-funnels-list js-funnels-list">
+                                                        <div class="dropdown" id="dropdown-funnels-list">
+                                                            <button class="dropdown-toggle light-gray js-visible-link flexbox space-4 align-left" type="button" style="word-break: break-all;">
+                                                                <span class="js-text">
+                                                                    {if !empty($_active_funnel.color)}
+                                                                    <i class="{$_active_funnel.icon|default:'fas fa-briefcase'} custom-pr-4 funnel-state" style="color: {$_active_funnel.color}"></i>
+                                                                    {/if}
+                                                                    <span class="js-name">{$_active_funnel.name|escape}</span>
+                                                                </span>
+                                                            </button>
+                                                            <div class="dropdown-body">
+                                                                <ul class="menu with-icons">
+                                                                    {strip}
+                                                                        {foreach $funnels as $_funnel}
+                                                                            {if !empty($_funnel.is_archived)}
+                                                                                {continue}
+                                                                            {/if}
+                                                                            <li class="{if $_active_funnel.id == $_funnel.id}selected{/if}">
+                                                                                <a href="javascript:void(0);" data-id="{$_funnel.id}">
+                                                                                    {if !empty($_funnel.color)}
+                                                                                    <i class="{$_funnel.icon|default:'fas fa-briefcase'} custom-pr-4 funnel-state" style="color: {$_funnel.color}"></i>
+                                                                                    {/if}
+                                                                                    <span>{$_funnel.name|escape}</span>
+                                                                                </a>
+                                                                            </li>
+                                                                        {/foreach}
+                                                                    {/strip}
+                                                                </ul>
+                                                            </div>
+                                                            <input class="js-field" name="data[funnel_id]" type="hidden" value="{$_active_funnel.id}">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="c-funnel-stages-list js-funnel-stages-list">
+                                                        <div class="dropdown" id="dropdown-funnel-stages-list">
+                                                            <button class="dropdown-toggle light-gray js-visible-link flexbox space-4 align-left" type="button" style="word-break: break-all;">
+                                                                <span class="js-text">
+                                                                    {if !empty($_active_stage.color)}
+                                                                    <i class="fas fa-circle custom-pr-4 funnel-state" style="color: {$_active_stage.color}"></i>
+                                                                    {/if}
+                                                                    <span class="js-name">{$_active_stage.name|escape}</span>
+                                                                </span>
+                                                            </button>
+                                                            <div class="dropdown-body">
+                                                                <ul class="menu with-icons">
+                                                                    {strip}{foreach $_active_funnel.stages as $_id => $_stage}{_renderStage _stage=$_stage}{/foreach}{/strip}
+                                                                </ul>
+                                                                <input class="js-field" name="data[stage_id]" type="hidden" value="{$_active_stage.id}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="line">
+                                                    <div class="c-contact-wrapper js-contact-wrapper">
+                                                        <div class="c-contact js-user">
+                                                            <span class="gray">[`Owner:`]</span>
+                                                            {$_userpic = $_me->getPhotoUrl($_me.id, null, 16)}
+                                                            {if !empty($_userpic)}
+                                                                <i class="icon userpic rounded" style="background-image: url({$_userpic});"></i>
+                                                            {/if}
+                                                            <span class="c-name">{$_me.name|escape}</span>
+                                                            <a class="js-show-combobox nowrap" href="javascript:void(0);">[`Assign another user`]</a>
+                                                        </div>
+                                                        <div class="c-combobox">
+                                                            <span class="gray">[`Owner:`]</span>
+                                                            <input class="js-autocomplete" type="text" value="" placeholder="[`Choose a user`]">
+                                                            <a class="inline-link js-hide-combobox" href="javascript:void(0);">[`Cancel`]</a>
+                                                        </div>
+                                                        <input class="js-field" type="hidden" name="data[user_contact_id]" value="{$_me.id}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="c-deals-options-list is-overflow" data-name="[`Bind`]">
+                                    {foreach $open_deals as $_deal}
+                                        <div class="c-list">
+                                            <div class="flexbox">
+                                                <div class="c-column custom-mr-8">
+                                                    <input type="radio" name="data[deal_id]" value="{$_deal.id}" id="c-radio-for-deal-{$_deal.id}">
+                                                </div>
+                                                <div class="c-column">
+                                                    <label for="c-radio-for-deal-{$_deal.id}">
+                                                        {if !empty($funnels[$_deal.funnel_id])}
+                                                            {$_funnel = $funnels[$_deal.funnel_id]}
+                                                            {if !empty($_funnel.stages[$_deal.stage_id])}
+                                                                {$_stage = $_funnel.stages[$_deal.stage_id]}
+                                                            {/if}
+                                                            <i class="{$_funnel.icon|default:'fas fa-briefcase'} custom-pr-4 funnel-state" style="color: {$_funnel.color|default:"inherit"|escape}" title="{if $_deal.status_id == "WON"}[`Won`] / {elseif $_deal.status_id == "LOST"}[`Lost`] / {/if}{$_funnel.name|escape} / {$_stage.name|default:""|escape}"></i>
+
+                                                        {/if}
+
+                                                        <span>
+                                                            {$_deal.name|escape}
+                                                            {if !empty($_funnel.is_archived)}<span class="gray small custom-ml-4 nowrap"> [`(archived)`]</span>{/if}
+                                                        </span>
+
+                                                        {if !empty($_deal.amount)}
+                                                            <span class="c-amount">&mdash; {$_deal.amount|wa_format_amount_currency:$_deal.currency_id}</span>
+                                                        {/if}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </div>
+
+                    {else}
+                        <div class="dialog-content-indent">
+                            <h2>[`Create deal in CRM`]</h2>
+
+                            <div class="field flexbox middle space-16">
+                                <div class="name">[`Funnel:`]</div>
+                                <div class="flexbox middle wrap space-16 custom-my-16 value">
+                                    <div class="c-funnels-list js-funnels-list">
+                                        <div class="dropdown" id="dropdown-funnels-list">
+                                            <button class="dropdown-toggle light-gray js-visible-link flexbox space-4 align-left" type="button" style="word-break: break-all;">
+                                                <span class="js-text">
+                                                    {if !empty($_active_funnel.color)}
+                                                    <i class="{$_active_funnel.icon|default:'fas fa-briefcase'} custom-pr-4 funnel-state" style="color: {$_active_funnel.color}"></i>
+                                                    {/if}
+                                                    <span class="js-name">{$_active_funnel.name|escape}</span>
+                                                </span>
+                                            </button>
+                                            <div class="dropdown-body">
+                                                <ul class="menu with-icons">
+                                                    {strip}
+                                                        {foreach $funnels as $_funnel}
+                                                            {if !empty($_funnel.is_archived)}
+                                                                {continue}
+                                                            {/if}
+                                                            <li class="{if $_active_funnel.id == $_funnel.id}selected{/if}">
+                                                                <a href="javascript:void(0);" data-id="{$_funnel.id}">
+                                                                    {if !empty($_funnel.color)}
+                                                                    <i class="{$_funnel.icon|default:'fas fa-briefcase'} custom-pr-4 funnel-state" style="color: {$_funnel.color}"></i>
+                                                                    {/if}
+                                                                    <span>{$_funnel.name|escape}</span>
+                                                                </a>
+                                                            </li>
+                                                        {/foreach}
+                                                    {/strip}
+                                                </ul>
+                                            </div>
+                                            <input class="js-field" name="data[funnel_id]" type="hidden" value="{$_active_funnel.id}">
+                                        </div>
+                                    </div>
+                                    <div class="c-funnel-stages-list js-funnel-stages-list">
+                                        <div class="dropdown" id="dropdown-funnel-stages-list">
+                                            <button class="dropdown-toggle light-gray js-visible-link flexbox space-4 align-left" type="button" style="word-break: break-all;">
+                                                <span class="js-text">
+                                                    {if !empty($_active_stage.color)}
+                                                    <i class="fas fa-circle custom-pr-4 funnel-state" style="color: {$_active_stage.color}"></i>
+                                                    {/if}
+                                                    <span class="js-name">{$_active_stage.name|escape}</span>
+                                                </span>
+                                            </button>
+                                            <div class="dropdown-body">
+                                                <ul class="menu with-icons">
+                                                    {strip}{foreach $_active_funnel.stages as $_id => $_stage}{_renderStage _stage=$_stage}{/foreach}{/strip}
+                                                </ul>
+                                            </div>
+                                            <input class="js-field" name="data[stage_id]" type="hidden" value="{$_active_stage.id}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field flexbox middle space-16">
+                                <div class="name">[`Owner:`]</div>
+                                <div class="flexbox middle wrap space-16 custom-my-16 value">
+                                    <div class="c-contact-wrapper js-contact-wrapper">
+                                        <div class="c-contact js-user">
+                                            {$_userpic = $_me->getPhotoUrl($_me.id, null, 16)}
+                                            {if !empty($_userpic)}
+                                                <i class="icon userpic rounded" style="background-image: url({$_userpic});"></i>
+                                            {/if}
+                                            <span class="c-name">{$_me.name|escape}</span>
+                                            <a class="inline-link js-show-combobox nowrap" href="javascript:void(0);">[`Assign another user`]</a>
+                                        </div>
+                                        <div class="c-combobox">
+                                            <input class="js-autocomplete" type="text" value="" placeholder="[`Choose a user`]">
+                                            <a class="inline-link js-hide-combobox" href="javascript:void(0);">[`Cancel`]</a>
+                                        </div>
+                                        <input class="js-field" type="hidden" name="data[user_contact_id]" value="{$_me.id}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+            </div>
+            <footer class="dialog-footer">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    <input class="button js-submit-button" type="submit" value="[`Create`]"> <span class="icon loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+                    <a class="button light-gray cancel js-close-dialog" href="javascript:void(0);">[`Cancel`]</a>
+                </div>
+            </footer>
+
+            <input type="hidden" name="order_id" value="{$order_id}">
+        </form>
+    </div>
+    <script>
+        ( function($) {
+
+            // DOM
+            var $dialog = $("#js-crm-create-order-dialog");
+
+            // VARS
+            var funnels = {$funnels|json_encode},
+                stage_template_html = {$_stage_template_html|json_encode},
+                app_url = {$wa_backend_url|json_encode} + "crm/";
+
+            // DYNAMIC VARS
+            var is_locked = false;
+
+            //
+
+            initShowDialog();
+
+            initFunnelsAndStates($dialog);
+
+            initAutoComplete($dialog);
+
+            initOptionsList($dialog);
+
+            //renderSVG($dialog);
+
+            //
+
+            function initShowDialog() {
+                var $form = $dialog.find("form");
+
+                /*$.waDialog({
+                    html: $dialog.html(),
+                    onClose: function() {
+                        $dialog.remove();
+                    }
+                });*/
+
+                $form.on("submit", function(event) {
+                    event.preventDefault();
+                    onSubmit();
+                });
+
+                function onSubmit() {
+                    var $loading = $dialog.find('.loading').show();
+
+                    if (!is_locked) {
+                        is_locked = true;
+
+                        var href = $form.attr('action'),
+                            data = $form.serializeArray();
+
+                        $.post(href, data, function(response) {
+                            if (response.status === 'ok') {
+                                $dialog.trigger('close');
+                                location.reload();
+                            }
+                        }, "json").always( function() {
+                            $loading.hide();
+                            is_locked = false;
+                        });
+                    }
+                }
+            }
+
+            function initFunnelsAndStates($outerWrapper) {
+
+                //
+                initChangeFunnel($outerWrapper);
+                //
+                initChangeStage($outerWrapper);
+
+                function initChangeFunnel($outerWrapper) {
+                    var $wrapper = $outerWrapper.find(".js-funnels-list");
+                    $("#dropdown-funnels-list").waDropdown();
+                    if (!$wrapper.length) { return false; }
+                    var $dropdown = $wrapper.find("#dropdown-funnels-list");
+
+                    var $visibleLink = $wrapper.find(".js-visible-link"),
+                        $field = $wrapper.find(".js-field"),
+                        $menu = $wrapper.find(".menu");
+                    $dropdown.waDropdown();
+                    $menu.on("click", "a", function () {
+                        var $link = $(this);
+                        $visibleLink.find(".js-text").html($link.html());
+
+                        $menu.find(".selected").removeClass("selected");
+                        $link.closest("li").addClass("selected");
+
+                        /*$menu.hide();
+                        setTimeout(function () {
+                            $menu.removeAttr("style");
+                        }, 200);*/
+
+                        var id = $link.data("id");
+                        $field.val(id).trigger("change");
+
+                        loadStages(id);
+                    });
+
+                    function loadStages(id) {
+                        var funnel = ( funnels[id] || false );
+                        if (funnel) {
+                            $wrapper.trigger("changeFunnel", funnel);
+                        }
+                    }
+                }
+
+                function initChangeStage($outerWrapper) {
+                    var $funnelWrapper = $outerWrapper.find(".js-funnels-list");
+                    if (!$funnelWrapper.length) { return false; }
+
+                    var $wrapper = $outerWrapper.find(".js-funnel-stages-list"),
+                        $dropdown = $wrapper.find("#dropdown-funnel-stages-list"),
+                        $visibleLink = $wrapper.find(".js-visible-link"),
+                        $field = $wrapper.find(".js-field"),
+                        $menu = $wrapper.find(".menu");
+
+                    $dropdown.waDropdown();
+                    $menu.on("click", "a", function () {
+                        var $link = $(this);
+                        $visibleLink.find(".js-text").html($link.html());
+
+                        $menu.find(".selected").removeClass("selected");
+                        $link.closest("li").addClass("selected");
+
+                        /*$menu.hide();
+                        setTimeout(function () {
+                            $menu.removeAttr("style");
+                        }, 200);*/
+
+                        var id = $link.data("id");
+                        $field.val(id);
+                    });
+
+                    $funnelWrapper.on("changeFunnel", function (event, funnel) {
+                        renderStages(funnel.stages);
+                    });
+
+                    function renderStages(stages) {
+                        $menu.html("");
+
+                        $.each(stages, function (index, stage) {
+                            var stage_template = stage_template_html;
+                            var name = $("<div />").text(stage.name).html();
+
+                            stage_template = stage_template
+                                .replace("%id%", stage.id)
+                                .replace("%color%", stage.color)
+                                .replace("%name%", name);
+
+                            var $stage = $(stage_template);
+
+                            $menu.append($stage);
+                        });
+
+                        //renderSVG($wrapper);
+
+                        $menu.find("li:first-child a").trigger("click");
+                    }
+                }
+            }
+
+            function initAutoComplete($outerWrapper) {
+                var $wrapper = $outerWrapper.find(".js-contact-wrapper"),
+                    $idField = $wrapper.find(".js-field");
+
+                $wrapper.on("click", ".js-show-combobox", function(event) {
+                    event.stopPropagation();
+                    showToggle(true);
+                });
+
+                $wrapper.on("click", ".js-hide-combobox", function(event) {
+                    event.stopPropagation();
+                    showToggle(false);
+                });
+
+                initAutocomplete();
+
+                function showToggle( show ) {
+                    var active_class = "is-shown";
+                    if (show) {
+                        $wrapper.addClass(active_class);
+                    } else {
+                        $wrapper.removeClass(active_class);
+                    }
+                }
+
+                function initAutocomplete() {
+                    var $autocomplete = $wrapper.find(".js-autocomplete");
+
+                    $autocomplete
+                        .autocomplete({
+                            appendTo: $wrapper,
+                            source: app_url + "?module=autocomplete&type=user",
+                            minLength: 0,
+                            html: true,
+                            focus: function() {
+                                return false;
+                            },
+                            select: function( event, ui ) {
+                                setContact(ui.item);
+                                showToggle(false);
+                                $autocomplete.val("");
+                                return false;
+                            }
+                        });
+
+                    $autocomplete.on("focus", function(){
+                        $autocomplete.autocomplete("search", $autocomplete.val() );
+                    });
+
+//                        .data("ui-autocomplete")._renderItem = function( ul, item ) {
+//                            return $("<li />").addClass("ui-menu-item-html").append("<div>"+ item.value + "</div>").appendTo( ul );
+//                        };
+                }
+
+                function setContact(user) {
+                    var $user = $wrapper.find(".js-user");
+                    if (user["photo_url"]) {
+                        $user.find(".icon16").css("background-image", "url(" + user["photo_url"] + ")");
+                    }
+                    $user.find(".c-name").text(user.name);
+                    $idField.val(user.id);
+                }
+            }
+
+            function initOptionsList($outerWrapper) {
+                var $wrapper = $outerWrapper.find(".js-deals-options-wrapper"),
+                    $submitButton = $outerWrapper.find(".js-submit-button"),
+                    active_class = "is-active";
+
+                if (!$wrapper.length) { return false; }
+
+                $wrapper.on("change", "input", function() {
+                    var $input = $(this),
+                        $li = $input.closest(".c-list"),
+                        $list = $li.closest(".c-deals-options-list");
+
+                    var button_text = $list.data("name");
+                    if (button_text) {
+                        $submitButton.val(button_text);
+                    }
+
+                    var is_active = $input.prop("checked");
+
+                    if (is_active) {
+                        $wrapper.find(".c-list." + active_class).removeClass(active_class);
+                        $li.addClass(active_class);
+                    }
+                });
+            }
+
+        })(jQuery);
+    </script>
+</div>

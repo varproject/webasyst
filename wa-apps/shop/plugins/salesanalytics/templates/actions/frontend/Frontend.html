@@ -1,0 +1,95 @@
+<div class="ssa-wrap">
+    <h1>Анализ продаж</h1>
+
+    <form method="get" class="ssa-filters">
+        <input type="hidden" name="plugin" value="salesanalytics">
+        <label>
+            С:
+            <input type="date" name="from" value="{$from|escape}">
+        </label>
+        <label>
+            По:
+            <input type="date" name="to" value="{$to|escape}">
+        </label>
+        <button type="submit">Показать</button>
+    </form>
+
+    <div class="ssa-kpis">
+        <div class="ssa-card">
+            <div class="label">Заказы</div>
+            <div class="value">{$data.kpi.count}</div>
+        </div>
+        <div class="ssa-card">
+            <div class="label">Выручка</div>
+            <div class="value">{$data.kpi.total_sales}</div>
+        </div>
+        <div class="ssa-card">
+            <div class="label">Средний чек</div>
+            <div class="value">{$data.kpi.avg_check}</div>
+        </div>
+    </div>
+
+    <div class="ssa-chart">
+        <canvas id="ssaChart" height="90"></canvas>
+    </div>
+
+    <table class="ssa-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Contact ID</th>
+                <th>Дата оплаты</th>
+                <th>Сумма</th>
+                <th>Валюта</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $data.orders as $o}
+                <tr>
+                    <td>{$o.id}</td>
+                    <td>{$o.contact_id}</td>
+                    <td>{$o.paid_date|default:$o.create_datetime}</td>
+                    <td>{$o.total}</td>
+                    <td>{$o.currency}</td>
+                </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+
+<link rel="stylesheet" href="{$wa_url}wa-apps/shop/plugins/salesanalytics/css/salesanalytics.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    (function() {
+        const labels = {json_encode(array_keys($data.chart))};
+        const values = {json_encode(array_values($data.chart))};
+
+        const ctx = document.getElementById('ssaChart');
+        if (!ctx) return;
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Выручка по дням',
+                    data: values,
+                    borderColor: '#4f46e5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.12)',
+                    fill: true,
+                    tension: 0.25
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    })();
+</script>

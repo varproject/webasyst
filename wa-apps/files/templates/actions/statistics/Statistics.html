@@ -1,0 +1,39 @@
+<div class="shadowed f-statistics-container" id="f-statistics-container">
+    <ul class="tabs f-statistics-menu custom-pl-0 custom-pt-0 custom-mb-16">
+        <li class="selected">
+            <a href="#/statistics/storages/">
+                <i class="fas fa-folder"></i>
+                [`Storage summary`]
+            </a>
+        </li>
+        <li>
+            <a href="#/statistics/trash/">
+                <i class="far fa-trash-alt"></i>
+                [`Trash summary`]
+            </a>
+        </li>
+        <li>
+            <a href="#/statistics/file_types/">
+                <i class="far fa-file-alt"></i>
+                [`File type statistics`]
+            </a>
+        </li>
+        <li>
+            <a href="#/statistics/users/">
+                <i class="far fa-user"></i>
+                [`User statistics`]
+            </a>
+        </li>
+    </ul>
+
+    <div class="f-statistics-content f-load-block">
+        <div class="f-loading">
+            [`Loading...`]<i class="fas fa-spinner fa-spin custom-ml-4"></i>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        $.files.setBrowserTitle("[`Statistics`]");
+    });
+</script>

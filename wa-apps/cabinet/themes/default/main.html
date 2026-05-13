@@ -1,0 +1,32 @@
+<div class="sa-app sa-app--desktop-sidebar-shown sa-app--mobile-sidebar-hidden sa-app--toolbar-fixed">
+
+    {* SIDEBAR *}
+    <div class="sa-app__sidebar">
+        {include file="partials/sidebar.html"}
+    </div>
+
+    {* CONTENT *}
+    <div class="sa-app__content">
+
+        {* TOOLBAR *}
+        <div class="sa-toolbar sa-toolbar--search-hidden sa-app__toolbar">
+            {include file="partials/toolbar.html"}
+        </div>
+
+        {* BODY *}
+        <div id="top" class="sa-app__body px-2 px-lg-4">
+            <div class="container pb-6">
+                {$content}
+            </div>
+        </div>
+
+        {* FOOTER *}
+        <div class="sa-app__footer d-block d-md-flex">
+            {include file="partials/footer.html"}
+        </div>
+
+    </div>
+
+    <div class="sa-app__toasts toast-container bottom-0 end-0"></div>
+    
+</div>

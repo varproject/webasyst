@@ -1,0 +1,88 @@
+<ul class="tree-level" style="width:{$width+280}px;">
+    {foreach $nodes as $node}
+        <li class="tree-item">
+
+            <div class="tree-row {if $node.id == $active_id}active bg-light{/if}">
+
+                {* Toggle *}
+                <a class="toggle-btn" href="?toggle={$node.id|escape}" hx-get="?toggle={$node.id|escape}"
+                    hx-select-oob="{$toggle_oob_ids|default:'#main_body_tree'}" hx-push-url="false" hx-swap="none">
+
+                    {if isset($node.childs)}
+                        {if in_array($node.id, $open_ids|default:[])}
+                            <i class="bi bi-caret-down-fill icon"></i>
+                        {else}
+                            <i class="bi bi-caret-right-fill icon"></i>
+                        {/if}
+                    {/if}
+                </a>
+
+                {* Узел *}
+                <a class="node-name w-100" href="?category_id={$node.id|escape}" hx-get="?category_id={$node.id|escape}"
+                    hx-select-oob="{$node_oob_ids|default:'#main_body_tree'}" hx-push-url="true" hx-swap="none">
+                    {apanelGetIcon::svg('apanel-icon-folder',['height'=>18])}
+                    {$node.name}
+                </a>
+               
+            </div>
+
+            {if isset($node.childs) && in_array($node.id, $open_ids)}
+                {include file="./{$component_template}.html" nodes=$node.childs width=$width-20}
+            {/if}
+
+        </li>
+    {/foreach}
+</ul>
+
+<style>
+    .tree-level {
+        list-style: none;
+        padding: 0 10px 0 20px;
+        user-select: none;
+    }
+
+    .tree-level a {
+        text-decoration: none;
+        cursor: pointer;
+        color: var(--bs-secondary-color) !important;
+    }
+
+    .tree-level a:hover {
+        color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1)) !important;
+    }
+
+    .tree-level .tree-row {
+        padding: 3px 6px;
+        display: flex;
+        align-items: center;
+    }
+
+    .tree-level .tree-row.active {
+        border-radius: 4px;
+    }
+
+    .tree-level .tree-row.active a {
+        color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1)) !important;
+    }
+
+    .tree-level .icon {
+        display: inline-block;
+        transition: transform 0.1s ease;
+    }
+
+    .tree-level .node-name .apanel-icon {
+        vertical-align: sub;
+    }
+
+    .tree-level .toggle-btn .bi-caret-down-fill,
+    .tree-level .toggle-btn .bi-caret-right-fill {
+        position: sticky;
+        margin-left: -20px;
+        cursor: default;
+        color: #464646;
+    }
+
+    .tree-level .toggle-btn:active .icon {
+        transform: scale(0.8);
+    }
+</style>

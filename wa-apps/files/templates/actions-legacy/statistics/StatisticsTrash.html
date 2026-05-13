@@ -1,0 +1,42 @@
+{* assign $body *}
+{include file="./include.body.storages.html" clear_link=true assign="body"}
+
+{* render content *}
+<div id="f-statistics-trash">
+    {include file="./include.content.html"
+        action = 'trash'
+        title = '[`Trash summary`]'
+        cols = [
+            'name' => '[`Storage`]',
+            'size' => '[`Size`]',
+            'count' => '[`Files`]',
+            '' => ''
+        ]
+        body = $body
+    inline}
+</div>
+
+<script>
+    $(function() {
+        $('#f-statistics-trash')
+            .on('click', '.f-clear-storage-trash', function () {
+                var link = $(this);
+                $.files.confirm('[`Are you sure?`]',
+                    function() {
+                        var tr = link.closest('tr');
+                        var id = tr.data('id');
+                        $.files.jsonPost({
+                            url: '?module=trash&action=clear',
+                            data: { storage_id: id },
+                            onSuccess: function (r) {
+                                if (r.status === 'ok') {
+                                    $.files.controller.reloadPage();
+                                }
+                            }
+                        });
+                    }
+                );
+
+            });
+    });
+</script>

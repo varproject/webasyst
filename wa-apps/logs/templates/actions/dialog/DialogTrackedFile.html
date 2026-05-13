@@ -1,0 +1,74 @@
+<div>
+    {if isset($error)}
+        <div class="fields">
+            <div class="field">
+                <div class="name">[`Path`]</div>
+                <div class="value">
+                    <strong>{if $file.folder}<span class="gray">{$file.folder}</span>{/if}{$file.name}</strong>
+                </div>
+            </div>
+            <div class="field">
+                <div class="value">
+                    <span class="state-error">{$error}</span>
+                </div>
+            </div>
+        </div>
+    {else}
+        <div class="fields">
+            <div class="field">
+                <div class="name">[`Path`]</div>
+                <div class="value">
+                    <strong class="break-all">{if $file.folder}<span class="gray">{$file.folder}</span>{/if}{$file.name}</strong>
+                </div>
+            </div>
+            <div class="field">
+                <div class="name">[`Tracking`]</div>
+                <div class="value">
+                    <div class="fields">
+                        <div class="field">
+                            <div class="value">
+                                <div class="switch-with-text tracked-status-selector">
+                                    <span class="switch tracked-status-switch small">
+                                        {$controls.status}
+                                    </span>
+                                    <label for="tracked-status-selector-checkbox" data-active-text="[`tracking enabled`]" data-inactive-text="[`tracking disabled`]">{if $tracked_file}[`tracking enabled`]{else}[`tracking disabled`]{/if}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field hint-field"{if !$tracked_file} style="display: none;"{/if}>
+                <div class="name"></div>
+                <div class="value small">{sprintf_wp(
+                    'Once this file is updated, you will see a %s&nbsp;badge next to the app’s icon in the main menu.',
+                    '<span class="badge red">1</span>')
+                }</div>
+            </div>
+
+            {if $show_email_notifications_promo}
+                <div class="field">
+                    <div class="value">
+                        <div class="alert info small logs-premium-feature-alert custom-mb-0 custom-mt-32">
+                            <div class="flexbox full-width">
+                                <div class="flexbox middle">
+                                    <span>
+                                        [`You can receive <strong>email notifications</strong> on this file’s updates with the <em>Logs+</em> license.`]
+                                        <a href="javascript: void(0);" class="view-premium-link nowrap" data-feature="tracked-email-notifications">[`Read more`] ›</a>
+                                    </span>
+                                </div>
+                                <button type="button" title="[`Do not show again`]" class="alert-close nobutton" data-feature="tracked-email-notifications" style="float: none;"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+
+            <div class="field dialog-error-message">
+                <div class="value">
+                    <span class="state-error"></span>
+                </div>
+            </div>
+        </div>
+    {/if}
+</div>

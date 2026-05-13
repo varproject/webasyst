@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$wa->appName()} &mdash; {$wa->accountName()}</title>
+    {$wa->css()}
+    <link type="text/css" rel="stylesheet" href="{$wa_url}wa-content/css/jquery-ui/jquery-ui-1.7.2.custom.css">
+    <link type="text/css" rel="stylesheet" href="{$wa_app_static_url}css/status.css?v=2{$wa->version()}">
+    <link type="text/css" rel="stylesheet" href="{$wa_app_static_url}js/vendors/noUiSlider/nouislider.min.css">
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="/wa-content/js/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-wa/wa.core.js?v{if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-plugins/jquery.store.js"></script>
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-plugins/jquery.history.js"></script>
+
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.core.min.js?v{if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.widget.min.js?v{if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.mouse.min.js?v{if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.slider.min.js?v{if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+    <script type="text/javascript" src="{$wa_app_static_url}js/vendors/noUiSlider/nouislider.min.js"></script>
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.datepicker.min.js?v{if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+    {if ($wa->locale() == 'ru_RU')}
+    <script type="text/javascript" src="{$wa_url}wa-content/js/jquery-ui/i18n/jquery.ui.datepicker-ru_RU.js"></script>
+    {/if}
+
+    <script src="{$wa_url}wa-content/js/jquery-wa/wa.js?v={if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+
+    <script type="text/javascript" src="{$wa_app_static_url}js/status.js?v=2{if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+    <script type="text/javascript" src="?action=loc&amp;v={if !waSystemConfig::isDebug()}{$wa->version()}{/if}"></script>
+
+</head>
+<body>
+<div id="wa">
+    {$wa->header()}
+
+    <div id="wa-app">
+        <div class="flexbox wrap-mobile">
+            <section class="sidebar mobile-friendly width-adaptive flexbox s-navigation" id="status-left-sidebar">{$sidebar_html}</section>
+            <section class="content blank" id="status-content"></section>
+        </div>
+    </div>
+
+    {if $showReviewWidget && method_exists($wa->installer, 'reviewWidget')}
+        {$wa->installer->reviewWidget('app/status')}
+    {/if}
+
+    <script>
+        'use strict';
+
+        // $(function () {
+        $.status.init({
+            account_name: '{$wa->accountName()|escape:'javascript'}',
+            isAdmin: {$isAdmin},
+            userId: {$stts->getUser()->getContactId()},
+            backendUrl: '{$wa_backend_url}'
+        });
+
+        // $.status.routing.defaultAction();
+
+        // });
+    </script>
+
+    {if $wa->isMobile()}
+    <script>
+        (function ($) {
+                var sidebar = $('#status-left-sidebar').waShowSidebar();
+                window.addEventListener('hashchange', function () {
+                    window.scrollTo(0, 0);
+                    sidebar.data('sidebar').$sidebar_content.hide();
+                });
+            })(jQuery);
+    </script>
+    {/if}
+
+    <script>$.wa.locale = $.extend($.wa.locale || {}, {
+        'Adjust time': "[`Adjust time`]",
+        'Save': "[`Save`]",
+        'Cancel': "[`Cancel`]",
+    });</script>
+</div>
+</body>
+</html>

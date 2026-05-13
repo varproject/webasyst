@@ -1,0 +1,10 @@
+/*
+// containers
+*/
+@use '../mixins/bootstrap' as bt;
+
+@each $breakpoint, $container-max-width in bt.$container-max-widths {
+    .container--max--#{$breakpoint} {
+        max-width: $container-max-width;
+    }
+}

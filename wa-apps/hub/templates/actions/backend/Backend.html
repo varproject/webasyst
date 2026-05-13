@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>{$wa->appName()} &mdash; {$wa->accountName()}</title>
+
+    {$wa->css()}
+    <link rel="stylesheet" href="{$wa_app_static_url}css/hub.css?v{$wa->version()}">
+    <link rel="stylesheet" href="{$wa_app_static_url}css/glyphs.css?v{$wa->version()}">
+    <link rel="stylesheet" href="{$wa_app_static_url}css/codemirror/codemirror.css?v{$wa->version()}">
+    <link rel="stylesheet" href="{$wa_app_static_url}css/codemirror/monokai.css?v{$wa->version()}">
+    <link rel="stylesheet" href="{$wa_app_static_url}js/redactorx/redactorx.min.css">
+    <link rel="stylesheet" href="{$wa_app_static_url}js/redactorx/redactorx.dark.css">
+
+    <link rel="stylesheet" href="{$wa_url}wa-content/css/jquery-ui/base/jquery.ui.autocomplete.css">
+    <link rel="stylesheet" href="{$wa_url}wa-content/js/jquery-plugins/jquery-tagsinput/jquery.tagsinput.css">
+    <link rel="stylesheet" href="{$wa_url}wa-content/css/jquery-ui/base/jquery.ui.datepicker.css">
+    <link rel="stylesheet" href="{$wa_url}wa-content/js/pickr/themes/classic.min.css">
+
+    <script src="{$wa_url}wa-content/js/jquery/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="{$wa_url}wa-content/js/jquery-wa/wa.js?v={$wa->version(true)}"></script>
+
+    {wa_js file="js/compiled/redactorx.bundle.min.js" uibundle=''}
+        {$wa_app_static_url}js/redactorx/redactorx.min.js
+        {$wa_app_static_url}js/redactorx/plugins/alignment/alignment.min.js
+        {$wa_app_static_url}js/redactorx/plugins/blockcode/blockcode.min.js
+        {$wa_app_static_url}js/redactorx/plugins/removeformat/removeformat.min.js
+        {$wa_app_static_url}js/redactorx/plugins/inlineformat/inlineformat.min.js
+        {$wa_app_static_url}js/redactorx/plugins/imageposition/imageposition.min.js
+        {$wa_app_static_url}js/redactorx/plugins/allowstyle/allowstyle.js
+        {$wa_app_static_url}js/redactorx/language/ru.js
+    {/wa_js}
+
+    {wa_js file="js/compiled/hub-external.min.js" uibundle=''}
+        {$wa_url}wa-content/js/sortable/sortable.min.js
+        {$wa_url}wa-content/js/sortable/jquery-sortable.min.js
+        {$wa_url}wa-content/js/jquery-plugins/jquery.history.js
+        {$wa_url}wa-content/js/jquery-plugins/jquery.store.js
+        {$wa_url}wa-content/js/jquery-ui/jquery.ui.core.min.js
+        {$wa_url}wa-content/js/jquery-ui/jquery.ui.widget.min.js
+        {$wa_url}wa-content/js/jquery-ui/jquery.ui.mouse.min.js
+        {$wa_url}wa-content/js/jquery-ui/jquery.ui.position.min.js
+        {$wa_url}wa-content/js/jquery-ui/jquery.ui.autocomplete.min.js
+        {$wa_url}wa-content/js/jquery-ui/jquery.ui.draggable.min.js
+        {$wa_url}wa-content/js/jquery-ui/jquery.ui.droppable.min.js
+        {$wa_url}wa-content/js/jquery-ui/jquery.ui.datepicker.min.js
+        {$wa_url}wa-content/js/jquery-plugins/jquery-tagsinput/jquery.tagsinput.min.js
+        {$wa_app_static_url}js/lazy.load.js
+        {$wa_app_static_url}js/codemirror/codemirror.js
+        {$wa_app_static_url}js/codemirror/xml.js
+        {$wa_app_static_url}js/codemirror/smarty.js
+    {/wa_js}
+    <script src="{$wa_url}wa-content/js/pickr/pickr.min.js?v={$wa->version(true)}"></script>
+
+    {wa_js file="js/hub.min.js"}
+        {$wa_app_static_url}js/hub.js
+        {$wa_app_static_url}js/sidebar.js
+    {/wa_js}
+
+    <script src="{$wa_url}wa-content/js/jquery-ui/i18n/jquery.ui.datepicker-{$wa->locale()}.js"></script>
+
+    {$wa->js()}
+    {foreach $backend_event as $e}{if !empty($e.head)}{$e.head}{/if}{/foreach}
+</head>
+<body>
+    <div id="wa">
+        {$wa->header()}
+        <div id="wa-app" class="hub flexbox wrap-mobile">
+            <div class="sidebar flexbox width-adaptive-wider mobile-friendly js-app-sidebar">
+                {include file="./include.sidebar.html" inline}
+            </div>
+
+            <div class="content blank" id="content">
+                <div class="js-skeleton-default" style="display: none;">
+                    {include file="./skeleton/topics.html"}
+                </div>
+
+                <div class="js-skeleton-comments" style="display: none;">
+                    {include file="./skeleton/comments.html"}
+                </div>
+
+                <div class="js-skeleton-authors" style="display: none;">
+                    {include file="./skeleton/authors.html"}
+                </div>
+
+                <div class="js-skeleton-topic" style="display: none;">
+                    {include file="./skeleton/topic.html"}
+                </div>
+
+                <div class="js-skeleton-topic-edit" style="display: none;">
+                    {include file="./skeleton/topic-edit.html"}
+                </div>
+
+                <div class="js-skeleton-filter-add" style="display: none;">
+                    {include file="./skeleton/filter-add.html"}
+                </div>
+
+                <div class="js-skeleton-category-add" style="display: none;">
+                    {include file="./skeleton/category-add.html"}
+                </div>
+
+                <div class="js-skeleton-settings" style="display: none;">
+                    {include file="./skeleton/settings.html"}
+                </div>
+
+                <div class="js-skeleton-settings-hub" style="display: none;">
+                    {include file="./skeleton/settings-hub.html"}
+                </div>
+
+                <div class="js-skeleton-settings-type" style="display: none;">
+                    {include file="./skeleton/settings-type.html"}
+                </div>
+
+                <div class="js-skeleton-plugins" style="display: none;">
+                    {include file="./skeleton/plugins.html"}
+                </div>
+
+                <div class="js-skeleton-pages" style="display: none;">
+                    {include file="./skeleton/pages.html"}
+                </div>
+            </div>
+
+            {if $can_create_topics}
+            <div class="add-topic-link">
+                <a class="button circle largest mobile-only js-add-topic-mobile" href="#/topic/add/" title="[`New topic`]">
+                    <i class="fas fa-pen-alt"></i>
+                </a>
+            </div>
+            {/if}
+        </div>
+    </div>
+
+    {if $wa->installer && method_exists($wa->installer, 'reviewWidget') && $count_topics['all'] > 10}
+        {$wa->installer->reviewWidget('app/hub')}
+    {/if}
+
+    <script>
+        $.wa.locale = $.extend($.wa.locale || { }, {
+            'Insert code block': "[`Insert code block`]",
+            'Insert quote': "[`Insert quote`]",
+            'Insert': "[`Insert`]"
+        });
+        $.hub.lang = {json_encode(substr($wa->locale(), 0, 2))};
+        $.hub.framework_version = {$wa->version(true)|json_encode};
+        $.hub.init({
+            accountName: {json_encode($wa->accountName(false))},
+            topics_count: {json_encode($count_topics)}
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+/*
+// breadcrumb
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+
+.breadcrumb-sa-simple {
+    $local-gutter: .5rem;
+
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    font-size: func.rem(13);
+
+    a {
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+
+    a {
+        color: vs.$sa-breadcrumb--font-color;
+    }
+    .breadcrumb-item.active {
+        color: vs.$sa-breadcrumb--active-font-color;
+    }
+    .breadcrumb-item + .breadcrumb-item {
+        @include dir.scope {
+            #{dir.$padding-inline-start}: $local-gutter;
+        }
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: vs.$sa-breadcrumb--divider-color;
+
+        @include dir.scope {
+            #{dir.$padding-inline-end}: $local-gutter;
+        }
+    }
+}

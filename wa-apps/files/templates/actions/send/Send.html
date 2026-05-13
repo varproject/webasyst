@@ -1,0 +1,112 @@
+{$dialog_id = uniqid('f-send-dialog-')}
+
+{function form_begin}
+    {if $allowed}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $allowed}</form>{/if}
+{/function}
+
+<div class="dialog f-send-dialog" id="{$dialog_id}">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <h3 class="dialog-header">[`Send as attachment`]</h3>
+            <div class="dialog-content fields">
+
+                {if $allowed}
+                    <div class="field">
+                        <div class="name">[`To:`]</div>
+                        <div class="value">
+                            <textarea name="data[to]" class="width-100" style="height: 3.2em;"></textarea>
+                            <p class="hint">[`One email per line or separated by a ";"`]</p>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name">[`Subject:`]</div>
+                        <div class="value">
+                            <input type="text" name="data[subject]" value="{if count($files)}{$_f = current($files)}{$_f.name|escape}{/if}" class="width-100 f-send-subject" />
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name">[`Text:`]</div>
+                        <div class="value">
+                            <textarea name="data[text]" class="f-send-text width-100"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name">[`Attachments:`]</div>
+                        <div class="value">
+                            {_w('%d file', '%d files', count($files))} ({$size_str})
+                        </div>
+                    </div>
+                {else}
+                    <span class="text-red">[`File size exceeds the limit set for email messages.`]</span>
+                {/if}
+
+            </div>
+
+            <div class="dialog-footer">
+                {$wa->csrf()}
+                {if $allowed && $files}
+                    <button type="submit" class="button"><i class="fas fa-spinner fa-spin hidden custom-mr-4"></i> [`Send`]</button>
+                    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+                    <input type="hidden" name="data[files]" value="{join(',', array_keys($files))}" />
+                {else}
+                    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+                {/if}
+            </div>
+        </div>
+    {form_end}
+    <script>
+        $(function() {
+            const dialog = $('#{$dialog_id}');
+            $('.f-send-dialog').not(dialog).remove();
+            {if $allowed && $files}
+            dialog.filesDialog({
+                onOpen: function($dialog, dialog_instance) {
+                    $dialog.find('[type="submit"]').on('click', function(e) {
+                        e.preventDefault();
+
+                        $(this).find('.fa-spinner').removeClass('hidden');
+                        this.disabled = true;
+
+                        $dialog.find('.state-error-hint').remove();
+                        $dialog.find('.state-error').removeClass('state-error');
+
+                        $.files.jsonPost({
+                            url: '?module=send&action=files',
+                            data: $dialog.find('form').serialize(),
+                            onSuccess: function(r) {
+                                if (r.status === 'ok') {
+                                    $.files.refreshSidebar();
+                                    dialog_instance.close();
+                                    $.files.controller.reloadPage();
+                                } else {
+                                    $dialog.find('.fa-spinner').addClass('hidden');
+
+                                    for(var i in r.errors) {
+                                        $dialog.find('[name="data[' + r.errors[i][1] + ']"]').addClass('state-error').after(' <span class="state-error-hint">' + r.errors[i][0] + '</span>');
+                                    }
+                                    //$.files.alertError(r.errors[0][0]);
+                                }
+                            },
+                            onFailure: function(r) {
+                                $.files.alertError('[`Server error`]', r);
+                                dialog_instance.close();
+                            }
+                        });
+                    })
+                }
+            });
+            {else}
+            dialog.filesDialog();
+            {/if}
+        });
+    </script>
+</div>
+

@@ -1,0 +1,117 @@
+{$dialog_id = uniqid('f-delete-dialog-')}
+
+{function form_begin}
+    {if $allowed_files}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $allowed_files}</form>{/if}
+{/function}
+
+{function size}
+    {if $allowed_files && $unallowed_files}width650px height350px{else}width400px height200px{/if}
+{/function}
+
+<div class="dialog {size} f-delete-dialog" id="{$dialog_id}" style="display:none;">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+                    <h1>[`Delete`]</h1>
+
+                    {if $allowed_files}
+                        {if $unallowed_files}
+                            <p class="errormsg">
+                                [`No permissions to delete these files`]:
+                                {foreach $unallowed_files as $file}
+                                    {$file.name|escape}&nbsp;
+                                {/foreach}
+                            </p>
+                        {/if}
+                        {$allowed_files_count = count($allowed_files)}
+                        <p>
+                            {if $is_permanently}
+                                [`Files will be deleted PERMANENTLY without the ability to restore. Are you sure?`]
+                            {else}
+                                [`Files will be moved to trash. Are you sure?`]
+                            {/if}
+                            <br>{_w('%d file will be deleted', '%d files will be deleted', $allowed_files_count)}
+                        </p>
+                    {else}
+                        <p class="errormsg">
+                            [`You don’t have permissions to delete these files.`]
+                        </p>
+                    {/if}
+
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    {if $allowed_files}
+                        <input class="button red" type="submit" value="{if $unallowed_files}[`Delete the rest`]{else}[`Delete`]{/if}">
+                        <i class="icon16 loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                    {else}
+                        <input class="button gray cancel" type="button" value="[`Cancel`]">
+                    {/if}
+                </div>
+            </div>
+        </div>
+    {form_end}
+</div>
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-delete-dialog').not(dialog).remove();
+        {if $allowed_files}
+            dialog.filesDialog({
+                disableButtonsOnSubmit: true,
+                onSubmit: function() {
+                    var file_ids = {json_encode(array_keys($allowed_files))};
+                    dialog.find('.loading').show();
+                    $.files.jsonPost({
+                        url: '?module=delete&action=files{if $is_permanently}&permanently=1{/if}',
+                        data: { file_id: file_ids },
+                        onSuccess: function(r) {
+                            if (r.status === 'ok') {
+                                $.files.refreshSidebar();
+                                {if $wa->get('from') === 'fileinfo'}
+
+                                    var file_id = file_ids[0];
+
+                                    if (!$.isEmptyObject(r.data.files) && !$.isEmptyObject(r.data.files[file_id])) {
+                                        if (r.data.files[file_id].parent_id > 0) {
+                                            $.files.controller.gotoFolderPage(r.data.files[file_id].parent_id);
+                                        } else {
+                                            $.files.controller.gotoStoragePage(r.data.files[file_id].storage_id);
+                                        }
+                                    } else {
+                                        $.files.controller.gotoDefaultPage();
+                                    }
+
+                                {else}
+                                    $.files.controller.reloadPage();
+                                {/if}
+                            } else {
+                                $.files.alertError(r.errors[0][0]);
+                            }
+                        },
+                        onFailure: function(r) {
+                            $.files.alertError('[`Server error`]', r);
+                        },
+                        onAlways: function() {
+                            dialog.find('input[type=submit]').attr('disabled', false);
+                            dialog.find('.loading').hide();
+                            dialog.trigger('close');
+                        }
+                    });
+                    return false;
+                }
+            });
+        {else}
+            dialog.filesDialog();
+        {/if}
+    });
+</script>

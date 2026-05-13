@@ -1,0 +1,43 @@
+.f-file-list-table {
+    width: 100%;
+    table-layout: fixed;
+}
+.f-file-list-table td,
+.f-file-list-table th {
+    padding: 4px;
+    vertical-align: middle;
+    border: solid rgba(0,0,0,0.1);
+    border-width: 0 0 1px;
+}
+.f-file-list-table .f-image-column {
+    width: 32px;
+    font-size: 0;
+    line-height: 0;
+}
+.f-file-list-table .f-image-column .f-file-image {
+    width: 32px;
+    height: 32px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+.f-file-list-table .f-name-column {
+    text-align: left;
+}
+.f-file-list-table .f-name-column .f-name-wrapper {
+    max-width: 100%;
+    line-height: 0;
+}
+.f-file-list-table .f-name-column .f-name-wrapper .f-file-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    line-height: 1.25em;
+}
+.f-file-list-table .f-date-column,
+.f-file-list-table .f-size-column {
+    width: 125px;
+    text-align: center;
+}

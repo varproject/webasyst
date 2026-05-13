@@ -1,0 +1,289 @@
+{$_email = $_contact->get('email', 'default')}
+{$_sender = $contacts[$wa->userId()]}
+
+<section class="c-add-email-message-section" id="js-add-email-message-section">
+    <form>
+        <div class="c-invisible">
+            {* TO *}
+            <div class="flexbox middle width-100 custom-mb-16" style="line-height: 38px;">
+                <div class="c-column label">[`To`]:</div>
+                <div class="c-column middle width-100">
+
+                    <div class="flexbox middle space-8 full-width">
+                        <div class="c-column">
+                            <span class="flexbox space-4 middle wrap c-user-name">
+                                <i class="icon userpic" style="background-image: url({waContact::getPhotoUrl($_contact.id, $_contact.photo, 20)|escape});"></i>{$_contact.name|escape}
+                                <span class="text-gray">&lt;{$_email|escape}&gt;</span>
+                            </span>
+                        </div>
+                        <div class="c-column right">
+                            <a href="" class="text-gray small nowrap js-email-copy-link">
+                                [`Copy`] <i class="icon fas fa-caret-right js-email-copy-link-icon"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {* COPY *}
+            <div class="email-copy-wrapper">
+                <div class="flexbox middle width-100">
+                    <div class="c-column label">[`Copy`]:</div>
+                    <div class="c-column flexbox middle width-100">
+
+                        <div class="email-copy-area">
+                            <div class="email-copy-text">
+                                {if ifset($recipients)}
+                                    {foreach $recipients as $_recipient}
+                                        <div class="email-copy-user" title="{$_recipient.email|escape}" data-contact-id="{if !empty($_recipient.contact_id)}{$_recipient.contact_id|escape}{else}0{/if}" data-email="{$_recipient.email|escape}">
+                                            {if !empty($_recipient.photo)}<i class="icon userpic" style="background-image: url({$_recipient.photo});"></i>{/if}
+                                            <b>
+                                                {if !empty($_recipient.name)}
+                                                    {$_recipient.name|escape}
+                                                {else}
+                                                    {$_recipient.email|escape}
+                                                {/if}
+                                            </b>
+                                            <a title="[`Remove from CC`]" class="remove-cc js-remove-cc">x</a>
+                                            <input name="cc[{$_recipient.email|escape}][email]" type="hidden" value="{$_recipient.email|escape}">
+                                            <input name="cc[{$_recipient.email|escape}][id]" type="hidden" value="{if !empty($_recipient.contact_id)}{$_recipient.contact_id}{else}0{/if}">
+                                            {if empty($_recipient.id) && !empty($_recipient.name)}
+                                                <input name="cc[{$_recipient.email|escape}][name]" type="hidden" value="{$_recipient.name|escape|default:""}">
+                                            {/if}
+                                        </div>
+                                    {/foreach}
+                                {/if}
+                                <div class="email-copy-input-div">
+                                    <input class="email-copy-input js-email-copy-input" type="text" autocomplete="off" placeholder="[`Name or email`]" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="deal-participants-area">
+                        {if ifset($participants)}
+                            [`Participants in the deal`]:
+                            {foreach $participants as $_participant}
+                                <span class="email-copy-user" title="{$_participant.email.0|escape}" data-cc-contact-id="{$_participant.id|escape}" data-cc-email="{$_participant.email.0|escape}">
+                                    <i class="icon userpic" style="background-image: url({$_participant.photo_url_16|escape});"></i>
+                                    <b>{$_participant.name|escape}</b>
+                                </span>
+                            {/foreach}
+                        {/if}
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {* COPY *}
+            <div class="custom-mb-16 email-copy-wrapper-collapsed {if ifset($recipients)}email-copy-wrapper-collapsed-block{/if}">
+                <div class="flexbox middle width-100">
+                    <div class="c-column label">[`Copy`]:</div>
+                    <div class="c-column middle width-100">
+
+                        <div class="email-copy-area">
+                            <div class="flexbox space-8 wrap middle email-copy-text-collapsed">
+                                {if ifset($recipients)}
+                                    {foreach $recipients as $_recipient}
+                                        <div class="email-copy-user" title="{$_recipient.email|escape}" data-contact-id="{if !empty($_recipient.contact_id)}{$_recipient.contact_id|escape}{else}0{/if}" data-email="{$_recipient.email|escape}">
+                                            {if !empty($_recipient.photo)}<i class="icon userpic" style="background-image: url({$_recipient.photo|escape});"></i>{/if}
+                                            <b>
+                                                {if !empty($_recipient.name)}
+                                                    {$_recipient.name|escape}
+                                                {else}
+                                                    {$_recipient.email|escape}
+                                                {/if}
+                                            </b>
+                                        </div>
+                                    {/foreach}
+                                {/if}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {* FROM *}
+            <div class="flexbox middle width-100 custom-mb-16">
+                <div class="c-column label">[`From`]:</div>
+                <div class="c-column middle width-100">
+
+                    <span class="c-user-name">
+                        <i class="icon userpic c-icon-with-text" style="background-image: url({$_sender.photo_url_16});"></i><span class="js-sender-name">{$_sender->getSenderName()|escape}</span>
+                    </span>
+
+                    {if $_sender.email|count}
+                        <span class="c-user-email">
+                            <span class="text-gray">[`via`]</span>
+                            <span class="wa-select">
+                                <select class="js-sender-email-select">
+                                    {foreach $_sender.email as $_email}
+                                        <option value="{$_email.value|escape}">{$_email.value|escape}</option>
+                                    {/foreach}
+                                </select>
+                            </span>
+                        </span>
+                    {/if}
+
+                    <a href="javascript:void(0)" class="nowrap js-show-personal-settings-dialog">
+                        <i class="icon fas fa-cog text-gray settings"></i>
+                    </a>
+                </div>
+            </div>
+
+            {* SUBJECT *}
+            <div class="flexbox middle width-100 c-subject-wrapper">
+                <div class="c-column middle width-100">
+                    <input type="text" name="subject" class="wide" value="{strip_tags($subject)|default:''|escape}" placeholder="[`Subject`]" required>
+                </div>
+            </div>
+
+            {* TEXT *}
+            <div class="line">
+                <div class="c-wysiwyg-wrapper">
+                    <textarea class="c-textarea js-wysiwyg" name="body" cols="1" rows="1" placeholder="[`Write a message`]..." required></textarea>
+                </div>
+
+            </div>
+
+            {* ACTIONS *}
+            <div class="line c-form-actions">
+                <div class="flexbox middle space-4 js-extended-form-actions">
+                    <div class="c-column middle">
+                        <input class="button js-save-button" type="submit" value="[`Reply`]">
+                        <a class="button light-gray js-revert" href="javascript:void(0);">[`Cancel`]</a>
+                    </div>
+                    <div class="c-column middle right">
+                    </div>
+                    {* FILES *}
+                    <div class="c-files-wrapper js-files-wrapper js-default-drop-area js-extended-form-drop-area">
+                        <div class="c-drop-wrapper js-drop-area">
+                            <span class="icon size-16 js-message-attachment cursor-pointer">
+                                <i class="fas fa-paperclip"></i>
+                            </span>
+                            {* <input class="c-drop-field js-drop-field" type="file" multiple>*}
+                        </div>
+                    </div>
+                    <div class="icon size-18 js-message-resize cursor-pointer custom-ml-auto">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                </div>
+
+                {* ATTACH *}
+                {if !empty($files)}
+                    <div class="line">
+                        <h4 class="heading">[`Attach existed files:`]</h4>
+                        <ul class="menu c-attach-existed-files-wrapper">
+                            {foreach $files as $_file}
+                            <li class="c-attach-file-wrapper">
+                                <label>
+                                    <input type="checkbox" name="file_id[]" value="{$_file.id|escape}">
+                                    <span class="c-attach-file-name">{$_file.name|escape}</span>
+                                    <span class="c-size hint">{crmHelper::formatFileSize($_file.size)}</span>
+                                </label>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+            </div>
+
+        </div>
+
+        <div class="flexbox vertical middle c-visible">
+            {*OLD*}
+            {*<span class="custom-pr-12 icon size-16">
+                <i class="fas fa-paperclip"></i>
+            </span>
+            <textarea class="c-textarea js-visible-textarea" placeholder="[`Message`]"></textarea>*}
+
+            {*NEW*}
+            <div class="flexbox width-100 js-default-drop-area">
+                <div class="c-files-wrapper js-files-wrapper">
+                    <div class="c-drop-wrapper js-drop-area">
+                        <span class="custom-pr-12 icon size-20 js-message-attachment cursor-pointer">
+                            <i class="fas fa-paperclip"></i>
+                        </span>
+                        {*<div class="js-drop-text" data-default="[`Attach file`]" data-hover="[`Drop file here`]">[`Attach file`]</div>*}
+                        <input class="c-drop-field js-drop-field" type="file" multiple>
+                    </div>
+                </div>
+                {if !empty($conversation.aux_items.reply_form_ai_answer)}
+                    {$conversation.aux_items.reply_form_ai_answer.button}
+                {/if}
+                <div class="width-100 flexbox middle">
+                    <textarea class="c-textarea js-visible-textarea-small" placeholder="[`Message`]"></textarea>
+                </div>
+                {* ACTIONS *}
+                <div class="flexbox space-20 c-form-actions">
+                    <div class="icon size-18 js-message-resize-open cursor-pointer">
+                        <i class="fas fa-expand-alt"></i>
+                    </div>
+                    <div class="c-column middle">
+                        <button class="button rounded c-im-save-button js-save-button" type="submit" disabled>
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flexbox wrap c-upload-list">
+            {capture assign="_file_template_html"}
+                <div class="small c-upload-item flexbox space-4 middle ">
+                    <i class="icon fas fa-file"></i>
+                    <span class="c-name js-name"></span>
+                    <div class="c-progress-wrapper progress js-bar">
+                        <progress class="bar js-progress" id="js-progress" min="0" max="100" value=""></progress>
+                        <span class="icon text-green size-14 js-progress-success-icon"><i class="fas fa-check-circle"></i></span>
+                    </div>
+                    <button class="nobutton flexbox middle text-gray js-file-delete" ><i class="icon fas fa-times-circle delete"></i></button>
+                    <span class="c-status js-status" id="tooltip-error" data-wa-tooltip-content="[`Your file is too large. You need to increase the file upload size limit in the PHP configuration.`]">
+                        <i class="fas fa-exclamation-triangle state-error"></i>
+                    </span>
+                    <script>
+                        ( function($) {
+                            $("#tooltip-error").waTooltip();
+                        })(jQuery);
+                    </script>
+                </div>
+            {/capture}
+            <div class="js-status-message" id="tooltip-error-message" >
+            </div>
+        </div>
+
+
+        <input name="deal_id" type="hidden" value="{$conversation.deal_id|default:"none"}" class="js-field js-deal-id">
+        <input name="message_id" value="{$conversation.conversation_last_message.id|escape|default:""}" type="hidden">
+        <input name="contact_id" value="{$_contact.id|escape|default:""}" type="hidden" class="js-to-id">
+        <input name="email" value="{$_contact.email[0].value|escape|default:""}" type="hidden" class="js-to-email">
+        <input name="name" value="" type="hidden" class="js-to-new-name">
+        <input name="sender_email" value="{$_sender.email[0].value|escape|default:""}" type="hidden" class="js-sender-email">
+        <input name="source_email" value="" type="hidden">
+        <input name="hash" value="{$hash|default:""}" type="hidden">
+        {$wa->csrf()}
+    </form>
+
+    <script>
+        (function ($) {
+            new CRMEmailConversationEmailSender({
+                $wrapper: $("#js-add-email-message-section"),
+                file_template_html: {$_file_template_html|json_encode},
+                max_upload_size: {waRequest::getUploadMaxFilesize()},
+                hash: "{$hash|default:""}",
+                body: {$body|default:''|json_encode},
+                send_action_url: {$send_action_url|default:''|json_encode},
+                deal_id: {$conversation.deal_id|default:"0"},
+                locales: {
+                    remove: "[`Remove`]",
+                    change_recipient: "[`Change recipient`]",
+                    remove_form_cc: "[`Remove from CC`]",
+                    type_email: "[`Type email`]",
+                    type_name: "[`Type name`]",
+                    file_size: "[`File is too large or another upload error occurred.`]",
+                    wrote: "[`wrote`]",
+                }
+            });
+        })(jQuery);
+    </script>
+</section>

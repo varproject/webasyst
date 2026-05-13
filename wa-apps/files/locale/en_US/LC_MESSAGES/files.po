@@ -1,0 +1,1205 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: files\n"
+"POT-Creation-Date: 2015-08-17 19:37+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: files\n"
+"Language-Team: files\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+msgid "Share this folder"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Move"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
+msgid "Updated"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Meta"
+msgstr ""
+
+msgid "Upload photos"
+msgstr ""
+
+msgid "All files"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Document"
+msgstr ""
+
+msgid "Images"
+msgstr ""
+
+msgid "Input file name"
+msgstr ""
+
+msgid "Storage"
+msgstr ""
+
+msgid "Shared"
+msgstr ""
+
+msgid "Trash"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "Create folder"
+msgstr ""
+
+msgid "Common files"
+msgstr ""
+
+msgid "No access"
+msgstr ""
+
+msgid "Read only"
+msgstr ""
+
+msgid "Read and comment"
+msgstr ""
+
+msgid "Add new files"
+msgstr ""
+
+msgid "Full access"
+msgstr ""
+
+msgid "My files"
+msgstr ""
+
+msgid "Show more files"
+msgstr ""
+
+msgid "Loading"
+msgstr ""
+
+msgid "%d comment"
+msgid_plural "%d comments"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d file"
+msgid_plural "%d files"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%d contact"
+msgid_plural "%d contacts"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "of %d"
+msgstr ""
+
+msgid "Download File"
+msgstr ""
+
+msgid "Upload datetime"
+msgstr ""
+
+msgid "Update datetime"
+msgstr ""
+
+msgid "Contact isn't exists"
+msgstr ""
+
+msgid "Comments"
+msgstr ""
+
+msgid "Add comment"
+msgstr ""
+
+msgid "No permission to create a folder"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "cancel"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Couldn't create folder"
+msgstr ""
+
+msgid "Create storage"
+msgstr ""
+
+msgid "Storage name"
+msgstr ""
+
+msgid "Access rights"
+msgstr ""
+
+msgid "There are no user groups in your Webasyst installation. Add groups in the Contacts app to be able to manage access to storage."
+msgstr ""
+
+msgid "Couldn't create storage"
+msgstr ""
+
+msgid "Share file"
+msgstr ""
+
+msgid "Share folder"
+msgstr ""
+
+msgid "Groups/users"
+msgstr ""
+
+msgid "Access level"
+msgstr ""
+
+msgid "Couldn't share folder"
+msgstr ""
+
+msgid "Select files"
+msgstr ""
+
+msgid "or drag files here"
+msgstr ""
+
+msgid "Start upload"
+msgstr ""
+
+msgid "Stop upload"
+msgstr ""
+
+msgid "Files uploaded with errors"
+msgstr ""
+
+msgid "Server error"
+msgstr ""
+
+msgid "Upload files (%d)"
+msgstr ""
+
+msgid "Upload to"
+msgstr ""
+
+msgid "Upload files"
+msgstr ""
+
+msgid "Empty result"
+msgstr ""
+
+msgid "The insufficient file write permissions for the %s folder."
+msgstr ""
+
+msgid "Database error"
+msgstr ""
+
+msgid "This field is required"
+msgstr ""
+
+msgid "There are a forbidden symbols"
+msgstr ""
+
+msgid "Name is not unique. Try to rename"
+msgstr ""
+
+msgid "Not unique"
+msgstr ""
+
+msgid "Save error"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
+msgid "Delete permanently"
+msgstr ""
+
+msgid "Error occurred"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "%d file will be deleted"
+msgid_plural "%d files will be deleted"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Private link"
+msgstr ""
+
+msgid "Remove link"
+msgstr ""
+
+msgid "Files with the following names already exist in the specified folder"
+msgstr ""
+
+msgid "Select an action to resolve a name conflict"
+msgstr ""
+
+msgid "Replace"
+msgstr ""
+
+msgid "Exclude"
+msgstr ""
+
+msgid "Move files and folders"
+msgstr ""
+
+msgid "No permissions to move this files"
+msgstr ""
+
+msgid "Move rest"
+msgstr ""
+
+msgid "Visibility"
+msgstr ""
+
+msgid "Me only"
+msgstr ""
+
+msgid "Everyone"
+msgstr ""
+
+msgid "Icon"
+msgstr ""
+
+msgid "Filter conditions"
+msgstr ""
+
+msgid "File name"
+msgstr ""
+
+msgid "All storages"
+msgstr ""
+
+msgid "Field type"
+msgstr ""
+
+msgid "All types"
+msgstr ""
+
+msgid "Custom file name extension"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Delete filter"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Create filter"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Who already got shared access"
+msgstr ""
+
+msgid "Edit share settings"
+msgstr ""
+
+msgid "Save settings"
+msgstr ""
+
+msgid "Remove all sharings"
+msgstr ""
+
+msgid "Couldn't delete sharings"
+msgstr ""
+
+msgid "Couldn't save settings"
+msgstr ""
+
+msgid "Rename file"
+msgstr ""
+
+msgid "New filter"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Files from the same place"
+msgstr ""
+
+msgid "Couldn't save filter"
+msgstr ""
+
+msgid "Documents"
+msgstr ""
+
+msgid "File type"
+msgstr ""
+
+msgid "Extension"
+msgstr ""
+
+msgid "Search results of"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "Video"
+msgstr ""
+
+msgid "Audio"
+msgstr ""
+
+msgid "eBooks"
+msgstr ""
+
+msgid "Search result"
+msgstr ""
+
+msgid "Group %s"
+msgstr ""
+
+msgid "User %s"
+msgstr ""
+
+msgid "Excluded cause of name conflict"
+msgstr ""
+
+msgid "File is not visible in the public frontend because there are no routing rules for the Files app in your website settings. Use Site app (Routing section) to settle File app on your website."
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Mark"
+msgstr ""
+
+msgid "Share this file"
+msgstr ""
+
+msgid "First "
+msgstr ""
+
+msgid "Seems binary data!"
+msgstr ""
+
+msgid "Ctrl+Enter"
+msgstr ""
+
+msgid "Delete the file"
+msgstr ""
+
+msgid "You are going to change file extension. This may cause unavailability of file content. Are you sure?"
+msgstr ""
+
+msgid "Restore files and folders"
+msgstr ""
+
+msgid "Restore rest"
+msgstr ""
+
+msgid "Choosen groups/users"
+msgstr ""
+
+msgid "Delete storage"
+msgstr ""
+
+msgid "Color"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Delete storage and all files"
+msgstr ""
+
+msgid "This will to delete %s and <strong>all %d files and folders permanently</strong>. Are you sure?"
+msgstr ""
+
+msgid "Copy files"
+msgstr ""
+
+msgid "No permissions to copy this files"
+msgstr ""
+
+msgid "Copying start"
+msgstr ""
+
+msgid "Mark files"
+msgstr ""
+
+msgid "Change upload path"
+msgstr ""
+
+msgid "Change"
+msgstr ""
+
+msgid "change"
+msgstr ""
+
+msgid "No permissions to rename this file"
+msgstr ""
+
+msgid "New source"
+msgstr ""
+
+msgid "Sources"
+msgstr ""
+
+msgid "Files IDs:"
+msgstr ""
+
+msgid "Frontend type"
+msgstr ""
+
+msgid "Published files"
+msgstr ""
+
+msgid "Incorrect data for saving"
+msgstr ""
+
+msgid "Load more"
+msgstr ""
+
+msgid "Upload %d file"
+msgid_plural "Uploaded %d files"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Welcome to Files application!"
+msgstr ""
+
+msgid "Start uploading files by clicking the link above or by dragging selected files anywhere on this page."
+msgstr ""
+
+msgid "Drag some photos anywhere on this page to start upload"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Storage ID"
+msgstr ""
+
+msgid "Storage access type"
+msgstr ""
+
+msgid "Total size of files"
+msgstr ""
+
+msgid "Personal"
+msgstr ""
+
+msgid "Limited"
+msgstr ""
+
+msgid "Unknown"
+msgstr ""
+
+msgid "Total size"
+msgstr ""
+
+msgid "Release<br> to create new filter"
+msgstr ""
+
+msgid "Search files"
+msgstr ""
+
+msgid "New storage"
+msgstr ""
+
+msgid "Only you can access files in this storage"
+msgstr ""
+
+msgid "Admin"
+msgstr ""
+
+msgid "Root"
+msgstr ""
+
+msgid "No permissions to delete this files"
+msgstr ""
+
+msgid "Files will be deleted PERMANENTLY without the ability to restore. Are you sure?"
+msgstr ""
+
+msgid "Files will be moved to trash. Are you sure?"
+msgstr ""
+
+msgid "You don’t have permissions to delete these files."
+msgstr ""
+
+msgid "Delete rest"
+msgstr ""
+
+msgid "Send as attachment"
+msgstr ""
+
+msgid "Delete file"
+msgstr ""
+
+msgid "Uploaded"
+msgstr ""
+
+msgid "Uploaded by"
+msgstr ""
+
+msgid "enter tags"
+msgstr ""
+
+msgid "Mark rest"
+msgstr ""
+
+msgid "No permissions to mark this files"
+msgstr ""
+
+msgid "To:"
+msgstr ""
+
+msgid "One email per line or separated by a \";\""
+msgstr ""
+
+msgid "Subject:"
+msgstr ""
+
+msgid "Text:"
+msgstr ""
+
+msgid "Attachments:"
+msgstr ""
+
+msgid "File size exeeds the defined limit for email messages"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "Notifications on new uploaded files"
+msgstr ""
+
+msgid "App icon badge count"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Selected users"
+msgstr ""
+
+msgid "Start typing user name..."
+msgstr ""
+
+msgid "Click “Save” button below to commit changes."
+msgstr ""
+
+msgid "Create link"
+msgstr ""
+
+msgid "Limited access"
+msgstr ""
+
+msgid "Insufficient access rights"
+msgstr ""
+
+msgid "Edit source \"%s\""
+msgstr ""
+
+msgid "Create source"
+msgstr ""
+
+msgid "Delete source"
+msgstr ""
+
+msgid "Source name"
+msgstr ""
+
+msgid "Source provider"
+msgstr ""
+
+msgid "Source paired with"
+msgstr ""
+
+msgid "Select folder to pair"
+msgstr ""
+
+msgid "Pair"
+msgstr ""
+
+msgid "Save source"
+msgstr ""
+
+msgid "Source adapter not found"
+msgstr ""
+
+msgid "There no source provider plugins"
+msgstr ""
+
+msgid "All backend users"
+msgstr ""
+
+msgid "Only certain backend users will be able to access this storage"
+msgstr ""
+
+msgid "Clear trash"
+msgstr ""
+
+msgid "Are you sure clean trash and delete all files?"
+msgstr ""
+
+msgid "download"
+msgstr ""
+
+msgid "Create subfolder"
+msgstr ""
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Please specify valid email address"
+msgstr ""
+
+msgid "Invalid email address"
+msgstr ""
+
+msgid "Source settings updated"
+msgstr ""
+
+msgid "B"
+msgstr ""
+
+msgid "KB"
+msgstr ""
+
+msgid "MB"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "My favorite folders only"
+msgstr ""
+
+msgid "All folders"
+msgstr ""
+
+msgid "New shared files and folders"
+msgstr ""
+
+msgid "New uploaded files (favorite folders only)"
+msgstr ""
+
+msgid "New uploaded files (all folders)"
+msgstr ""
+
+msgid "uploaded"
+msgstr ""
+
+msgid "created new folder"
+msgstr ""
+
+msgid "created new storage"
+msgstr ""
+
+msgid "renamed"
+msgstr ""
+
+msgid "moved"
+msgstr ""
+
+msgid "duplicated"
+msgstr ""
+
+msgid "deleted"
+msgstr ""
+
+msgid "restored"
+msgstr ""
+
+msgid "WebDav"
+msgstr ""
+
+msgid "Saved"
+msgstr ""
+
+msgid "Popular tags"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Skip"
+msgstr ""
+
+msgid "Link to this file"
+msgstr ""
+
+msgid "Link to this folder"
+msgstr ""
+
+msgid "Create link to this file"
+msgstr ""
+
+msgid "Create link to this folder"
+msgstr ""
+
+msgid "Share with the team"
+msgstr ""
+
+msgid "Currently shared with <strong>%s</strong>"
+msgstr ""
+
+msgid "Customize"
+msgstr ""
+
+msgid "Assign tags"
+msgstr ""
+
+msgid "Assign"
+msgstr ""
+
+msgid "Add tag"
+msgstr ""
+
+msgid "share"
+msgstr ""
+
+msgid "favorites"
+msgstr ""
+
+msgid "Share settings"
+msgstr ""
+
+msgid "Drop anywhere to upload"
+msgstr ""
+
+msgid "Group:"
+msgstr ""
+
+msgid "User:"
+msgstr ""
+
+msgid "My only"
+msgstr ""
+
+msgid "No permissions to copy these files"
+msgstr ""
+
+msgid "Copying started"
+msgstr ""
+
+msgid "No permissions to delete these files"
+msgstr ""
+
+msgid "Delete the rest"
+msgstr ""
+
+msgid "Probably binary data in this file!"
+msgstr ""
+
+msgid "File is not visible in the public frontend because there are no routing rules for the Files app in your website settings. Use Site app (“Structure” section) to settle Files app on your website."
+msgstr ""
+
+msgid "No permissions to create a folder"
+msgstr ""
+
+msgid "Mark the rest"
+msgstr ""
+
+msgid "Restore the rest"
+msgstr ""
+
+msgid "Move the rest"
+msgstr ""
+
+msgid "No permissions to move these files"
+msgstr ""
+
+msgid "File size exceeds the limit set for email messages."
+msgstr ""
+
+msgid "There are no user groups in your Webasyst account. Add groups using Contacts app to be able to manage access to storage."
+msgstr ""
+
+msgid "There are no source provider plugins."
+msgstr ""
+
+msgid "This will permanently delete “%s”, and <strong>all %d files and folders</strong>. Are you sure?"
+msgstr ""
+
+msgid "Select an action to resolve the name conflict:"
+msgstr ""
+
+msgid "An error occurred"
+msgstr ""
+
+msgid "Do you really want to clean the trash and delete all files?"
+msgstr ""
+
+msgid "Sharing settings"
+msgstr ""
+
+msgid "There are forbidden characters."
+msgstr ""
+
+msgid "Name is not unique. Try to rename."
+msgstr ""
+
+msgid "Search results"
+msgstr ""
+
+msgid "Saving error"
+msgstr ""
+
+msgid "Excluded from upload because of name conflict."
+msgstr ""
+
+msgid "Insufficient file write permissions for folder %s."
+msgstr ""
+
+msgid "View only"
+msgstr ""
+
+msgid "View and comment"
+msgstr ""
+
+msgid "Uploaded by %s"
+msgstr ""
+
+msgid "Storage not found"
+msgstr ""
+
+msgid "Access denied to storage"
+msgstr ""
+
+msgid "Folder not found"
+msgstr ""
+
+msgid "empty"
+msgstr ""
+
+msgid "Created by %s"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "clear"
+msgstr ""
+
+msgid "Trash summary"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "User statistics"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Storage summary"
+msgstr ""
+
+msgid "File type statistics"
+msgstr ""
+
+msgid "File extension"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "You have not enough rights to upload files"
+msgstr ""
+
+msgid "Release to create new filter"
+msgstr ""
+
+msgid "Deleted contact"
+msgstr ""
+
+msgid "Page not found"
+msgstr ""
+
+msgid "Access denied"
+msgstr ""
+
+msgid "Please contact app developer."
+msgstr ""
+
+msgid "Can create storage"
+msgstr ""
+
+msgid "No available storages"
+msgstr ""
+
+msgid "Rename folder"
+msgstr ""
+
+msgid "File size exceeds the limit"
+msgstr ""
+
+msgid "Not allowed file type"
+msgstr ""
+
+msgid "Max number of files exceeded"
+msgstr ""
+
+msgid "Uploaded bytes exceed file size"
+msgstr ""
+
+msgid "Unidentified error"
+msgstr ""
+
+msgid "All delete files"
+msgstr ""
+
+msgid "My private files"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "via %s (%s)"
+msgstr ""
+
+msgid "Public link"
+msgstr ""
+
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "public link"
+msgstr ""
+
+msgid "Are you sure you want move folder <strong>\"%s\"</strong> and all files in it to trash?"
+msgstr ""
+
+msgid "Delete folder"
+msgstr ""
+
+msgid "Unmount source"
+msgstr ""
+
+msgid "Sync is in process. No changes available until synchronization finish."
+msgstr ""
+
+msgid "Connect new source"
+msgstr ""
+
+msgid "Register application on %s"
+msgstr ""
+
+msgid "Connect %s account:"
+msgstr ""
+
+msgid "Provider"
+msgstr ""
+
+msgid "Connect"
+msgstr ""
+
+msgid "Load authorize page"
+msgstr ""
+
+msgid "You need to install any source plugin before connecting sources."
+msgstr ""
+
+msgid "This will remove source and related folder from application. All files inside your source will remain unchanged."
+msgstr ""
+
+msgid "Unmount"
+msgstr ""
+
+msgid "Source %s"
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
+msgid "Mounted"
+msgstr ""
+
+msgid "Mount point"
+msgstr ""
+
+msgid "Mount as storage"
+msgstr ""
+
+msgid "Mount as subfolder"
+msgstr ""
+
+msgid "Mount"
+msgstr ""
+
+msgid "Synchronization process may take several minutes."
+msgstr ""
+
+msgid "Do not leave this page until the process is completed."
+msgstr ""
+
+msgid "Source authorization code is canceled or expired"
+msgstr ""
+
+msgid "Renew authorization code"
+msgstr ""
+
+msgid "Share storage"
+msgstr ""
+
+msgid "Public link to"
+msgstr ""
+
+msgid "Right now this content is private and can be viewed by authorized backend users only. Enabling public link option will create a secret direct link that you can send to other people so they can access and download this content too."
+msgstr ""
+
+msgid "Application"
+msgstr ""
+
+msgid "Source not found"
+msgstr ""
+
+msgid "Can't create storage"
+msgstr ""
+
+msgid "Can't create folder"
+msgstr ""
+
+msgid "All files from remote source have been pulled"
+msgstr ""
+
+msgid "Source plugin not found"
+msgstr ""
+
+msgid "This is your personal folder. No one but you has access here."
+msgstr ""
+
+msgid "If you need to share files with someone else use folders with common access."
+msgstr ""
+
+msgid "Cron Tasks"
+msgstr ""
+
+msgid "Without a <tt>cron</tt> job set up for copy task file copy process may complete at slower rate."
+msgstr ""
+
+msgid "Please set up a <tt>cron</tt> job (<a href=\"http://www.webasyst.com/framework/docs/server/cron/\" target=\"_blank\">view instructions</a>) using the command specified below in your web-hosting control panel:"
+msgstr ""
+
+msgid "Without a <tt>cron</tt> job set up for external sources, the synchronization process may complete at a slower rate."
+msgstr ""
+
+msgid "<tt>cron</tt> job is set up properly."
+msgstr ""
+
+msgid "Cron tasks"
+msgstr ""
+
+msgid "You need the settlement of Files to create public link. Use <a href=\"%s\">Site</a> to create new settlement."
+msgstr ""
+
+msgid "Copy process may take several minutes."
+msgstr ""
+
+msgid "Continue in background"
+msgstr ""
+
+msgid "Cancel the copy process? All files that is not finished will be deleted"
+msgstr ""
+
+msgid "Move process may take several minutes."
+msgstr ""
+
+msgid "specify settings"
+msgstr ""
+
+msgid "Account"
+msgstr ""
+
+msgid "Authorization code renewal is not possible. You need to unlink the source and connect it again."
+msgstr ""
+
+msgid "Authorize failed"
+msgstr ""
+
+msgid "All files have been copied"
+msgstr ""
+
+msgid "Move files"
+msgstr ""
+
+msgid "Maximum amount of folders for one copy process is %s."
+msgstr ""
+
+msgid "Only you can access this file"
+msgstr ""
+
+msgid "Only you can access files in this folder"
+msgstr ""
+
+msgid "Too many requests to external source service. Please try again in a few minutes."
+msgstr ""
+
+msgid "GB"
+msgstr ""
+
+msgid "There are no files available to pack"
+msgstr ""
+
+msgid "Choose destination folder or storage"
+msgstr ""
+
+msgid "added new comment"
+msgstr ""
+
+msgid "in copying/moving process"
+msgstr ""
+
+msgid "Access"
+msgstr ""

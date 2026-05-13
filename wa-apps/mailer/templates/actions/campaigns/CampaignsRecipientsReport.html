@@ -1,0 +1,102 @@
+{if $recipients}
+    {if $error_classes}
+        <div class="dropdown js-errors-report custom-mb-16">
+            <button class="dropdown-toggle button light-gray" type="button">[`All bounces`]</button>
+            <div class="dropdown-body dd-wide">
+                <ul class="menu">
+                    {foreach $error_classes as $e}
+                        <li>
+                            <a href="javascript:void(0);"
+                               class="show-recipients-link"
+                               rel="{$e.param}"
+                               data-hide-title="false"
+                               {if $e.status > mailerMessageLogModel::STATUS_PREVIOUSLY_UNSUBSCRIBED} data-graph-id="{$e.status}"{/if}
+                               data-id="{$e@iteration}">
+                                <span>{$e.name}</span>
+                                <span class="count">{$e.count}{if $e.percent !== null} ({$e.percent}%){/if}</span>
+                            </a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+
+        {*<div class="block" style="max-width:600px;margin-left:23px;padding-left:0;">
+            <table class="errors-table">
+                {foreach $error_classes as $e}
+                    <tr>
+                        <td><a class="show-recipients-link" href="javascript:void(0)" rel="{$e.param}" data-hide-title="false" {if $e.status > mailerMessageLogModel::STATUS_PREVIOUSLY_UNSUBSCRIBED}data-graph-id="{$e.status}"{/if}><b>{$e.name}</b></a></td>
+                        {if $e.percent !== null}
+                            <td>{$e.count}</td>
+                            <td>({$e.percent}%)</td>
+                        {else}
+                            <td colspan="2">{$e.count}</td>
+                        {/if}
+                    </tr>
+                {/foreach}
+            </table>
+        </div>*}
+        </div>
+    {/if}
+
+    <table class="zebra recipients-report custom-mt-16">
+        {foreach $recipients as $r}
+            <tr>
+                {if ($r.status >= mailerMessageLogModel::STATUS_NOT_DELIVERED && !empty($statuses)) && empty($search)}
+                    <td>{$r.datetime}</td>
+                {/if}
+                <td>{$r.name|escape} {$r.email|escape}</td>
+                {if count($statuses) > 1 || !empty($search)}
+                    <td>{$r.status_text}
+                        {if $r.error}
+                            <div class="hidden">{$r.error|escape|nl2br}</div>
+                        {elseif !empty($search)}
+                            <span>{$r.datetime}</span>
+                        {/if}
+                    </td>
+                {else}
+                    <td></td>
+                {/if}
+            </tr>
+        {/foreach}
+    </table>
+    {if $has_more}
+        <a class="js-load-more-recipients semibold text-blue" rel="{$parameters}"  data-hide-title="false" href="javascript:void(0)">[`Load next 50`] ({sprintf_wp('total %s', $total_rows)})</a>
+    {/if}
+{else}
+    <p>[`No entries in this list`]</p>
+{/if}
+<script>(function($) { "use strict";
+
+    {if $search}
+        $('#pie-legend').find('.search-recipients input').val('{$search}');
+        $('#report-wrapper .recipients-count').show()
+                .find('[data-rel]').hide()
+                .end()
+                .find('[data-rel="search"]').show()
+                    .find('.title').html('{$search}: <span class="cnt">{$recipients|count}</span></span>');
+    {/if}
+
+    {if $total_rows && $endinterval && $startinterval}
+        $('.m-graph-times').find('.recipients-period-count').removeClass('hidden').text("{_w('%s recipient appear in the period selected', '%s recipients appear in the period selected', $total_rows)}");
+    {else}
+        $('.m-graph-times').find('.recipients-period-count').addClass('hidden');
+    {/if}
+
+    {if $period}
+        if (!$('.m-graph-times').find('.js-time-toggle span').hasClass('selected')) {
+            $('.m-graph-times')
+                    .find('.choosen')
+                        .removeClass('hidden').html('{$period[0]} &mdash; {$period[1]}')
+                        .siblings().addClass('hidden');
+        }
+    {/if}
+
+    $(".js-errors-report").waDropdown({
+        hover: false,
+        items: ".menu > li > a",
+        ready(dropdown) {
+            $(window).on('wa_recipients_loaded', () => dropdown.$button.text(dropdown.$menu.find('a.disabled').text()))
+        }
+    });
+})($);</script>
+

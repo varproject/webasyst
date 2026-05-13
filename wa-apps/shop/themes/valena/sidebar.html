@@ -1,0 +1,98 @@
+{if isset($category)}
+    {$selected_category = $category.id}
+{else}
+    {$selected_category = $product.categories.{$product.category_id}.id|default:''}
+{/if}
+
+{$categories = $wa->shop->categories(0, null, true)}
+
+<div class="sb-block">
+
+    <div class="sb-title">Каталог</div>
+
+    <ul class="sb-list">
+        {foreach $categories as $cat}
+
+            {$image = shopSkcatimageHelper::getImages($cat.id, 'icon')}
+            <li>
+                <a href="{$cat.url}" class="sb-link{if $selected_category === $cat.id} active{/if}">
+
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        {if isset($image)}<span class="menu-icon"><img style="vertical-align: middle;"
+                                src="{$image|default:''}"></span>{/if}
+                        {$cat.name|escape}
+                    </span>
+
+
+                    {if $cat.count}
+                        <span class="sb-pill">{$cat.count}</span>
+                    {/if}
+                </a>
+            </li>
+        {/foreach}
+    </ul>
+
+</div>
+
+
+
+
+<style>
+    .sb-block {
+        padding: 0 20px;
+    }
+
+    .sb-title {
+        margin: 16px 0 6px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #6B7280;
+        text-transform: uppercase;
+    }
+
+    .sb-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sb-list li {
+        margin-bottom: 6px;
+    }
+
+    .sb-link {
+        display: flex;
+        justify-content: space-between;
+        padding: 9px 12px;
+        text-decoration: none;
+        font-size: 15px;
+        border-radius: 10px;
+        color: #374151;
+        border: 1px solid transparent;
+        align-items: center;
+    }
+
+    .sb-link:hover {
+        background: #F3F4F6;
+    }
+
+    .sb-link.active {
+        background: #EFF6FF;
+        border-color: #3B82F6;
+        color: #1D4ED8;
+        /* font-weight: 700; */
+    }
+
+    .sb-pill {
+        background: #DBEAFE;
+        color: #1D4ED8;
+        padding: 2px 8px;
+        font-weight: 700;
+        border-radius: 999px;
+        font-size: 12px;
+    }
+
+    .mt20 {
+        margin-top: 20px;
+    }
+</style>

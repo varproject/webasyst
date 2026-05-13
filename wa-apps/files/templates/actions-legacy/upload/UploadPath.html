@@ -1,0 +1,29 @@
+<div>
+    {if $path}
+        [`Upload to`]:
+        <ul class="f-upload-folder-path">
+            {foreach $path|default:[] as $item}
+                <li class="f-upload-folder-path-item">
+                    {if $item@first}
+                        {if !empty($item.icon_str)}
+                            {$item.icon_str}
+                        {/if}
+                        <strong>{$item.name|escape}</strong>
+                    {else}
+                        {$item.name|escape}
+                    {/if}
+                </li>
+            {/foreach}
+        </ul>
+        <span>
+            {if $is_personal}<i class="icon10 lock-bw"></i>{/if}
+            <a href="javascript:void(0);" class="f-upload-path-change">[`change`]</a>
+        </span>
+        <input type="hidden" name="folder_id" value="{$folder_id|default:0}">
+        <input type="hidden" name="storage_id" value="{if !$folder_id}{$path[0].id}{/if}">
+    {else}
+        <p class="errormsg f-access-denied">
+            [`You have not enough rights to upload files`]
+        </p>
+    {/if}
+</div>

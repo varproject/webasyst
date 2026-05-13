@@ -1,0 +1,60 @@
+<div class="crm-general-settings-page" id="crm-general-settings-page">
+
+    <form action="?module=settings&action=generalSave">
+
+        {if !empty($common_settings_has_access)}
+            <div class="crm-general-settings-block">
+
+                <h1 class="c-page-header">[`General settings`]</h1>
+
+                <div class="fields">
+                    <div class="fields-group">
+                        <div class="field">
+                            <div class="name">[`Contact name edit form`]</div>
+                            <div class="value no-shift"><label>
+                                <span class="wa-radio"><input type="radio" name="settings[common][one_name_field]" value="1"{if !empty($common_settings.one_name_field)} checked{/if}><span></span></span>
+                                [`One field for contact name`]
+                            </label><br>
+                            <label>
+                                <span class="wa-radio"><input type="radio" name="settings[common][one_name_field]" value=""{if empty($common_settings.one_name_field)} checked{/if}><span></span></span>
+                                [`Separate fields for name parts`]
+                            </label></div>
+                        </div>
+                    </div>
+
+                    <div class="fields-group">
+                        <div class="field">
+                            <div class="name">[`Contact name format`]</div>
+                            <div class="value no-shift"><label>
+                                <span class="wa-radio"><input type="radio" name="settings[common][name_order]" value="lfm"{if ifempty($common_settings.name_order) == 'lfm'} checked{/if}><span></span></span>
+                                [`Lastname`] [`Firstname`] [`Middlename`]
+                            </label><br>
+                         <label>
+                                <span class="wa-radio"><input type="radio" name="settings[common][name_order]" value="fml"{if ifempty($common_settings.name_order) == 'fml'} checked{/if}><span></span></span>
+                                [`Firstname`] [`Middlename`] [`Lastname`]
+                            </label></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+
+        <div class="c-settings-footer bottombar sticky">
+            <div class="c-footer-actions js-footer-actions">
+              <button type="submit" class="button js-submit-button">[`Save`]</button>
+                <span class="c-hidden">
+                        <a class="button light-gray" href="{$wa_app_url}settings/general/">[`Cancel`]</a>
+                    </span>
+            </div>
+        </div>
+
+        <script>
+            ( function($) {
+                new CRMSettingsGeneral({
+                    $wrapper: $('#crm-general-settings-page')
+                });
+            })(jQuery);
+        </script>
+
+    </form>
+</div>

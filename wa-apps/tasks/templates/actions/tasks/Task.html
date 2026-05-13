@@ -1,0 +1,1376 @@
+{strip}
+
+{include file="./includes/TasksTaskHelpers.inc.html" inline}
+
+{$is_single = $is_single|default:false}
+
+{* This vars will be mutated by tasksHelper::getDatetime, must be inited first because of Smary & PHP 7.4 cause the warnings otherwise *}
+{$time_since_update_period = null}
+{$time_since_update_template = null}
+{$time_since_update_str = tasksHelper::getDatetime($task.update_datetime, $time_since_update_period, $time_since_update_template)}
+
+{$classes = ['t-task-outer-container']}
+{if !empty($is_single)}
+    {$classes['is-single'] = 'is-single'}
+{/if}
+
+    {* LEGACY if !empty($task.project.color)}
+        {$classes[$task.project.color] = $task.project.color}
+    {/if *}
+
+{if $task.project.archive_datetime}
+    {$classes['is-archived'] = 'is-archived'}
+{/if}
+
+{$_priority_class_array = [
+    "-1" => "is-low",
+    "0" => "is-normal",
+    "1" => "is-high",
+    "2" => "is-urgent",
+    "3" => "is-onfire"
+]}
+
+{$_priority_icon = ""}
+{if !empty($task.priority)}
+    {if $task.priority == '0'}
+        {$_priority_icon = "<i class=\"fas fa-hashtag\" style=\"color: var(--light-gray);\"></i>"}
+    {/if}
+    {if $task.priority == '1'}
+        {$_priority_icon = "<i class=\"fas fa-exclamation-triangle\" style=\"color: orange;\"></i>"}
+    {/if}
+    {if $task.priority == '2'}
+        {$_priority_icon = "<i class=\"fas fa-exclamation-triangle\" style=\"color: red;\"></i>"}
+    {/if}
+{/if}
+
+{$_task_hooks = $task.hooks|default:[]}
+{$_backend_task_hook = $_task_hooks.backend_task|default:[]}
+
+<div class="article wide {$classes|join:' '}" id="task-{$task.id}" data-task-id="{$task.id}" data-task-uuid="{$task.uuid}">
+    <div class="article-body t-task-wrapper">
+
+        <div class="t-content-column">
+
+            <!-- plugin hook: 'backend_task.%plugin_id%.before_header' -->
+            {* @event backend_task.%plugin_id%.before_header *}
+            {foreach $_backend_task_hook as $_}{$_.before_header|default:''}{/foreach}
+
+            {* TASK HEADER *}
+            <header class="t-task-header">
+                <div class="flexbox wrap-mobile full-width middle custom-mb-8">
+
+                    <div class="t-task-header-content wide flexbox">
+
+                        {* PROJECT *}
+                        <a href="#/tasks/project/{$task.project.id}/" class="t-menu-name flexbox space-8">
+                            {if !empty($task.project.icon_html)}
+                                {$task.project.icon_html}
+                            {/if}
+                            <span class="semibold">{$task.project.name|escape|truncate:42}</span>
+                        </a>
+
+                    </div>
+
+                    <div class="t-controls-wrapper flexbox middle wrap-mobile space-12">
+
+                        {if count($task.tags) === 0}
+                            <a class="tags-toggle button circle light-gray" href="#">
+                                <i class="fas fa-hashtag"></i>
+                            </a>
+                            <script>
+                                (function($) {
+                                    $('.tags-toggle').on('click', function (e) {
+                                        e.preventDefault();
+                                        $('.t-task-header .t-tags-wrapper').slideToggle(200);
+                                    });
+                                })(jQuery);
+                            </script>
+                        {/if}
+
+                        {* HIDE FROM INBOX OPTIONS *}
+                        {$_hash_type = $hash_type|default:''}
+                        {if ($_hash_type == 'inbox' || $_hash_type == 'hidden') && $task.priority <= 1}
+                            <span class="t-postpone-wrapper t-visible-part">
+                                {$intervals = ['1d' => _w('1 day'), '3d' => _w('3 days'), '1w' => _w('1 week'), '2w' => _w('2 weeks')]}
+                                <span id="js-hide-task-dropdown" class="dropdown t-custom-select" style="line-height: 1"
+                                    {if $task.priority > 0}
+                                        data-errormsg="[`You can't hide high priority task`]"
+                                    {elseif $task.assigned_contact_id != $wa->user('id')}
+                                        data-errormsg="[`You can only hide tasks assigned to you.`]"
+                                    {/if}
+                                >
+
+                                    <a class="dropdown-toggle without-arrow button circle {if $task.hidden_timestamp && $task.hidden_timestamp > time()}gray{else}light-gray{/if} selected-custom-item inline-link" href="javascript:void(0);" style="top: 3px;">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </a>
+                                    <div class="dropdown-body">
+
+                                        {if $task.hidden_timestamp && $task.hidden_timestamp > time()}
+                                            <div class="box align-center custom-pb-0">
+                                                <h6 class="align-center small">
+                                                    <i class="fas fa-inbox custom-mr-4"></i>
+                                                    [`Hidden until`] {waDateTime::format('humandate', $task.hidden_timestamp)}
+                                                </h6>
+                                            </div>
+                                        {/if}
+
+                                        <ul class="menu">
+                                            {if $task.hidden_timestamp && $task.hidden_timestamp > time()}
+                                                <li class="t-nav-item">
+                                                    <a class="set-custom-select" href="javascript:void(0);" data-value="" title="[`Unhide`]">[`Unhide`]</a>
+                                                </li>
+                                            {/if}
+                                            {foreach $intervals as $value => $name}
+                                                <li class="t-nav-item">
+                                                    <a class="set-custom-select" href="javascript:void(0);" data-value="{$value}">{$name}</a>
+                                                </li>
+                                            {/foreach}
+                                        </ul>
+                                        <div class="box align-center custom-pt-0">
+                                            <p class="hint">
+                                                <i class="fas fa-inbox custom-mr-4"></i>
+                                                [`Hide tasks from your inbox for a specific period of time to focus on other important tasks. Your teammates will continue to see your hidden tasks as open and visible.`]
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <input class="change-postpone-field" type="hidden" name="change-postpone-field" value="!">
+                                    <script>
+                                        ( function($) {
+                                            $("#js-hide-task-dropdown").waDropdown();
+                                        })(jQuery);
+                                    </script>
+
+                                </span>
+                            </span>
+                        {/if}
+
+                        {* EDIT & DELETE *}
+                        {if $task.rights_info.can_edit|default:false}
+                            <span>
+                                <a href="#/task/{$task.project_id}.{$task.number}/edit/" class="t-edit-task-link nowrap button light-gray rounded" title="[`Edit`]">
+                                    <i class="fas fa-edit text-blue"></i>
+                                    <span class="custom-ml-4 desktop-only">[`Edit`]</span>
+                                </a>
+                            </span>
+                        {/if}
+                        {if $task.rights_info.can_delete|default:false}
+                            <span>
+                                <a href="javascript:void(0);" class="t-delete-task-link nowrap button light-gray circle" title="[`Delete`]">
+                                    <i class="fas fa-trash-alt text-red"></i>
+                                </a>
+                            </span>
+                        {/if}
+
+                        {$is_public_link_exists = !!count($task.public_links)}
+                        <div class="dropdown" id="publicLinkDropdown">
+                            <button class="dropdown-toggle without-arrow nowrap button light-gray rounded {if !$is_public_link_exists}text-light-gray{else}text-blue{/if}"><i class="fas fa-external-link-alt"></i></button>
+                            <div class="dropdown-body right custom-p-8" style="width: auto;min-width: 300px;">
+                                <div class="t-public-link-block {if $is_public_link_exists}hidden{/if}">
+                                    <p class="hint align-center custom-mb-0">
+                                        [`Get a public link for tracking task status and updates with no access to Webasyst backend.`]
+                                    </p>
+                                    <div class="align-center box">
+                                        <button href="#" class="t-public-link-button-create smaller light-gray text-blue">[`Enable public link`]</button>
+                                    </div>
+                                </div>
+                                <div class="t-public-link-block {if !$is_public_link_exists}hidden{/if}">
+                                    <ul class="menu custom-m-0">
+                                        {foreach $task.public_links as $link}
+                                        <li class="custom-mb-4">
+                                            <div class="flexbox middle space-4">
+                                                <div class="wide">
+                                                    <a href="{$link}" class="small bold" target="_blank">{$link}</a>
+                                                </div>
+                                                <button class="copy-to-clipboard button small nobutton"><i class="fas fa-copy"></i></button>
+                                            </div>
+                                        </li>
+                                        {/foreach}
+                                    </ul>
+                                    <div class="align-center box">
+                                        <button href="#" class="t-public-link-button-del smaller light-gray text-red">[`Disable public link`]</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {* TAGS *}
+                <div class="t-tags-wrapper" style="{if count($task.tags) === 0}display: none;{/if}">
+                    <li class="tag is-template">
+                        <a class="t-tag-item" href="javascript:void(0);" data-tag-id="">
+                            <i class="fas fa-hashtag"></i>
+                            <span></span>
+                            <!-- <i class="fas fa-minus-circle t-remove-tag"></i> -->
+                        </a>
+                    </li>
+
+                    <ul class="chips smaller custom-my-0">
+                        {foreach $task.tags as $tag_id => $tag_name}
+                            <li class="tag">
+                                <a class="t-tag-item" href="#/tasks/tag/{$tag_name|escape}/" data-tag-id="{$tag_id|escape}">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span>{$tag_name|escape}</span>
+                                    <i class="fas fa-times-circle t-remove-tag"></i>
+                                </a>
+                            </li>
+                        {/foreach}
+                        <li class="t-tag-cloud-widget transparent dropdown" id="t-task-dropdown-add-tag">
+                            <a href="javascript:void(0);" class="text-gray dropdown-toggle">
+                                [`Add tag`]
+                            </a>
+                            <div class="dropdown-body custom-p-8" style="min-width: 320px;">
+
+                                {* top tags 'copy-paste #3' *}
+
+                                {$_tag_usage_counts = []}
+                                {foreach $tags_cloud as $tag}
+                                    {$_tag_usage_counts[ $tag.id ] = $tag.count}
+                                {/foreach}
+
+                                {capture}{arsort($_tag_usage_counts)}{/capture}
+
+                                {$_top_tags_ids = []}
+                                {$_max_tag_visible = 25}
+                                {$_i = 0}
+                                {foreach $_tag_usage_counts as $_tid => $_tcount}
+                                    {$_top_tags_ids[ $_tid ] = $_tcount}
+                                    {if $_i >= $_max_tag_visible}
+                                        {break}
+                                    {/if}
+                                    {$_i = $_i + 1}
+                                {/foreach}
+
+                                {$_hidden_tags_counter = 0}
+                                <ul class="chips tags small">
+                                    {if count($tags_cloud)}<li class="transparent"><span>[`Popular tags:`]</span></li>{/if}
+                                    {foreach $tags_cloud as $tag}
+                                        {$_visible = $tag.id|array_key_exists:$_top_tags_ids}
+
+                                        <li{if !$_visible} class="t-tags-hidden-tag js-tags-hidden-tag"{/if}>
+                                            <a class="js-set-tag t-cloud-link"
+                                                data-id="{$tag.id}" href="#/tasks/tag/{$tag.name|escape}/"><i class="fas fa-hashtag"></i> {$tag.name|escape}</a>
+                                        </li>
+                                        {if !$_visible}
+                                            {$_hidden_tags_counter = $_hidden_tags_counter + 1}
+                                        {/if}
+                                    {/foreach}
+
+                                    {if $_hidden_tags_counter > 0}
+                                        <li class="transparent">
+                                            <a href="#" style="background: transparent !important; color: rgba(127,127,127,0.5) !important;" class="js-tags-show-all-link">[`Show all tags`]</a>
+                                        </li>
+                                    {/if}
+                                </ul>
+
+                                <div class="t-input-wrapper">
+                                    <input value="" class="t-input js-t-task-tags-autocomplete small" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"
+                                        placeholder="[`Create new tag`]">
+                                </div>
+                            </div>
+
+                            <script>
+                                ( function($) {
+                                    $("#t-task-dropdown-add-tag").waDropdown({
+                                        hover: false,
+                                        hide: false,
+                                    });
+
+                                    $('.js-tags-show-all-link').on('click', function (e) {
+                                        e.preventDefault();
+                                        $(this).closest('.tags').find('.js-tags-hidden-tag').show();
+                                        $(this).hide();
+                                    });
+
+                                })(jQuery);
+                            </script>
+
+                        </li>
+                    </ul>
+                </div>
+
+                {* USERS & DEADLINES *}
+                <div class="flexbox space-16 custom-mb-8 custom-mt-16 wrap-mobile">
+
+                    <div class="wide t-task-users-box" style="position: relative;">
+
+                        {* AUTHOR OF THE LAST ASSIGNMENT *}
+                        {$_assignment_creator = $task.assignment_creator}
+
+                        {* CURRENT ASSIGNED CONTACT *}
+                        {$_assigned_contact = $task.assigned_contact}
+
+                        <div class="flexbox space-12">
+
+                            <div class="flexbox space-8">
+                                <a href="#/tasks/assigned/{$_assignment_creator.id}/{* tasksHelper::getProfileURL($_assignment_creator.id) *}" title="{$_assignment_creator.name|escape}">
+                                    <img class="userpic userpic48" src="{waContact::getPhotoUrl($_assignment_creator.id, $_assignment_creator.photo, 96)}" alt="{$_assignment_creator.name|escape}">
+                                </a>
+                            </div>
+
+                            <div>
+                                <i class="fas fa-arrow-right text-light-gray custom-mt-16"></i>
+                            </div>
+
+                            <div class="flexbox space-8">
+                                {if $task.status_id == -1}
+                                    <span class="icon size-48">
+                                        <i class="fas fa-check-circle text-light-gray"></i>
+                                    </span>
+                                    <div class="wide">
+                                        <p class="small custom-mb-4 semibold text-gray">
+                                            [`Closed`]
+                                        </p>
+
+                                        <p class="hint nowrap custom-mt-0">{$task.update_datetime|wa_datetime:'humandatetime'}</p>
+
+                                    </div>
+                                {else}
+                                    <a href="#/tasks/assigned/{$_assigned_contact.id}/{* tasksHelper::getProfileURL($_assigned_contact.id) *}" title="{$_assigned_contact.name|escape}">
+                                        <img class="userpic userpic48" src="{waContact::getPhotoUrl($_assigned_contact.id, $_assigned_contact.photo, 96)}" alt="{$_assigned_contact.name|escape}">
+                                    </a>
+                                    <div class="wide">
+                                        <p class="small custom-mb-4">
+                                            {if empty($_assigned_contact.delete) && $_assigned_contact.id}
+                                                <a href="#/tasks/assigned/{$_assigned_contact.id}/" class="black bold">{$_assigned_contact.name|escape}</a>
+                                                {if $taskAssignedContactStatus}
+                                                    <span class="badge small nowrap custom-ml-4" style="background-color: {$taskAssignedContactStatus->getBgColor()};color: {$taskAssignedContactStatus->getFontColor()};" title="{$taskAssignedContactStatus->getName()|escape}">{$taskAssignedContactStatus->getName()|escape|truncate:23}</span>
+                                                {/if}
+                                                {if $_assigned_contact.invited}
+                                                    <span class="badge small squared light-gray custom-ml-4">[`invited`]</span>
+                                                {/if}
+                                            {else}
+                                                <strong class="gray">[`Unassigned`]</strong>
+                                            {/if}
+                                        </p>
+
+                                        <p class="hint nowrap custom-mt-0">{$task.update_datetime|wa_datetime:'humandatetime'}</p>
+
+                                    </div>
+                                {/if}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {* MILESTONE & DEADLINE *}
+                    <div class="t-task-flag-box">
+
+                        <div class="flexbox space-8 t-task-flag-box-content">
+                            {$_milestone = ''}
+                            {$_due_date = ''}
+                            {$_due_hint = ''}
+                            {$_due_class = ''}
+                            {if $task.milestone}
+                                {$_milestone = $task.milestone.name|escape}
+                                {if $task.milestone.due_date}
+                                    {$_due_date = wa_date('humandate', $task.milestone.due_date, waDateTime::getDefaultTimezone())|escape}
+                                {/if}
+                                {$_due_hint = $task.milestone.view.due_text}
+                                {$_due_class = $task.milestone.view.due_color_class}
+                            {/if}
+                            {if $task.due_date}
+                                {* manually set due date overrides milestone general due date *}
+                                {$_due_date = wa_date('humandate', $task.due_date, waDateTime::getDefaultTimezone())|escape}
+                                {$_due_hint = $task.view.due_text}
+                                {$_due_class = $task.view.due_color_class}
+                            {/if}
+                            <a href="#" class="custom-mr-16{if !$task.milestone && !$task.due_date} text-light-gray{else} black{/if}">
+                                <span class="icon size-32">
+                                    <i class="fas fa-flag-checkered"></i>
+                                </span>
+                            </a>
+                            <div class="wide middle">
+                                {if count($milestones)}
+
+                                    {* inline milestone selector (dropdown) *}
+
+                                    <div class="dropdown" id="milestoneSelector">
+                                        <div class="dropdown-toggle">
+                                            <p class="small custom-mb-0">
+                                                {if $_milestone}
+                                                    <strong>{$_milestone|truncate:32}</strong>
+                                                {elseif $_due_date}
+                                                    <span class="badge nowrap squared {$_due_class} custom-mr-4">{$_due_date}</span>
+                                                {else}
+                                                    <span class="gray nowrap">[`No milestone`]</span>
+                                                {/if}
+                                            </p>
+                                        </div>
+                                        <div class="dropdown-body right">
+                                            <ul class="menu">
+                                                <li class="bordered-bottom">
+                                                    <a href="javascript:void(0);" data-id="">
+                                                        <span>
+                                                            [`No milestone`]
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                {foreach $milestones as $milestone}
+                                                <li>
+                                                    <a href="javascript:void(0);" data-id="{$milestone.id}">
+                                                        <span>
+                                                            <span class="milestoneName">{$milestone.name}</span>
+                                                            {if !empty($milestone.due_date)}
+                                                                <br><span class="hint">{wa_date('humandate', $milestone.due_date, waDateTime::getDefaultTimezone())|escape}</span>
+                                                            {/if}
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                {/foreach}
+                                            </ul>
+                                        </div>
+                                        <script>
+                                            (function ($) {
+                                                    $("#milestoneSelector").waDropdown({
+                                                        hover: false,
+                                                        items: ".menu > li > a",
+                                                        update_title: false,
+                                                        change: function (event, target, dropdown) {
+                                                            var formData = new FormData();
+                                                            formData.append("data[milestone_id]", $(target).data("id"));
+
+                                                            var waLoading = $.waLoading();
+
+                                                            waLoading.animate(6000, 99, true);
+
+                                                            $.ajax({
+                                                                url: "?module=tasks&action=save&id={$task.id}",
+                                                                data: formData,
+                                                                cache: false,
+                                                                contentType: false,
+                                                                processData: false,
+                                                                type: 'POST',
+                                                                success: function () {
+                                                                    $.tasks.redispatch(function () {
+                                                                        waLoading.hide();
+                                                                    });
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                })(jQuery);
+                                        </script>
+                                    </div>
+
+                                {else}
+
+                                    {* no milstones in the project => no dropdown*}
+
+                                    <p class="small custom-mb-4">
+                                        {if $_milestone}
+                                            <strong>{$_milestone|truncate:32}</strong>
+                                        {elseif $_due_date}
+                                            <span class="badge nowrap squared {$_due_class} custom-mr-4">{$_due_date}</span>
+                                        {else}
+                                            <span class="gray nowrap">[`No due date`]</span>
+                                        {/if}
+                                    </p>
+
+                                {/if}
+
+                                {if $_due_date}
+                                    <p class="hint custom-mt-0">
+                                        {if $_milestone}
+                                            <span class="t-due-date-bl badge nowrap squared {$_due_class} custom-mr-4">{$_due_date}</span>
+                                        {/if}
+                                        <strong class="small nowrap">{$_due_hint}</strong>
+                                    </p>
+                                {/if}
+                                {if $_milestone && !$_due_date}
+                                    <p class="hint custom-mt-0">
+                                        <span class="gray nowrap">[`No due date`]</span>
+                                    </p>
+                                {/if}
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                {if !empty($user_roles) && count($user_roles) > 0 && $wa->tasks->isPremium()}
+                    <div class="t-team-roles-wrapper flexbox space-8">
+                        <ul class="chips small t-user-roles custom-mt-0">
+                            {foreach $task.role_users as $role_user}
+                                {foreach $role_user.roles as $role}
+                                <li data-role-id="{$role.role_id}" data-user-id="{$role_user.id}" style="--menu-link-color: #{$role.color}; --menu-link-color-hover: #{$role.color}; ">
+                                    <a href="#/tasks/assigned/{$role_user.id}/">
+                                        <img src="{$role_user.photo_url}" alt="{$role_user.name|escape}" class="userpic">
+                                        <strong>{$role_user.name|escape}</strong> <span class="custom-ml-4 hint">{_w($role.name|escape)}</span>
+                                        {if $task.rights_info.can_edit|default:false}<i class="fas fa-times custom-ml-16 custom-mr-4 js-remove-user"></i>{/if}
+                                    </a>
+                                </li>
+                                {/foreach}
+                            {/foreach}
+                            {if $task.rights_info.can_edit|default:false}
+                                {foreach $user_roles as $role}
+                                    <li class="dropdown js-role-dropdown" data-role-id="{$role.id}" data-role-name="{_w($role.name|escape)}" data-role-color="#{$role.color}" style="--chips-background-color: transparent; --chips-background-color-hover: transparent;">
+                                        <a href="javascript:void(0);" class="dropdown-toggle">
+                                            <i class="fas fa-user-plus custom-mr-4" style="color: #{$role.color};"></i>{_w($role.name|escape)}
+                                        </a>
+                                        <div class="dropdown-body">
+                                            <ul class="menu"></ul>
+                                        </div>
+                                    </li>
+                                {/foreach}
+                            {/if}
+                        </ul>
+                    </div>
+                    <div class="t-errors-block js-role-errors-block"></div>
+
+                    <script>
+                        (() => {
+                            const RoleManager = {
+                                $chipsWrapper: $('.t-team-roles-wrapper .chips'),
+                                $counter: $('.t-role-user-counter'),
+
+                                /**
+                                 * Экранирует HTML
+                                 */
+                                escapeHtml: function(text) {
+                                    const div = document.createElement('div');
+                                    div.textContent = text;
+                                    return div.innerHTML;
+                                },
+
+                                /**
+                                 * Проверяет, назначена ли пользователю роль
+                                 */
+                                isUserInRole: function(roleId, userId) {
+                                    return this.$chipsWrapper.find(`li[data-role-id="${ roleId }"][data-user-id="${ userId }"]`).length > 0;
+                                },
+
+                                /**
+                                 * Создает HTML для элемента пользователя с ролью
+                                 */
+                                createUserChip: function(roleId, roleColor, userId, userPhotoUrl, userName, roleName) {
+                                    const safeUserName = this.escapeHtml(userName);
+                                    const safeRoleName = this.escapeHtml(roleName);
+
+                                    const $li = $('<li>', {
+                                        'data-role-id': roleId,
+                                        'data-user-id': userId,
+                                        'style': `
+                                            --menu-link-color: ${ roleColor };
+                                            --menu-link-color-hover: ${ roleColor };
+                                        `
+                                    });
+
+                                    const $link = $('<a>', { href: 'javascript:void(0);' });
+                                    $link.append($('<img>', { src: userPhotoUrl, alt: safeUserName, class: 'userpic' }));
+                                    $link.append($('<strong>', { text: safeUserName }));
+                                    $link.append($('<span>', { class: 'custom-ml-4 hint', text: safeRoleName }));
+                                    $link.append($('<i>', { class: 'fas fa-times custom-ml-16 custom-mr-4 js-remove-user' }));
+
+                                    $li.append($link);
+                                    return $li;
+                                },
+
+                                /**
+                                 * Назначает пользователю роль
+                                 */
+                                addUserToRole: async function(roleId, roleColor, userId, userPhotoUrl, userName, roleName) {
+                                    if (this.isUserInRole(roleId, userId)) {
+                                        return false;
+                                    }
+
+                                    const formData = new FormData();
+                                    formData.append('task_id', {$task.id});
+                                    formData.append('user_id', userId);
+                                    formData.append('role_id', roleId);
+
+                                    const self = this;
+
+                                    fetch('?module=tasks&action=usersRole&act=add', { method: 'POST', body: formData })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.status !== 'ok') {
+                                                const errorMessage = data.errors || data.message || 'Неизвестная ошибка';
+                                                throw new Error(errorMessage);
+                                            }
+
+                                            const $chip = self.createUserChip(roleId, roleColor, userId, userPhotoUrl, userName, roleName);
+
+                                            const $addButtons = self.$chipsWrapper.find('.js-role-dropdown');
+                                            if ($addButtons.length > 0) {
+                                                $addButtons.first().before($chip);
+                                            } else {
+                                                self.$chipsWrapper.append($chip);
+                                            }
+
+                                            self.updateCounter(1);
+                                        })
+                                        .catch(error => {
+                                            if(error.message){
+                                                const $error_block = $('.js-role-errors-block');
+                                                const $error = $('<span style="color: red;"></span>').text(error.message);
+                                                $error_block.append($error);
+
+                                                setTimeout(() => {
+                                                    $error_block.empty();
+                                                }, 3000);
+                                            }
+                                        });
+
+                                    return true;
+                                },
+
+                                /**
+                                 * Снимает роль с пользователя
+                                 */
+                                removeUserFromRole: function($chip) {
+                                    const roleId = $chip.data('role-id');
+                                    const userId = $chip.data('user-id');
+
+                                    $.post('?module=tasks&action=usersRole&act=remove', {
+                                        task_id: {$task.id},
+                                        user_id: userId,
+                                        role_id: roleId
+                                    }, (data) => {
+                                        if (data.status !== 'ok') {
+                                            const errorMessage = data.errors || data.message || 'Неизвестная ошибка';
+                                            const $error_block = $('.js-role-errors-block');
+                                            const $error = $('<span style="color: red;"></span>').text(errorMessage);
+
+                                            $error_block.append($error);
+
+                                            setTimeout(() => {
+                                                $error_block.empty();
+                                            }, 3000);
+
+                                            return;
+                                        }
+                                        $chip.remove();
+                                        this.updateCounter(-1);
+                                    });
+                                },
+
+                                /**
+                                 * Обновляет счетчик назначенных пользователей с ролями
+                                 */
+                                updateCounter: function(delta) {
+                                    const currentNum = parseInt(this.$counter.text(), 10) || 0;
+                                    const nextNum = (currentNum + delta) || '';
+                                    this.$counter.text(nextNum);
+                                },
+
+                                init: function() {
+                                    const self = this;
+
+                                    this.$chipsWrapper.on('click', '.js-remove-user', function (event) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                        const $chip = $(this).closest('li[data-role-id][data-user-id]');
+                                        self.removeUserFromRole($chip);
+                                    });
+                                }
+                            };
+
+                            RoleManager.init();
+
+                            $.get('?module=tasks&action=usersRole&project_id={$task.project_id}', function (data) {
+                                if (data.status !== 'ok') return;
+
+                                const users = data.data;
+                                const $roleDropdowns = RoleManager.$chipsWrapper.find('.js-role-dropdown');
+
+                                $roleDropdowns.each(function() {
+                                    const $dropdown = $(this);
+                                    const $menu = $dropdown.find('.dropdown-body .menu');
+
+                                    const userListFragment = document.createDocumentFragment();
+                                    users.forEach(user => {
+                                        const $li = $('<li>', {
+                                            'data-user-id': user.id,
+                                            'data-user-photo-url': user.photo_url,
+                                            'data-user-name': user.name
+                                        });
+
+                                        const $userpicIcon = $('<span>', { class: 'icon userpic userpic20' });
+                                        $userpicIcon.css('background-image', `url('${ user.photo_url }')`);
+
+                                        const $span = $('<span>', { class: 'item' });
+                                        $span.append($userpicIcon);
+                                        $span.append($('<span>', { text: user.name }));
+
+                                        $li.append($span);
+                                        userListFragment.appendChild($li[0]);
+                                    });
+
+                                    $menu.append(userListFragment);
+                                });
+
+                                $roleDropdowns.waDropdown({
+                                    hover: true,
+                                    items: '.menu > li > span',
+                                    update_title: false
+                                });
+
+                                $roleDropdowns.on('click', '.menu li', function (event) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+
+                                    const $this = $(this);
+                                    const $dropdown = $this.closest('.js-role-dropdown');
+
+                                    RoleManager.addUserToRole(
+                                        $dropdown.data('role-id'),
+                                        $dropdown.data('role-color'),
+                                        $this.data('user-id'),
+                                        $this.data('user-photo-url'),
+                                        $this.data('user-name'),
+                                        $dropdown.data('role-name')
+                                    );
+                                });
+                            });
+                        })();
+                    </script>
+                {/if}
+
+                <!-- plugin hook: 'backend_task.%plugin_id%.header' -->
+                {* @event backend_task.%plugin_id%.header *}
+                {foreach $_backend_task_hook as $_}{$_.header|default:''}{/foreach}
+
+            </header>
+
+            <!-- plugin hook: 'backend_task.%plugin_id%.after_header' -->
+            {* @event backend_task.%plugin_id%.after_header *}
+            {foreach $_backend_task_hook as $_}{$_.after_header|default:''}{/foreach}
+
+            <hr class="desktop-and-tablet-only t-task-buttons-divider" />
+
+            {* TASK BODY *}
+            <div class="flexbox space-12 full-width t-task-body" style="position: relative;">
+
+                <h2 class="custom-m-0 wide">
+
+                    {* PRIORITY *}
+                    <span class="t-priority-wrapper t-priority-clickable-wrapper {ifset($_priority_class_array[$task.priority])} {$task.project.color}" title="[`Priority`]">
+                        {if !empty($_priority_icon)}<span class="icon size-20 baseline">{$_priority_icon}</span>{/if}
+                        {$task.project_id}.{$task.number}
+                    </span>
+
+                    {* A delimeter between number and name that should get into clipboard when user selects text, but should not be visible *}
+                    <span style="position:absolute;left:-100500px;">: </span>
+
+                    {* TITLE *}
+                    {if !empty($task_type.name)}
+                    <span class="t-type-text" style="color: #{$task_type.color|escape}; font-weight: bold;">{$task_type.name|escape}:&nbsp;</span>
+                    {/if}
+                    <span class="t-task-name-wrapper{if $task.status_id == -1} gray{/if}" href="#/task/{$task.project_id}.{$task.number}/">{$task.name|escape|default:"(no name)"}</span>
+
+                    {* STATUS *}
+                    {if !empty($task.status.name)}
+                            {if $task.project.archive_datetime}
+                                <span class="badge t-status-wrapper is-archived"><i class="fas fa-archive fa-xs"></i> [`Archived`]</span>
+                            {else}
+                                <span>{tasksHelper::statusNameHTML($task.status.id)}</span>
+                            {/if}
+                    {/if}
+
+                </h2>
+
+                {* ON-CLICK PRIORITY CHANGER *}
+                <div class="t-priority-changer-wrapper">
+                    <div class="t-priority-changer">
+                        <div class="t-slider-wrapper">
+                            <div class="t-priority-slider"></div>
+                            <input class="t-input" type="hidden" name="data[priority]" value="{$task.priority}">
+                        </div>
+                        <div class="t-priority-text"></div>
+                    </div>
+                </div>
+
+                <span class="t-visible-block"></span>
+
+            </div>
+
+            {$task_ext_info_html}
+
+            {* Show review widget if new task or completed *}
+            {if !empty($task.log)}
+                {$is_just_created_task = strtotime($task.create_datetime) - strtotime(date('Y-m-d H:i:s')) >= -1 }
+                {$logs = array_values($task.log)}
+                {$last_log = end($logs)}
+                {$cond = $is_just_created_task || (isset($last_log) && $last_log.after_status_id == -1)}
+                {if $cond && $wa->installer && method_exists($wa->installer, 'reviewWidget')}
+                    {$wa->installer->reviewWidget('app/tasks')}
+                {/if}
+            {/if}
+
+            <!-- plugin hook: 'backend_task.%plugin_id%.before_buttons' -->
+            {* @event backend_task.%plugin_id%.before_buttons *}
+            {foreach $_backend_task_hook as $_}{$_.before_buttons|default:''}{/foreach}
+
+            {* TASK BUTTONS *}
+            <div class="t-task-buttons">
+
+                {* PRIMARY ACTION BUTTONS *}
+                <div class="t-task-controls flexbox wrap space-12 full-width">
+                    <div class="t-task-button t-task-return">
+                        <a href="javascript:void(0);" class="t-control-link button light-gray t-return-link" title="[`Return`]"> <span class="icon"><i class="fas fa-arrow-left"></i></span> <span class="t-button-label">[`Return`]</span></a>
+                    </div>
+                    {if isset($task.next_status.id) && $task.next_status.id != -1 && (($task.contact_id == $wa->user('id') && $task.assigned_contact_id == $task.contact_id) || $task->hasFullAccess())}
+                        {* action buttons *}
+                        <div class="t-task-button t-task-action{if $task.status.id == -1} wide{/if}">
+                            {$task->buttonHtml()}
+                        </div>
+                    {/if}
+                    {if $task.status.id != -1}
+                        {* close button only *}
+                        <div class="t-task-button t-task-close wide">
+                            {$task->buttonHtml(-1)}
+                        </div>
+                    {/if}
+                    <div class="t-task-button t-task-forward">
+                        <a href="javascript:void(0);" class="t-control-link button light-gray t-forward-link" title="[`Forward`]"> <span class="icon"><i class="fas fa-arrow-right"></i></span> <span class="t-button-label">[`Forward`]</span></a>
+                    </div>
+                </div>
+
+                <!-- plugin hook: 'backend_task.%plugin_id%.buttons' -->
+                {* @event backend_task.%plugin_id%.buttons *}
+                {foreach $_backend_task_hook as $_}{$_.buttons|default:''}{/foreach}
+
+            </div>
+            <hr class="t-task-buttons-divider" />
+
+            <!-- plugin hook: 'backend_task.%plugin_id%.after_buttons' -->
+            {* @event backend_task.%plugin_id%.after_buttons *}
+            {foreach $_backend_task_hook as $_}{$_.after_buttons|default:''}{/foreach}
+
+            {* change_status_form HTML *}
+            {if !empty($is_single)}
+                <div class="t-status-data-container custom-mb-8"></div>
+            {/if}
+
+            <!-- plugin hook: 'backend_task.%plugin_id%.before_description' -->
+            {* @event backend_task.%plugin_id%.before_description *}
+            {foreach $_backend_task_hook as $_}{$_.before_description|default:''}{/foreach}
+
+            {* TASK CONTENT *}
+            <div class="t-description-wrapper js-description-wrapper">
+
+                {function insertRelations data=null relation_name=null relation_type=null}
+                    <ul class="t-relations-hover-block custom-my-0">
+                        {foreach $data as $id => $item}
+                            <li data-relation-type="{$relation_type}" data-relation-task="{$id}" style="border: none;">
+                                <div class="flexbox full-width middle space-12 small">
+                                    <!-- <span class="gray">{$relation_name}:</span> -->
+                                    <span class="wide flexbox middle space-8" style="min-width: 0; width: 1px;">
+                                        <span title="{$relation_name}" class="small custom-mt-4"><i class="fas fa-link text-light-gray"></i></span>
+                                        <a title="{$item['name']|escape}" href="#/task/{$item['project']|escape}.{$item['number']|escape}/" class="t-task-link{if $item['status_id'] < 0} gray{/if}">
+                                            {if !empty($statuses[$item['status_id']])}
+                                                <span class="custom-mx-4">{tasksHelper::statusNameHTML($item['status_id'])}</span>
+                                            {/if}
+                                            <strong class="custom-mr-4">{$item['project']|escape}.{$item['number']|escape}</strong>
+                                            <span>{$item['name']|escape}</span>
+                                        </a>
+                                    </span>
+                                    {*
+                                        legacy
+                                        <a class="js-t-invert-relations t-relations-btn js-no-app-icon small" href="javascript:void(0);"><i class="icon10 larr"></i><span>[`invert`]</span></a>&nbsp;
+                                    *}
+                                    <a class="js-t-delete-relations t-relations-btn js-no-app-icon large" href="javascript:void(0);" title="[`Unlink`]"><i class="fas fa-times-circle text-light-gray"></i></a>
+                                </div>
+                            </li>
+                        {/foreach}
+                    </ul>
+                {/function}
+                {if !empty($task.relations.parents) || !empty($task.relations.childs)}
+                    <div class="t-relations-wrapper">
+                        {if !empty($task.relations.parents)}
+                            {* legacy: 'Parent task' *}
+                            {insertRelations data=$task.relations.parents relation_type="parent" relation_name="[`Linked task`]" }
+                        {/if}
+
+                        {if !empty($task.relations.childs)}
+                            {* legacy: 'Child task' *}
+                            {insertRelations data=$task.relations.childs  relation_type="child" relation_name="[`Linked task`]"}
+                        {/if}
+                    </div>
+                {/if}
+
+                {tasksTask::formatText($task.text)}
+
+                <!-- plugin hook: 'backend_task.%plugin_id%.description' -->
+                {* @event backend_task.%plugin_id%.description *}
+                {foreach $_backend_task_hook as $_}{$_.description|default:''}{/foreach}
+
+            </div>
+
+            <!-- plugin hook: 'backend_task.%plugin_id%.after_description' -->
+            {* @event backend_task.%plugin_id%.after_description *}
+            {foreach $_backend_task_hook as $_}
+                {if !empty($_.after_description)}
+                    <div class="t-task-embedded-block">
+                        {$_.after_description}
+                    </div>
+                {/if}
+            {/foreach}
+
+            {* ATTACHMENTS *}
+            {if $task.images || $task.files}
+
+                <!-- plugin hook: 'backend_task.%plugin_id%.before_attachments' -->
+                {* @event backend_task.%plugin_id%.before_attachments *}
+                {foreach $_backend_task_hook as $_}{$_.before_attachments|default:''}{/foreach}
+
+                <div class="t-attach-wrapper">
+                    {if $task.images}
+                        <div class="t-attached-files-wrapper">
+                            <div class="t-attach-list-block">
+                                <div class="t-images-list">
+                                    {foreach $task.images as $image}
+                                        <div class="t-image-item">
+                                            <a class="t-image-link wa-gallery-image" href="?module=attachments&action=download&id={$image.id}" target="_blank" title="{$image.name|escape}">
+                                                <img src="{tasksHelper::getAttachPreviewUrl($image)}" alt="{$image.name|escape}">
+                                            </a>
+                                            <div class="t-file-name" title="{$image.name|escape}">{$image.name|escape}</div>
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+                    {if $task.files}
+                        <div class="t-attached-files-wrapper">
+                            <div class="t-attach-list-block">
+                                <div class="t-files-list">
+                                    {foreach $task.files as $file}
+                                        <div class="t-file-item">
+                                            <a class="t-file-link" href="?module=attachments&action=download&id={$file.id}" target="_blank" title="{$file.name|escape}">
+                                                <i class="fas fa-cloud-download-alt custom-mr-4"></i>
+                                                <span class="t-file-name">{$file.name|escape}</span>
+                                                <span class="t-file-size">{$file.size|wa_format_file_size}</span>
+                                            </a>
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+
+                    <!-- plugin hook: 'backend_task.%plugin_id%.attachments' -->
+                    {* @event backend_task.%plugin_id%.attachments *}
+                    {foreach $_backend_task_hook as $_}{$_.attachments|default:''}{/foreach}
+
+                </div>
+
+                <!-- plugin hook: 'backend_task.%plugin_id%.after_attachments' -->
+                {* @event backend_task.%plugin_id%.after_attachments *}
+                {foreach $_backend_task_hook as $_}
+                    {if !empty($_.after_attachments)}
+                        <div class="t-task-embedded-block">
+                            {$_.after_attachments}
+                        </div>
+                    {/if}
+                {/foreach}
+
+            {/if}
+
+
+                <style>
+                    .t-watchers-remove-icon,
+                    .t-role-user-remove-icon {
+                        display: none !important;
+                    }
+                    .userpic:hover .t-watchers-remove-icon,
+                    .userpic:hover .t-role-user-remove-icon {
+                        display: flex !important;
+                    }
+                </style>
+
+                <hr>
+                <div class="flexbox space-8">
+                    <h3><span class="gray">@</span> [`Following task updates`]</h3>
+                    <div>
+                        {* WATCH *}
+                        <a class="t-favorite-link button small light-gray rounded t-set-favorite nowrap" href="javascript:void(0);" title="[`Follow`]">
+                            <i class="fas fa-at {if empty($task.favorite)}text-light-gray{else}text-orange{/if}"></i>
+                            <span class="custom-ml-4 desktop-only"{if !empty($task.favorite)} style="display: none;"{/if}>[`Follow`]</span>
+                            <span class="custom-ml-4 desktop-only"{if empty($task.favorite)} style="display: none;"{/if}>[`I’m following`] <i class="fas fa-check fa-xs text-light-gray"></i></span>
+                        </a>
+                    </div>
+                </div>
+
+                <ul class="thumbs t-watchers-thumbs">
+                    {foreach $task.watching_contacts as $c}
+                        <li data-id="{$c.id}">
+                            <a class="userpic userpic48" href="#/tasks/assigned/{$c.id|escape}/" style="background-image: url('{$c.photo_url}');" title="{$c.name|escape}{if $c.calendar_status} - {$c.calendar_status->getName()|escape}{/if}">
+                                {if $c.calendar_status}
+                                    <span class="userstatus" style="background-color: {$c.calendar_status->getBgColor()};color: {$c.calendar_status->getFontColor()};" title="{$c.calendar_status->getName()|escape}"><i class="{$c.calendar_status->getIcon()|escape|default:'fas fa-calendar-alt'}"></i></span>
+                                {/if}
+                                <span class="userstatus t-watchers-remove-icon bg-red"><i class="fas fa-times"></i></span>
+                            </a>
+                        </li>
+                    {/foreach}
+                    <li class="t-watchers-add-icon">
+                        <div class="dropdown" id="addWatcherSelect">
+                            <a href="#" style="width: 48px; height: 48px;" class="dropdown-toggle without-arrow flexbox middle">
+                                <span class="icon text-light-gray size-24"><i class="fas fa-plus"></i></span>
+                            </a>
+                            <div class="dropdown-body">
+                                <ul class="menu">
+                                    <li>
+                                        <a href="javascript:void(0);" data-id="">
+                                            <div class="icon">
+                                                <i class="userpic size-20"></i>
+                                            </div>
+                                            <span></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <script>
+
+                    (() => {
+                        /*
+                            Add / Remove watchers
+                        */
+                        $.get('?module=tasks&action=getUsersForProject&project_id={$task.project_id}&task_id={$task.id}', function (data) {
+
+                            if (data.status !== 'ok') return;
+
+                            const users = data.data;
+
+                            const addWatcherSelect = $('#addWatcherSelect');
+                            const menu = addWatcherSelect.find('.dropdown-body .menu');
+                            const li = menu.find('li');
+
+                            users.forEach(user => {
+                                const item = li.clone();
+                                if (!user.rights_info.can_view) {
+                                    item.addClass('disabled');
+                                }
+                                item.find('a').attr('data-id', user.id);
+                                item.find('span').text(user.name);
+                                item.find('.icon i').css('background-image', 'url('+user.photo_url+')');
+                                item.appendTo(menu);
+                            });
+
+                            li.remove();
+
+                            addWatcherSelect.waDropdown({
+                                hover: false,
+                                items: ".menu > li > a",
+                                update_title: false,
+                                change: (_event, target) => {
+                                    const userId = $(target).data('id');
+                                    if ($('.t-watchers-thumbs li[data-id='+userId+']')[0]) {
+                                        return;
+                                    }
+
+                                    const data = new FormData();
+                                    data.append('id', {$task.id});
+                                    data.append('user_id', userId);
+                                    data.append('value', 1);
+
+                                    fetch('?module=tasks&action=favorite', {
+                                        method: 'POST',
+                                        body: data
+                                    })
+                                    .then(response => {
+                                        if (!response.ok) throw new Error('Response error');
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        if (data.status !== 'ok') return;
+                                        const user = users.find(u => u.id == userId);
+                                        if (!user) return;
+                                        const tpl = `
+                                            <li data-id="`+user.id+`">
+                                                <a class="userpic userpic48" href="#/tasks/assigned/`+user.id+`/" style="background-image: url('`+user.photo_url+`');">
+                                                    <span class="userstatus t-watchers-remove-icon bg-red"><i class="fas fa-times"></i></span>
+                                                </a>
+                                            </li>
+                                        `;
+
+                                        $(".t-watchers-add-icon").before(tpl);
+                                        updateCounter(1);
+                                        addEvents();
+                                        $.tasks.reloadSidebar();
+                                        if(user.id == {$wa->user()->getId()}) {
+                                            const $link = $('.t-set-favorite');
+                                            const $i = $link.find('.fa-at').get(0);
+                                            const value = $i.classList.contains('text-light-gray') ? 1 : 0;
+                                            const $spans = $link.find('span');
+                                            $spans.hide();
+                                            $spans.eq(1).show();
+                                            $i.classList.remove('text-light-gray');
+                                            $i.classList.add('text-orange');
+                                        }
+
+                                    })
+                                    .catch(() => {});
+                                }
+                            });
+                        });
+
+                        function removeWatcher (userId) {
+                            $.post('?module=tasks&action=favorite', {
+                                id: {$task.id},
+                                user_id: userId,
+                                value: 0
+                            }, function (data) {
+                                if (data.status !== 'ok') return;
+                                $(".t-watchers-thumbs li[data-id="+userId+"]").remove();
+                                updateCounter(-1);
+                                $.tasks.reloadSidebar();
+                                if(userId == {$wa->user()->getId()}) {
+                                    const $link = $('.t-set-favorite');
+                                    const $i = $link.find('.fa-at').get(0);
+                                    const value = $i.classList.contains('text-light-gray') ? 1 : 0;
+                                    const $spans = $link.find('span');
+                                    $spans.hide();
+                                    $spans.eq(0).show();
+                                    $i.classList.add('text-light-gray');
+                                    $i.classList.remove('text-orange');
+                                }
+                            });
+                        };
+
+                        function updateCounter (num) {
+                            const currentNum = parseInt($(".t-watchers-counter").text(), 10) || 0;
+                            const nextNum = (currentNum + num) || '';
+                            $(".t-watchers-counter").text(nextNum);
+                        };
+
+                        function addEvents () {
+                            $('.t-watchers-thumbs li[data-id]').each(function () {
+                                const userId = $(this).data('id');
+                                $(this).find('.t-watchers-remove-icon').off('click.watchers').on('click.watchers', function (event) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    removeWatcher(userId);
+                                });
+                            });
+                        };
+
+                        addEvents();
+
+                    })();
+                </script>
+
+
+            <h3 class="t-comments-h3 custom-mt-32">[`History &amp; Comments`] <span class="hint">{count($task.log)}</span></h3>
+
+            <!-- plugin hook: 'backend_task.%plugin_id%.before_hidden_block' -->
+            {* @event backend_task.%plugin_id%.before_hidden_block *}
+            {foreach $_backend_task_hook as $_}{$_.before_hidden_block|default:''}{/foreach}
+
+            {* COMMENT LIST *}
+            <div class="t-full-content">
+
+                <div class="t-comments-list-wrapper js-comments-list-wrapper">
+                    {foreach $task.log as $l}
+                        <div class="t-comment-item-wrapper {if $l.contact_id == $wa->user()->getId()}t-comment-item-wrapper--right{/if}" data-id="{$l.id}">
+
+                            {$_rights_info = $l.rights_info|default:[]}
+                            {$_can_edit = $_rights_info.can_edit|default:false}
+                            {$_can_delete = $_rights_info.can_delete|default:false}
+
+                            {$log_attachments = $task->getLogAttachments($l.id)}
+                            {$log_attachments_count = count($log_attachments.files) + count($log_attachments.images)}
+
+                            {$_is_comment = $l.action == tasksTaskLogModel::ACTION_TYPE_COMMENT}
+                            {$_is_forward = $l.action == tasksTaskLogModel::ACTION_TYPE_FORWARD}
+
+                            {$_empty_log_item = empty($l.text) && $log_attachments_count <= 0}
+
+                            {if $_is_forward}
+                                {$_can_edit = $_can_edit && !$_empty_log_item}
+                            {/if}
+
+                            <div class="t-comment-item flexbox {if !empty($l.text)}t-comment-with-custom-text {/if}{if $task.comment_log_id == $l.id}t-pinned-comment{/if}" data-id="{$l.id}">
+                                <div class="image">
+                                    <a href="{if !empty($l.contact.id)}#/tasks/assigned/{$l.contact.id}/{* tasksHelper::getProfileURL($l.contact.id) *}{else}javascript:void(0);{/if}" title="{$l.contact.name|escape}">
+                                        {if !empty({$l.contact.photo_url})}
+                                            <img class="userpic userpic-32 custom-mt-4" src="{$l.contact.photo_url}" alt="{$l.contact.name|escape}">
+                                            {else}
+                                            <img class="userpic userpic-32 custom-mt-4" src="/wa-content/img/userpic96@2x.jpg">
+                                        {/if}
+                                    </a>
+                                </div>
+                                <div class="details">
+                                    <header class="t-comment-header wrap-mobile flexbox full-width middle space-8">
+                                        <div class="wide flexbox wrap space-4">
+
+                                            {if $l.status_changed}
+                                                <div class="t-comment-status-change small gray">
+                                                    {if isset($l.before_status_id) && $l.before_status_id != $l.after_status_id}
+                                                        {tasksHelper::statusNameHTML($l.before_status_id)}
+                                                        &nbsp;→&nbsp;
+                                                    {/if}
+                                                    {tasksHelper::statusNameHTML($l.after_status_id)}
+                                                </div>
+                                            {/if}
+
+                                            <span class="t-comment-author small">
+                                                <a href="{if !empty($l.contact.id)}#/tasks/assigned/{$l.contact.id}/{* tasksHelper::getProfileURL($l.contact.id) *}{else}javascript:void(0);{/if}" class="bold">{$l.contact.name|escape|default:_w('(no name)')}</a>
+                                            </span>
+                                            {if $l.action == 'edit' || $l.action == 'comment' || $l.action == 'forward'|| $l.action == 'return'}
+                                                <span class="t-comment-action small">{$l.action_name}</span>
+                                            {/if}
+
+                                            {if $l.assignment_changed}
+                                                <div class="t-comment-assignment-change small">
+                                                    {if $l.assigned_contact_id}
+                                                        {if !empty($l.assigned_contact.name)}<span class="gray custom-mx-4">→</span>{/if}
+                                                        <a href="#/tasks/assigned/{$l.assigned_contact.id}/" class="bold">{$l.assigned_contact.name|escape}</a>
+                                                    {else}
+                                                        <span class="gray">→</span>
+                                                        <span class="gray">[`Assignment removed`]</span>
+                                                    {/if}
+                                                </div>
+                                            {/if}
+
+                                            <span class="t-comment-date nowrap hint middle">{$l.create_datetime|wa_datetime:"humandatetime"}</span>
+                                        </div>
+
+                                        {* MARK LAST NOT EMPTY FORWARD LOG ITEM *}
+                                        {*** [wtf is that?] if $_is_forward && !$_empty_log_item && $task.assign_log_id && $task.assign_log_id == $l.id}
+                                            <span><i class="fas fa-bolt"></i></span>
+                                        {/if ***}
+
+                                        {if $_is_comment && !empty($l.text)}
+                                            {if !($task.comment_log_id == $l.id)}
+                                                <a href="javascript:void(0);" class="t-assign-comment-link button rounded light-gray small nowrap" data-id="{$l.id}">
+                                                    <i class="fas fa-thumbtack fa-xs text-blue"></i> <span class="small">[`Pin`]</span>
+                                                    <!-- <i class="icon16 loading t-loading"></i> -->
+                                                </a>
+                                            {else}
+                                                <span class="small gray nowrap"><i class="fas fa-thumbtack text-blue"></i> [`Pinned`]</span>
+                                            {/if}
+                                        {/if}
+
+                                        {if $_can_edit && $l.contact_id == $wa->user()->getId()}
+                                            <span>
+                                                <a href="javascript:void(0);" class="t-comment-edit-link button circle light-gray small" data-id="{$l.id}"><i class="fas fa-edit text-blue"></i></a>
+                                            </span>
+                                        {/if}
+
+                                        {if $_can_delete}
+                                            <span>
+                                                <a href="javascript:void(0);" class="t-comment-delete-link button circle light-gray small" data-id="{$l.id}"><i class="fas fa-trash-alt text-red"></i></a>
+                                            </span>
+                                        {/if}
+
+                                    </header>
+
+                                    {if !empty($l.text)}
+                                        <div class="t-comment-content">{tasksTask::formatText($l.text)}</div>
+                                    {/if}
+
+                                    {if $log_attachments.files || $log_attachments.images}
+                                        <div class="t-attach-wrapper">
+                                            <div class="t-attached-files-wrapper">
+                                                {if $log_attachments.images}
+                                                    <div class="t-images-list">
+                                                        {foreach $log_attachments.images as $image}
+                                                            <div class="t-image-item">
+                                                                <a class="t-image-link wa-gallery-image" href="?module=attachments&action=download&id={$image.id}" title="{$image.name|escape}">
+                                                                    <img src="{tasksHelper::getAttachPreviewUrl($image)}" alt="{$image.name|escape}">
+                                                                </a>
+                                                                <div class="t-file-name" title="{$image.name|escape}">{$image.name|escape}</div>
+                                                            </div>
+                                                        {/foreach}
+                                                    </div>
+                                                {/if}
+                                                {if $log_attachments.files}
+                                                    <div class="t-files-list">
+                                                        {foreach $log_attachments.files as $file}
+                                                            <div class="t-file-item" data-file-ident="{$file.id}">
+                                                                <a class="t-file-link" href="?module=attachments&action=download&id={$file.id}" title="{$file.name|escape}">
+                                                                    <i class="fas fa-cloud-download-alt custom-mr-4"></i>
+                                                                    <span class="t-file-name">{$file.name|escape}</span>
+                                                                    <span class="t-file-size">{$file.size|wa_format_file_size}</span>
+                                                                </a>
+                                                            </div>
+                                                        {/foreach}
+                                                    </div>
+                                                {/if}
+                                            </div>
+                                        </div>
+                                    {/if}
+                                </div>
+                            </div>
+
+                            {if $_can_edit}
+                                <div class="t-comment-edit-form-wrapper" style="display: none;"></div>
+                            {/if}
+                        </div>
+                    {foreachelse}
+                        <p class="hint">[`There are no comments for this task yet.`]</p>
+                    {/foreach}
+                </div>
+
+                {* ADD COMMENT FORM *}
+                {include file="./TaskCommentForm.inc.html"
+                    post_action_url="?module=tasksComments&action=add&task_id={$task.id}"
+                    action="add"
+                inline}
+
+                <!-- plugin hook: 'backend_task.%plugin_id%.hidden_block' -->
+                {* @event backend_task.%plugin_id%.hidden_block *}
+                {foreach $_backend_task_hook as $_}{$_.hidden_block|default:''}{/foreach}
+
+            </div>
+
+            <!-- plugin hook: 'backend_task.%plugin_id%.after_hidden_block' -->
+            {* @event backend_task.%plugin_id%.after_hidden_block *}
+            {foreach $_backend_task_hook as $_}{$_.after_hidden_block|default:''}{/foreach}
+
+        </div>
+
+    </div>
+
+    {* CONTAINER FOR DYNAMIC AJAX FORMS *}
+    <div class="t-status-form-wrapper">
+        <!-- <i class="icon16 loading"></i> -->
+    </div>
+
+    {* LINK FOR TABLE VIEW *}
+    {$_list_view_type = $list_vie_type|default:''}
+    {if $_list_view_type == "table"}
+        <a class="t-open-task-link" href="#/task/{$task.project_id}.{$task.number}/"></a>
+    {/if}
+
+    {$_files_hash = md5(uniqid($task.id, true))}
+
+    {$_ignore_js = $ignore_js|default:false}
+
+    {if !$_ignore_js}
+        <script>(function() { "use strict";
+            var task = {
+                id: {$task.id|json_encode},
+                tags: {$task.tags|json_encode},
+                priority: {$task.priority|json_encode},
+                assigned_contact_id: {$task.assigned_contact_id|json_encode}
+            };
+            Tasks[task.id] = new Task({
+                $task: $("#task-{$task.id}"),
+                task: task,
+                tags: {$task.tags|json_encode},
+                priority: "{$task.priority}",
+                show_status_form: {$task->hasStatusForm()|json_encode},
+                time_since_update_period: {$time_since_update_period|json_encode},
+                time_since_update_template: {$time_since_update_template|json_encode},
+                files_hash: {$_files_hash|json_encode},
+                user_id: {$wa->user('id')|json_encode}
+            });
+
+            $.wa.locale = $.extend($.wa.locale || {}, {
+                "before_delete_task": "[`DANGER: Task will be deleted without the ability to restore. Delete?`]"
+            });
+        })();</script>
+    {/if}
+</div>
+{/strip}

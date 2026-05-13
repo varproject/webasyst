@@ -1,0 +1,55 @@
+<div class="dialog f-unmount-confirm-dialog" id="{$container_id}-unmount-confirm-dialog">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <h3 class="dialog-header">[`Unmount source`]</h3>
+        <div class="dialog-content">
+            [`This will remove source and related folder from application. All files inside your source will remain unchanged.`]
+        </div>
+        <div class="dialog-footer">
+            <button type="submit" class="button red"><i class="fas fa-spinner fa-spin loading hidden custom-mr-4"></i> [`Unmount`]</button>
+            <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            const confirm_dialog = $('#{$container_id}-unmount-confirm-dialog');
+            $('.f-unmount-confirm-dialog').not(confirm_dialog).remove();
+
+            $('.js-unmount').on('click', function() {
+
+                const link = $(this);
+                if (link.data('loading')) {
+                    return;
+                }
+
+                const unmount = function() {
+                    const loading = link.parent().find('.loading').removeClass('hidden');
+                    link.data('loading', true);
+                    return $.files.deleteSource('{$source_id}').always(function() {
+                        link.data('loading', false);
+                        loading.addClass('hidden');
+                    });
+                };
+
+                if (link.data('confirm') && confirm_dialog.length) {
+                    confirm_dialog.filesDialog({
+                        onOpen: function($dialog, dialog_instance) {
+                            $dialog.find('[type="submit"]').on('click', function (e) {
+                                e.preventDefault();
+
+                                const dialog_icon = $dialog.find('.loading').removeClass('hidden');
+                                unmount().done(function() {
+                                    dialog_icon.addClass('hidden');
+                                    dialog_instance.close();
+                                });
+                            });
+                        }
+                    });
+                } else {
+                    unmount();
+                }
+            });
+        });
+    </script>
+</div>
+

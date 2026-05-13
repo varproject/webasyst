@@ -1,0 +1,68 @@
+{capture assign="_component_table_filters_tags"}
+<div class="s-filter-tags-section s-pane-item dropbox">
+    <div class="s-dropbox-toggle js-dropbox-toggle" v-bind:class="{ 'text-blue' : has_value }">
+        <span class="s-icon icon shift-0 text-light-gray"><i class="fas fa-tag"></i></span>
+        <span class="s-name is-adaptive">[`Tags`]</span>
+    </div>
+    <div class="dropbox-body right">
+        <div class="s-dropbox-content-section">
+            <div class="s-section-header">
+                <component-table-filters-search
+                    class="s-search-form"
+                    v-model="search_string"
+                    v-bind:placeholder="'{_w("Find tags")|escape}'">
+                </component-table-filters-search>
+            </div>
+            <div class="s-section-body">
+                <div class="s-tags-list">
+                    <template v-if="items.length">
+                        <template v-for="tag of items" :key="tag.id">
+                            <div v-show="!tag.is_hide" class="s-tag-wrapper">
+                                <div class="s-checkbox-wrapper">
+                                    <template v-if="tag.is_locked">
+                                        <component-checkbox v-bind:model-value="true" v-bind:disabled="true"></component-checkbox>
+                                    </template>
+                                    <template v-else>
+                                        <component-checkbox v-model="tag.states.enabled" v-on:change="onChange"></component-checkbox>
+                                    </template>
+                                </div>
+                                <div class="s-name-wrapper">
+                                    <span class="s-name"
+                                        v-text="tag.name"
+                                        v-bind:class="{ 'cursor-pointer' : !tag.is_locked }"
+                                        v-on:click="changeTag(tag)"></span>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                    <template v-else-if="!states.is_fetching && !empty_search_result">
+                        <div style="margin-bottom: -1.25rem;">[`You have no tags`]</div>
+                    </template>
+
+                    <div class="js-lazyloading align-center">
+                        <div
+                            v-show="!empty_search_result"
+                            :style="{ visibility: states.is_fetching ? 'visible' : 'hidden' }"
+                        >
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+
+                    <div v-if="empty_search_result"
+                        class="s-tag-wrapper align-center custom-mt-0"
+                    >[`Tags not found.`]</div>
+                </div>
+                <div class="s-section-footer">
+                    <button class="button small blue" type="button"
+                        v-bind:disabled="!states.is_changed || !has_value"
+                        v-on:click="save">[`Apply`]</button>
+                    <button class="button small outlined" type="button"
+                        v-bind:disabled="!has_value"
+                        v-on:click="reset">[`Reset filter`]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/capture}
+{$_components["component-table-filters-tags"] = $_component_table_filters_tags|strip}

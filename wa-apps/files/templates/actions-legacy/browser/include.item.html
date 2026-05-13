@@ -1,0 +1,27 @@
+{$is_tmpl = $type|substr:0:5 === 'tmpl-'}
+{if $is_tmpl}
+    {$type = $type|substr:5}
+{/if}
+
+{if !$is_tmpl && ($type === 'storage' || empty($item.is_leaf))}
+    <i class="icon16 rarr overhanging f-collapse-handler"></i>
+{/if}
+<a class="f-browser-{$type}" href="javascript:void(0);">
+    {if $type === 'storage'}
+        {$item.icon_str}
+    {else}
+        <i class="icon16 folder"></i>
+    {/if}
+    <span class="f-name">
+        {if $is_tmpl}
+            <input type="name" name="tmpl_name" value="">
+        {else}
+            {$item.name|escape}
+        {/if}
+        {if !empty($item.is_personal)}
+            <i class="icon10 lock-bw no-overhanging"></i>
+        {/if}
+    </span>
+    <i class="icon16 loading" style="display: none;"></i>
+    <i class="icon10 add" {if $is_tmpl}style="display: none;" {/if}></i>
+</a>

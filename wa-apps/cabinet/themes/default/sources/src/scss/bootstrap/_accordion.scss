@@ -1,0 +1,59 @@
+/*
+// accordion
+*/
+@use '../functions' as func;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.accordion-button {
+    font-size: func.rem(15);
+    font-weight: bt.$font-weight-medium;
+
+    &.sa-hover-area {
+        --sa-hover-area--padding: .375rem;
+    }
+
+    &:after {
+        content: none;
+    }
+
+    &.collapsed {
+        .accordion-sa-icon:after {
+            transform: rotateZ(90deg);
+        }
+    }
+}
+.accordion-sa-icon {
+    position: relative;
+    height: .625rem;
+    width: .625rem;
+    opacity: .85;
+    flex-shrink: 0;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .625rem;
+    }
+
+    &:before,
+    &:after {
+        display: block;
+        position: absolute;
+        content: '';
+        top: .25rem;
+        width: .625rem;
+        height: .125rem;
+        background: currentColor;
+        transition: transform .2s;
+
+        @include dir.scope {
+            #{dir.$inset-inline-start}: 0;
+        }
+    }
+}
+.accordion-body {
+    @include bt.font-size(func.rem(15));
+
+    line-height: 1.5rem;
+    color: bt.$accordion-color;
+    padding-top: 0;
+}

@@ -1,0 +1,88 @@
+<div class="dialog" id="wa-theme-reset-dialog">
+    <div class="dialog-background"></div>
+    <form class="dialog-body">
+        <h3 class="dialog-header">[s`Revert to original`]</h3>
+        <div class="dialog-content">
+            <p><i class="fas fa-exclamation-triangle text-orange"></i> [s`This will reset all customizations you applied to this design theme. Are you sure?`]</p>
+            {if $theme.parent_theme && $theme.parent_theme.type == waTheme::OVERRIDDEN}
+                <label>
+                    <span class="wa-checkbox">
+                        <input type="checkbox" name="parent" value="1">
+                        <span>
+                            <span class="icon">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        </span>
+                    </span>
+                    {sprintf("[s`Drop all customizations and revert parent theme <strong>%s</strong> to the original version too`]", $theme.parent_theme_id)}
+                </label>
+            {/if}
+        </div>
+        <div class="dialog-footer">
+            <button type="submit" class="button red">[s`Revert to original`]</button>
+            <a href="javascript:void(0)" class="js-close-dialog button light-gray">[`Cancel`]</a>
+        </div>
+        <input type="hidden" name="theme" value="{$theme.app_id|escape}:{$theme.id|escape}">
+    </form>
+</div>
+
+<script>
+$(function() {
+    $(".theme-reset").on('click', function () {
+        if (!$(this).hasClass('disabled'))  {
+            const $wrapper = $('#wa-theme-reset-dialog').clone();
+            $.waDialog({
+                $wrapper,
+                onOpen($dialog) {
+                    const $form = $dialog.find('form'),
+                        $submit_btn = $dialog.find('[type="submit"]');
+
+                    $submit_btn.on('click', function (event) {
+                        event.preventDefault();
+                        if ($.wa.mailer) {
+                            $.wa.mailer.buttonLoader({
+                                $button: $submit_btn,
+                                status: 'loader'
+                            });
+                        } else {
+                            $submit_btn.prepend('<span class="js-loading custom-mr-4"><i class="fas fa-spinner fa-spin"></i></span>');
+                        }
+
+                        $.post("?module=design&action=themeReset", $form.serialize(), response => {
+                            if (response.status === 'ok') {
+                                if ($.wa.mailer) {
+                                    $.wa.mailer.buttonLoader({
+                                        $button: $submit_btn,
+                                        status: 'success',
+                                        callback() {
+                                            if(response.data.redirect) {
+                                                location.href = location.href.replace(/(\?|#).*$/,'') + response.data.redirect;
+                                                location.reload();
+                                            } else {
+                                                location.reload();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    location.reload();
+                                }
+                            } else {
+                                if ($.wa.mailer) {
+                                    $.wa.mailer.buttonLoader({
+                                        $button: $submit_btn,
+                                        status: 'failed'
+                                    });
+                                } else {
+                                    $submit_btn.find('.js-loading').remove();
+                                }
+                                alert(response.errors);
+                            }
+                        }, "json");
+                    })
+                }
+            });
+        }
+        return false;
+    });
+});
+</script>

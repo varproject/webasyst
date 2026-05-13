@@ -1,0 +1,127 @@
+{$main = $settings.main|default:[]}
+
+<div class="lk-settings-page">
+
+    <h2>Настройки кабинетов по витринам</h2>
+
+    <div class="fields form lk-settings-main">
+        <div class="field">
+            <div class="name">Плагин «ЛК»</div>
+            <div class="value">
+                <label>
+                    <input type="hidden" name="shop_lk[main][enabled]" value="0">
+                    <input type="checkbox" name="shop_lk[main][enabled]" value="1"
+                        {if !empty($main.enabled)}checked{/if}>
+                    Включить
+                </label>
+
+                <p class="hint">
+                    Глобальный выключатель плагина. Ниже каждая витрина Shop-Script настраивается отдельно.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="block lk-storefronts-box">
+        <table class="zebra lk-storefronts-table js-lk-storefronts-table">
+            <thead>
+                <tr>
+                    <th class="lk-storefronts-table__check">
+                        <input type="checkbox" class="js-lk-storefront-check-all" title="Включить все витрины">
+                    </th>
+                    <th>Домен</th>
+                    <th>Поселение</th>
+                    <th>Адрес кабинета</th>
+                    <th class="lk-storefronts-table__b2b">B2B</th>
+                    <th>Ссылка</th>
+                    <th class="lk-storefronts-table__status">Статус</th>
+                    <th class="lk-storefronts-table__link">Разделы</th>
+                    <th class="lk-storefronts-table__link">Авторизация</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {if !empty($storefront_rows)}
+                    {foreach $storefront_rows as $row}
+                        {$key = $row.key}
+
+                        <tr class="js-lk-storefront-row {if !empty($row.enabled)}is-enabled{else}is-disabled{/if} {if !empty($row.b2b_mode)}is-b2b{/if}"
+                            data-key="{$key|escape}" data-base-url="{$row.base_url|escape}"
+                            data-default-route="{$default_root_url|escape}">
+
+                            <td class="lk-storefronts-table__check">
+                                <input type="hidden" name="shop_lk[storefronts][{$key|escape}][enabled]" value="0">
+                                <input type="checkbox" name="shop_lk[storefronts][{$key|escape}][enabled]" value="1"
+                                    class="js-lk-storefront-check" {if !empty($row.enabled)}checked{/if}>
+
+                                <input type="hidden" name="shop_lk[storefronts][{$key|escape}][domain]"
+                                    value="{$row.domain|escape}">
+                                <input type="hidden" name="shop_lk[storefronts][{$key|escape}][shop_url]"
+                                    value="{$row.shop_url|escape}">
+                            </td>
+
+                            <td class="lk-storefronts-table__domain">
+                                {$row.domain|escape}
+                            </td>
+
+                            <td>
+                                <code>{$row.shop_label|escape}</code>
+                            </td>
+
+                            <td>
+                                <input type="text" class="short js-lk-storefront-route"
+                                    name="shop_lk[storefronts][{$key|escape}][route]" value="{$row.route|escape}"
+                                    placeholder="{$default_root_url|escape}">
+                            </td>
+
+                            <td class="lk-storefronts-table__b2b">
+                                <input type="hidden" name="shop_lk[storefronts][{$key|escape}][b2b_mode]" value="0">
+                                <input type="checkbox" name="shop_lk[storefronts][{$key|escape}][b2b_mode]" value="1"
+                                    class="js-lk-storefront-b2b" {if !empty($row.b2b_mode)}checked{/if}>
+                            </td>
+
+                            <td>
+                                <a href="{$row.cabinet_url|escape}" target="_blank" class="js-lk-storefront-link">
+                                    Открыть →
+                                </a>
+                            </td>
+
+                            <td class="lk-storefronts-table__status">
+                                <span class="lk-storefront-status js-lk-storefront-status">
+                                    {$row.status|escape}
+                                </span>
+                            </td>
+
+                            <td class="lk-storefronts-table__link">
+                                <a href="?plugin=lk&module=settings&settings_page=sections&storefront={$key|escape:'url'}"
+                                    class="js-lk-settings-page-link">
+                                    Разделы
+                                </a>
+                            </td>
+
+                            <td class="lk-storefronts-table__link">
+                                <a href="?plugin=lk&module=settings&settings_page=auth&storefront={$key|escape:'url'}"
+                                    class="js-lk-settings-page-link">
+                                    Авторизация
+                                </a>
+                            </td>
+
+                        </tr>
+                    {/foreach}
+                {else}
+                    <tr>
+                        <td colspan="9">
+                            <span class="hint">Витрины Shop-Script не найдены.</span>
+                        </td>
+                    </tr>
+                {/if}
+            </tbody>
+        </table>
+    </div>
+
+    <p class="hint">
+        Каждая строка — отдельная витрина Shop-Script: домен + поселение приложения.
+        Для каждой витрины можно задать свой адрес кабинета, B2B-режим, разделы и оформление страницы входа.
+    </p>
+
+</div>

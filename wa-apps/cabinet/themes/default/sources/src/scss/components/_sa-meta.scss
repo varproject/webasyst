@@ -1,0 +1,52 @@
+/*
+// .sa-meta
+*/
+@use 'sass:math';
+@use '../functions' as func;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+$local-margin-x: 15;
+$local-margin-y: .25rem;
+
+.sa-meta {
+    font-size: .75rem;
+}
+.sa-meta__list {
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    color: bt.$text-muted;
+    margin: -$local-margin-y 0 -.125rem;
+    padding: 0 0 .125rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: -.125rem;
+        #{dir.$margin-inline-end}: -(func.rem($local-margin-x));
+        #{dir.$padding-inline-start}: .125rem;
+    }
+}
+.sa-meta__item {
+    margin-top: $local-margin-y;
+    position: relative;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: func.rem($local-margin-x);
+    }
+
+    &:before {
+        display: block;
+        content: '';
+        position: absolute;
+        width: 1px; // SKIP-PIXELS
+        height: calc(100% - .1875rem);
+        background: currentColor;
+        top: 1px; // SKIP-PIXELS
+        opacity: .4;
+
+        @include dir.scope {
+            #{dir.$inset-inline-start}: func.rem(math.ceil($local-margin-x * .5) * -1);
+        }
+    }
+}

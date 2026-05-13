@@ -1,0 +1,88 @@
+/*
+// .sa-symbol
+*/
+@use 'sass:map';
+@use '../direction' as dir;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+
+.sa-symbol {
+    --sa-symbol--bg-color: #{vs.$sa-symbol--bg-color};
+    --sa-symbol--font-color: #{vs.$sa-symbol--font-color};
+    --sa-symbol--status-color: #{vs.$sa-symbol__status--default-color};
+    --sa-symbol--size: inherit;
+    --sa-symbol--parent-bg-color: #{vs.$sa-symbol--parent-bg-color};
+    --sa-symbol--text-size: 37%;
+    --sa-symbol--icon-size: 40%;
+
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    position: relative;
+    font-size: var(--sa-symbol--size);
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: inherit;
+    }
+}
+.sa-symbol--shape--circle {
+    border-radius: .5em;
+}
+.sa-symbol--shape--rounded {
+    border-radius: max(#{.125rem}, 0.1em);
+}
+.sa-symbol__text,
+.sa-symbol__icon {
+    background: var(--sa-symbol--bg-color);
+    color: var(--sa-symbol--font-color);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+}
+.sa-symbol__text {
+    font-size: var(--sa-symbol--text-size);
+    font-weight: bt.$font-weight-medium;
+}
+.sa-symbol__icon {
+    font-size: var(--sa-symbol--icon-size);
+}
+.sa-symbol__status {
+    position: absolute;
+    background: var(--sa-symbol--status-color);
+    width: calc(25% + .125rem);
+    height: calc(25% + .125rem);
+    border-radius: 50%;
+    border: .125rem solid var(--sa-symbol--parent-bg-color);
+    bottom: -.0625rem;
+
+    @include dir.scope {
+        #{dir.$inset-inline-end}: -.0625rem;
+    }
+}
+
+@each $name, $size in vs.$sa-symbol--sizes {
+    .sa-symbol--size--#{$name} {
+        --sa-symbol--size: #{$size};
+    }
+}
+@each $style, $variables in vs.$sa-symbol--styles {
+    .sa-symbol--style--#{$style} {
+        --sa-symbol--bg-color: #{map.get($variables, bg-color)};
+        --sa-symbol--font-color: #{map.get($variables, font-color)};
+    }
+}
+@each $status, $color in vs.$sa-symbol__status--styles {
+    .sa-symbol--status--#{$status} {
+        --sa-symbol--status-color: #{$color};
+    }
+}

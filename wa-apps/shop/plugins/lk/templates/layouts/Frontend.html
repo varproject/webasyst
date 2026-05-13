@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+
+{* Head Assets *}
+{if !$is_htmx}
+    {include file="./_parts/html_head_assets.html" inline}
+{/if}
+
+<body class="layout-fixed sidebar-expand-lg">
+
+    {* Modal Page *}
+    {if $action_modal_page}
+        {include file="./_parts/action_modal_page.html" inline}
+    {/if}
+
+    <div id="wa-app" class="app-wrapper vh-100 overflow-hidden">
+
+        {* App Sidebar *}
+        {if $sidebar_enabled}
+            {include file="./FrontendSidebar.html" inline}
+        {/if}
+
+        {* App Header *}
+        {if $header_enabled}
+            {include file="./FrontendHeader.html" inline}
+        {/if}
+
+        {* App Main *}
+        {if $main_enabled}
+            <main id="main" class="app-main p-0">
+                <div class="app-content d-flex flex-column flex-grow-1 overflow-hidden h-100 px-0">
+                    <div class="container-fluid d-flex flex-column flex-grow-1 overflow-hidden h-100 px-0">
+                        {include file="./FrontendMain.html" inline}
+                    </div>
+                </div>
+            </main>
+        {/if}
+
+    </div>
+
+    {* Body Assets *}
+    {if !$is_htmx}
+        {include file="./_parts/html_body_assets.html" inline}
+    {/if}
+</body>
+
+</html>

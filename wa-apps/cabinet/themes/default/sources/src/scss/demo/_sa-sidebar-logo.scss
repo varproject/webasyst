@@ -1,0 +1,30 @@
+/*
+// .sa-sidebar-logo
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-sidebar-logo {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    fill: vs.$sa-sidebar-logo--font-color;
+}
+.sa-sidebar-logo__caption {
+    background-color: vs.$sa-sidebar-logo__caption--bg-color;
+    color: vs.$sa-sidebar-logo__caption--font-color;
+    font-size: func.rem(11);
+    padding: .4375rem .5rem .375rem;
+    line-height: 1;
+    flex-grow: 1;
+    text-align: center;
+    font-weight: bt.$font-weight-bold;
+    text-transform: uppercase;
+    border-radius: .125rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .625rem;
+    }
+}

@@ -1,0 +1,166 @@
+/*
+// .sa-nav--sidebar
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+$local-item-padding-x: 1.25rem;
+$local-item-icon-gutter: .75rem;
+$local-item-arrow-margin-inline-end: 0;
+$local-section-padding-y: $local-item-padding-x - .4375rem;
+$local-item-sub-padding: 1rem;
+
+.sa-nav--sidebar {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .sa-nav__section {
+        padding: $local-section-padding-y 0;
+    }
+    .sa-nav__section + .sa-nav__section {
+        border-top: 1px solid vs.$sa-sidebar--divider-color; // SKIP-PIXELS
+    }
+    .sa-nav__section-title {
+        color: vs.$sa-sidebar__section--font-color;
+        font-size: func.rem(11);
+        font-weight: bt.$font-weight-medium;
+        text-transform: uppercase;
+        display: block;
+        padding: func.rem(9) $local-item-padding-x;
+        line-height: func.rem(11);
+    }
+
+    .sa-nav__menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sa-nav__link {
+        font-size: .875rem;
+        color: inherit;
+        padding: func.rem(7) $local-item-padding-x;
+        line-height: 1.125rem;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+
+        &:hover {
+            background-color: vs.$sa-sidebar__item--hover-bg-color;
+        }
+    }
+    .sa-nav__menu-item-padding {
+        width: $local-item-sub-padding;
+    }
+
+    .sa-nav__title {
+        flex-grow: 1;
+        padding-top: 1px; // SKIP-PIXELS
+        margin-bottom: -1px; // SKIP-PIXELS
+    }
+
+    .sa-nav__icon {
+        display: flex;
+        justify-content: center;
+        width: 1rem;
+        height: 1rem;
+        font-size: 1rem;
+        fill: currentColor;
+        flex-shrink: 0;
+
+        @include dir.scope {
+            #{dir.$margin-inline-end}: $local-item-icon-gutter;
+        }
+
+        svg {
+            margin: auto;
+            display: block;
+        }
+
+        .feather {
+            width: 1rem;
+            height: 1rem;
+            stroke-width: 2.5px; // SKIP-PIXELS
+        }
+    }
+    .sa-nav__arrow {
+        flex-shrink: 0;
+        color: vs.$sa-sidebar--arrow-color;
+        transition: transform .2s ease-in-out;
+        display: flex;
+        align-items: center;
+
+        @include dir.scope {
+            #{dir.$margin-inline-start}: .625rem;
+            #{dir.$margin-inline-end}: $local-item-arrow-margin-inline-end;
+        }
+    }
+    .sa-nav__menu-item-badge {
+        padding: .125rem .5rem calc(.125rem - 1px);
+        font-size: 11px;
+        line-height: 15px;
+        font-weight: bt.$font-weight-bold;
+        vertical-align: middle;
+        align-self: center;
+
+        @include dir.scope {
+            #{dir.$margin-inline-start}: .5rem;
+        }
+
+        &:last-child {
+            @include dir.scope {
+                #{dir.$margin-inline-end}: -.25rem;
+            }
+        }
+    }
+
+    .sa-nav__menu--sub {
+        overflow: hidden;
+        height: 0;
+        opacity: 0;
+        transition:
+            height .2s,
+            opacity .2s;
+
+        &:before,
+        &:after {
+            display: block;
+            content: '';
+            height: .125rem;
+        }
+    }
+    .sa-nav__menu-item:last-child {
+        .sa-nav__menu--sub {
+            &:after {
+                display: none;
+            }
+        }
+    }
+    .sa-nav__menu-item--open {
+        & > .sa-nav__menu--sub {
+            overflow: hidden;
+            height: auto;
+            opacity: 1;
+        }
+        & > .sa-nav__link .sa-nav__arrow {
+            transform: rotateZ(-90deg);
+        }
+    }
+    .sa-nav__menu--sub .sa-nav__link {
+        $local-padding-y: func.rem(5);
+
+        padding-top: $local-padding-y;
+        padding-bottom: $local-padding-y;
+    }
+
+    .sa-nav__menu-item--has-icon {
+        .sa-nav__menu--sub .sa-nav__link {
+            @include dir.scope {
+                #{dir.$padding-inline-start}: ($local-item-padding-x + 1rem + $local-item-icon-gutter) - $local-item-sub-padding;
+            }
+        }
+    }
+}

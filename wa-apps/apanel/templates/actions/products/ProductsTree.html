@@ -1,0 +1,121 @@
+{* Шапка дерево *}
+<div class="header d-flex justify-content-between align-items-center p-2 flex-shrink-0">
+
+    {* Заголовок *}
+    <span class="title text-body-secondary me-2">
+        КАТЕГОРИИ
+    </span>
+
+    {* Выпадающий список инструментов *}
+    {if !empty($has_categories)}
+        <div class="btn-group nav-item">
+
+            {* Кнопка *}
+            <button type="button" class="nav-link dropdown-toggle- pe-0 fw-bold" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+            </button>
+
+            {* Список *}
+            <ul class="dropdown-menu dropdown-menu">
+
+                {* ФИЛЬТР *}
+                <li>
+                    <div class="dropdown-item">
+                        <div class="form-check mb-0">
+                            <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault1" checked>
+                            <label class="form-check-label cursor-pointer w-100" for="radioDefault1">
+                                Все <span class="text-muted">(54)</span>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown-item">
+                        <div class="form-check mb-0">
+                            <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault2">
+                            <label class="form-check-label cursor-pointer w-100" for="radioDefault2">
+                                С товарами <span class="text-muted">(43)</span>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown-item">
+                        <div class="form-check mb-0">
+                            <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault3">
+                            <label class="form-check-label cursor-pointer w-100" for="radioDefault3">
+                                Без товаров <span class="text-muted">(11)</span>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+
+                {* СВЕРНУТЬ/РАЗВЕРНУТЬ *}
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    {if !empty($has_open_ids)}
+                        <a class="dropdown-item cursor-pointer" hx-post="?module=categoryTree&items_action=up"
+                            hx-select-oob="#main_body_tree" hx-swap="none">
+                            <i class="bi bi-chevron-up me-1"></i> Свернуть
+                        </a>
+                    {else}
+                        <span class="dropdown-item disabled">
+                            <i class="bi bi-chevron-up me-1"></i> Свернуть
+                        </span>
+                    {/if}
+                </li>
+                <li>
+                    <a class="dropdown-item cursor-pointer" hx-post="?module=categoryTree&items_action=down"
+                        hx-select-oob="#main_body_tree" hx-swap="none">
+                        <i class="bi bi-chevron-down me-1"></i> Развернуть
+                    </a>
+                </li>
+
+
+                {* СБРОС *}
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    {if !empty($category) || !empty($has_open_ids)}
+                        <a class="dropdown-item cursor-pointer" hx-post="?module=categoryTree&items_action=reset"
+                            hx-select-oob="#main_body_tree" hx-swap="none">
+                            <i class="bi bi-x-circle me-1"></i> Сбросить
+                        </a>
+                    {else}
+                        <span class="dropdown-item disabled">
+                            <i class="bi bi-x-circle me-1"></i> Сбросить
+                        </span>
+                    {/if}
+                </li>
+
+
+            </ul>
+        </div>
+    {/if}
+
+</div>
+
+{* Дерево категории *}
+{if !empty($has_categories)}
+    {$tree_html}
+{else}
+    <div class="text-body-wrapper">
+        <span class="text-body-tertiary fs-2"><i class="bi bi-archive"></i></span>
+        <span class="text-body-tertiary fs-4">Пока нет категории</span>
+    </div>
+{/if}
+
+
+<style>
+    .tree-content .text-body-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 100px 0;
+    }
+</style>

@@ -1,0 +1,32 @@
+{$_is_empty = ($total_count <= 0)}
+
+{if $_is_empty}
+
+    {$title = '[`Welcome to Files application!`]'}
+
+    <div class="block f-welcome-wrapper">
+        <i class="fas fa-cloud-upload-alt text-light-gray custom-mb-32" style="font-size: 9rem;"></i>
+        <h1>[`Welcome to Files application!`]</h1>
+        <p>[`Start uploading files by clicking the link above or by dragging selected files anywhere on this page.`]</p>
+    </div>
+
+    <script>
+        $(function() {
+            $.files.setBrowserTitle('{$title}');
+        });
+    </script>
+
+{else}
+
+    {include file="../../files/include.files.html" title=$title inline}
+
+    <script>( function($) {
+        $.files.config.getSidebar().trigger('notify', {
+            hash: '',
+            counters: {
+                all: {$total_count}
+            }
+        });
+    })(jQuery);</script>
+
+{/if}

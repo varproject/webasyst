@@ -1,0 +1,45 @@
+{* SIDEBAR *}
+<aside class="legrand-valena-sidebar">
+    <div class="legrand-valena-sidebar-top">
+        <a href="{$wa_app_url}" class="legrand-valena-sidebar-brand">
+            <div class="brand-logo">V</div>
+            <div class="brand-info">
+                <div class="brand-title">{$wa->accountName()|escape}</div>
+                <div class="brand-sub">Интернет-магазин</div>
+            </div>
+        </a>
+        {include file="./FrontendSidebar.html"}
+    </div>
+
+    <div class="legrand-valena-sidebar-bottom">
+        <div class="sb-footer">
+            &copy; {$wa->accountName()|escape}, {$smarty.now|wa_date:'Y'}
+        </div>
+    </div>
+</aside>
+
+{* MAIN PANEL *}
+<div class="legrand-valena-main">
+
+    {* HEADER *}
+    <header class="legrand-valena-header">
+        <button class="burger" id="legrand-valena-burger">
+            <span></span><span></span><span></span>
+        </button>
+
+        <div class="header-title">{$wa->title()|escape}</div>
+
+        <nav class="header-links">
+            <a href="{$wa_app_url}cart/" class="header-link">Корзина</a>
+            <a href="{$wa_app_url}search/" class="header-link">Поиск</a>
+        </nav>
+    </header>
+
+    {* CONTENT (FIXED HEIGHT) *}
+    <main class="legrand-valena-content">
+        {include file="./FrontendHome.html"}
+    </main>
+
+</div>
+
+{* <div class="sidebar-overlay" id="sidebar-overlay"></div> *}

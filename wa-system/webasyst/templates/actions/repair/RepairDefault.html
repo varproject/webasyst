@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webasyst repair tools</title>
+    {$wa->css()}
+</head>
+<body>
+    <div id="wa">
+        <div id="wa-app" class="block box">
+            <h2>Available repair tools</h2>
+            <ul class="menu-v menu width-25">
+                {foreach $actions as $action => $description}
+                    <li><a href="?module=repair&action={$action}">{$description}</a></li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

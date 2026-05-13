@@ -1,0 +1,18 @@
+{$category_id = $category.id}
+
+{* 1. Синхронизируем фильтры по текущей категории (обновим сессию, если HTMX) *}
+{* {$active_filters = shopFiltersCustom::syncFiltersForCategory($category_id)} *}
+
+{* 2. Берём товары категории с учётом активных фильтров из сессии *}
+{* {$products = shopFiltersCustom::getCategoryProductsWithActiveFilters($category_id)} *}
+
+{* 3. Строим список фильтров, урезанный по этой коллекции товаров *}
+{* {$filters = shopFiltersCustom::getCategoryEnabledFiltersByCollection($products, $category_id)} *}
+
+{$active_filters = []}
+{include file="cat_prod.html"
+    category=$category
+    products=$products
+    filters=$filters
+    active_filters=$active_filters
+}

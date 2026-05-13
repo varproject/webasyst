@@ -1,0 +1,269 @@
+{* SETTINGS LINK IF STORAGE IS TUNABLE *}
+{capture assign="before_links_block"}{strip}
+    {if $can_edit && !$storage.is_persistent}&nbsp;
+        <a href="javascript:void(0);" class="f-storage-access-settings f-share-link" id="f-storage-access-settings">
+            <i class="icon16 sharing"></i>[`Sharing settings`]
+        </a>
+    {/if}
+{/strip}{/capture}
+
+{capture assign="after_links_block"}{strip}
+    {if $can_delete && !$storage.is_persistent}
+        <span id="f-storage-delete-actions">
+            {if !$is_source_root}
+                <a class="f-storage-delete" id="f-storage-delete" href="javascript:void(0);">
+                    <i class="icon16 delete"></i>[`Delete storage`]
+                </a>
+            {else}
+                {include file='../source/include.unmount.html' container_id='f-storage-delete-actions' source_id=abs(intval($storage['source_id'])) inline}
+                <a class="f-unmount" href="javascript:void(0);" data-confirm="1">
+                    <i class="icon16 delete"></i>[`Unmount source`]
+                </a>
+            {/if}
+        </span>
+    {/if}
+    <!-- plugin hook: 'backend_storage.menu' -->
+    {* @event backend_storage.%plugin_id%.menu *}
+    {foreach $backend_storage as $plugin_id => $item}
+        {if !empty($item.menu)}{$item.menu}{/if}
+    {/foreach}
+{/strip}{/capture}
+
+{capture assign='after_breadcrumbs_block'}{strip}
+    {if $storage.is_personal}
+        {include file="../../include.personal_warn_block.html" storage_id=$storage.id}
+    {/if}
+{/strip}{/capture}
+
+{* STORAGE SETTINGS *}
+{if $storage.access_type != filesStorageModel::ACCESS_TYPE_PERSONAL && $can_edit && !$in_sync}
+    <div class="f-storage-settings-wrapper" id="f-storage-settings-wrapper" style="display:none;">
+        <form>
+            <div class="block">
+                {include file="./include.settings.html" inline}
+                <input type="hidden" name="save_type" value="info">
+                <div class="buttons">
+                    <input type="hidden" name="id" value="{$storage.id}">
+                    <input type="submit" class="button green" value="[`Save`]"> [`or`]
+                    <a href="javascript:void(0)" class="cancel f-cancel">[`cancel`]</a>
+                </div>
+            </div>
+        </form>
+    </div>
+{/if}
+
+{if $can_edit && !$storage.is_persistent}
+    {$dialog_id = uniqid('f-access-dialog')}
+    <div class="dialog width650px height400px f-dialog f-access-dialog" id="{$dialog_id}" style="display:none;">
+        <form>
+            <div class="dialog-background"></div>
+            <div class="dialog-window">
+                <div class="dialog-content">
+                    <div class="dialog-content-indent">
+                        <h1>
+                            [`Share storage`]
+                            {$storage.name|escape|truncate:32}
+                        </h1>
+                        {include file='./include.access.settings.html' container_id=$dialog_id}
+                        <input type="hidden" name="id" value="{$storage.id}">
+                        <input type="hidden" name="save_type" value="access">
+                    </div>
+                </div>
+                <div class="dialog-buttons">
+                    <div class="dialog-buttons-gradient">
+                        <input class="button green" type="submit" value="[`Save`]">
+                        <i class="icon16 loading" style="display: none;"></i> [`or`]
+                        <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{/if}
+
+{include file="../../files-legacy/include.files.html"
+    can_create_folder=true
+    can_delete_storage=$can_delete && !$storage.is_persistent
+    storage_id=$storage['id']
+inline}
+
+<script>
+    $(function() {
+
+        $.files.config.getSidebar().trigger('notify', {
+            hash: "storage/{$storage.id}",
+            counters: {
+                storage: {
+                    {$storage.id}: {$storage.count}
+                }
+            }
+        });
+
+        // delete
+        {if $can_delete && !$storage.is_persistent && !$in_sync && !$is_source_root}
+            $('#f-storage-delete').click(function() {
+                $.files.loadDialog('?module=storage&action=deleteConfirm&id={$storage.id}');
+            });
+        {/if}
+
+        var $header = $.files.config.getMainContainer().find('.f-header-name');
+        {if $storage.is_personal}
+            $header.after('<span class="f-header-icon"><i class="icon16 lock-bw" title="[`Only you can access files in this storage`]"></i></span>');
+        {/if}
+
+        {if $storage.access_type == filesStorageModel::ACCESS_TYPE_PERSONAL && $can_edit && !$in_sync}
+            $header.addClass('editable');
+            $header.inlineEditable({
+                minSize: {
+                    width: $header.width()
+                },
+                maxSize: {
+                    width: 600
+                },
+                size: {
+                    height: 30
+                },
+                inputClass: 'bold',
+                beforeMakeEditable: function (input) {
+                    var $input = $(input);
+                    $input.attr('name', 'name');
+                    $input.wrap('<form>');
+
+                    var $form = $input.closest('form');
+                    $form.css('display', 'inline');
+                    $form.append('<input type="hidden" name="id" value="{$storage['id']}">');
+                    $form.append('<input type="hidden" name="save_type" value="info">');
+                    $form.submit(function () {
+                        return false;
+                    });
+
+                    $header.data('form', $form);
+                },
+                afterMakeEditable: function(input) {
+                    input.selection('setPos', {
+                        start: 0,
+                        end: {strlen($storage.name)}
+                    });
+                },
+                beforeBackReadable: function (input, data) {
+                    if (data.changed && $header.data('form')) {
+                        var $form = $header.data('form');
+                        $.files.storageSettingsFormSubmit($form, {
+                            onSuccess: function () {
+                                $header.trigger('readable', [true]);
+                            },
+                            reload: false
+                        });
+                        return false;
+                    }
+                },
+                afterBackReadable: function (input) {
+                    var $input = $(input);
+                    var $form = $input.closest('form');
+                    $form.find('[name=id]').remove();
+                    $form.find('[name=save_type]').remove();
+                    $form.find('.errormsg').remove();
+                    $input.unwrap();
+
+                }
+            });
+        {/if}
+
+        {if $storage.access_type != filesStorageModel::ACCESS_TYPE_PERSONAL && $can_edit && !$in_sync}
+
+            var $trigger = $('.f-header-name', $.files.config.getMainContainer());
+            $trigger.addClass('editable');
+
+            var openSettings = function() {
+                var main_container = $.files.config.getMainContainer();
+                $('.f-main-header-wrapper', main_container).hide();
+                $('.f-main-settings-block', main_container).slideDown( function() {
+                    $trigger.trigger("settings-is-shown");
+                });
+            };
+
+            var closeSettings = function() {
+                var main_container = $.files.config.getMainContainer();
+                $('.f-main-settings-block', main_container).slideUp(function() {
+                    $('.f-main-header-wrapper', main_container).show();
+                    $trigger.trigger("settings-is-hidden");
+                });
+            };
+
+            $trigger.click(function() {
+                var main_container = $.files.config.getMainContainer();
+                var settings_wrapper = $('#f-storage-settings-wrapper');
+
+                // not first click on trigger button
+                if ($('.f-main-settings-block .f-storage-settings', main_container).length) {
+                    openSettings();
+                    return;
+                }
+
+                // first click on trigger button
+                $('.f-main-settings-block', main_container).html(settings_wrapper.show());
+
+                {if $storage.access_type !== filesStorageModel::ACCESS_TYPE_PERSONAL}
+                    $('.f-main-settings-block', main_container)
+                        .find('.f-access-rights-settings').prepend(
+                            $('.f-main-settings-block', main_container)
+                                .find('.f-storage-groups-settings').show()
+                        );
+                {/if}
+
+                $('.f-cancel', settings_wrapper).click(function() {
+                    closeSettings();
+                });
+                $('form', settings_wrapper).submit(function() {
+                    var form = $(this);
+                    $.files.storageSettingsFormSubmit(form);
+
+                    return false;
+                });
+                openSettings();
+
+            });
+        {/if}
+
+        // access settings dialog
+        {if $can_edit && !$storage.is_persistent}
+            $('#f-storage-access-settings').click(function () {
+                var dialog = $('#{$dialog_id}');
+
+                if (!dialog.data('inited')) {
+                    initDialog();
+                } else {
+                    showDialog();
+                }
+
+                // helpers block
+                function initDialog () {
+                    $('.f-dialogs-section').append(dialog);
+                    $('.f-access-dialog').not(dialog).remove();
+                    dialog.filesDialog({
+                        onSubmit: function () {
+                            var form = $(this);
+                            form.find('.loading').show();
+                            $.files.storageSettingsFormSubmit(form, {
+                                onSuccess: function () {
+                                    dialog.trigger('close');
+                                },
+                                onAlways: function () {
+                                    form.find('.loading').hide();
+                                }
+                            });
+                            return false;
+                        }
+                    });
+                    dialog.data('inited', 1);
+                };
+
+                function showDialog () {
+                    dialog.trigger('open');
+                };
+
+            });
+        {/if}
+
+    });
+</script>

@@ -1,0 +1,16 @@
+/*
+// modal
+*/
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+
+.modal-content {
+    box-shadow: vs.$sa-modal--shadow;
+}
+.modal-header {
+    .sa-close--modal {
+        @include dir.scope {
+            @include dir.margin(-.5rem -.5rem -.5rem auto);
+        }
+    }
+}

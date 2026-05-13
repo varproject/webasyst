@@ -1,0 +1,37 @@
+{function order_url info=[] text=''}
+    <a href="#/statistics/{$action}/{$info.link|default:''}">{$text}{if $info.order} <i class="icon10 {if $info.order === 'asc'}uarr{elseif $info.order === 'desc'}darr{/if}"></i>{/if}</a>
+{/function}
+
+<div class="f-statistics-page-wrapper">
+    <h1>{$title}</h1>
+    <div class="f-statistics-wrapper">
+        <table cellpadding="0">
+
+            {* COLUMNS HEAD *}
+            <thead>
+                {if !empty($cols)}
+                    <tr class="f-statistics-item">
+                        {foreach $cols as $col => $name}
+                            <th>
+                                {if $col && $name}
+                                    {order_url info=$order_info[$col]|default:[] text=$name}
+                                {/if}
+                            </th>
+                        {/foreach}
+                    </tr>
+                {/if}
+            </thead>
+
+            <tbody>
+                {$body}
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $.files.setBrowserTitle("{$title|escape:'javascript'}");
+    });
+</script>

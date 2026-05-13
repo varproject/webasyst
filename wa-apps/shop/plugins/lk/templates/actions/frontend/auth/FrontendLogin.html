@@ -1,0 +1,20 @@
+{$wa->loginForm()}
+
+<div class="lk-auth-links mt-3">
+    <div class="d-flex justify-content-between gap-3">
+        <a href="{$forgotpassword_url|escape}" class="text-decoration-none">
+            Забыли пароль?
+        </a>
+
+        <a href="{$signup_url|escape}" class="text-decoration-none">
+            Регистрация
+        </a>
+    </div>
+</div>
+
+<style>
+    .lk-auth-form .wa-login-forgotpassword-url,
+    .lk-auth-form .wa-signup-url {
+        display: none !important;
+    }
+</style>

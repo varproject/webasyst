@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>{$wa->accountName()}</title>
+    {$wa->css()}
+    {if $wa_app == 'webasyst'}
+        <link rel="stylesheet" href="{$wa_url}wa-content/css/dashboard/dashboard.css?v={$wa->version()}">
+    {/if}
+    <script src="{$wa_url}wa-content/js/jquery/jquery-3.6.0.min.js"></script>
+    <script src="{$wa_url}wa-content/js/jquery/jquery-migrate-3.3.2.min.js"></script>
+    <script src="{$wa_url}wa-content/js/jquery-wa/wa.js?v={$wa->version(true)}"></script>
+
+</head>
+<body{if $wa_app == 'webasyst' && $wa->get('tv')===''} class="tv"{/if}>
+    <div id="wa">
+        {if $wa_app != 'webasyst'}
+            {$wa->header()}
+        {/if}
+        <div id="wa-app" class="flexbox">
+            {$is_fixed_header = $wa->cookie('wa_header_fixed', 0)}
+            <div class="content blank box dashboard js-main-content{if $is_fixed_header} header-apps header-fixed{/if}{if strpos(waRequest::server('REQUEST_URI'), "/webasyst/dashboard/dashboard/") !== false} is-dashboard{/if}">
+                {if $wa_app == 'webasyst'}
+                    {$wa->header(['keep_unpublished' => true])}
+                {/if}
+                {$content}
+                {* New dashboard dialog *}
+                <div class="dialog" id="dashboard-editor-dialog">
+                    <div class="dialog-background"></div>
+                    <form action="?module=dashboard&action=dashboardSave" data-dashboard-url="{$wa->domainUrl()}{$dashboard_module_url}dashboard/">
+                        <div class="dialog-body">
+                            <div class="dialog-content fields">
+                                <div class="field">
+                                    <div class="name for-input bold">[`New dashboard`]</div>
+                                    <div class="value"><input type="text" name="dashboard[name]" value="" class="bold large"></div>
+                                </div>
+                                <p class="hint"><i class="fas fa-lock text-gray custom-mr-4"></i> [`The dashboard will be available only to admin users with full access rights.`]</p>
+                                <p class="hint"><i class="fas fa-tv fa-xs text-gray custom-mr-4"></i> [`A private link will be generated for streaming this dashboard on 4K and Full HD TVs.`]</p>
+                            </div>
+                            <div class="dialog-footer">
+                                <input type="submit" value="[`Save`]" class="button">
+                                <a class="js-close-dialog button light-gray" href="#">[`Cancel`]</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="dialog" id="dashboard-delete-dialog">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body">
+                        <h1 class="dialog-header break-word">[`Delete dashboard`]</h1>
+                        <div class="dialog-content">
+                            <p>[`You are about to permanently delete this dashboard. Are you sure?`]</p>
+                        </div>
+                        <div class="dialog-footer">
+                            <input type="submit" value="[`Delete`]" class="button red">
+                            <a class="js-close-dialog button light-gray" href="#">[s`Cancel`]</a>
+                            <span class="js-loading hidden"><i class="fas fa-spinner fa-spin"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a href="javascript:void(0)" class="widgets-list-wrapper-close js-dashboard-edit-close">
+                    <i class="fas fa-times"></i>
+                </a>
+                <div class="widgets-list-wrapper" data-backend-url="{$wa_backend_url|escape}">
+                {function skeleton}
+                    <div class="skeleton list-group-wrapper">
+                        <div class="list-wrapper">
+                            {for $i=1 to 12}
+                                <div class="widget-item-wrapper">
+                                    <span class="skeleton-custom-box image-wrapper"></span>
+                                    <span class="skeleton-line custom-mt-16"></span>
+                                </div>
+                            {/for}
+                        </div>
+                    </div>
+                {/function}
+                {skeleton}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

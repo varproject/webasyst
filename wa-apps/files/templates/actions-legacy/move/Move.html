@@ -1,0 +1,188 @@
+{$dialog_id = uniqid('f-move-dialog-')}
+
+{function form_begin}
+    {if $allowed_files}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $allowed_files}</form>{/if}
+{/function}
+
+{function size}
+    {if $allowed_files}width650px height350px{else}width400px height200px{/if}
+{/function}
+
+{function title}
+    {if $wa->get('restore')}
+        <h1>[`Restore files and folders`]</h1>
+    {else}
+        <h1>[`Move files and folders`]</h1>
+    {/if}
+{/function}
+
+{function button_text}{strip}
+    {if $wa->get('restore')}
+        {if $unallowed_files}[`Restore the rest`]{else}[`Restore`]{/if}
+    {else}
+        {if $unallowed_files}[`Move the rest`]{else}[`Move`]{/if}
+    {/if}
+{/strip}{/function}
+
+<div class="dialog {size} f-move-dialog" id="{$dialog_id}" style="display:none;">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+
+                    {title}
+
+                    {if $allowed_files}
+                        {if $unallowed_files}
+                            <p class="errormsg">
+                                [`No permissions to move these files`]:
+                                {foreach $unallowed_files as $file}
+                                    {$file.name|escape}&nbsp;
+                                {/foreach}
+                            </p>
+                        {/if}
+                        <div class="f-choose-path-block">
+                            <i class="icon16 loading"></i>
+                        </div>
+                    {else}
+                        <p class="errormsg">
+                            [`No permissions to move these files`]
+                        </p>
+                    {/if}
+
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    {if $allowed_files}
+                        <input class="button green" type="submit" value="{button_text}" disabled="disabled">
+                        <i class="icon16 loading f-submit-loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                    {else}
+                        <input class="button gray cancel" type="button" value="[`Cancel`]">
+                    {/if}
+                </div>
+            </div>
+        </div>
+    {form_end}
+</div>
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-move-dialog').not(dialog).remove();
+        {if $allowed_files}
+            var storage_id = 0;
+            var folder_id = 0;
+
+            // load empty process dialog and hide
+            var empty_process_dialog = $('.f-move-process-empty-dialog');
+            if (!empty_process_dialog.length) {
+                $.files.loadDialog('?module=move&action=processDialog', {
+                    onLoad: function (d) {
+                        empty_process_dialog = d;
+                        d.hide();
+                    }
+                });
+            }
+
+            dialog.filesDialog({
+                disableButtonsOnSubmit: true,
+                onFirstLoad: function() {
+                    $('.f-choose-path-block', dialog).load('?module=browser&level={$level}', function() {
+                        dialog.find('.f-browser').bind('select', function(event, type, id) {
+                            dialog.find('[type=submit]').attr('disabled', false);
+                            if (type === 'storage') {
+                                storage_id = id;
+                                folder_id = 0;
+                            } else {
+                                storage_id = 0;
+                                folder_id = id;
+                            }
+                        });
+                    });
+                },
+                onSubmit: function() {
+
+                    var file_ids = {json_encode(array_keys($allowed_files))};
+                    dialog.find('.f-submit-loading').show();
+
+                    $.files.moveFiles({
+                        file_ids: file_ids,
+                        storage_id: storage_id,
+                        folder_id: folder_id,
+                        is_restore: {json_encode($is_restore)},
+                        beforeMoveFiles: function () {
+                            if (empty_process_dialog.length) {
+                                $.wa.dialogHide();
+                                empty_process_dialog.show();
+                            }
+                        },
+                        onSuccess: function(r) {
+                            if (r.status === 'ok') {
+
+                                var reload_page = true;
+
+                                $.files.runCopyFiles();
+                                $.files.checkBackendChanges();
+                                // run dialog if process_id is present and not empty
+
+                                if (r.data.process_id > 0) {
+                                    $.files.loadDialog('?module=move&action=processDialog&copytask_process_id=' + r.data.process_id, {
+                                        onLoad: function (d) {
+                                            $.wa.dialogHide();
+                                            d.show();
+                                        }
+                                    });
+                                    reload_page = false;
+                                }
+
+                                if (r.data.count > 0) {
+                                    $.files.refreshSidebar();
+                                }
+
+                                if (reload_page) {
+                                    $.wa.dialogHide();
+                                    $.files.controller.reloadPage();
+                                }
+
+                                // Uncheck All
+                                var $catalog = $("#f-catalog-wrapper");
+                                if ($catalog.length) {
+                                    $catalog.trigger("unSelectAll");
+                                }
+                            } else {
+                                $.wa.dialogHide();
+                                $.files.alertError(r.errors[0][0]);
+                            }
+                        },
+                        onError: function(r) {
+                            $.wa.dialogHide();
+                            if ($.isPlainObject(r) && r.same_place) {
+                                $.files.alertError($_("Files from the same place"));
+                            } else if (typeof r === 'string') {
+                                $.files.alertError(r);
+                            } else if ($.isArray(r)) {
+                                $.files.alertError(r[0] || '[`Server error`]', r);
+                            } else {
+                                $.files.alertError('[`Server error`]', r);
+                            }
+                        },
+                        onAlways: function() {
+                            dialog.find('.f-submit-loading').hide();
+                        }
+                    });
+
+                    return false;
+                }
+            });
+        {else}
+            dialog.filesDialog();
+        {/if}
+    });
+</script>

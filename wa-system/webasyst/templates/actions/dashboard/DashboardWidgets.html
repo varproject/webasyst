@@ -1,0 +1,136 @@
+{$_capture_array = []}
+{strip}
+<div class="d-widgets-block">
+    <ul class="chips rounded dashboards-list js-dashboards-list custom-mr-8 custom-mb-32 custom-mt-16 desktop-and-tablet-only">
+        <li class="{if $selected_sidebar_item === 'my'} selected{/if}" data-header-title="[`My apps`]">
+            <a href="javascript:void(0)" data-dashboard="0">
+                <span class="semibold">[`My dashboard`]</span>
+            </a>
+        </li>
+        {foreach $public_dashboards as $d}
+            <li{if $selected_sidebar_item === "dashboard/`$d.id`"} class="selected"{/if} data-header-title="[`Everyone`]">
+                <a href="javascript:void(0)" data-dashboard="{$d.id}" title="{$d.name|escape}">
+                    <span class="semibold">{$d.name|escape|truncate:32}</span>
+                    <span class="js-loading hidden custom-mr-0 custom-ml-4 small"><i class="fas fa-spinner fa-spin" style="color:var(--text-color);"></i></span>
+                </a>
+            </li>
+        {/foreach}
+        {if !empty($is_admin)}
+            <li class="transparent" style="display: none;">
+                <a class="js-new-dashboard" href="javascript:void(0);" data-dashboard="new_dashboard" title="[`New dashboard`]">
+                    <i class="fas fa-plus text-gray custom-mr-4"></i>[`New dashboard`]
+                </a>
+            </li>
+        {/if}
+        {if !$wa->isMobile()}
+            <li class="transparent dashboard-customize">
+                <a href="javascript:void(0);"
+                   class="js-dashboard-edit"
+                   data-current_dashboard-id="{$selected_sidebar_item|default:0|regex_replace:'/[^0-9]/':''}"
+                   id="show-dashboard-editable-mode_" title="[s`Widgets`]">
+                    <i class="fas fa-sliders-h text-gray"></i>
+                </a>
+            </li>
+        {/if}
+    </ul>
+
+    {* LOAD RESOURCES *}
+    <script src="{$wa_url}wa-content/js/d3/d3.min.js"></script>
+
+    <div class="empty-widgets-wrapper {if empty($widgets)}is-shown{/if}" id="empty-widgets-wrapper">
+        <p>[`Your dashboard is empty. Add widgets by clicking “Edit widgets” button at the top.`]</p>
+    </div>
+
+    <div id="d-widgets-block">
+        {foreach $widgets as $block => $block_widgets}
+            {foreach $block_widgets as $w}
+                {$size_sum = array_sum($w.size)}
+                {$is_small = $size_sum == 2}
+                {$is_medium = $size_sum == 3}
+                {$is_big = $size_sum == 4}
+                {$has_small_size = ifset($w.has_sizes.small)}
+                {$has_medium_size = ifset($w.has_sizes.medium)}
+                {$has_big_size = ifset($w.has_sizes.big)}
+            {/foreach}
+
+            <div class="widget-group-wrapper{if $is_small || $is_medium} js-nested-sortable{/if}">
+                {foreach $block_widgets as $w}
+
+                    {include file="./DashboardWidget.html" inline}
+
+                    {* INIT WIDGET*}
+                    {capture append="_capture_array"}
+                        <script>
+                            DashboardWidgets[{$w.id}] = new DashboardWidget({
+                                widget_id: {$w.id},
+                                widget_href: {"`$w.href`&ui=2.0"|json_encode},
+                                widget_sort: {$w.sort},
+                                widget_group_index: {$block_widgets@index},
+                                widget_size: {
+                                    width: {$w.size.0},
+                                    height: {$w.size.1}
+                                }
+                            });
+                        </script>
+                    {/capture}
+                {/foreach}
+            </div>
+        {/foreach}
+
+        {* EMPTY GROUP*}
+        <div class="widget-group-wrapper js-nested-sortable js-empty-group"></div>
+    </div>
+
+    <div id="widgets-list-wrapper" data-backend-url="{$wa_backend_url|escape}"></div>
+
+    {* HIDDEN LOADING SCREEN *}
+{*    <div class="loading-ornament-wrapper">
+        <div class="image-wrapper"></div>
+    </div>*}
+</div>
+
+{* SCRIPTS *}
+{$_capture_array|join:''|strip}
+{/strip}
+
+<style>
+    .widget-group-wrapper.widget-chosen {
+        transition: auto !important;
+    }
+    .widget-ghost:not(.widget-drag) {
+        opacity: 0;
+    }
+    .widget-drag {
+       opacity: 1 !important;
+       background: rgba(0,0,0,0.06);
+        overflow: hidden;
+        border-radius: 1rem;
+    }
+    .widget-chosen:not(.widget-drag) {
+        cursor: move;
+    }
+    .widget-drag .widget-controls-wrapper {
+        display: none !important;
+    }
+
+    .sortable-fallback {
+        background: var(--background-color-blank)
+    }
+
+    @keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale3d(0.3, 0.3, 0.3);
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .zoomIn {
+        animation-name: zoomIn;
+        animation-duration: 500ms;
+        animation-fill-mode: both;
+    }
+</style>

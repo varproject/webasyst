@@ -1,0 +1,328 @@
+
+<section id="wa_announcement">
+    {$has_dasboard = ($current_app === 'webasyst' && isset($activity))}
+    {if $has_dasboard}
+        {include file="./BackendDashboardHeaderAnnouncements.functions.inc.html" inline}
+        <link href="{$wa_url}wa-content/js/redactor/2/redactor.css?v{$wa->version(true)}" rel="stylesheet">
+        <script id="redactor_2-js" src="{$wa_url}wa-content/js/redactor/2/redactor.min.js?v{$wa->version(true)}"></script>
+        {if substr($wa->locale(), 0, 2)!='en'}
+            <script id="redactor_2-lang-js" src="{$wa_url}wa-content/js/redactor/2/{substr($wa->locale(), 0, 2)}.js?v{$wa->version(true)}"></script>
+        {/if}
+        <script id="wa-announcement-js" src="{$wa_url}wa-content/js/jquery-wa/wa.header.announcement.js?v{$wa->version(true)}"></script>
+        <script>
+            $(function () {
+                new WaHeaderAnnouncement();
+                new WaAnnouncementReactions({
+                    user_id: {$wa->userId()},
+                    reaction_list: [
+                        '👍','👎','👌','🔥','💯','🆗','⚡','🙏','🤝','👏','🤟','✌️','💗','🚀','💥','💪','🌞','⭐','🤩','🤑','😄','😀',
+                        '😅','🤣','😮','🙁','🤔','🧐','😢', '😬','😱','😎','🥰','😍','🤗','😇','😝','🎉','🥳', '🎁','☕','🍺','🍾','🥂',
+                        '🐱','🐶','🎯','🌴','🌹','🌷','🌸','💋','😴','😷','🤮','😠','💩','🤬','✅','❌','🥵','🥶','💡', '🚩',
+                    ],
+                    highlighting_class: 'bg-blue text-white',
+                    templates: {
+                        reaction_item: {announcement_reaction|json_encode}
+                    }
+                });
+                new WaAnnouncementComments();
+            });
+        </script>
+    {/if}
+
+
+    <div class="wa-announcement-wrapper custom-mt-12-mobile">
+        {* FORM *}
+        <form id="js-form-new-announcement" class="wa-announcement-form" style="display:none;">
+            <div class="fields">
+                <div class="fields-group">
+                    <div class="flexbox middle wrap-mobile custom-mb-12">
+                        <div id="dropdown-notify-to-users" class="dropdown width-100-mobile" style="min-width: 270px;">
+                            <button type="button" class="dropdown-toggle button light-gray width-100 small"
+                                style="text-align:left;" data-init-text="[`To all users`]">[`To all users`]</button>
+
+                            <div class="dropdown-body">
+                                <div class="box flexbox vertical">
+                                    <div class="toggle small middle" id="toggle-groups-or-users">
+                                        <span data-type="all" class="selected">[`All`]</span>
+                                        <span data-type="groups">[`Groups`]</span>
+                                        <span data-type="contacts">[`Users`]</span>
+                                    </div>
+                                </div>
+
+                                <ul class="menu custom-mt-0" data-list="all">
+                                    <div class="gray align-center custom-mx-8">
+                                        [`All users will see this in their Webasyst accounts.`]
+                                    </div>
+                                </ul>
+
+                                <ul id="notify-to-groups-list" class="menu custom-mt-0" data-list="groups" style="display: none;">
+                                    {if !empty($groups)}
+                                        {foreach $groups as $_g}
+                                            <li data-id="{$_g.id}" data-contact-ids="{','|implode:$_g.contact_ids}">
+                                                <div class="item">
+                                                    <span>
+                                                        <label class="flexbox"{if !empty($_g.description)} title="{$_g.description|escape}"{/if}>
+                                                            <span class="wa-checkbox">
+                                                                <input type="checkbox" name="group_ids[{$_g@index}]" value="{$_g.id}">
+                                                                <span>
+                                                                    <span class="icon">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                            {$icon = 'fas fa-user'}
+                                                            {if $_g.icon}
+                                                                {if strpos($_g.icon, 'fa-') !== false}
+                                                                    {$icon = $_g.icon}
+                                                                {else}
+                                                                    {$icon = 'fas fa-user-friends'}
+                                                                {/if}
+                                                            {/if}
+                                                            <i class="fas fa-{$icon|escape} custom-mx-4"></i>
+                                                            {$_g.name|escape}
+                                                        </label>
+                                                    </span>
+                                                    <span class="count">{count($_g.contact_ids)}</span>
+                                                </div>
+                                            </li>
+                                        {/foreach}
+                                    {else}
+                                        <p class="hint align-center custom-mb-8">
+                                            [`Invite your teammates using the Team app.`]
+                                        </p>
+                                    {/if}
+                                </ul>
+
+                                <ul id="notify-to-users-list" class="menu custom-mt-0" data-list="contacts" style="display: none;">
+                                    {if !empty($contacts)}
+                                        {foreach $contacts as $_c}
+                                            <li data-id="{$_c.id}" data-has-phone="{$_c.has_phone}"{if $_c.id === $wa->user('id')} class="disabled"{/if}>
+                                                <div class="item">
+                                                    <span>
+                                                        <label class="flexbox">
+                                                            <span class="wa-checkbox">
+                                                                <input type="checkbox" name="contact_ids[{$_c@index}]" value="{$_c.id}">
+                                                                <span>
+                                                                    <span class="icon">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                            <i class="userpic userpic-20 custom-ml-8 custom-mr-4" style="background-image: url('{$_c.photo_url_96}')"></i>
+                                                            {$_c.name|escape}
+                                                        </label>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        {/foreach}
+                                    {else}
+                                        <p class="hint align-center custom-mb-8">
+                                            [`Invite your teammates using the Team app.`]
+                                        </p>
+                                    {/if}
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        <div id="js-wa-announcement-ai-write-dropdown" class="dropdown">
+                            <button type="button" class="dropdown-toggle button nobutton small custom-mx-8" style="display: none;">
+                                <i class="icon webasyst-magic-wand-ai"></i> [s`Write with AI`]
+                            </button>
+                            <div class="dropdown-body" style="width: 340px;">
+                                <div class="custom-p-12">
+                                    <textarea class="js-prompt full-width smaller" placeholder="[s`Write an announcement about...`]"></textarea>
+
+                                    <div class="flexbox space-4 custom-mt-16">
+                                        <div class="wide">
+                                            <button type="button" class="js-submit ai-button button small black rounded align-center" disabled>
+                                                <i class="icon-loading icon icon-loading webasyst-magic-wand-ai shimmer"></i>
+                                                <i class="icon-success fas fa-check"></i>
+                                                <i class="icon-error fas fa-times"></i>
+                                                <span class="text">[s`Write`]</span>
+                                            </button>
+                                            <button type="button" class="js-repeat-submit button nobutton circle" disabled style="display: none;">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <span class="hint">[`Style`]</span>
+                                            <div class="wa-select smaller">
+                                                <select class="js-emotion">
+                                                    <option value="neutral" selected>[`Neutral`]</option>
+                                                    <option value="positive">[`Positive`]</option>
+                                                    <option value="fun">[`Fun`]</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="js-error state-error-hint custom-mt-8"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" id="js-wa-announcement-ai-spellcheck" class="button nobutton light-gray small custom-ml-8" style="display: none;">
+                            <span class="icon webasyst-magic-wand-ai"></span>
+                            [`Check spelling`]
+                        </button>
+
+                        <div class="custom-ml-auto small">
+                            <span>
+                                {$_count_notifocations = $contacts|count|escape}
+                                <span id="js-announcement-notify-counter" class="badge gray small" data-init-value="{$_count_notifocations}">{$_count_notifocations}</span>
+                                [s`Notify everyone`]
+                            </span>
+
+                            <label>
+                                <span class="wa-checkbox">
+                                    <input type="checkbox" name="data[is_notify_email]" value="1">
+                                    <span>
+                                        <span class="icon">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                    </span>
+                                </span>
+                                [s`by email`]
+                            </label>
+
+                            <label>
+                                <span class="wa-checkbox">
+                                    <input type="checkbox" name="data[is_notify_sms]" value="1"{if !$sms_plugins_exists || !$sms_plugins_configured} disabled{/if}>
+                                    <span>
+                                        <span class="icon">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                    </span>
+                                </span>
+                                [s`by SMS`]
+                            </label>
+                            {if !$sms_plugins_exists || !$sms_plugins_configured}
+                                {$_tt_text = '[`No configured SMS plugins are available.`]'}
+                                {if !$sms_plugins_exists}
+                                    {$_tt_text = '[`No SMS plugins are installed.`]'}
+                                {/if}
+                                <span class="wa-tooltip text-orange js-announcements-sms-tt" data-wa-tooltip-content="{$_tt_text|escape}">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                                <script>
+                                    ( function($) {
+                                        $(".js-announcements-sms-tt").waTooltip();
+                                    })(jQuery);
+                                </script>
+                            {/if}
+                            <span class="js-sms-counter flexbox-inline hidden" style="min-width:55px;">
+                                <span class="js-sms-counter-loading text-gray" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+                                <span class="js-sms-counter-value text-gray small semibold" style="display:none;">≈<span></span> SMS</span>
+                            </span>
+                        </div>
+                    </div>
+                    <textarea id="js-announcement-textarea" class="width-100" name="data[text]"
+                        placeholder="[`Everyone on your team will see the announcement`]" data-lang="{substr($wa->locale(), 0, 2)}"></textarea>
+
+                    <div id="js-announcement-fields" style="display: none;">
+                        <div class="fields custom-pb-8">
+                        <div class="fields-group custom-p-12 custom-m-0">
+                            <div class="field">
+                                <div class="name for-input">[`Publish on`]</div>
+                                <div class="value">
+                                    <input type="date" id="js-announcement-datetime-date" class="wa-datepicker small">
+                                    <input type="time" id="js-announcement-datetime-time" class="small">
+                                    <p class="hint">
+                                      [`The announcement will become visible at the specified time.`]
+                                      [`Scheduled publication cannot be used along with email or SMS notifications enabled.`]<br>
+                                      [`Current time:`] <strong>{$smarty.now|wa_datetime}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="name for-input">[`Show until`]</div>
+                                <div class="value">
+                                    <input type="date" id="js-announcement-ttl-date" class="wa-datepicker small">
+                                    <input type="time" id="js-announcement-ttl-time" class="small">
+                                    <p class="hint">
+                                      [`The announcement will automatically disappear at the specified time.`]
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="name for-checkbox">[`Pin above others`]</div>
+                                <div class="value">
+                                    <label>
+                                        <span class="wa-checkbox">
+                                            <input type="checkbox" name="data[is_pinned]" value="0">
+                                            <span>
+                                                <span class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        <span class="small"><i class="fas fa-bolt text-orange custom-ml-4"></i> [`Breaking news`]</span>
+                                        <span class="hint">[`will show the announcement above others`]</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        </div>
+                    </div>
+                    {* Buttons *}
+                    <div class="flexbox middle space-4 wrap small custom-mt-12">
+                        <button type="button" id="js-publish-announcement" class="button green">[`Publish`]</button>
+                        <button type="button" id="js-update-announcement" class="button green hidden">[`Save`]</button>
+                        <button type="button" id="js-preview-announcement" class="button green outlined" data-active-text="[`Preview`]" data-inactive-text="[`Stop preview session`]">[`Preview`]</button>
+                        <button type="button" id="js-cancel-announcement-form" class="button light-gray hidden">[`Cancel`]</button>
+                        <div class="custom-ml-auto flexbox middle custom-mt-8-mobile">
+                            <button type="button" id="js-announcement-remove" class="button outlined red small hidden"
+                                data-button-delete="[`Delete`]" data-button-cancel="[`Cancel`]" data-text-delete="[`Delete the notification permanently?`]">
+                                [`Delete`]
+                            </button>
+                            <a href="javascript:void(0)" id="js-announcement-fields-more" class="button nobutton text-gray">
+                                [`Options`] <i class="fas fa-caret-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="js-announcement-error" class="state-error-hint custom-mt-8 hidden">[`An unknown error has occurred. Please reload this page and try again.`]</div>
+                </div>
+            </div>
+        </form>
+        {* ANNOUNCEMENT LIST *}
+        <div class="wa-announcement-list-wrapper custom-px-16-mobile">
+            {$count_notifications = (!empty($notifications)) ? count($notifications) : 0}
+            <ul id="js-announcement-groups" class="wa-announcement-groups list custom-m-0">
+                {if $count_notifications}
+                    {announcement_list}
+                {/if}
+            </ul>
+            <div id="js-announcement-show-more" class="wa-announcement-show-more custom-mt-8 custom-ml-4">
+                {if $count_notifications > 5}
+                    <a href="javascript:void(0)" class="back">
+                        <span class="custom-pl-4"><i class="fas fa-caret-down"></i> [`Show more`]</span>
+                    </a>
+                {/if}
+            </div>
+        </div>
+        {* Announcement template *}
+        {$_default_app = 'webasyst'}
+        <script id="js-announcement-preview-template" type="text/html">
+            <li class="wa-announcement-group js-announcement-group wa-announcement-preview-group js-announcement-preview-group" data-app-id="{$_default_app}" data-contact-id="{$user->getId()}">
+                <ul class="js-announcement-list wa-announcement-list menu large custom-mb-0">
+                    <li class="js-announcement-preview-item js-wa-announcement wa-announcement-item wa-announcement-preview-item" data-app-id="{$_default_app}" data-id="">
+                        <input type="hidden" class="js-is-allowed-edit" value="1">
+                        <div class="wa-announcement-item-inner">
+                            <i class="icon size-24 userpic userpic-24 custom-mt-2" data-wa-tooltip-content="{$user->getName()|escape}" data-wa-tooltip-placement="right" style="background: url('{$user->getPhoto("32")}');"></i>
+                            <span class="wa-announcement-item-main">
+                                <span class="js-announcement-pinned wa-announcement-pinned hidden"><i class="fas fa-bolt text-orange"></i></span>
+                                <span class="js-announcement-content wa-announcement-content semibold"></span>
+
+                                {announcement_controls}
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+
+                {announcement_control_close}
+            </li>
+        </script>
+    </div>
+
+</section>

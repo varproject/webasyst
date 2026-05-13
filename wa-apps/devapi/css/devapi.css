@@ -1,0 +1,69 @@
+.paging > *.selected {
+	background: var(--gray);
+	color: var(--white);
+}
+
+.summary-toolbar {
+	position: sticky;
+	top: 4rem;
+	background: var(--background-color-blank);
+}
+
+.history-element {
+	border: solid 1px;
+	border-radius: 5px;
+	border-color: var(--border-color-hard);
+	margin-bottom: 15px;
+	background-color: var(--background-color);
+}
+.order-header {
+	background-color: var(--background-color-wa-header);
+	padding: 10px;
+}
+table.compact {
+	margin-top: 3px !important;
+	margin-bottom: 1em;
+}
+tr.disabled {
+	color: gray;
+}
+.devapi-app-icon {
+	cursor: pointer;
+}
+.devapi-app-icon.selected {
+	border: 2px solid red;
+	border-radius: 5px;
+}
+table.requests-table tr.unread td {
+	background-color: var(--background-color-table-row-selected);
+}
+@media (max-width: 768px) {
+
+#devapi-menu ul li {
+    display: inline-block;
+}
+.sidebar ul.menu > li > a svg, .sidebar ul.menu > li > .item svg {
+    font-size: 2rem;
+    max-width: 2rem;
+}
+.content, .custom-p-24.summary-toolbar {
+    max-width: 100vw;
+}
+.dev-select, .paginator-block {
+    display: block;
+}
+#table-products {
+    max-width:100vw;
+    overflow: auto;
+}
+.devapi-app-icon-block, .devapi-app-icon {
+    display: inline-block;
+}
+
+}
+ul.tabs.secondary > li.selected > a {
+	border-bottom-color: var(--dark-gray);
+}
+.image.sorter:hover {
+	cursor: move;
+}

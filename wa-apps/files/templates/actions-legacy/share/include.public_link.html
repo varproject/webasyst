@@ -1,0 +1,30 @@
+<div class="f-file-preview-link-value {if $file.hash}f-private-link-on{else}f-private-link-off{/if}">
+
+    {if !$file.frontend_url}
+        <p>{sprintf('[`You need the settlement of Files to create public link. Use <a href="%s">Site</a> to create new settlement.`]', $site_url)}</p>
+    {else}
+        <div class="f-ibutton-checkbox">
+            <ul class="menu-h">
+                <li>
+                    <input type="checkbox" class="f-private-link-toggle" name="" value="1" {if $file.hash}checked="checked"{/if}>
+                </li>
+                <li>
+                <span class="f-private-link-text">
+                    {if $file.type === filesFileModel::TYPE_FILE}[`Link to this file`]{else}[`Link to this folder`]{/if}
+                    <i class="icon16 yes"></i>
+                </span>
+                </li>
+            </ul>
+        </div>
+        <div class="f-file-preview-link-block">
+            <input name="link" value="{$file.frontend_url}" class="f-file-preview-link" style="width: 90%;" readonly>
+            <a target="_blank" href="{$file.frontend_url}" class="f-file-go-link">
+                <i class="icon16 new-window"></i>
+            </a>
+        </div>
+        <div class="f-private-link-off-text"><br>
+            <p class="hint"><i class="icon16 lock-bw"></i>[`Right now this content is private and can be viewed by authorized backend users only. Enabling public link option will create a secret direct link that you can send to other people so they can access and download this content too.`]</p>
+        </div>
+    {/if}
+
+</div>

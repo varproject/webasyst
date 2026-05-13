@@ -1,0 +1,155 @@
+/*
+// .sa-app
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-app {
+    --sa-footer-visible-height: 0rem;
+    --sa-sidebar-shown: 1;
+    --sa-sidebar-width: #{vs.$sa-sidebar--width};
+    --sa-sidebar-actual-width: calc(var(--sa-sidebar-width) * var(--sa-sidebar-shown));
+    --sa-sticky-height: #{vs.$sa-toolbar--height};
+    --sa-toolbar-height: #{vs.$sa-toolbar--height};
+    --sa-toolbar-visible-height: #{vs.$sa-toolbar--height};
+
+    min-height: 100%;
+    display: flex;
+}
+.sa-app--toolbar-static {
+    --sa-sticky-height: 0;
+
+    .sa-app__toolbar {
+        position: relative;
+    }
+}
+.sa-app__toasts {
+    padding: 1.5rem;
+    position: fixed;
+    z-index: 100;
+
+    @include bt.media-breakpoint-down(md) {
+        padding: 1rem;
+    }
+    @include bt.media-breakpoint-down(sm) {
+        padding: .75rem;
+    }
+}
+.sa-app__sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: fixed;
+    width: var(--sa-sidebar-actual-width);
+    transition: width .2s ease-in-out;
+    height: 100%;
+}
+.sa-app__content {
+    max-width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.sa-app__toolbar,
+.sa-app__body,
+.sa-app__footer {
+    width: calc(100% - var(--sa-sidebar-actual-width));
+    transition: width .2s ease-in-out;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: auto;
+    }
+}
+.sa-app__toolbar {
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    height: var(--sa-toolbar-height);
+
+    @include dir.scope {
+        #{dir.$inset-inline-end}: 0;
+    }
+}
+.sa-app__body {
+    flex-grow: 1;
+    padding-top: var(--sa-sticky-height);
+}
+.sa-app__footer {
+    color: vs.$sa-app__footer--font-color;
+    font-size: func.rem(13);
+    border-top: 1px solid vs.$sa-app__footer--border-color; // SKIP-PIXELS
+    background: vs.$sa-app__footer--bg-color;
+    padding: 1rem 1.5rem;
+}
+
+.sa-app--switch-device {
+    .sa-app__sidebar,
+    .sa-app__toolbar,
+    .sa-app__body,
+    .sa-app__footer,
+    .sa-app__sidebar-backdrop {
+        transition: none;
+    }
+}
+
+@include bt.media-breakpoint-up(xl) {
+    .sa-app--desktop-sidebar-hidden {
+        --sa-sidebar-shown: 0;
+    }
+    .sa-app__sidebar-shadow {
+        pointer-events: none;
+        position: absolute;
+        height: 100%;
+        top: 0;
+        width: 2rem;
+        overflow: hidden;
+
+        @include dir.scope {
+            #{dir.$inset-inline-end}: 0;
+        }
+
+        &::before {
+            display: block;
+            content: '';
+            position: absolute;
+            height: calc(100% + 4rem);
+            width: 100%;
+            top: -2rem;
+            box-shadow: vs.$sa-sidebar--shadow;
+
+            @include dir.scope {
+                #{dir.$inset-inline-start}: 100%;
+            }
+        }
+    }
+}
+@include bt.media-breakpoint-down(xl) {
+    .sa-app--mobile-sidebar-hidden {
+        --sa-sidebar-shown: 0;
+
+        .sa-app__sidebar-backdrop {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+    .sa-app__sidebar {
+        z-index: 11;
+    }
+    .sa-app__toolbar,
+    .sa-app__body,
+    .sa-app__footer {
+        width: 100%;
+    }
+    .sa-app__sidebar-backdrop {
+        position: fixed;
+        left: 0; // SKIP-RTL
+        right: 0; // SKIP-RTL
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+        transition: opacity .2s;
+        background: vs.$sa-sidebar--backdrop-color;
+    }
+}

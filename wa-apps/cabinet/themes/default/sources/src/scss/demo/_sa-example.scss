@@ -1,0 +1,15 @@
+/*
+// .sa-example
+*/
+
+.sa-example {}
+.sa-example__body {
+    & > .dropdown-menu {
+        position: static;
+        display: block;
+    }
+    & > .modal:first-child {
+        position: static;
+        display: block;
+    }
+}

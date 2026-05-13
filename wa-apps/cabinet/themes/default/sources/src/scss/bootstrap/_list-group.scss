@@ -1,0 +1,14 @@
+/*
+// list-group
+*/
+@use '../functions' as func;
+
+.list-group {
+    font-size: func.rem(15);
+}
+.list-group-item:not(.active) + .list-group-item {
+    &:hover {
+        border-top-width: 1px; // SKIP-PIXELS
+        margin-top: -1px; // SKIP-PIXELS
+    }
+}

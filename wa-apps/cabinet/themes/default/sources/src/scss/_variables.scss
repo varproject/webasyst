@@ -1,0 +1,919 @@
+@use 'sass:math';
+@use 'sass:map';
+@use 'sass:color';
+@use 'functions' as func;
+
+//----------------------------------------
+//- direction
+//----------------------------------------
+    $direction:       ltr  !default;
+    $both-directions: true !default;
+
+//----------------------------------------
+//- theme scheme
+//----------------------------------------
+    $sa-scheme-theme--main-color:     #ffd333 !default;
+    $sa-scheme-theme--opposite-color: #3d464d !default;
+    // scheme
+    $sa-scheme-theme: () !default;
+    $sa-scheme-theme: map.merge((
+        main-color:     $sa-scheme-theme--main-color,
+        opposite-color: $sa-scheme-theme--opposite-color,
+        // bg
+        bg-color-1:     color.scale($sa-scheme-theme--main-color, $lightness: -10%),
+        bg-color-2:     color.scale($sa-scheme-theme--main-color, $lightness: -15%),
+        bg-color-3:     color.scale($sa-scheme-theme--main-color, $lightness: -20%),
+        bg-color-4:     color.scale($sa-scheme-theme--main-color, $lightness: -25%),
+        // font
+        font-color-1:   color.mix($sa-scheme-theme--main-color, $sa-scheme-theme--opposite-color, 30%),
+        font-color-2:   color.mix($sa-scheme-theme--main-color, $sa-scheme-theme--opposite-color, 35%),
+        font-color-3:   color.mix($sa-scheme-theme--main-color, $sa-scheme-theme--opposite-color, 40%),
+        font-color-4:   color.mix($sa-scheme-theme--main-color, $sa-scheme-theme--opposite-color, 45%),
+        // divider
+        divider-color:  color.scale($sa-scheme-theme--opposite-color, $alpha: -90%),
+    ), $sa-scheme-theme);
+
+//----------------------------------------
+//- light scheme
+//----------------------------------------
+    $sa-scheme-light--main-color:     #fff    !default;
+    $sa-scheme-light--opposite-color: #212529 !default;
+    // scheme
+    $sa-scheme-light: () !default;
+    $sa-scheme-light: map.merge((
+        main-color:     $sa-scheme-light--main-color,
+        opposite-color: $sa-scheme-light--opposite-color,
+        // bg
+        bg-color-1:     #f5f7fa,
+        bg-color-2:     #f0f2f5,
+        bg-color-3:     #ebedf0,
+        bg-color-4:     #e6e8eb,
+        // font
+        font-color-1:   #333a40,
+        font-color-2:   #6c757d,
+        font-color-3:   #77838c,
+        font-color-4:   #828f99,
+        // divider
+        divider-color:  color.scale($sa-scheme-light--opposite-color, $alpha: -90%),
+    ), $sa-scheme-light);
+
+//----------------------------------------
+//- dark scheme
+//----------------------------------------
+    $sa-scheme-dark--main-color:     #3d464d !default;
+    $sa-scheme-dark--opposite-color: #fff    !default;
+    // scheme
+    $sa-scheme-dark: () !default;
+    $sa-scheme-dark: map.merge((
+        main-color:     $sa-scheme-dark--main-color,
+        opposite-color: $sa-scheme-dark--opposite-color,
+        // bg
+        bg-color-1:     #434d54,
+        bg-color-2:     #48525a,
+        bg-color-3:     #525d66,
+        bg-color-4:     #5c6873,
+        // font
+        font-color-1:   #cfdee5,
+        font-color-2:   #8fa7b2,
+        font-color-3:   #859ba6,
+        font-color-4:   #7a8f99,
+        // divider
+        divider-color:  rgba(#000, .12),
+    ), $sa-scheme-dark);
+
+//----------------------------------------
+//- font
+//----------------------------------------
+    $sa-font-family: Roboto, sans-serif !default;
+
+//----------------------------------------
+//- header
+//----------------------------------------
+    $sa-header--font-color: map.get($sa-scheme-light, font-color-1) !default;
+
+//----------------------------------------
+//- body
+//----------------------------------------
+    $sa-body--bg-color:         map.get($sa-scheme-light, bg-color-1)         !default;
+    $sa-body--bg-hover-color:   map.get($sa-scheme-light, bg-color-2)         !default;
+    $sa-body--bg-touch-color:   map.get($sa-scheme-light, bg-color-3)         !default;
+    $sa-body--font-color:       map.get($sa-scheme-light, opposite-color)     !default;
+    $sa-body--font-muted-color: map.get($sa-scheme-light, font-color-2)       !default;
+    $sa-body--font-dim-color:   map.get($sa-scheme-light, font-color-4)       !default;
+    $sa-body--divider-color:    map.get($sa-scheme-light, divider-color)      !default;
+    $sa-body--backdrop-color:   color.scale($sa-body--bg-color, $alpha: -20%) !default;
+
+//----------------------------------------
+//- link
+//----------------------------------------
+    $sa-link-color: #0b5be5 !default;
+
+//----------------------------------------
+//- app
+//----------------------------------------
+    // footer
+    $sa-app__footer--bg-color:     transparent                !default;
+    $sa-app__footer--font-color:   $sa-body--font-muted-color !default;
+    $sa-app__footer--border-color: $sa-body--divider-color    !default;
+
+//----------------------------------------
+//- sidebar
+//----------------------------------------
+    $sa-sidebar--width:                15rem                                     !default;
+    $sa-sidebar--shadow:               0 0 7px rgba(#000, .2)                    !default;
+    $sa-sidebar--backdrop-color:       $sa-body--backdrop-color                  !default;
+    $sa-sidebar--bg-color:             map.get($sa-scheme-dark, main-color)      !default;
+    $sa-sidebar--font-color:           map.get($sa-scheme-dark, opposite-color)  !default;
+    $sa-sidebar--divider-color:        map.get($sa-scheme-dark, divider-color)   !default;
+    $sa-sidebar--arrow-color:          map.get($sa-scheme-dark, font-color-4)    !default;
+    $sa-sidebar--scrollbar-color:      map.get($sa-scheme-dark, font-color-4)    !default;
+    // header
+    $sa-sidebar__header--bg-color:     map.get($sa-scheme-theme, main-color)     !default;
+    $sa-sidebar__header--font-color:   map.get($sa-scheme-theme, opposite-color) !default;
+    // section
+    $sa-sidebar__section--font-color:  map.get($sa-scheme-dark, font-color-2)    !default;
+    // item hover
+    $sa-sidebar__item--hover-bg-color: map.get($sa-scheme-dark, bg-color-2)      !default;
+
+//----------------------------------------
+//- sidebar logo
+//----------------------------------------
+    $sa-sidebar-logo--font-color:          $sa-sidebar__header--font-color           !default;
+    $sa-sidebar-logo__caption--bg-color:   map.get($sa-scheme-light, main-color)     !default;
+    $sa-sidebar-logo__caption--font-color: map.get($sa-scheme-light, opposite-color) !default;
+
+//----------------------------------------
+//- invoice logo
+//----------------------------------------
+    $sa-invoice-logo--main-color:        $sa-header--font-color                    !default;
+    $sa-invoice-logo--ribbon-bg-color:   map.get($sa-scheme-theme, main-color)     !default;
+    $sa-invoice-logo--ribbon-font-color: map.get($sa-scheme-theme, opposite-color) !default;
+
+//----------------------------------------
+//- toolbar
+//----------------------------------------
+    $sa-toolbar--bg-color:                map.get($sa-scheme-light, main-color)                    !default;
+    $sa-toolbar--font-color:              map.get($sa-scheme-light, opposite-color)                !default;
+    $sa-toolbar--font-muted-color:        map.get($sa-scheme-light, font-color-2)                  !default;
+    $sa-toolbar--shadow:                  0 1px 5px rgba(#000, .1), 0 0 3px rgba(#000, .15)        !default;
+    $sa-toolbar--height:                  3.25rem                                                  !default;
+    $sa-toolbar--inner-height:            2.25rem                                                  !default;
+    $sa-toolbar--gutter:                  (($sa-toolbar--height - $sa-toolbar--inner-height) * .5) !default;
+    // button
+    $sa-toolbar__button--hover-bg-color:  map.get($sa-scheme-light, bg-color-3)                    !default;
+    $sa-toolbar__button--active-bg-color: map.get($sa-scheme-light, bg-color-4)                    !default;
+    // counter
+    $sa-toolbar__counter--bg-color:       map.get($sa-scheme-theme, main-color)                    !default;
+    $sa-toolbar__counter--font-color:     map.get($sa-scheme-theme, opposite-color)                !default;
+
+//----------------------------------------
+//- dropdown
+//----------------------------------------
+    $sa-dropdown--bg-color:          map.get($sa-scheme-light, main-color)                            !default;
+    $sa-dropdown--font-color:        map.get($sa-scheme-light, opposite-color)                        !default;
+    $sa-dropdown--font-muted-color:  map.get($sa-scheme-light, font-color-2)                          !default;
+    $sa-dropdown--font-dim-color:    map.get($sa-scheme-light, font-color-4)                          !default;
+    $sa-dropdown--divider-color:     map.get($sa-scheme-light, divider-color)                         !default;
+    $sa-dropdown--hover-bg-color:    map.get($sa-scheme-light, bg-color-2)                            !default;
+    $sa-dropdown--touch-bg-color:    map.get($sa-scheme-light, bg-color-3)                            !default;
+    $sa-dropdown--active-bg-color:   scale-color(map.get($sa-scheme-theme, main-color), $alpha: -65%) !default;
+    $sa-dropdown--active-font-color: map.get($sa-scheme-theme, opposite-color)                        !default;
+    $sa-dropdown--base-shadow:
+        0 1px 15px rgba(25, 38, 64, 0.15),
+        0 1px 3px rgba(25, 38, 64, 0.12) !default;
+    $sa-dropdown--shadow:
+        $sa-dropdown--base-shadow,
+        inset 0 -1px rgba(25, 38, 64, 0.03) !default;
+    // button
+    $sa-dropdown__button--sizes: () !default;
+    $sa-dropdown__button--sizes: map.merge((
+        default: (
+            vertical-align: func.rem(1),
+            gutter: func.rem(11),
+            shift: func.rem(2),
+        ),
+        lg: (
+            vertical-align: func.rem(2),
+            gutter: func.rem(13),
+            shift: func.rem(4),
+        ),
+        sm: (
+            vertical-align: func.rem(0),
+            gutter: func.rem(9),
+            shift: func.rem(0),
+        ),
+    ), $sa-dropdown__button--sizes);
+
+//----------------------------------------
+//- search
+//----------------------------------------
+    $sa-search--backdrop-color:             color.scale(map.get($sa-scheme-dark, main-color), $alpha: -20%)                      !default;
+    $sa-search--bg-color:                   map.get($sa-scheme-light, bg-color-3)                                                !default;
+    $sa-search--font-color:                 map.get($sa-scheme-light, opposite-color)                                            !default;
+    $sa-search--icon-color:                 $sa-search--font-color                                                               !default;
+    $sa-search--placeholder-color:          map.get($sa-scheme-light, font-color-2)                                              !default;
+    // hover
+    $sa-search--hover-bg-color:             map.get($sa-scheme-light, bg-color-4)                                                !default;
+    $sa-search--hover-shadow:               inset 0 0 0 1px color.scale(map.get($sa-scheme-light, opposite-color), $alpha: -95%) !default;
+    // focus
+    $sa-search--focus-bg-color:             map.get($sa-scheme-light, main-color)                                                !default;
+    // dropdown
+    $sa-search__dropdown--bg-color:         $sa-dropdown--bg-color                                                               !default;
+    $sa-search__dropdown--font-color:       $sa-dropdown--font-color                                                             !default;
+    $sa-search__dropdown--font-muted-color: $sa-dropdown--font-muted-color                                                       !default;
+    $sa-search__dropdown--loader-color:     $sa-dropdown--font-color                                                             !default;
+
+//----------------------------------------
+//- suggestions
+//----------------------------------------
+    $sa-suggestions--divider-color:          $sa-dropdown--divider-color    !default;
+    $sa-suggestions--font-muted-color:       $sa-dropdown--font-muted-color !default;
+    $sa-suggestions--link-color:             $sa-link-color                 !default;
+    // item hover
+    $sa-suggestions__item--hover-bg-color:   $sa-dropdown--hover-bg-color   !default;
+    $sa-suggestions__item--hover-font-color: $sa-dropdown--font-color       !default;
+
+//----------------------------------------
+//- card
+//----------------------------------------
+    $sa-card--bg-color:         map.get($sa-scheme-light, main-color)     !default;
+    $sa-card--bg-dim-color:     map.get($sa-scheme-light, bg-color-1)     !default;
+    $sa-card--bg-hover-color:   map.get($sa-scheme-light, bg-color-2)     !default;
+    $sa-card--bg-touch-color:   map.get($sa-scheme-light, bg-color-3)     !default;
+    $sa-card--font-color:       map.get($sa-scheme-light, opposite-color) !default;
+    $sa-card--font-muted-color: map.get($sa-scheme-light, font-color-2)   !default;
+    $sa-card--font-dim-color:   map.get($sa-scheme-light, font-color-4)   !default;
+    $sa-card--shadow:           0 1px 3px rgba(#000, .15)                 !default;
+    $sa-card--divider-color:    map.get($sa-scheme-light, divider-color)  !default;
+    $sa-card--scrollbar-color:  $sa-card--font-dim-color                  !default;
+    // divider colors
+    $sa-card--divider-colors: ()  !default;
+    $sa-card--divider-colors: map.merge((
+        primary:   rgba(#fff, .15),
+        secondary: rgba(#000, .08),
+        success:   rgba(#fff, .18),
+        danger:    rgba(#fff, .18),
+        warning:   rgba(#000, .08),
+        info:      rgba(#fff, .18),
+        light:     rgba(#000, .08),
+        dark:      rgba(#fff, .15),
+    ), $sa-card--divider-colors);
+
+//----------------------------------------
+//- card-area
+//----------------------------------------
+    $sa-card-area--bg-color:          $sa-card--bg-color                                          !default;
+    $sa-card-area--shadow:            $sa-card--shadow                                            !default;
+    $sa-card-area--placeholder-color: $sa-card--font-muted-color                                  !default;
+    $sa-card-area--icon-color:        color.scale($sa-card-area--placeholder-color, $alpha: -70%) !default;
+
+//----------------------------------------
+//- alerts
+//----------------------------------------
+    $sa-alert--styles: () !default;
+    $sa-alert--styles: map.merge((
+        success:   (bg-color: #b0e595, font-color: #314029, link-bg-color: null,             link-font-color: null),
+        danger:    (bg-color: #ffb8b8, font-color: #473333, link-bg-color: null,             link-font-color: null),
+        warning:   (bg-color: #ffe28c, font-color: #594e31, link-bg-color: rgba(#fff, .9),   link-font-color: null),
+        info:      (bg-color: #b8e2e5, font-color: #2d3e40, link-bg-color: rgba(#fff, .8),   link-font-color: null),
+        primary:   (bg-color: #b2d9ff, font-color: #36414d, link-bg-color: null,             link-font-color: null),
+        secondary: (bg-color: #d9d9d9, font-color: #424242, link-bg-color: rgba(#fff, .9),   link-font-color: null),
+        light:     (bg-color: #ffffff, font-color: #3d464d, link-bg-color: rgba(#3d464d, 1), link-font-color: #fff),
+        dark:      (bg-color: #3d464d, font-color: #ffffff, link-bg-color: rgba(#fff, 1),    link-font-color: #3d464d),
+    ), $sa-alert--styles);
+    // link
+    $sa-alert__link--bg-color:   rgba(#fff, .7) !default;
+    $sa-alert__link--font-color: inherit        !default;
+    // card
+    $sa-alert-card--styles: () !default;
+    $sa-alert-card--styles: map.merge((
+        success:   (font-color: #2c870e, icon-color: #51ad23),
+        danger:    (font-color: #db3737, icon-color: #eb5252),
+        warning:   (font-color: #ba5d00, icon-color: #ffab19),
+        info:      (font-color: #1c828a, icon-color: #4cb8bf),
+        primary:   (font-color: #3476d1, icon-color: #498ff2),
+        secondary: (font-color: #757575, icon-color: #a6a6a6),
+        light:     (font-color: #757575, icon-color: #a6a6a6),
+        dark:      (font-color: #333a40, icon-color: #5c6873),
+    ), $sa-alert-card--styles);
+    $sa-alert-card--close-color: $sa-card--font-muted-color !default;
+
+//----------------------------------------
+//- badges
+//----------------------------------------
+    $sa-badge--styles: () !default;
+    $sa-badge--styles: map.merge((
+        sa-theme:     (bg-color: map.get($sa-scheme-theme, main-color), font-color: map.get($sa-scheme-theme, opposite-color)),
+        sa-primary:   (bg-color: mix(#b2d9ff, #fff, 50%), font-color: #004b9a),
+        sa-secondary: (bg-color: mix(#6c757d, #fff, 20%), font-color: #444a4f),
+        sa-success:   (bg-color: mix(#bde5a1, #fff, 50%), font-color: #245900),
+        sa-danger:    (bg-color: mix(#ffb8b8, #fff, 50%), font-color: #990000),
+        sa-warning:   (bg-color: mix(#f2e291, #fff, 50%), font-color: #5e4f00),
+        sa-info:      (bg-color: mix(#b8e2e5, #fff, 50%), font-color: #00585d),
+        sa-light:     (bg-color: #fff, font-color: #212529),
+        sa-dark:      (bg-color: #3d464d, font-color: #fff),
+    ), $sa-badge--styles);
+    // pill
+    $sa-badge-pill--padding-y: .35em !default;
+    $sa-badge-pill--padding-x: .90em !default;
+
+//----------------------------------------
+//- input
+//----------------------------------------
+    $sa-input--border-width: func.rem(1) !default;
+    // sizes
+    $sa-input--sizes: () !default;
+    $sa-input--sizes: map.merge((
+        default: (
+            padding-x: func.rem(13),
+            padding-y: func.rem(6), // 5
+            font-size: func.rem(15),
+            line-height: (math.div(22, 15)),
+        ),
+        lg: (
+            padding-x: func.rem(17),
+            padding-y: func.rem(8), // 7
+            font-size: func.rem(17),
+            line-height: (math.div(26, 17)),
+        ),
+        sm: (
+            padding-x: func.rem(9),
+            padding-y: func.rem(4), // 3
+            font-size: func.rem(13),
+            line-height: (math.div(18, 13)),
+        ),
+    ), $sa-input--sizes);
+    // search
+    $sa-input-search--icon-color:          color.scale(map.get($sa-scheme-light, opposite-color), $alpha: -70%) !default;
+    $sa-input-search--filled-border-color: map.get($sa-scheme-light, bg-color-3)                                !default;
+    $sa-input-search--filled-bg-color:     map.get($sa-scheme-light, bg-color-3)                                !default;
+    // group
+    $sa-input-group__button--border-color: rgba(#000, .08)    !default;
+
+//----------------------------------------
+//- outline
+//----------------------------------------
+    $sa-outline--normal: 0 0 0 0 #fff,   0 0 0 0 #3d464d   !default;
+    $sa-outline--focus:  0 0 0 2px #fff, 0 0 0 4px #3d464d !default;
+    $sa-outline--active: 0 0 0 3px #fff, 0 0 0 5px #3d464d !default;
+
+//----------------------------------------
+//- buttons
+//----------------------------------------
+    $sa-button--border-width:         .125rem !default;
+    $sa-button--default-bg-color:     #000    !default;
+    $sa-button--default-font-color:   #fff    !default;
+    $sa-button--default-loader-color: #fff    !default;
+    // sizes
+    $sa-button--sizes: () !default;
+    $sa-button--sizes: map.merge((
+        default: (
+            padding-x: func.rem(13),
+            padding-y: func.rem(5),
+            font-size: func.rem(15),
+            line-height: (math.div(22, 15)),
+        ),
+        lg: (
+            padding-x: func.rem(17),
+            padding-y: func.rem(7),
+            font-size: func.rem(17),
+            line-height: (math.div(26, 17)),
+        ),
+        sm: (
+            padding-x: func.rem(9),
+            padding-y: func.rem(3),
+            font-size: func.rem(13),
+            line-height: (math.div(18, 13)),
+        ),
+    ), $sa-button--sizes);
+    // styles
+    $sa-button--styles: () !default;
+    $sa-button--styles: map.merge((
+        primary: (
+            normal: (bg-color: map.get($sa-scheme-theme, main-color), font-color: #212529, arrow-opacity: .4),
+            hover:  (bg-color: color.scale(map.get($sa-scheme-theme, main-color), $lightness: -20%)),
+        ),
+        secondary: (
+            normal: (bg-color: #e6e8eb, font-color: #212529, arrow-opacity: .4),
+            hover:  (bg-color: #d9dbde),
+        ),
+        success: (
+            normal: (bg-color: #00a629, font-color: #fff, arrow-opacity: .5),
+            hover:  (bg-color: #009425),
+        ),
+        danger: (
+            normal: (bg-color: #db3737, font-color: #fff, arrow-opacity: .5),
+            hover:  (bg-color: #c43131),
+        ),
+        warning: (
+            normal: (bg-color: #ffab19, font-color: #212529, arrow-opacity: .35),
+            hover:  (bg-color: #f59b00),
+        ),
+        info: (
+            normal: (bg-color: #00a2ad, font-color: #fff, arrow-opacity: .5),
+            hover:  (bg-color: #00949e),
+        ),
+        light: (
+            normal: (bg-color: #fff, font-color: #212529, arrow-opacity: .35),
+            hover:  (bg-color: #f5f5f5),
+        ),
+        dark: (
+            normal: (bg-color: map.get($sa-scheme-dark, main-color), font-color: #fff, arrow-opacity: .4),
+            hover:  (bg-color: #4b565e),
+        ),
+        sa-muted: (
+            normal: (bg-color: #fff, font-color: #6c757d, arrow-opacity: .35),
+            hover:  (bg-color: #f5f5f5),
+        ),
+    ), $sa-button--styles);
+
+//----------------------------------------
+//- pagination
+//----------------------------------------
+    // sizes
+    $sa-pagination--sizes: () !default;
+    $sa-pagination--sizes: map.merge($sa-button--sizes, $sa-pagination--sizes);
+    // arrow-vertical-align
+    $sa-pagination--arrow-vertical-align: () !default;
+    $sa-pagination--arrow-vertical-align: map.merge((
+        default: func.rem(1),
+        lg:      func.rem(2),
+        sm:      func.rem(0),
+    ), $sa-pagination--arrow-vertical-align);
+
+//----------------------------------------
+//- progress
+//----------------------------------------
+    $sa-progress--default-bg-color:    #000 !default;
+    $sa-progress--default-font-color:  #fff !default;
+    $sa-progress--default-strip-color: #fff !default;
+    $sa-progress--shadow:
+        inset 0 0 0 1px rgba(#000, .02),
+        inset 0 1px 2px rgba(#000, .08)     !default;
+    $sa-progress--styles:              ()   !default;
+    $sa-progress--styles: map.merge((
+        primary: (
+            bg-color: map.get($sa-scheme-theme, main-color),
+            font-color: #212529,
+            strip-color: rgba(#000, .07),
+        ),
+        success: (
+            bg-color: #00a629,
+            font-color: #fff,
+            strip-color: rgba(#fff, .14),
+        ),
+        danger: (
+            bg-color: #db3737,
+            font-color: #fff,
+            strip-color: rgba(#fff, .16),
+        ),
+        warning: (
+            bg-color: #ffab19,
+            font-color: #212529,
+            strip-color: rgba(#000, .07),
+        ),
+        info: (
+            bg-color: #00a2ad,
+            font-color: #fff,
+            strip-color: rgba(#fff, .15),
+        ),
+        dark: (
+            bg-color: map.get($sa-scheme-dark, main-color),
+            font-color: map.get($sa-scheme-dark, opposite-color),
+            strip-color: rgba(#fff, .14),
+        ),
+    ), $sa-progress--styles);
+
+//----------------------------------------
+//- toasts
+//----------------------------------------
+    $sa-toast--bg-color:      map.get($sa-scheme-light, main-color)     !default;
+    $sa-toast--font-color:    map.get($sa-scheme-light, opposite-color) !default;
+    $sa-toast--divider-color: map.get($sa-scheme-light, divider-color)  !default;
+    $sa-toast--shadow:
+        0 1px 15px rgba(25, 38, 64, .15),
+        0 1px 3px rgba(25, 38, 64, .12) !default;
+    $sa-toast--styled-shadow:
+        0 1px 15px rgba(25, 38, 64, .1),
+        0 1px 3px rgba(25, 38, 64, .07) !default;
+    // styles
+    $sa-toast--styles: () !default;
+    $sa-toast--styles: map.merge((
+        sa-success:   (bg-color: #b0e595, font-color: #314029),
+        sa-danger:    (bg-color: #ffb8b8, font-color: #473333),
+        sa-warning:   (bg-color: #ffe28c, font-color: #594e31),
+        sa-info:      (bg-color: #b8e2e5, font-color: #2d3e40),
+        sa-primary:   (bg-color: #b2d9ff, font-color: #36414d),
+        sa-secondary: (bg-color: #d9d9d9, font-color: #424242),
+        sa-light:     (bg-color: #ffffff, font-color: #3d464d),
+        sa-dark:      (bg-color: #3d464d, font-color: #ffffff),
+    ), $sa-toast--styles);
+
+//----------------------------------------
+//- air-datepicker
+//----------------------------------------
+    $air-datepicker--bg-color:                  $sa-dropdown--bg-color           !default;
+    $air-datepicker--hover-bg-color:            $sa-dropdown--hover-bg-color     !default;
+    $air-datepicker--font-color:                $sa-dropdown--font-color         !default;
+    $air-datepicker--font-dim-color:            $sa-dropdown--font-dim-color     !default;
+    $air-datepicker--base-shadow:               $sa-dropdown--base-shadow        !default;
+    $air-datepicker--shadow:                    $sa-dropdown--shadow             !default;
+    $air-datepicker--dot-color:                 $sa-dropdown--font-muted-color   !default;
+    // day-name
+    $air-datepicker__day-name--font-color:      #e43d3d                          !default;
+    // selected-cell
+    $air-datepicker__selected-cell--bg-color:   $sa-scheme-theme--main-color     !default;
+    $air-datepicker__selected-cell--font-color: $sa-scheme-theme--opposite-color !default;
+
+//----------------------------------------
+//- box
+//----------------------------------------
+    $sa-box--aspect-ratios: () !default;
+    $sa-box--aspect-ratios: map.merge((
+        1\:1: 1,
+        3\:2: 1.5,
+        2\:1: 2,
+        3\:1: 3,
+    ), $sa-box--aspect-ratios);
+
+//----------------------------------------
+//- dash
+//----------------------------------------
+    $sa-dash--color: map.get($sa-scheme-light, font-color-2) !default;
+
+//----------------------------------------
+//- datatables
+//----------------------------------------
+    $sa-datatables--border-color:                 $sa-card--divider-color  !default;
+    $sa-datatables__sortable-column--hover-color: $sa-card--bg-hover-color !default;
+    $sa-datatables__sortable-column--arrow-color: $sa-card--font-color     !default;
+
+//----------------------------------------
+//- divider
+//----------------------------------------
+    $sa-divider--parent-bg-color: $sa-card--bg-color       !default;
+    $sa-divider--color:           $sa-card--divider-color  !default;
+    $sa-divider--font-color:      $sa-card--font-dim-color !default;
+
+//----------------------------------------
+//- example
+//----------------------------------------
+    $sa-example--parent-bg-color:        $sa-body--bg-color         !default;
+    $sa-example--border-color:           $sa-body--divider-color    !default;
+    // code
+    $sa-example__code--bg-color:         map.get($sa-scheme-light, main-color) !default;
+    // legend
+    $sa-example__legend--font-color:     $sa-body--font-dim-color   !default;
+    // button
+    $sa-example__button--font-color:     $sa-body--font-muted-color !default;
+    $sa-example__button--hover-bg-color: $sa-body--bg-hover-color   !default;
+    $sa-example__button--touch-bg-color: $sa-body--bg-touch-color   !default;
+
+//----------------------------------------
+//- hover-area
+//----------------------------------------
+    $sa-hover-area--hover-bg-color: $sa-card--bg-hover-color !default;
+    $sa-hover-area--touch-bg-color: $sa-card--bg-touch-color !default;
+
+//----------------------------------------
+//- sa-layout
+//----------------------------------------
+    $sa-layout__sidebar--bg-color:       $sa-card--bg-color        !default;
+    $sa-layout__sidebar--shadow:         $sa-card--shadow          !default;
+    $sa-layout__sidebar--divider-color:  $sa-card--divider-color   !default;
+    $sa-layout__sidebar--backdrop-color: $sa-body--backdrop-color  !default;
+
+//----------------------------------------
+//- sa-page-meta
+//----------------------------------------
+    $sa-page-meta--border-color:  $sa-body--divider-color                         !default;
+    $sa-page-meta--divider-color: color.scale($sa-body--font-color, $alpha: -80%) !default;
+
+//----------------------------------------
+//- sa-quill
+//----------------------------------------
+    // toolbar
+    $sa-quill__toolbar--bg-color: map.get($sa-scheme-light, main-color) !default;
+    // button
+    $sa-quill__button: () !default;
+    $sa-quill__button: map.merge((
+        normal: (
+            bg-color:   transparent,
+            font-color: map.get($sa-scheme-light, opposite-color),
+        ),
+        hover: (
+            bg-color:   map.get($sa-scheme-light, bg-color-2),
+            font-color: map.get($sa-scheme-light, opposite-color),
+        ),
+        active: (
+            bg-color:   map.get($sa-scheme-dark, main-color),
+            font-color: map.get($sa-scheme-dark, opposite-color),
+        ),
+    ), $sa-quill__button);
+
+//----------------------------------------
+//- sa-rating
+//----------------------------------------
+    $sa-rating--bg-color:                  $sa-card--bg-color                    !default;
+    $sa-rating--stars-count:               5                                     !default;
+    // star
+    $sa-rating__star--normal-bg-color:     #d0d5d9                               !default;
+    $sa-rating__star--normal-border-color: rgba(#000, 0.08)                      !default;
+    $sa-rating__star--active-bg-color:     map.get($sa-scheme-theme, main-color) !default;
+    $sa-rating__star--active-border-color: rgba(#000, 0.08)                      !default;
+
+//----------------------------------------
+//- sa-switch
+//----------------------------------------
+    $sa-switch--bg-color:              #ebedf0         !default;
+    // item
+    $sa-switch__item--hover-bg-color:  rgba(#000, .06) !default;
+    $sa-switch__item--active-bg-color: #fff            !default;
+    $sa-switch__item--active-shadow:
+        0 1px 3px rgba(#000, .12),
+        0 0 0 1px rgba(#000, .04) !default;
+
+//----------------------------------------
+//- sa-symbol
+//----------------------------------------
+    $sa-symbol--parent-bg-color: $sa-card--bg-color                      !default;
+    $sa-symbol--bg-color:        map.get($sa-scheme-light, bg-color-3)   !default;
+    $sa-symbol--font-color:      map.get($sa-scheme-light, font-color-3) !default;
+    // sizes
+    $sa-symbol--sizes: () !default;
+    $sa-symbol--sizes: map.merge((
+        xs:  1rem,
+        sm:  1.5rem,
+        md:  2rem,
+        lg:  2.5rem,
+        xl:  3rem,
+        xxl: 3.5rem,
+    ), $sa-symbol--sizes);
+    // styles
+    $sa-symbol--styles: () !default;
+    $sa-symbol--styles: map.merge((
+        theme:     (bg-color: map.get($sa-scheme-theme, main-color), font-color: map.get($sa-scheme-theme, opposite-color)),
+        primary:   (bg-color: mix(#b2d9ff, #fff, 50%), font-color: #004b9a),
+        secondary: (bg-color: mix(#6c757d, #fff, 20%), font-color: #444a4f),
+        success:   (bg-color: mix(#bde5a1, #fff, 50%), font-color: #245900),
+        danger:    (bg-color: mix(#ffb8b8, #fff, 50%), font-color: #990000),
+        warning:   (bg-color: mix(#f2e291, #fff, 50%), font-color: #5e4f00),
+        info:      (bg-color: mix(#b8e2e5, #fff, 50%), font-color: #00585d),
+        light:     (bg-color: #fff, font-color: #212529),
+        dark:      (bg-color: #3d464d, font-color: #fff),
+    ), $sa-symbol--styles);
+    // status
+    $sa-symbol__status--default-color: #000 !default;
+    $sa-symbol__status--styles: () !default;
+    $sa-symbol__status--styles: map.merge((
+        offline: #ccc,
+        online:  #61cc14,
+        away:    #ffba33,
+        busy:    #e52e2e,
+    ), $sa-symbol__status--styles);
+
+//----------------------------------------
+//- sa-timeline
+//----------------------------------------
+    $sa-timeline--parent-bg-color:   $sa-card--bg-color                    !default;
+    $sa-timeline--line-color:        $sa-card--divider-color               !default;
+    $sa-timeline--point-color:       map.get($sa-scheme-theme, main-color) !default;
+    // title
+    $sa-timeline__title--font-color: $sa-card--font-muted-color            !default;
+
+//----------------------------------------
+//- sa-toc
+//----------------------------------------
+    $sa-toc--width:                  $sa-sidebar--width        !default;
+    $sa-toc--border-color:           $sa-body--divider-color   !default;
+    // link
+    $sa-toc__link--font-color:       inherit                   !default;
+    $sa-toc__link--hover-font-color: $sa-link-color            !default;
+    // head
+    $sa-toc__head--font-color:       $sa-body--font-dim-color  !default;
+    $sa-toc__head--hover-font-color: $sa-toc__link--font-color !default;
+
+//----------------------------------------
+//- select2
+//----------------------------------------
+    // tag
+    $sa-select2__tag--bg-color:                    color.scale(map.get($sa-scheme-dark, main-color), $alpha: -35%) !default;
+    $sa-select2__tag--font-color:                  map.get($sa-scheme-dark, opposite-color)                        !default;
+    $sa-select2__tag--disabled-bg-color:           color.scale(map.get($sa-scheme-dark, main-color), $alpha: -50%) !default;
+    // tag close
+    $sa-select2__tag-close--hover-bg-color:        color.scale(map.get($sa-scheme-dark, main-color), $alpha: -50%) !default;
+    // dropdown
+    $sa-select2__dropdown--shadow:                 $sa-dropdown--shadow                                            !default;
+    $sa-select2__dropdown--divider-color:          $sa-dropdown--divider-color                                     !default;
+    // dropdown-item
+    $sa-select2__dropdown-item--hover-bg-color:    $sa-dropdown--hover-bg-color                                    !default;
+    $sa-select2__dropdown-item--hover-font-color:  $sa-dropdown--font-color                                        !default;
+    $sa-select2__dropdown-item--active-bg-color:   $sa-dropdown--active-bg-color                                   !default;
+    $sa-select2__dropdown-item--active-font-color: $sa-dropdown--active-font-color                                 !default;
+
+//----------------------------------------
+//- simplebar-track
+//----------------------------------------
+    $sa-simplebar-track--default-color: #000 !default;
+
+//----------------------------------------
+//- breadcrumb
+//----------------------------------------
+    $sa-breadcrumb--font-color:        $sa-body--font-dim-color                            !default;
+    $sa-breadcrumb--active-font-color: $sa-breadcrumb--font-color                          !default;
+    $sa-breadcrumb--divider-color:     color.scale($sa-body--font-dim-color, $alpha: -55%) !default;
+
+//----------------------------------------
+//- form-check
+//----------------------------------------
+    $sa-form-check--validation-opposite-color: #fff !default;
+
+//----------------------------------------
+//- modal
+//----------------------------------------
+    $sa-modal--shadow: $sa-dropdown--shadow !default;
+
+//----------------------------------------
+//- nav-tabs
+//----------------------------------------
+    $sa-nav-tabs__item--hover-bg-color:   $sa-card--bg-hover-color              !default;
+    $sa-nav-tabs__item--indicator-color:  map.get($sa-scheme-theme, main-color) !default;
+    $sa-nav-tabs__item--indicator-shadow: inset 0 0 0 1px rgba(#000, .02)       !default;
+
+//----------------------------------------
+//- nav-pills
+//----------------------------------------
+    $sa-nav-pills__item--hover-bg-color:      $sa-card--bg-hover-color   !default;
+    $sa-nav-pills__item--disabled-font-color: $sa-card--font-muted-color !default;
+
+//----------------------------------------
+//- popover
+//----------------------------------------
+    $sa-popover--bg-color:      $sa-dropdown--bg-color      !default;
+    $sa-popover--divider-color: $sa-dropdown--divider-color !default;
+    $sa-popover--shadow:        $sa-dropdown--base-shadow   !default;
+
+//----------------------------------------
+//- validation-tooltip
+//----------------------------------------
+    $sa-validation-tooltip--font-color: #fff !default;
+
+//----------------------------------------
+//- saw-chart-circle
+//----------------------------------------
+    $saw-chart-circle--symbol-default-color: #000 !default;
+
+//----------------------------------------
+//- saw-indicator
+//----------------------------------------
+    $saw-indicator--font-rise-color:  #47ad24 !default;
+    $saw-indicator--font-fall-color:  #e52e2e !default;
+
+//----------------------------------------
+//- saw-pulse
+//----------------------------------------
+    $saw-pulse__counter--bg-color:   #d9ecff !default;
+    $saw-pulse__counter--font-color: #004b9a !default;
+
+//----------------------------------------
+//- sa-inbox
+//----------------------------------------
+    $sa-inbox--bg-color:                 $sa-card--bg-color         !default;
+    $sa-inbox--bg-hover-color:           $sa-card--bg-hover-color   !default;
+    $sa-inbox--font-color:               $sa-card--font-color       !default;
+    $sa-inbox--font-muted-color:         $sa-card--font-muted-color !default;
+    $sa-inbox--divider-color:            $sa-card--divider-color    !default;
+    // sidebar
+    $sa-inbox__sidebar--bg-color:        $sa-card--bg-color         !default;
+    $sa-inbox__sidebar--shadow:          $sa-card--shadow           !default;
+    $sa-inbox__sidebar--scrollbar-color: $sa-card--font-dim-color   !default;
+    $sa-inbox__sidebar--backdrop-color:  $sa-body--backdrop-color   !default;
+
+//----------------------------------------
+//- sa-inbox-chat
+//----------------------------------------
+    $sa-inbox-chat__file--bg-color:         $sa-inbox--bg-hover-color   !default;
+    $sa-inbox-chat__file--font-muted-color: $sa-inbox--font-muted-color !default;
+
+//----------------------------------------
+//- sa-inbox-list
+//----------------------------------------
+    $sa-inbox-list--hover-bg-color:     color.scale($sa-inbox--bg-hover-color, $alpha: -50%)   !default;
+    // star
+    $sa-inbox-list__star--color:        color.scale($sa-inbox--font-muted-color, $alpha: -50%) !default;
+    $sa-inbox-list__star--hover-color:  $sa-inbox--font-muted-color                            !default;
+    $sa-inbox-list__star--active-color: #ffb44c                                                !default;
+
+//----------------------------------------
+//- sa-chat
+//----------------------------------------
+    $sa-chat--bg-color:                 $sa-card--bg-color              !default;
+    $sa-chat--font-color:               $sa-card--font-color            !default;
+    $sa-chat--border-color:             $sa-card--divider-color         !default;
+    $sa-chat--divider-color:            $sa-chat--border-color          !default;
+    $sa-chat--font-muted-color:         $sa-card--font-muted-color      !default;
+    // sidebar
+    $sa-chat__sidebar--bg-color:        $sa-chat--bg-color              !default;
+    $sa-chat__sidebar--border-color:    $sa-chat--border-color          !default;
+    $sa-chat__sidebar--scrollbar-color: $sa-chat--font-color            !default;
+    // header
+    $sa-chat__header--bg-color:         $sa-chat--bg-color              !default;
+    $sa-chat__header--border-color:     $sa-chat--border-color          !default;
+    // contact
+    $sa-chat__contact--divider-color:   $sa-chat__sidebar--border-color !default;
+    $sa-chat__contact--hover-bg-color:  $sa-card--bg-hover-color        !default;
+    // message
+    $sa-chat__message--right-bg-color:  rgba(#b8e2e5, .5)               !default;
+    $sa-chat__message--left-bg-color:   rgba(#f2e291, .5)               !default;
+    // message-actions
+    $sa-chat__actions--hover-bg-color:  $sa-card--bg-hover-color        !default;
+    // form
+    $sa-chat__form--bg-color:           $sa-chat--bg-color              !default;
+    $sa-chat__form--border-color:       $sa-chat--border-color          !default;
+
+//----------------------------------------
+//- sa-error
+//----------------------------------------
+    $sa-error--background-text-color: map.get($sa-scheme-light, bg-color-4) !default;
+
+//----------------------------------------
+//- sa-invoice
+//----------------------------------------
+    // sides
+    $sa-invoice__sides--bg-color: map.get($sa-scheme-light, bg-color-1) !default;
+
+//----------------------------------------
+//- sa-price-card
+//----------------------------------------
+    // badge
+    $sa-price-card__badge--bg-color:                  map.get($sa-scheme-theme, main-color)                                   !default;
+    $sa-price-card__badge--font-color:                map.get($sa-scheme-theme, opposite-color)                               !default;
+    // feature
+    $sa-price-card__feature--disabled-font-color:     $sa-card--font-dim-color                                                !default;
+    // feature-icon
+    $sa-price-card__feature-icon--default-bg-color:   color.scale($sa-price-card__feature--disabled-font-color, $alpha: -85%) !default;
+    $sa-price-card__feature-icon--default-font-color: color.scale($sa-price-card__feature--disabled-font-color, $alpha: -10%) !default;
+    $sa-price-card__feature-icon--active-bg-color:    rgba(#bde5a1, .4)                                                       !default;
+    $sa-price-card__feature-icon--active-font-color:  #5c993d                                                                 !default;
+
+//----------------------------------------
+//- sa-nouislider
+//----------------------------------------
+    // guid
+    $sa-nouislider__guide--height:          .375rem                                  !default;
+    $sa-nouislider__guide--border-radius:   $sa-nouislider__guide--height * .5       !default;
+    $sa-nouislider__guide--bg-color:        map.get($sa-scheme-light, bg-color-4)    !default;
+    $sa-nouislider__guide--active-bg-color: $sa-scheme-theme--main-color             !default;
+    // handle
+    $sa-nouislider__handle--size:           1.125rem                                 !default;
+    $sa-nouislider__handle--color:          $sa-scheme-theme--opposite-color         !default;
+    $sa-nouislider__handle--circle-size:    .5rem                                    !default;
+    $sa-nouislider__handle--circle-color:   $sa-scheme-theme--main-color             !default;
+    // ruler
+    $sa-nouislider__ruler--gutter:          .375rem                                  !default;
+    // marker
+    $sa-nouislider__marker--sizes:          .25rem, .5rem, .5rem                     !default;
+    $sa-nouislider__marker--color:          map.get($sa-scheme-light, font-color-4)  !default;
+    $sa-nouislider__marker--opacity:        .7                                       !default;
+    // label
+    $sa-nouislider__label--gutter:          .25rem                                   !default;
+    $sa-nouislider__label--font-size:       .75rem                                   !default;
+    $sa-nouislider__label--font-color:      $sa-nouislider__marker--color            !default;
+    // tooltip
+    $sa-nouislider__tooltip--font-size:     .75rem                                   !default;
+    $sa-nouislider__tooltip--padding-x:     .125rem                                  !default;
+    $sa-nouislider__tooltip--padding-y:     .5rem                                    !default;
+    $sa-nouislider__tooltip--bg-color:      map.get($sa-scheme-dark, main-color)     !default;
+    $sa-nouislider__tooltip--font-color:    map.get($sa-scheme-dark, opposite-color) !default;
+    $sa-nouislider__tooltip--border-radius: .125rem                                  !default;
+
+//----------------------------------------
+//- sa-folder
+//----------------------------------------
+    $sa-folder--hover-bg-color: $sa-card--bg-dim-color       !default;
+    $sa-folder--icon-color:     $sa-scheme-theme--main-color !default;
+
+//----------------------------------------
+//- sa-file
+//----------------------------------------
+    $sa-file--hover-bg-color:     $sa-folder--hover-bg-color                            !default;
+    $sa-file--thumbnail-bg-color: $sa-file--hover-bg-color                              !default;
+    $sa-file--default-icon-color: color.scale($sa-card--font-muted-color, $alpha: -50%) !default;
+    // types
+    $sa-file--types: () !default;
+    $sa-file--types: map.merge((
+        docx: #2b579a,
+        xlsx: #217346,
+        pdf: #d2281e,
+        jpg: #883dac,
+        txt: #777777,
+        mkv: #2298da,
+        mp3: #36a389,
+        zip: #ffb800,
+    ), $sa-file--types);
+
+//----------------------------------------
+//- sa-fullcalendar
+//----------------------------------------
+    $sa-fullcalendar__event--bg-color:   $sa-scheme-theme--main-color     !default;
+    $sa-fullcalendar__event--font-color: $sa-scheme-theme--opposite-color !default;

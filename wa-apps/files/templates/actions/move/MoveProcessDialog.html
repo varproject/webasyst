@@ -1,0 +1,121 @@
+{if $copytask_process_id > 0}
+    {$dialog_id = uniqid('f-move-process-dialog-')}
+    {$dialog_class = 'f-move-process-dialog'}
+{else}
+    {$dialog_id = uniqid('f-move-process-empty-dialog')}
+    {$dialog_class = 'f-move-process-empty-dialog'}
+{/if}
+
+<div class="dialog {$dialog_class}" id="{$dialog_id}">
+    <div class="dialog-background"></div>
+    <form class="dialog-body">
+        <a href="#" class="dialog-close js-close-dialog"><i class="fas fa-times"></i></a>
+        <h3 class="dialog-header">[`Move files`]</h3>
+        <div class="dialog-content">
+            <div class="f-progress-block" style="margin-top: 40px;">
+                <progress max="100" value="0"></progress>
+                <p class="js-progress-text">
+                    <span class="spinner custom-p-8 custom-mr-8 valign-middle"></span>
+                    [`Copy process may take several minutes.`]
+                </p>
+                <div class="f-ready-report" style="display: none;"></div>
+            </div>
+        </div>
+        {if $copytask_process_id > 0}
+            <div class="dialog-footer">
+                {$wa->csrf()}
+                <input class="button f-continue" type="button" value="[`Continue in background`]">
+                <a class="button js-close-dialog light-gray" href="javascript:void(0)">[`Cancel`]</a>
+            </div>
+        {/if}
+    </form>
+
+    <script>
+        $(function() {
+            var dialog = $('#{$dialog_id}');
+
+            var runCopyFiles = function (process_id, $dialog, dialog_instance) {
+
+                var url = '?module=move&action=process';
+
+                var pull_process = new LongActionProcess({
+                    url: url,
+                    post_data: { copytask_process_id: process_id },
+                    onProgress: function (r) {
+                        if (r.progress) {
+                            $dialog.find('progress').val(r.progress_str);
+                        }
+                    },
+                    onReady: function(r) {
+                        $dialog.find('progress').val('100');
+                        if (r.report) {
+                            $dialog.find('.js-progress-text').hide();
+                            $dialog.find('.f-ready-report').html(r.report);
+                        }
+                    },
+                    onCleanup: function(r) {
+                        $.files.refreshSidebar();
+                        $.files.controller.reloadPage();
+                        setTimeout(function () {
+                            dialog_instance.close();
+                        }, 1000);
+                    },
+                    onError: function(r) {
+                        dialog_instance.close();
+                        $.files.alertError((r && r.error) || 'Server error');
+                    }
+                });
+
+                pull_process.start();
+
+                var buttons_block = $dialog.find('.dialog-footer');
+                buttons_block.find('.js-close-dialog').on('click', function () {
+
+                    dialog_instance.hide();
+                    pull_process.stop();
+
+                    $.files.confirm('[`Cancel the copy process? All files that is not finished will be deleted`]',
+                        function () {
+                            pull_process.stop();
+                            dialog_instance.close();
+                            $.files.jsonPost({
+                                url: url,
+                                data: {
+                                    copytask_process_id: process_id,
+                                    cancel_copytask: 1
+                                },
+                                onAlways: function () {
+                                    $.files.refreshSidebar();
+                                    $.files.controller.reloadPage();
+                                }
+                            });
+                        },
+                        function () {
+                            dialog_instance.show();
+                            pull_process.start();
+                        }
+                    );
+                    return false;
+                });
+
+                buttons_block.find('.f-continue').on('click', function() {
+                    pull_process.stop();
+                    dialog_instance.close();
+                    pull_process = null;
+                });
+            };
+
+            dialog.filesDialog({
+                onFirstLoad: function($dialog, dialog_instance) {
+                    {if $copytask_process_id > 0}
+                    runCopyFiles({$copytask_process_id}, $dialog, dialog_instance);
+                    {/if}
+                },
+                onClose: (function () {
+                    return false;
+                })
+            });
+        });
+    </script>
+</div>
+

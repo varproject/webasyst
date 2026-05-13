@@ -1,0 +1,50 @@
+<template class="crm-settings-form-paragraph-edit-wrapper">
+<div class="dialog crm-dialog-wrapper">
+    <div class="dialog-background"></div>
+    <div class="dialog-body" style="min-width:700px;">
+        <header class="dialog-header">
+            <h1>[`Text paragraph`]</h1>
+        </header>
+
+        <div class="dialog-content">
+            <div class="fields">
+                <div class="field">
+                    <div class="value">
+                        <div class="crm-paragraph-textarea-wrapper">
+                            <textarea class="crm-paragraph-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="field c-field-captionplace">
+                    <div class="name">[`Placement`]</div>
+                    <div class="value">
+                        <div class="custom-mb-8">
+                            <label>
+                                <span class="wa-radio">
+                                    <input type="radio" name="params[captionplace]" value="none">
+                                    <span></span>
+                                </span> [`stretch to form width`]
+                            </label>
+                        </div>
+                        <div class="custom-mb-8">
+                            <label>
+                                <span class="wa-radio">
+                                    <input type="radio" name="params[captionplace]" value="left" checked="checked">
+                                    <span></span>
+                                </span> [`show under form fields`]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="dialog-footer">
+            <div class="crm-actions">
+                <input class="button crm-button js-some-action" type="submit" value="[`Apply`]">
+                <a class="button light-gray js-close-dialog" href="javascript:void(0);">[`Cancel`]</a>
+            </div>
+        </footer>
+    </div>
+</div>
+</template>

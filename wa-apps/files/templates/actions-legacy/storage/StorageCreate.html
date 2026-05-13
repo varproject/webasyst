@@ -1,0 +1,33 @@
+<div class="block f-create-storage-container" id="f-create-storage-container">
+    <form>
+        <h1>[`Create storage`]</h1>
+        <div class="f-storage-settings">
+            <div class="fields form width100px">
+                <div class="fields-wrapper">
+                    {include file="./include.settings.html" nowrap=true container_id='f-create-storage-container' inline}
+                    {include file='./include.access.settings.html' container_id='f-create-storage-container' inline}
+                    {$wa->csrf()}
+                    <div class="field">
+                        <input class="button green" type="submit" value="[`Create storage`]">
+                        <i class="icon16 loading" style="display: none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        (function(container) {
+            $.files.setBrowserTitle('[`Create storage`]');
+            container.find('form').submit(function() {
+                $.files.storageSettingsFormSubmit($(this));
+                return false;
+            });
+            container.find('.cancel').click(function() {
+                history.back();
+            });
+        })($('#f-create-storage-container'));
+    });
+</script>

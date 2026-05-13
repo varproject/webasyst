@@ -1,0 +1,255 @@
+/*
+// .sa-inbox-list
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-inbox-list {
+    font-size: func.rem(14);
+    padding-bottom: 4rem;
+}
+.sa-inbox-list__item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid vs.$sa-inbox--divider-color; // SKIP-PIXELS
+    padding: .75rem 1.25rem;
+    cursor: pointer;
+    position: relative;
+
+    &,
+    &:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    &--hover {
+        background: vs.$sa-inbox-list--hover-bg-color;
+    }
+}
+.sa-inbox-list__checkbox,
+.sa-inbox-list__star {
+    z-index: 1;
+}
+.sa-inbox-list__checkbox {
+    width: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    margin: -.75rem 0;
+    font-size: 1rem;
+    flex-shrink: 0;
+    user-select: none;
+
+    &,
+    input {
+        cursor: pointer;
+    }
+
+    &:hover {
+        background: vs.$sa-inbox-list--hover-bg-color;
+    }
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: -.625rem;
+    }
+}
+.sa-inbox-list__star {
+    flex-shrink: 0;
+    color: vs.$sa-inbox-list__star--color;
+    font-size: 1rem;
+    width: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    margin: -.75rem 0;
+    user-select: none;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .5rem;
+    }
+
+    &:hover {
+        color: vs.$sa-inbox-list__star--hover-color;
+        background: vs.$sa-inbox-list--hover-bg-color;
+    }
+
+    .sa-inbox-list__item--starred & {
+        color: vs.$sa-inbox-list__star--active-color;
+
+        svg {
+            fill: currentColor;
+        }
+    }
+}
+.sa-inbox-list__author {
+    width: 12rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: 1rem;
+    }
+
+    .sa-symbol {
+        font-size: 2rem;
+        margin: -.25rem 0;
+
+        @include dir.scope {
+            #{dir.$margin-inline-end}: .75rem;
+        }
+    }
+}
+.sa-inbox-list__summary {
+    flex-grow: 1;
+    align-items: center;
+    display: flex;
+    overflow: hidden;
+}
+.sa-inbox-list__badges {
+    display: flex;
+    align-items: center;
+    margin-top: -.25rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: -.25rem;
+        #{dir.$margin-inline-end}: .5rem;
+    }
+
+    & > * {
+        margin-top: .25rem;
+
+        @include dir.scope {
+            #{dir.$margin-inline-start}: .25rem;
+        }
+    }
+}
+.sa-inbox-list__content {
+    color: vs.$sa-inbox--font-muted-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sa-inbox-list__subject {
+    color: vs.$sa-inbox--font-color;
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+    a:before {
+        position: absolute;
+        content: '';
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+}
+.sa-inbox-list__attachments {
+    flex-shrink: 0;
+    font-size: .875rem;
+    opacity: .4;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .75rem;
+    }
+}
+.sa-inbox-list__date {
+    width: 3.25rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: bt.$text-muted;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .75rem;
+        text-align: dir.$inline-end;
+    }
+}
+
+.sa-inbox-list__item--unread {
+    .sa-inbox-list__author,
+    .sa-inbox-list__subject {
+        font-weight: bt.$font-weight-medium;
+    }
+}
+
+
+
+@include bt.media-breakpoint-down(lg) {
+    .sa-inbox-list__item {
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-template-columns: auto 1rem 1fr auto;
+    }
+    .sa-inbox-list__checkbox {
+        grid-area: 1 / 1 / 3 / 1;
+    }
+    .sa-inbox-list__star {
+        grid-area: 2 / 4;
+    }
+    .sa-inbox-list__author {
+        grid-area: 1 / 3;
+    }
+    .sa-inbox-list__summary {
+        grid-area: 2 / 3 / 2 / 4;
+    }
+    .sa-inbox-list__date {
+        grid-area: 1 / 4;
+    }
+    .sa-inbox-list__attachments {
+        display: none;
+    }
+
+    .sa-inbox-list__item {
+        padding: .75rem 1rem;
+    }
+    .sa-inbox-list__checkbox {
+        margin: -.75rem;
+        padding: .75rem;
+        width: auto;
+        align-self: center;
+        border-radius: 50%;
+
+        @include dir.scope {
+            #{dir.$margin-inline-start}: -.75rem;
+        }
+    }
+    .sa-inbox-list__star {
+        margin: -.5rem;
+        padding: .5rem;
+        width: auto;
+        align-self: center;
+        justify-self: flex-end;
+        border-radius: 50%;
+
+        @include dir.scope {
+            #{dir.$margin-inline-end}: -.5rem;
+        }
+    }
+
+    .sa-inbox-list__author {
+        width: auto;
+
+        .sa-symbol {
+            display: none;
+        }
+    }
+    .sa-inbox-list__summary {
+        margin-top: .125rem;
+    }
+    .sa-inbox-list__date {
+        width: auto;
+        font-size: .75rem;
+
+        @include dir.scope {
+            #{dir.$margin-inline-start}: 0;
+        }
+    }
+}

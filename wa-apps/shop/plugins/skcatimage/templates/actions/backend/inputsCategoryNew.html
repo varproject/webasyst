@@ -1,0 +1,214 @@
+{if isset($shop_skcatimage_groups) && !empty($shop_skcatimage_groups)}
+<div class="shop-skcatimage-block js-skcatimage-block">
+    {foreach $shop_skcatimage_groups as $group}
+    {$data_item = []}
+    {if isset($shop_skcatimage_data[$group.name])}
+        {$data_item = $shop_skcatimage_data[$group.name]}
+    {/if}
+    <div class="field">
+        <div class="name">
+            {$group.title}
+            {if $group.width || $group.height}
+                <br><span class="hint">({if $group.width}{$group.width}{else}-{/if} X {if $group.height}{$group.height}{else}-{/if})</span>
+            {/if}
+        </div>
+        <div class="value no-shift">
+            <div class="shop-skcatimage-field js-skcatimage-field" data-name="{$group.name}">
+                {if $data_item}
+                    {include file="`$shop_skcatimage_path`inputsCategoryRowLoad.html" data=$data_item}
+                {else}
+                    {include file="`$shop_skcatimage_path`inputsCategoryRowEmpty.html"}
+                {/if}
+            </div>
+        </div>
+    </div>
+    {/foreach}
+</div>
+{/if}
+{literal}
+<component :is="'script'">
+(function(){
+    const $dialog = $('.js-skcatimage-block').closest('.wa-dialog');
+    const dialog_object = $dialog.data('dialog');
+    dialog_object.options.vue_ready.then(function(){
+        var shopSkcatimageCategory = (function ($) {
+
+            var shopSkcatimageCategory = function (params) {
+
+                this.init(params);
+
+            };
+
+            shopSkcatimageCategory.prototype = {
+
+                _config: {},
+
+                init: function (params) {
+
+                    let that = this;
+
+                    that.params = $.extend({}, that._config, params);
+
+                    that.onSaveInput();
+
+                    that.onDeleteInput();
+
+                    that.onToggleImg();
+
+                },
+
+                onSaveInput: function(){
+                    let that = this;
+
+                    $(".js-skcatimage-block").on("change", ".js-skcatimage-input", function(e){
+                        let element = $(this),
+                            group_name = element.data("name"),
+                            files = this.files,
+                            data = new FormData(),
+                            loading = $(".js-skcatimage-preview-loading[data-name='" + group_name + "']");
+
+                        loading.show();
+
+                        data.append( group_name, files[0] );
+
+                        data.append( 'group_name', group_name );
+                        data.append( 'category_id', that.params.category_id );
+
+                        $.ajax({
+                            url: that.params.url + "?plugin=skcatimage&action=imageSave",
+                            type: 'POST',
+                            data: data,
+                            cache: false,
+                            dataType: 'html',
+                            processData: false,
+                            contentType: false,
+                            success: function(resp, status, jqXHR){
+                                if(!that.isJsonString(resp)){
+                                    if(('Allowed memory size'.indexOf(resp) + 1)){
+                                        alert("Сервер отклонил изображение из-за большого размера, необходимо уменьшить вес изображения или увеличить объем памяти для выполнения скрипта в php.");
+                                    }else{
+                                        alert("При загрузке файла произошла ошибка.");
+                                    }
+                                    loading.hide();
+                                    element.val("");
+                                }else{
+                                    resp = JSON.parse(resp);
+                                    if(resp.status === "fail"){
+                                        if(typeof resp.errors[0] !== "undefined"){
+                                            alert(resp.errors[0]);
+                                        }else{
+                                            alert("При загрузке файла произошла ошибка.");
+                                        }
+                                        loading.hide();
+                                        element.val("");
+                                    }else if(resp.status === "ok"){
+                                        $(".js-skcatimage-field[data-name='" + group_name + "']").html(resp.data.html);
+                                    }else{
+                                        alert("При загрузке файла произошла ошибка.");
+                                        loading.hide();
+                                        element.val("");
+                                    }
+                                }
+
+                            }
+                        });
+
+                    });
+                },
+
+                isJsonString: function(str){
+                    try{
+                        JSON.parse(str);
+                    }catch (e) {
+                        return false;
+                    }
+                    return true;
+                },
+
+                onDeleteInput: function(){
+                    let that = this;
+
+                    $(".js-skcatimage-block").on("click", ".js-skcatimage-preview-delete", function(e){
+                        let element = $(this),
+                            group_name = element.data("name");
+
+                        $.post(that.params.url + "?plugin=skcatimage&action=imageDelete", { group_name: group_name, category_id: that.params.category_id }, function(resp){
+                            if(resp.status === "fail") {
+                                alert("При удалении файла произошла ошибка.");
+                            }else if(resp.status === "ok"){
+                                $(".js-skcatimage-field[data-name='" + group_name + "']").html(resp.data.html);
+                            }else{
+                                alert("При удалении файла произошла ошибка.");
+                            }
+                        });
+
+                    });
+                },
+
+                onToggleImg: function(){
+                    let that = this;
+
+                    $(".js-skcatimage-block").on("click", ".js-skcatimage-preview-link", function(e){
+                        let element = $(this),
+                            href = element.data("href"),
+                            group_name = element.data("name"),
+                            preview = $(".js-skcatimage-preview-block[data-name='" + group_name + "']"),
+                            link = $(".js-skcatimage-preview-link[data-name='" + group_name + "']");
+
+                        if(link.hasClass("close")){
+                            link.removeClass("close");
+                            preview.addClass("_show");
+                        }else{
+                            link.addClass("close");
+                            preview.removeClass("_show");
+                        }
+                    });
+                }
+
+            };
+
+            return shopSkcatimageCategory;
+
+        })(jQuery);
+
+        new shopSkcatimageCategory({/literal}{$shop_skcatimage_init|@json_encode}{literal})
+    });
+
+})();
+</component>
+<component :is="'style'">
+    .shop-skcatimage-block{
+        margin-top: 10px;
+    }
+    .shop-skcatimage-preview-block{
+        margin-top: 5px;
+    }
+    .shop-skcatimage-preview-block img[src*=".svg"]{
+        max-width: 300px;
+    }
+    .shop-skcatimage-block .value{
+        padding-top: 6px;
+    }
+    .shop-skcatimage-preview-delete{
+        margin-right: 3px;
+        color: red;
+    }
+    .shop-skcatimage-preview-delete svg{
+        fill: red;
+        color: red;
+    }
+    .shop-skcatimage-preview-block{
+        display: none;
+    }
+    .shop-skcatimage-preview-block._show{
+        display: block;
+    }
+    .js-skcatimage-preview-link:after{
+        content: "↑";
+        margin-left: 5px;
+    }
+    .js-skcatimage-preview-link.close:after{
+        content: "↓";
+    }
+</component>
+{/literal}

@@ -1,0 +1,214 @@
+/*
+// buttons
+*/
+@use 'sass:map';
+@use 'sass:math';
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../mixins/loader';
+
+// colors
+.btn {
+    --sa-button--normal-bg-color: #{vs.$sa-button--default-bg-color};
+    --sa-button--normal-border-color: var(--sa-button--normal-bg-color);
+    --sa-button--normal-font-color: #{vs.$sa-button--default-font-color};
+
+    --sa-button--hover-bg-color: var(--sa-button--normal-bg-color);
+    --sa-button--hover-border-color: var(--sa-button--hover-bg-color);
+    --sa-button--hover-font-color: var(--sa-button--normal-font-color);
+
+    --sa-button--active-bg-color: var(--sa-button--hover-bg-color);
+    --sa-button--active-border-color: var(--sa-button--active-bg-color);
+    --sa-button--active-font-color: var(--sa-button--hover-font-color);
+
+    color: var(--sa-button--normal-font-color);
+    background-color: var(--sa-button--normal-bg-color);
+    border-color: var(--sa-button--normal-border-color);
+    fill: currentColor;
+
+    svg {
+        flex-shrink: 0;
+    }
+}
+.btn:hover,
+.btn-check:focus + .btn,
+.btn:focus {
+    color: var(--sa-button--hover-font-color);
+    background-color: var(--sa-button--hover-bg-color);
+    border-color: var(--sa-button--hover-border-color);
+}
+.btn-check:checked + .btn,
+.btn-check:active + .btn,
+.btn:active,
+.btn.active,
+.show > .btn.dropdown-toggle {
+    color: var(--sa-button--active-font-color);
+    background-color: var(--sa-button--active-bg-color);
+    border-color: var(--sa-button--active-border-color);
+}
+.btn:disabled,
+.btn.disabled {
+    color: var(--sa-button--normal-font-color);
+    background-color: var(--sa-button--normal-bg-color);
+    border-color: var(--sa-button--normal-border-color);
+}
+
+// box shadow
+.btn {
+    box-shadow: vs.$sa-outline--normal;
+}
+.btn-check:focus + .btn,
+.btn:focus {
+    box-shadow: vs.$sa-outline--focus;
+}
+.btn-check:checked + .btn:focus,
+.btn-check:active + .btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.show > .btn.dropdown-toggle:focus {
+    box-shadow: vs.$sa-outline--active;
+}
+
+// styles
+@each $style, $states in vs.$sa-button--styles {
+    .btn-#{$style} {
+        @each $state, $variables in $states {
+            @if (map.has-key($variables, bg-color)) {
+                --sa-button--#{$state}-bg-color: #{map.get($variables, bg-color)};
+            }
+            @if (map.has-key($variables, font-color)) {
+                --sa-button--#{$state}-font-color: #{map.get($variables, font-color)};
+            }
+            @if (map.has-key($variables, arrow-opacity)) {
+                --sa-arrow-opacity: #{map.get($variables, arrow-opacity)};
+            }
+        }
+
+        &.btn-sa-loading:before {
+            @if (map.has-key($states, normal, font-color)) {
+                @include loader.loader-color(map.get($states, normal, font-color));
+            }
+        }
+    }
+}
+
+// outline styles
+@each $style, $states in vs.$sa-button--styles {
+    .btn-outline-#{$style} {
+        $local-map-states: (
+            normal: hover,
+            hover: active,
+        );
+
+        --sa-button--normal-bg-color: transparent;
+
+        @if (map.has-key($states, normal, bg-color)) {
+            --sa-button--normal-border-color: #{map.get($states, normal, bg-color)};
+            --sa-button--normal-font-color: #{map.get($states, normal, bg-color)};
+
+            &.btn-sa-loading {
+                --sa-button--normal-bg-color: #{map.get($states, normal, bg-color)};
+            }
+        }
+        @if (map.has-key($states, normal, font-color)) {
+            &.btn-sa-loading:before {
+                @include loader.loader-color(map.get($states, normal, font-color));
+            }
+        }
+
+        @each $local-state, $local-actual-state in $local-map-states {
+            @if (map.has-key($states, $local-state, bg-color)) {
+                --sa-button--#{$local-actual-state}-bg-color: #{map.get($states, $local-state, bg-color)};
+            }
+            @if (map.has-key($states, $local-state, font-color)) {
+                --sa-button--#{$local-actual-state}-font-color: #{map.get($states, $local-state, font-color)};
+            }
+        }
+    }
+}
+
+// loading state
+.btn-sa-loading {
+    --sa-button--normal-font-color: transparent;
+
+    --sa-button--hover-bg-color: var(--sa-button--normal-bg-color);
+    --sa-button--hover-border-color: var(--sa-button--normal-bg-color);
+    --sa-button--hover-font-color: var(--sa-button--normal-font-color);
+
+    --sa-button--active-bg-color: var(--sa-button--normal-bg-color);
+    --sa-button--active-border-color: var(--sa-button--normal-bg-color);
+    --sa-button--active-font-color: var(--sa-button--normal-font-color);
+
+    position: relative;
+
+    &:before {
+        @include loader.loader-pseudo-element(0rem, .125rem, vs.$sa-button--default-loader-color);
+    }
+
+    &:not(:disabled) {
+        cursor: default;
+    }
+}
+
+// icon
+.btn-sa-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// sizes
+.btn,
+.btn-group > .btn {
+    --sa-button-padding-x: 0rem;
+    --sa-button-padding-y: 0rem;
+
+    border-width: vs.$sa-button--border-width;
+    padding: var(--sa-button-padding-y) var(--sa-button-padding-x);
+
+    &.btn-sa-pill {
+        padding: var(--sa-button-padding-y) calc(var(--sa-button-padding-x) * 1.5);
+    }
+}
+@each $size, $variables in vs.$sa-button--sizes {
+    $local-prefix: '';
+
+    @if($size != 'default') {
+        $local-prefix: '-' + $size;
+    }
+
+    $local-line-height: map.get($variables, line-height);
+
+    @if (math.is-unitless($local-line-height)) {
+        $local-line-height: map.get($variables, font-size) * map.get($variables, line-height);
+    }
+
+    .btn#{$local-prefix},
+    .btn-group#{$local-prefix} > .btn,
+    .btn-group > .btn#{$local-prefix} {
+        --sa-button-padding-x: #{map.get($variables, padding-x)};
+        --sa-button-padding-y: #{map.get($variables, padding-y)};
+        --sa-button--min-size: calc(#{bt.$btn-border-width * 2} + var(--sa-button-padding-y) * 2 + #{$local-line-height});
+
+        font-size: map.get($variables, font-size);
+        line-height: $local-line-height;
+        min-height: var(--sa-button--min-size);
+
+        &.btn-sa-loading:before {
+            @include loader.loader-size($local-line-height);
+        }
+
+        &.btn-sa-pill {
+            $local-border-radius: vs.$sa-button--border-width * 2;
+            $local-border-radius: $local-border-radius + map.get($variables, padding-y) * 2;
+            $local-border-radius: $local-border-radius + $local-line-height;
+
+            border-radius: ($local-border-radius * .5);
+        }
+
+        &.btn-sa-icon {
+            padding: .25rem;
+            min-width: var(--sa-button--min-size);
+        }
+    }
+}

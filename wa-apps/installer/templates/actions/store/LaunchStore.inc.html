@@ -1,0 +1,21 @@
+{strip}
+    <style>
+        .i-store-wrapper {
+            position: relative;
+            min-height: 50vh;
+        }
+        .i-loading-wrapper {
+            position:absolute;
+            top:calc(50% - 2.5em);
+            left:calc(50% - 2.5em);
+        }
+    </style>
+    <script>
+        $(function () {
+            $('.js-store-frame').on('load', () => $('.js-loading-wrapper-dbl').remove());
+        })
+    </script>
+
+    <div class="spinner custom-p-32 i-loading-wrapper js-loading-wrapper"></div>
+    <div class="spinner custom-p-32 i-loading-wrapper js-loading-wrapper-dbl"></div>
+{/strip}

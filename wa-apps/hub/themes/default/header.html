@@ -1,0 +1,22 @@
+<!-- info pages -->
+<ul class="pages">
+    <li><a href="{$wa_app_url}">[`All topics`]</a></li>
+    {if $theme_settings.header_links != 'hub-pages'}
+        {* display static page list in case it was not yet displayed in the core index.html layout template *}
+        {foreach $wa->hub->pages() as $page}
+            <li{if strlen($page.url)>1 && $wa->currentUrl()|strstr:$page.url} class="selected"{/if}><a href="{$page.url}">{$page.name}</a></li>
+        {/foreach}
+    {/if}
+</ul>
+
+<!-- topic search form -->
+<form method="get" action="{$wa->getUrl('/frontend/search')}" class="search wa-flex-fill">
+    <div class="search-wrapper">
+        <input type="search" name="query" value="{$wa->request('query')|escape}" placeholder="[`Find the answer`]">
+        <button type="submit">
+            <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMinYMin">
+                <use xlink:href="#img-find"></use>
+            </svg>
+        </button>
+    </div>
+</form>

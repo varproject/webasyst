@@ -1,0 +1,64 @@
+{if empty($container_id)}
+    {$container_id = uniqid('f-storage-settings-')}
+{/if}
+
+{capture assign='settings_fields'}
+    <div class="field">
+        <div class="name">
+            [`Name`]
+        </div>
+        <div class="value">
+            <input class="f-name-input large bold long" type="text" name="name" value="{$storage.name|escape}" placeholder="[`Storage name`]">
+        </div>
+    </div>
+    {if $storage.access_type != filesStorageModel::ACCESS_TYPE_PERSONAL || !$storage.id}
+        <div class="field f-icons-settings-block">
+            <div class="name">[`Icon`]</div>
+            <div class="value">
+                <ul class="flexbox wrap middle space-16 f-storage-icons">
+                    {foreach $icons as $icon}
+                        <li class="custom-mt-0{if $icon == $storage.icon} selected{/if}" data-icon="{$icon}"><a href="javascript:void(0)"><i class="text-{if $icon == $storage.icon}blue{else}gray{/if} {$icon}"></i></a></li>
+                    {/foreach}
+                </ul>
+                <input type="hidden" name="icon" value="{$storage.icon|escape}">
+            </div>
+        </div>
+    {/if}
+
+{/capture}
+
+{if empty($no_wrap)}
+    <div class="f-storage-settings" id="{$container_id}">
+        <div class="fields">
+            <div class="fields-wrapper">
+                {$settings_fields}
+            </div>
+        </div>
+    </div>
+{else}
+    {$settings_fields}
+{/if}
+
+
+<script>( function($) {
+
+    const container = $("#{$container_id}");
+
+    // Click on Icon
+    {if $storage.access_type != filesStorageModel::ACCESS_TYPE_PERSONAL || !$storage.id}
+        $('.f-storage-icons li', container).on('click', function() {
+            container.find('[data-icon]').removeClass('text-blue').addClass('text-gray');
+            $(this).find('[data-icon]').addClass('text-blue').removeClass('text-gray');
+            $('.f-storage-icons li.selected', container).removeClass('selected');
+            $(this).addClass('selected');
+            $(':input[name="icon"]').val($(this).data('icon'));
+        });
+    {/if}
+
+    // FOCUS
+    $(".f-storage-settings .f-name-input").focus();
+    $("#f-storage-settings-trigger").on("settings-is-shown", function() {
+        container.find(".f-name-input").focus();
+    });
+
+})(jQuery);</script>

@@ -1,0 +1,2164 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pocketlists\n"
+"POT-Creation-Date: 2015-12-28 22:51+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: pocketlists\n"
+"Language-Team: pocketlists\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+msgid "To archive an active list, tap on it’s checkmark."
+msgstr ""
+
+msgid "Archive is empty"
+msgstr ""
+
+msgid "Archiving is a handy way to hide a to-do list instead of deleting it permanently. To archive a list, tap on it’s big checkmark or click <em>Archive list</em> in the list action menu."
+msgstr ""
+
+msgid "Archive"
+msgstr ""
+
+msgid "Completed by %s"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Assigned to %s"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Note"
+msgstr ""
+
+msgid "Optional text note"
+msgstr ""
+
+msgid "Attachment"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "Due"
+msgstr ""
+
+msgid "Set time"
+msgstr ""
+
+msgid "Clear time"
+msgstr ""
+
+msgid "This item is <strong>marked as completed</strong>. Setting priority and due date won’t be visible within the to-do list."
+msgstr ""
+
+msgid "Repeat"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Every Day"
+msgstr ""
+
+msgid "Every Week"
+msgstr ""
+
+msgid "Every 2 Weeks"
+msgstr ""
+
+msgid "Every Month"
+msgstr ""
+
+msgid "Every Year"
+msgstr ""
+
+msgid "Custom..."
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "Assigned to"
+msgstr ""
+
+msgid "Nobody"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+msgid "Delete to-do"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "cancel"
+msgstr ""
+
+msgid "error"
+msgstr ""
+
+msgid "saved"
+msgstr ""
+
+msgid "More"
+msgstr ""
+
+msgid "Get public link"
+msgstr ""
+
+msgid "Sort"
+msgstr ""
+
+msgid "Email list"
+msgstr ""
+
+msgid "Print list"
+msgstr ""
+
+msgid "Archive list"
+msgstr ""
+
+msgid "Edit list"
+msgstr ""
+
+msgid "Delete list"
+msgstr ""
+
+msgid "New to-do"
+msgstr ""
+
+msgid "Unarchive list"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "New list"
+msgstr ""
+
+msgid "Logbook"
+msgstr ""
+
+msgid "Show all %d completed to-do"
+msgid_plural "Show all %d completed to-dos"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Icon"
+msgstr ""
+
+msgid "Change"
+msgstr ""
+
+msgid "Color"
+msgstr ""
+
+msgid "Choose list icon"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "To-do stream is empty"
+msgstr ""
+
+msgid "Logbook is empty"
+msgstr ""
+
+msgid "Logbook will automatically collect all to-do items completed by you and your teammates."
+msgstr ""
+
+msgid "This pocket is empty. Start by creating a to-do list."
+msgstr ""
+
+msgid "(unnamed pocket)"
+msgstr ""
+
+msgid "New pocket"
+msgstr ""
+
+msgid "Pocket name"
+msgstr ""
+
+msgid "Access rights"
+msgstr ""
+
+msgid "Use Contacts app to customize access rights for pockets."
+msgstr ""
+
+msgid "Everyone"
+msgstr ""
+
+msgid "Every user who can access Pocket Lists app will see lists and to-dos in this pocket."
+msgstr ""
+
+msgid "Limited"
+msgstr ""
+
+msgid "Selected users"
+msgstr ""
+
+msgid "Start typing name..."
+msgstr ""
+
+msgid "My personal settings"
+msgstr ""
+
+msgid "Reds"
+msgstr ""
+
+msgid "Reds + Yellows"
+msgstr ""
+
+msgid "Reds + Yellows + Greens"
+msgstr ""
+
+msgid "Only unassigned to-dos and to-dos assigned to you will be counted in the app icon counter."
+msgstr ""
+
+msgid "To-do stream inbox"
+msgstr ""
+
+msgid "When you add to-dos to your To-do stream directly, they will be added into the specified to-do list."
+msgstr ""
+
+msgid "Email me"
+msgstr ""
+
+msgid "Daily recap on what’s up next"
+msgstr ""
+
+msgid "for today"
+msgstr ""
+
+msgid "for today and tomorrow"
+msgstr ""
+
+msgid "for next 7 days"
+msgstr ""
+
+msgid "Daily recap notifications require CRON to be configured, which is not the case for your Pocket Lists app. Cron the following command to run daily:"
+msgstr ""
+
+msgid "When someone assigns me a to-do"
+msgstr ""
+
+msgid "When someone marks a to-do item as complete"
+msgstr ""
+
+msgid "only items I created"
+msgstr ""
+
+msgid "only items I marked as favorite"
+msgstr ""
+
+msgid "only items on to-do lists I previously marked as favorite"
+msgstr ""
+
+msgid "any item on any list"
+msgstr ""
+
+msgid "When someone adds a to-do item"
+msgstr ""
+
+msgid "to any list I previously marked as favorite"
+msgstr ""
+
+msgid "to just any list"
+msgstr ""
+
+msgid "When someone comments a to-do item"
+msgstr ""
+
+msgid "which I’ve created"
+msgstr ""
+
+msgid "which I previously marked as favorite"
+msgstr ""
+
+msgid "in just any list"
+msgstr ""
+
+msgid "When someone creates a new to-do list"
+msgstr ""
+
+msgid "Pockets"
+msgstr ""
+
+msgid "Invite your teammates!"
+msgstr ""
+
+msgid "Use <strong>Contacts app</strong> to add your teammates to Pocket Lists and to start collaborating on to-do lists together."
+msgstr ""
+
+msgid "No to-dos were assigned to %s yet"
+msgstr ""
+
+msgid "%s’s to-do list is empty"
+msgstr ""
+
+msgid "To assign a to-do to a user, either select him in to-do item details or add a to-do item above."
+msgstr ""
+
+msgid "To-do stream"
+msgstr ""
+
+msgid "Show stream"
+msgstr ""
+
+msgid "To-do stream automatically collects all important to-dos created by you and your teammates, and shows you what to do next."
+msgstr ""
+
+msgid "List completed"
+msgstr ""
+
+msgid "You can either automatically complete all to-do items on this list and continue adding new items, or archive this list to hide it until you need it some day in the future."
+msgstr ""
+
+msgid "Mark all to-dos as completed"
+msgstr ""
+
+msgid "Delete item?"
+msgstr ""
+
+msgid "Item will be deleted permanently without the ability to restore. Are you sure?"
+msgstr ""
+
+msgid "Delete item"
+msgstr ""
+
+msgid "List will be deleted permanently without the ability to restore. Are you sure?"
+msgstr ""
+
+msgid "Lists"
+msgstr ""
+
+msgid "To-do"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Map"
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Team"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "UNDONE"
+msgstr ""
+
+msgid "DONE"
+msgstr ""
+
+msgid "New to-do on your favorite list!"
+msgstr ""
+
+msgid "NEW: You’ve been assigned to a to-do"
+msgstr ""
+
+msgid "Daily recap for %s"
+msgstr ""
+
+msgid "New list!"
+msgstr ""
+
+msgid "%s created new list %s"
+msgstr ""
+
+msgid "%s deleted a list"
+msgstr ""
+
+msgid "%s archived %s"
+msgstr ""
+
+msgid "%s added new items to %s"
+msgstr ""
+
+msgid "No access"
+msgstr ""
+
+msgid "Full access"
+msgstr ""
+
+msgid "Just %d more items left on <a href=\"%s\">%s</a>"
+msgstr ""
+
+msgid "Woohoo, <a href=\"%s\">%s</a> to-do list has been completed :)"
+msgstr ""
+
+msgid "Here is your <a href=\"%s\">daily recap</a> for %s:"
+msgstr ""
+
+msgid "You’ve been assigned a new to-do"
+msgstr ""
+
+msgid "There are new items on your favorite <strong>%s</strong> to-do list:"
+msgstr ""
+
+msgid "There are new items on <strong>%s</strong> to-do list:"
+msgstr ""
+
+msgid "Hi %s,"
+msgstr ""
+
+msgid "<strong>%s</strong> on %s"
+msgstr ""
+
+msgid "<strong>%s</strong> by %s"
+msgstr ""
+
+msgid "%s have just completed a to-do <strong>%s</strong>"
+msgstr ""
+
+msgid "Favorite"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "Only you can see this item"
+msgstr ""
+
+msgid "Add comment"
+msgstr ""
+
+msgid "Attachments"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "Removing to-do item from a list makes it <strong>your private to-do item</strong> hidden from your teammates, and available on your To-do Stream only."
+msgstr ""
+
+msgid "Print"
+msgstr ""
+
+msgid "To"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "Delete pocket"
+msgstr ""
+
+msgid "To-do Stream inbox"
+msgstr ""
+
+msgid "When you add to-dos to your To-do Stream directly, they will be added into the specified to-do list and thus will be available to your teammates who can access this list. If you want such to-dos be your private to-dos by default, select None."
+msgstr ""
+
+msgid "Natural input"
+msgstr ""
+
+msgid "Set due date and time according to to-do name"
+msgstr ""
+
+msgid "When enabled, Pocket Lists will automatically parse to-do name and set due date and time if it was typed.<br> E.g. “meeting tomorrow morning”, “call James next friday 5pm”."
+msgstr ""
+
+msgid "Daily recap and the Cron are configured properly! You will get email notifications when Cron is executed but not more often than daily (every 24 hours). And when there is nothing planned for the upcoming period, no emails will be sent."
+msgstr ""
+
+msgid "Last Cron execution time: %s"
+msgstr ""
+
+msgid "ALL TO-DO LISTS AND ITEMS FROM THIS PROJECT WILL BE DELETED PERMANENTLY. ARE YOU SURE?"
+msgstr ""
+
+msgid "This is <strong>To-do Stream</strong> — your personal dynamic to-do list that automatically collects all important to-dos from all of your lists and presents them in the priority &amp; due order. Most important to-dos are on top. Since this is your personal list, to-do items assigned to your teammates won’t be listed on this list."
+msgstr ""
+
+msgid "To-dos added to this list directly will be automatically added to <strong>%s</strong> list and thus will be available to your teammates who can access this list. <a href=\"%s\">Configure</a>"
+msgstr ""
+
+msgid "To-dos added to the stream directly will be <em>your private to-dos</em> unless you manually assign them to any to-do list or <a href=\"%s\">select the default stream inbox list</a> in the app settings."
+msgstr ""
+
+msgid "All to-do items (either completed or not) will be deleted permanently."
+msgstr ""
+
+msgid "%s have just completed <strong>&#10004; %s</strong>"
+msgstr ""
+
+msgid "To-do has been uncompleted: <strong>&#10006; %s</strong>"
+msgstr ""
+
+msgid "%s assigned you to a to-do on <a href=\"%s\">%s</a>"
+msgstr ""
+
+msgid "%s commented on <a href=\"%s\">%s</a>"
+msgstr ""
+
+msgid "There are new items on <a href=\"%s\">%s</a> to-do list:"
+msgstr ""
+
+msgid "%s have just created a new to-do list <strong><a href=\"%s\">%s</a></strong>"
+msgstr ""
+
+msgid "This to-do is assigned to another person. Are you sure you want to mark this item as complete?"
+msgstr ""
+
+msgid "Close?"
+msgstr ""
+
+msgid "Failed to upload file %s."
+msgstr ""
+
+msgid "New comment on %s"
+msgstr ""
+
+msgid "created new list"
+msgstr ""
+
+msgid "deleted a list"
+msgstr ""
+
+msgid "archived"
+msgstr ""
+
+msgid "added new items to"
+msgstr ""
+
+msgid "Your favorites list is empty"
+msgstr ""
+
+msgid "Click on a tiny star icon next to to-do name to add it to your personal favorties list."
+msgstr ""
+
+msgid "Only selected users will be able to access lists and to-dos in this pocket."
+msgstr ""
+
+msgid "completed"
+msgstr ""
+
+msgid "My to-dos"
+msgstr ""
+
+msgid "Comments"
+msgstr ""
+
+msgid "Due %s"
+msgstr ""
+
+msgid "Create a to-do list and share it with your teammates."
+msgstr ""
+
+msgid "Online"
+msgstr ""
+
+msgid "Use <a href=\"%s\">Team app</a> to invite teammates and to collaborate using the Pocket Lists app: select a user or a group of users &gt; Access tab &gt; Pocket Lists app &gt; apply the proper access level."
+msgstr ""
+
+msgid "Reply"
+msgstr ""
+
+msgid "on"
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "You are about to permanently delete this comment. Delete?"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "My favorites"
+msgstr ""
+
+msgid "<strong>Your Favorites list is empty.</strong> To add a to-do to your personal favorites list, either click on a tiny little star icon next to a to-do name (in just any to-do list) or add a to-do directly using the form below."
+msgstr ""
+
+msgid "All favorites"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "me"
+msgstr ""
+
+msgid "When due is set, it may automatically increase the manually set priority color."
+msgstr ""
+
+msgid "Re-sort list"
+msgstr ""
+
+msgid "Edit list details"
+msgstr ""
+
+msgid "Access"
+msgstr ""
+
+msgid "author"
+msgstr ""
+
+msgid "Use <a href=\"%s\">Team app</a> to configure access: select a user or a group of users &gt; Access tab &gt; Pocket Lists app &gt; apply the proper access level."
+msgstr ""
+
+msgid "Understand “Meeting tomorrow at 10” input (recommended)"
+msgstr ""
+
+msgid "When enabled, the app will automatically parse to-do name and set due date and time if it was typed.<br> Examples: “Meeting tomorrow morning”, “Call James next friday 5pm”, “Pay electricity bill in a week”, “Update working schedule April 25”."
+msgstr ""
+
+msgid "My to-dos to self"
+msgstr ""
+
+msgid "To-dos assigned to me by other users"
+msgstr ""
+
+msgid "To-dos created by me in shared lists"
+msgstr ""
+
+msgid "only in lists which I marked as favorite"
+msgstr ""
+
+msgid "To-dos created by other users in shared lists"
+msgstr ""
+
+msgid "all Green, Yellow, and Red to-dos from all lists"
+msgstr ""
+
+msgid "My to-dos is your personal dynamic to-do list that automatically collects all to-dos which you are about to do up next. To-dos to self and to-dos assigned to you by your teammates are included in this list automatically. Most important and urgent to-dos are on top."
+msgstr ""
+
+msgid "Additionally, you can include other users’s to-dos to be shown on your My to-dos list , which is handy if you want to be sure not to miss any important to-do item, either it is an urgent to-do or a to-do list you follow."
+msgstr ""
+
+msgid "To-dos assigned to other users will be automatically hidden from your My to-dos list."
+msgstr ""
+
+msgid "The counter will count to-dos of the specified colors on your My to-dos list."
+msgstr ""
+
+msgid "When someone sends me a to-do"
+msgstr ""
+
+msgid "%s’s to-dos (%d)"
+msgstr ""
+
+msgid "Shared lists"
+msgstr ""
+
+msgid "Use Team app to <a href=\"%s\">configure %s’s access</a> to shared lists: select a user or a group of users &gt; Access tab &gt; Pocket Lists app &gt; apply the proper access level."
+msgstr ""
+
+msgid "You have no lists that you would share with %s in common."
+msgstr ""
+
+msgid "Welcome to Pocket Lists app!"
+msgstr ""
+
+msgid "Use Pocket Lists app to keep track on what you need to do up next, to assign to-dos to your teammates, and to collaborate on shared to-do lists."
+msgstr ""
+
+msgid "Meeting tomorrow at 10"
+msgstr ""
+
+msgid "%s has just completed <strong>%s</strong>"
+msgstr ""
+
+msgid "The following to-do has just been uncompleted and rolled back to active status: <strong>%s</strong>"
+msgstr ""
+
+msgid "Manage my subscription"
+msgstr ""
+
+msgid "%s sent you <a href=\"%s\">a new to-do</a>"
+msgstr ""
+
+msgid "Are you sure you want to delete this file?"
+msgstr ""
+
+msgid "Archiving the list will temporarily make this list and all it's items invisible. When you need this list in the future, simply unarchive it and continue from just where you stopped. Archive the list?"
+msgstr ""
+
+msgid "You are about to leave this page without saving your input. Are you sure?"
+msgstr ""
+
+msgid "No item with such ID"
+msgstr ""
+
+msgid "unarchived"
+msgstr ""
+
+msgid "added new to-dos to"
+msgstr ""
+
+msgid "commented"
+msgstr ""
+
+msgid "assigned a to-do to"
+msgstr ""
+
+msgid "To-dos"
+msgstr ""
+
+msgid "Can create to-dos to self"
+msgstr ""
+
+msgid "Can create shared to-do lists"
+msgstr ""
+
+msgid "Can see other users personal to-dos and assign to-dos to teammates"
+msgstr ""
+
+msgid "in any to-do list"
+msgstr ""
+
+msgid "%d to-do"
+msgid_plural "%d to-dos"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "<strong>No comments yet.</strong> This page will display a plain list of all to-do item comments posted by you and your teammates. Keep track on this page to make sure not to miss a single discussion."
+msgstr ""
+
+msgid "Sorry. You are not allowed to see anything on this page."
+msgstr ""
+
+msgid "Access denied"
+msgstr ""
+
+msgid "archive"
+msgstr ""
+
+msgid "Access to lists"
+msgstr ""
+
+msgid "No to-dos :)"
+msgstr ""
+
+msgid "to"
+msgstr ""
+
+msgid "added a to-do to self"
+msgstr ""
+
+msgid "sent a new to-do"
+msgstr ""
+
+msgid "in"
+msgstr ""
+
+msgid "to user"
+msgstr "to"
+
+msgid "in list"
+msgstr "in"
+
+msgid "List #%d"
+msgstr ""
+
+msgid "New to-do (e.g. “meeting tomorrow at 10”)"
+msgstr ""
+
+msgid "Show all %d completed to-dos"
+msgstr ""
+
+msgid "DELETED LIST"
+msgstr ""
+
+msgid "Show everyone"
+msgstr ""
+
+msgid "Files with extension .%s are not allowed to security considerations."
+msgstr "Files with extension .%s are not allowed due to security considerations."
+
+msgid "Unknown state"
+msgstr ""
+
+msgid "Better order processing"
+msgstr ""
+
+msgid "Pocket Lists integrates with Shop-Script and allows you to process orders even better: quickly set reminders linked to Shop-Script orders, assign tasks to sales managers, schedule follow-ups for the future. Pocket Lists will gather all such to-dos in one place and ensure you have your sales under complete control. Learn more about <a href=\"%s\" target=\"_blank\">integration with Shop-Script</a>."
+msgstr ""
+
+msgid "https://www.webasyst.com/store/app/pocketlists/shop-script/"
+msgstr ""
+
+msgid "To return a to-do back to work, simply unclick its checkmark."
+msgstr ""
+
+msgid "Store"
+msgstr ""
+
+msgid "Discussions"
+msgstr ""
+
+msgid "Your daily routine"
+msgstr ""
+
+msgid "<a href=\"%s\">Use Settings</a> page to configure your custom “My To-dos” filter behaviour."
+msgstr ""
+
+msgid "List created"
+msgstr ""
+
+msgid "Limited access"
+msgstr ""
+
+msgid "Pocket Lists"
+msgstr ""
+
+msgid "Find order or task by ID"
+msgstr ""
+
+msgid "Pocket settings"
+msgstr ""
+
+msgid "Can see Shop-Script to-dos, other users personal to-dos, and assign to-dos to teammates"
+msgstr ""
+
+msgid "DANGER! Pocket will be deleted with all its content including lists and to-dos. There will be no way to restore this data. Are you sure?"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "Add note"
+msgstr ""
+
+msgid "Can create and see to-dos linked with Shop-Script orders"
+msgstr ""
+
+msgid "Not found"
+msgstr ""
+
+msgid "Work & Office"
+msgstr ""
+
+msgid "Shopping"
+msgstr ""
+
+msgid "Home & Family"
+msgstr ""
+
+msgid "Travel & Vacations"
+msgstr ""
+
+msgid "Nature & Outdoors"
+msgstr ""
+
+msgid "Holidays & Events"
+msgstr ""
+
+msgid "School & Education"
+msgstr ""
+
+msgid "Hobbies & Games"
+msgstr ""
+
+msgid "Food & Drink"
+msgstr ""
+
+msgid "Health & Medical"
+msgstr ""
+
+msgid "Sports & Activities"
+msgstr ""
+
+msgid "Toys & Babies"
+msgstr ""
+
+msgid "Pets & Animals"
+msgstr ""
+
+msgid "Tech & Gadgets"
+msgstr ""
+
+msgid "Signs & Symbols"
+msgstr ""
+
+msgid "Flags"
+msgstr ""
+
+msgid "Stream"
+msgstr ""
+
+msgid "%d s"
+msgstr ""
+
+msgid "%d min"
+msgstr ""
+
+msgid "%d h"
+msgstr ""
+
+msgid "%d d"
+msgstr ""
+
+msgid "%d mo"
+msgstr ""
+
+msgid "%d y"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "You don’t have access to any list in the pocket. Please contact your admin to request access setup."
+msgstr ""
+
+msgid "Updated"
+msgstr ""
+
+msgid "No pocket/id and list/id params specified"
+msgstr ""
+
+msgid "Pocket and list not found"
+msgstr ""
+
+msgid "List move error"
+msgstr ""
+
+msgid "To setup access rights by pocket, set Limited access for at least one pocket"
+msgstr ""
+
+msgid "Use @ or # symbols to link this to-do with a Shop-Script order or a task from the Tasks app."
+msgstr ""
+
+msgid "Webasyst Cloud"
+msgstr ""
+
+msgid "launch the <a href=\"%s\">Cloud app</a>"
+msgstr ""
+
+msgid "Add Cron job"
+msgstr ""
+
+msgid "Own server"
+msgstr ""
+
+msgid "Only you can see this to-do"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "Installer"
+msgstr ""
+
+msgid "https://www.webasyst.com/store/app/pocketlists/reviews/"
+msgstr ""
+
+msgid "Rate on Webasyst Installer"
+msgstr ""
+
+msgid "<strong>Your feedback is very important!</strong> Please rate Pocket Lists and write a short review about your experience of using the app. Reviews (both positive and negative) really help us to see what is most useful in the app so we can continue delivering new features the right way."
+msgstr ""
+
+msgid "https://www.webasyst.com/store/app/pocketlists/"
+msgstr ""
+
+msgid "Support"
+msgstr ""
+
+msgid "We speak English and Russian."
+msgstr ""
+
+msgid "GitHub"
+msgstr ""
+
+msgid "Pocket Lists for Webasyst is an important part of the bigger <a href=\"https://pocketlists.com\" target=\"_blank\"><strong>PocketLists.com project</strong></a> — a suite of apps that are aimed to provide the friendliest to-do list making & collaboration experience."
+msgstr ""
+
+msgid "Pocket Lists is <strong>mostly known for its iOS app</strong> (iPhone, iPad, Apple Watch) designed for personal list making. Get Pocket Lists on the App Store for free."
+msgstr ""
+
+msgid "http://itunes.apple.com/us/app/pocket-lists-2/id1272049520?mt=8"
+msgstr ""
+
+msgid "With Pocket Lists for Webasyst, our goal is to deliver the best of the Pocket Lists world to the Webasyst collaborative environment and to make the teamwork and collaboration on tasks expectionally easy and friendly."
+msgstr ""
+
+msgid "Roadmap"
+msgstr ""
+
+msgid "We have big plans for both iOS and Webasyst apps, and here is the summary of what we are keen to be integrating into Pocket Lists for Webasyst anytime soon (a draft plan):"
+msgstr ""
+
+msgid "Bring the shared to-do list functionality into Webasyst"
+msgstr ""
+
+msgid "Natural input ('... tomorrow 10am') parser"
+msgstr ""
+
+msgid "Integrate with Shop-Script"
+msgstr ""
+
+msgid "The ability to create to-dos linked with orders"
+msgstr ""
+
+msgid "Multiple pockets and sophisticated access rights management"
+msgstr ""
+
+msgid "To-do search"
+msgstr ""
+
+msgid "“My To-dos” widget for the dashboard and Webasyst TV"
+msgstr ""
+
+msgid "Integration with Webasyst CRM, Tasks, and other apps"
+msgstr ""
+
+msgid "Repeating to-dos"
+msgstr ""
+
+msgid "Rest API"
+msgstr ""
+
+msgid "Mid 2019"
+msgstr ""
+
+msgid "Integrate Pocket Lists for Webasyst and iOS"
+msgstr ""
+
+msgid "Advanced Shop-Script integration"
+msgstr ""
+
+msgid "Automated to-do creation based on order statuses"
+msgstr ""
+
+msgid "Subtasks"
+msgstr ""
+
+msgid "Headings / dividers (sublists)"
+msgstr ""
+
+msgid "Pocket Lists for Android"
+msgstr ""
+
+msgid "Someday. The real ETA depends on the availability of development resources which are now focused mostly on iOS."
+msgstr ""
+
+msgid "Profit!"
+msgstr ""
+
+msgid "Copyright"
+msgstr ""
+
+msgid "We wish we could implement new features that easy :)"
+msgstr ""
+
+msgid "Respect The Send!"
+msgstr ""
+
+msgid "Go!"
+msgstr ""
+
+msgid "Generate"
+msgstr ""
+
+msgid "Contact not found"
+msgstr ""
+
+msgid "Not implemented for now"
+msgstr ""
+
+msgid "When someone adds a to-do item in any shared list"
+msgstr ""
+
+msgid "When someone creates a new shared to-do list"
+msgstr ""
+
+msgid "any item on any shared list"
+msgstr ""
+
+msgid "When someone comments on a to-do item"
+msgstr ""
+
+msgid "Rate"
+msgstr ""
+
+msgid "Send It!"
+msgstr ""
+
+msgid "When"
+msgstr ""
+
+msgid "Set date"
+msgstr ""
+
+msgid "close details"
+msgstr ""
+
+msgid "Add to-do"
+msgstr ""
+
+msgid "Unlink"
+msgstr ""
+
+msgid "Show details and use the detailed add mode by default"
+msgstr ""
+
+msgid "Go ahead! Create a list."
+msgstr ""
+
+msgid "Pockets and lists help you organize to-dos, ideas, and notes, and flexibly configure access rights for your team."
+msgstr ""
+
+msgid "All my to-dos"
+msgstr ""
+
+msgid "Only On Fire + Black + Red"
+msgstr ""
+
+msgid "Only On Fire + Black + Red + Yellow"
+msgstr ""
+
+msgid "Only On Fire + Black + Red + Yellow + Green"
+msgstr ""
+
+msgid "only items created by me or assigned to me"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid "Places"
+msgstr ""
+
+msgid "Board"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "%s lists found"
+msgstr ""
+
+msgid "No lists found"
+msgstr ""
+
+msgid "%s to-dos found"
+msgstr ""
+
+msgid "Hide details and use the compact add mode by default"
+msgstr ""
+
+msgid "Ok, I got it."
+msgstr ""
+
+msgid "The to-do item will be saved in the <span class=\"nowrap\"><a href=\"%s\" class=\"gray\" target=\"_blank\">Pocket Lists</a> app</span> and will be visible only to authorized Webasyst users. The customer will not see this to-do."
+msgstr ""
+
+msgid "The user will see this to-do in his Pocket Lists to-do stream and will be notified about this assignment by email."
+msgstr ""
+
+msgid "Reset everything"
+msgstr ""
+
+msgid "added new to-do"
+msgstr ""
+
+msgid "Integration with the Team app"
+msgstr ""
+
+msgid "Timelines: detailed activity log of who did what"
+msgstr ""
+
+msgid "By pocket, by list, by user"
+msgstr ""
+
+msgid "Custom to-do statuses"
+msgstr ""
+
+msgid "Agile board"
+msgstr ""
+
+msgid "Bullets highlighted with a %s label will be available as a part of the paid Pocket Lists PRO plugin."
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "To-do status labels"
+msgstr ""
+
+msgid "Kanban board"
+msgstr ""
+
+msgid "To-do shortcuts"
+msgstr ""
+
+msgid "The list is in the pocket already"
+msgstr ""
+
+msgid "https://www.webasyst.com/store/plugin/pocketlists/pro/"
+msgstr ""
+
+msgid "Bullets highlighted with a %s label are available as a part of the paid <a href=\"%s\"><b>Pocket Lists PRO</b></a> plugin."
+msgstr ""
+
+msgid "No %s entity object in log context"
+msgstr ""
+
+msgid "There should be %s entity in log context"
+msgstr ""
+
+msgid "No log mapping for %s"
+msgstr ""
+
+msgid "<strong>%s</strong> on <em>%s</em>"
+msgstr ""
+
+msgid "Upgrade to PRO"
+msgstr ""
+
+msgid "Upgrade"
+msgstr ""
+
+msgid "New app by 1312 Inc."
+msgstr ""
+
+msgid "Ad"
+msgstr ""
+
+msgid "<a href=\"%s\" target=\"_blank\">Status app</a> tracks working time and shows whom have been working on what (and whom have been doing nothing too!)"
+msgstr ""
+
+msgid "Upgrade to %s"
+msgstr ""
+
+msgid "Upgrade to Pocket Lists PRO"
+msgstr ""
+
+msgid "Boost your efficiency with the Pocket Lists PRO plugin that instantly enables a robust set of amazing advanced features: <b>Shop-Script automation (auto create to-dos based on actions with orders), kanban board, status labels, quick entry templates,</b> and more."
+msgstr ""
+
+msgid "See details"
+msgstr ""
+
+msgid "Pocket Lists PRO plugin"
+msgstr ""
+
+msgid "Shop-Script automation (auto create to-dos based on actions with orders), kanban board, status labels, quick entry templates, and other advanced features."
+msgstr ""
+
+msgid "Buy the plugin"
+msgstr ""
+
+msgid "Great to see a PRO user here!"
+msgstr ""
+
+msgid "<a href=\"%s\">Pocket Lists PRO</a> plugin is installed and running at full speed. Thank you for being a PRO user and for supporting the project."
+msgstr ""
+
+msgid "See Cron command"
+msgstr ""
+
+msgid "Path %s is not writable"
+msgstr ""
+
+msgid "https://www.webasyst.com/buy/store/5045/"
+msgstr ""
+
+msgid "https://www.webasyst.com/buy/store/1811/"
+msgstr ""
+
+msgid "https://www.webasyst.com/buy/store/5136/"
+msgstr ""
+
+msgid "https://www.webasyst.com/buy/store/4943/"
+msgstr ""
+
+msgid "Failed to upload file %s. Check permissions."
+msgstr ""
+
+msgid "Integration with Webasyst Tasks"
+msgstr ""
+
+msgid "New UI"
+msgstr ""
+
+msgid "Private to-dos"
+msgstr ""
+
+msgid "Integration with Webasyst CRM and other apps"
+msgstr ""
+
+msgid "More apps by 1312 Inc."
+msgstr ""
+
+msgid "Check out these thoroughly crafted apps on Webasyst Installer today:"
+msgstr ""
+
+msgid "https://www.webasyst.com/store/app/tasks/"
+msgstr ""
+
+msgid "Teamwork"
+msgstr ""
+
+msgid "Keeps track on all tasks and brings order to chaos"
+msgstr ""
+
+msgid "https://www.webasyst.com/store/app/status/"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Tracks your team time & work status remotely on WFH"
+msgstr ""
+
+msgid "https://www.webasyst.com/store/app/cash/"
+msgstr ""
+
+msgid "Cash Flow"
+msgstr ""
+
+msgid "Forecasts business cash flow & saves your money"
+msgstr ""
+
+msgid "Task"
+msgstr ""
+
+msgid "Checklist"
+msgstr ""
+
+msgid "%d to-do is pending"
+msgstr ""
+
+msgid "Buy now with promocode"
+msgstr ""
+
+msgid "Use this promocode until it expires:"
+msgstr ""
+
+msgid "Promocode"
+msgstr ""
+
+msgid "Buy now"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "We wish everyone could enjoy the power the Pocket Lists PRO plugin has to offer. This promocode will help you the get the plugin up and running at the best price possible."
+msgstr ""
+
+msgid "Show all completed to-dos"
+msgstr ""
+
+msgid "Unarchive"
+msgstr ""
+
+msgid "Menu"
+msgstr ""
+
+msgid "Show promocode"
+msgstr ""
+
+msgid "About the app"
+msgstr ""
+
+msgid "About the plugin"
+msgstr ""
+
+msgid "Installed"
+msgstr ""
+
+msgid "Promocode:"
+msgstr ""
+
+msgid "Our flagship app."
+msgstr ""
+
+msgid "Amazing companion/upgrade for Pocket Lists when it’s time for real collaboration on <em>bigger and more complex tasks</em>. Assignments, task statuses, deadlines, kanban board, more — the app help bringing the order to any complex teamwork."
+msgstr ""
+
+msgid "Forecasts and saves your money."
+msgstr ""
+
+msgid "Shows exact cash on hand balance for any date in the future. This app could have been a <em>life saver</em> for most businesses which did not survive a cash gap because of not knowing it’s coming."
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+msgid "Remote team leader’s best friend."
+msgstr ""
+
+msgid "Visualizes how you and your teammates work. Tracks working hours. Amazingly useful for WFH and any <em>we-don't-see-each-other-in-the-office</em> working patterns."
+msgstr ""
+
+msgid "List name"
+msgstr ""
+
+msgid "Type in new list name and hit Enter."
+msgstr ""
+
+msgid "When tasks become bigger and more complex."
+msgstr ""
+
+msgid "Promocode for our flagship Webasyst app."
+msgstr ""
+
+msgid "Forecasts and saves your business money."
+msgstr ""
+
+msgid "Promocode for managing money the smarter way."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/hooks/backend_item_add.html:15
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:11
+msgid "No status"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/hooks/backend_settings.sidebar_li.html:4
+msgid "Status labels"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/hooks/backend_settings.sidebar_li.html:10
+msgid "Shortcuts"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/hooks/backend_settings.sidebar_li.html:17
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:1
+msgid "Shop-Script"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/hooks/backend_sidebar.views_li.html:2
+msgid "Activity log"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/hooks/backend_sidebar.views_li.html:6
+msgid "Board"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShortcuts.html:1
+msgid "To-do shortcuts"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShortcuts.html:2
+msgid "Shortcuts help you create to-dos even faster. When creating a new to-do item, shortcuts will be offered as suggestions depending on your current input. Grouping enables the priority of each shortcut."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShortcuts.html:3
+msgid "For even faster to-do creation, use <code>Alt + N</code> keyboard combination to quickly select the suggested shortcut shown under the to-do name input."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShortcuts.html:12
+msgid "Add group"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShortcuts.html:28
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:351
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:59
+msgid "Save"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShortcuts.html:130
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShortcuts.html:144
+msgid "Group"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:2
+msgid "Set up the automation rules to make Pocket Lists automatically create and assign to-dos based on actions performed with Shop-Script orders."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:7
+msgid "New order"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:12
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:30
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:81
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:106
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:41
+msgid "Edit"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:13
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:31
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:83
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:108
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:155
+msgid "IF"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:14
+msgid "ALL"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:18
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:37
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:93
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:112
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:282
+msgid "Assigned to"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:19
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:39
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:94
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:115
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:298
+msgid "Priority"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:20
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:94
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:116
+msgid "Normal"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:20
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:40
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:98
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:119
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:313
+msgid "Due"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:21
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:43
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:100
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:120
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:329
+msgid "List"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:23
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:44
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:101
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:120
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:338
+msgid "None"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:33
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:207
+msgid "Amount"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:39
+msgid "Urgent"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:40
+msgid "Now"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:49
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:69
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:127
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:147
+msgid "Add rule"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:61
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:137
+msgid "No automation rules are defined for the ‘%s’ order action"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:84
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:109
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:189
+msgid "Shipping"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:87
+msgid "AND"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:89
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:170
+msgid "Payment"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:93
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:113
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:284
+msgid "Order action performer"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:147
+msgid "‘Order > To-do’ automation rule"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:148
+msgid "Pocket Lists will create a new to-do upon an action performed with any order in Shop-Script if the specified conditions are met."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:156
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:262
+msgid "Action"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:225
+msgid "Storefront"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:240
+msgid "Customer group"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:257
+msgid "THEN"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:264
+msgid "Create a to-do"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:270
+msgid "Title"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:275
+msgid "New to-do"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:279
+msgid "Note"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:284
+msgid "Nobody"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:285
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:288
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:292
+msgid "Random user from the “%s” group"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:320
+msgid "minutes"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:322
+msgid "hours"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:323
+msgid "day"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:325
+msgid "from the moment the action was performed"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:348
+msgid "Delete rule"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:354
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:60
+#: /wa-apps/pocketlists/templates/actions/label/LabelDeleteDialog.html:13
+msgid "or"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:354
+#: /wa-apps/pocketlists/templates/actions/label/LabelDeleteDialog.html:13
+msgid "cancel"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:1
+msgid "To-do status labels"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:2
+msgid "Statuses enables you to mark to-dos with color labels for better and a more sophisticated organization."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:2
+msgid "The list of available custom labels is system-wide and applicable for all to-dos no matter of a pocket or a list."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:19
+#: /wa-apps/pocketlists/lib/classes/Factory/pocketlistsProPluginLabelFactory.class.php:140
+msgid "Done"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:27
+msgid "Add status"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:37
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:51
+msgid "Sort"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:54
+#: /wa-apps/pocketlists/templates/actions/label/LabelDeleteDialog.html:12
+msgid "Delete"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsLabels.html:60
+msgid "close"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/board/Board.html:7
+#: /wa-apps/pocketlists/templates/actions/board/Board.html:24
+#: /wa-apps/pocketlists/templates/actions/board/Board.html:27
+msgid "All pockets"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/board/Board.html:14
+msgid "Filter by pocket"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/activity/Activity.html:3
+#: /wa-apps/pocketlists/templates/actions/activity/Activity.html:5
+msgid "Activity"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/activity/Activity.html:32
+msgid "No activity logged."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/activity/Activity.html:36
+msgid "Loading..."
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/activity/Activity.html:41
+msgid "Show more"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/label/LabelDeleteDialog.html:3
+msgid "Delete status"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/label/LabelDeleteDialog.html:5
+msgid "The status label will be permanently deleted leaving all <strong>%d&nbsp;to-dos</strong> currently marked with this status unlabelled. Delete the status label?"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/label/LabelDeleteDialog.html:7
+msgid "The status label will be permanently deleted. Are you sure?"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:10
+#: /wa-apps/pocketlists/lib/updates/dev/1564224483.php:9
+msgid "In progress"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:11
+#: /wa-apps/pocketlists/lib/updates/dev/1564224483.php:8
+msgid "To do"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:12
+#: /wa-apps/pocketlists/lib/updates/dev/1564224483.php:7
+msgid "Backlog"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:13
+#: /wa-apps/pocketlists/lib/updates/dev/1564224483.php:6
+msgid "Testing"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:23
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:6
+msgid "Call"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:23
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:6
+msgid "Remind"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:23
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:6
+msgid "Pay"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:23
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:6
+msgid "Ship"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:23
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:6
+msgid "Check"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:23
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:6
+msgid "Meet"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:24
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:7
+msgid "today"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:24
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:7
+msgid "tomorrow"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:24
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:7
+msgid "in 2 days"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:24
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:7
+msgid "in a week"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:24
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:7
+msgid "in 2 weeks"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:24
+#: /wa-apps/pocketlists/lib/updates/dev/1564650128.php:7
+msgid "in a month"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/hooks/backend_sidebar.views_li.html:6
+msgid "Kanban"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/label/LabelPocket.html:9
+msgid "Kanban view"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/label/LabelPocket.html:11
+msgid "Pocket activity log"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:10
+msgid "Reminder"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:12
+msgid "Bill"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:13
+msgid "Shipment"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:14
+msgid "Docs"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:15
+msgid "Meeting"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:26
+msgid "Reach out"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:26
+msgid "Order"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:26
+msgid "Prepare"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:26
+msgid "Return"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/config/install.php:27
+msgid "in 3 days"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogPocket.class.php:24
+msgid "%s updated the pocket"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogComment.class.php:28
+msgid "%s commented"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogComment.class.php:31
+msgid "%s deleted the comment"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogComment.class.php:34
+msgid "%s updated the comment"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogList.class.php:28
+msgid "%s created the list"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogList.class.php:31
+msgid "%s deleted the list"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogList.class.php:34
+msgid "%s updated list details"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogList.class.php:37
+msgid "%s updated the list"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogAttachment.class.php:28
+msgid "%s added an attachment"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogAttachment.class.php:31
+msgid "%s deleted the attachment"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogAttachment.class.php:34
+msgid "%s updated the attachment"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogAbstract.class.php:70
+msgid "Unknown log method %s"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogItem.class.php:29
+msgid "%s created the to-do"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogItem.class.php:32
+msgid "%s completed the to-do"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogItem.class.php:35
+msgid "%s deleted the to-do"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogItem.class.php:42
+msgid "%s assign to-do to %s"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogItem.class.php:48
+msgid "%s edited the to-do"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogItem.class.php:52
+msgid "%s updated the to-do"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogItem.class.php:53
+msgid "%s assigned to-do to %s"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Entity/Log/pocketlistsProPluginLogItem.class.php:60
+msgid "%s updated the label to <span class=\"pl-label\" style=\"background: #%s\">%s</span>"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:30
+msgid "Executions"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:31
+msgid "Last execution"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:109
+msgid "In"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopShipping.class.php:62
+msgid "No shipping method with the ID = %s is defined. Please check if settings need to be updated!"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopPayment.class.php:90
+msgid "No payment option with the ID = %s is defined. Please check if settings need to be updated!"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:228
+msgid "Minutes"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:229
+msgid "Hours"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:230
+msgid "Days"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:357
+msgid "No tracking number"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:191
+msgid "%d %s"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/actions/automation/pocketlistsProPluginAutomationCrud.actions.php:18
+#: /wa-apps/pocketlists/lib/actions/automation/pocketlistsProPluginAutomationDialog.action.php:18
+msgid "Shop-Script app is not installed"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:28
+msgid "Following variables can be used in the to-do title and note fields:"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:29
+msgid "customer name"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:30
+msgid "shipment tracking number"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/board/Board.html:64
+msgid "Assigned to %s"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopStorefront.class.php:86
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopPayment.class.php:103
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopCustomerGroup.class.php:85
+msgid "any"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:29
+msgid "order ID"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:31
+msgid "customer email"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:32
+msgid "customer phone number"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:33
+msgid "shipping address"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:35
+msgid "list of ordered items"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemView.html:24
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:152
+msgid "Label"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:133
+msgid "Leave zero for no due date and time."
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopCustomerGroup.class.php:77
+msgid "DELETED CATEGORY"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/settings/SettingsShopscript.html:21
+msgid "DISABLED"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/AutomationDialog.html:13
+msgid "Enabled"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemView.html:18
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:13
+msgid "When"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:16
+msgid "Create immediately"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:19
+msgid "Create with a delay in"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:151
+msgid "from the moment the to-do was created"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/pocketlistsProPluginAutomationRuleAbstract.class.php:184
+msgid "Delayed check (this check will be performed at the moment to-do is created rather than order action is performed; recommended only for to-dos created with a delay)"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopState.class.php:23
+msgid "Status"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopState.class.php:91
+msgid "(delayed check)"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopState.class.php:133
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopStorefront.class.php:106
+#: /wa-apps/pocketlists/lib/classes/Automation/Rule/Shop/pocketlistsProPluginAutomationRuleShopCustomerGroup.class.php:105
+msgid "For Windows: Hold down the control (ctrl) button to select multiple options.<br> For Mac: Hold down the command button to select multiple options."
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:521
+msgid "Delayed actions require CRON to be configured for the Pocket Lists PRO plugin, which is not the case for your installation. Cron the following command every 10 minutes:"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:523
+msgid "Webasyst Cloud: launch the Cloud app &gt; Add Cron job &gt;"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:525
+msgid "Own server:"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:529
+msgid "Last Cron execution time: %s"
+msgstr ""
+
+#: /wa-apps/pocketlists/lib/classes/Automation/Action/pocketlistsProPluginCreateItemAction.class.php:537
+msgid "See Cron command"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:49
+msgid "order amount"
+msgstr ""
+
+#: /wa-apps/pocketlists/templates/actions/automation/actions/createItemEdit.html:54
+msgid "shipping cost"
+msgstr ""
+
+msgid "Debug"
+msgstr ""
+
+msgid "Record runs to the Shop-Script order history"
+msgstr ""

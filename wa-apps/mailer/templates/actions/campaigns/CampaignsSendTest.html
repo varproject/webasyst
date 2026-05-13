@@ -1,0 +1,31 @@
+{if $errors}
+    <p class="state-error-hint">
+        [`Unable to send test messages:`]<br>
+        {implode("<br>\n", $errors)}
+    </p>
+{else}
+    <p class="small text-gray custom-mb-0">[`Test message has been sent to:`]</p>
+
+    <p class="small custom-mt-12">
+        {foreach $result as $email => $error}
+            {if $error}
+                <i class="fas fa-times-circle text-red"></i> {$email|escape}: {$error|escape}<br>
+            {else}
+                <i class="fas fa-check-circle text-green"></i> {$email|escape}<br>
+            {/if}
+        {/foreach}
+    </p>
+
+    {if !empty($transport_report)}
+        <div class="transport-sending-report">
+            {$transport_report}
+        </div>
+    {/if}
+{/if}
+
+<p>
+    <a href="javascript:void($('#send-test-wrapper').removeClass('sent').addClass('opened'))" class="button outlined gray custom-mb-8">
+        [`Send one more test`]
+    </a>
+</p>
+

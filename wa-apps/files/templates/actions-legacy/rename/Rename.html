@@ -1,0 +1,158 @@
+{$dialog_id = 'f-rename-dialog-'}
+
+{function form_begin}
+    {if $can_rename && !$in_sync}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $can_rename && !$in_sync}</form>{/if}
+{/function}
+
+
+<div class="dialog width400px height200px f-rename-dialog" id="{$dialog_id}" style="display:none;">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+
+                    <h1>{if $file.type === filesFileModel::TYPE_FILE}[`Rename file`]{else}[`Rename folder`]{/if}</h1>
+
+                    {if $can_rename}
+                        <div>
+                            <input type="text" name="name" value="{$file.name|escape}" style="width: 100%;">
+                            <input type="hidden" name="id" value="{$file.id}">
+                        </div>
+                        <div class="f-confirm-text" style="display:none;">{strip}
+                            [`You are going to change file extension. This may cause unavailability of file content. Are you sure?`]
+                        {/strip}</div>
+                    {elseif $in_sync}
+                        [`Sync is in process. No changes available until synchronization finish.`]
+                    {else}
+                        <p class="errormsg">
+                            [`No permissions to rename this file`]
+                        </p>
+                    {/if}
+
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    {if $can_rename && !$in_sync}
+                        <input class="button green" type="submit" value="[`Rename`]">
+                        <i class="icon16 loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                    {else}
+                        <input class="button grey cancel" type="button" value="[`Cancel`]">
+                    {/if}
+                </div>
+            </div>
+        </div>
+    {form_end}
+</div>
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-rename-dialog').not(dialog).remove();
+        {if $can_rename || !$in_sync}
+            dialog.filesDialog({
+                disableButtonsOnSubmit: true,
+                onLoad: function() {
+                    dialog.filesDialog('height', 120);
+                    var input = dialog.find('input[name="name"]');
+                    if (!input.length) {
+                        return;
+                    }
+                    var fileinfo = $.files.parseFileName(input.val());
+                    input.data('filename', fileinfo.filename);
+                    input.data('ext', fileinfo.ext);
+                    {if $file.type === filesFileModel::TYPE_FILE}
+                        var filename = input.data('filename');
+                        input.selection('setPos', { start: 0, end: filename.length });
+                    {else}
+                        input.focus();
+                    {/if}
+                },
+                onSubmit: function() {
+                    var input = dialog.find('input[name="name"]');
+                    var fileinfo = $.files.parseFileName(input.val());
+                    var cur_ext = fileinfo.ext;
+                    var prev_ext = input.data('ext');
+                    var file_type = {$file.type|json_encode};
+                    var form = $(this);
+
+                    var submit = function() {
+                        $.files.clearValidateErrors(form);
+                        form.find('.loading').show();
+                        $.files.jsonPost({
+                            url: '?module=rename&action=file',
+                            data: form.serialize(),
+                            onSuccess: function(r) {
+                                if (r.status !== 'ok') {
+                                    if (r.errors && r.errors.sync) {
+                                        $.files.alertError(r.errors.sync.msg);
+                                    } else {
+                                        $.files.showValidateErrors(r.errors, form);
+                                    }
+                                } else if (r.status === 'ok' && r.data.file) {
+                                    var file = r.data.file;
+                                    var file_list = $.files.config.getFileList();
+                                    var file_item = $('.f-catalog-item[data-id="' + file.id + '"]', file_list);
+                                    file_item.find('.f-file-name').text(file.name);
+                                    file_item.find('.f-file-image').attr('src', file.icon);
+                                    file_item.find('.f-update-column').text(file.update_datetime_str);
+                                    dialog.trigger('close').remove();
+
+                                    // Uncheck All
+                                    var $catalog = $("#f-catalog-wrapper");
+                                    if ($catalog.length) {
+                                        $catalog.trigger("unSelectAll");
+                                    }
+
+                                } else {
+                                    $.files.alertError('[`Server error`]', r);
+                                    dialog.trigger('close').remove();
+                                }
+                            },
+                            onError: function() {
+                                $.files.alertError('[`Server error`]');
+                                dialog.trigger('close').remove();
+                            },
+                            onAlways: function () {
+                                form.find('.loading').hide();
+                                form.find('input[type=submit]').attr('disabled', false);
+                            }
+                        });
+                    };
+
+                    if (file_type !== '{filesFileModel::TYPE_FILE}' || cur_ext === prev_ext) {
+                        submit();
+                    } else {
+                        dialog.hide();
+                        $.files.confirm(
+                            dialog.find('.f-confirm-text').text(),
+                            function() {
+                                submit();
+                            }
+                        );
+                    }
+
+                    return false;
+                },
+                onCancel: function() {
+                    dialog.remove();
+                }
+            });
+        {else}
+            dialog.filesDialog({
+                onLoad: function() {
+                    dialog.filesDialog('height', 120);
+                },
+                onCancel: function() {
+                    dialog.remove();
+                }
+            });
+        {/if}
+    });
+</script>

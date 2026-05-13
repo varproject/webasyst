@@ -1,0 +1,41 @@
+/*
+// .sa-divider
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+
+.sa-divider {
+    --sa-divider--parent-bg-color: #{vs.$sa-divider--parent-bg-color};
+
+    position: relative;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    &:before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 1px; // SKIP-PIXELS
+        background: vs.$sa-divider--color;
+    }
+}
+.sa-divider__text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    background: var(--sa-divider--parent-bg-color);
+    color: vs.$sa-divider--font-color;
+    padding: .125rem .5rem 0;
+    text-transform: uppercase;
+    font-size: func.rem(11);
+    margin: -.25rem 0;
+}
+
+.sa-divider--has-text {
+    &:before {
+        position: absolute;
+        top: 50%;
+    }
+}

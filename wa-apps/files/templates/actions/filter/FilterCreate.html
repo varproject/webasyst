@@ -1,0 +1,88 @@
+{capture assign="settings"}
+    {$filter_settings_html}
+    {foreach $file_ids as $file_id}
+        <input type="hidden" name="file_id[]" value="{$file_id}">
+    {/foreach}
+{/capture}
+
+{capture assign="buttons"}
+    {$wa->csrf()}
+    <button type="submit" class="button"><i class="fas fa-spinner fa-spin loading hidden custom-mr-4 f-submit-loading"></i> [`Create filter`]</button>
+    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+{/capture}
+
+{if $filter.acting_type === filesFilterModel::ACTING_TYPE_LIST}
+    {$dialog_id = uniqid('f-create-filter-dialog-')}
+    <div class="dialog f-create-filter-dialog" id="{$dialog_id}">
+        <form>
+            <div class="dialog-background"></div>
+            <div class="dialog-body">
+                <h3 class="dialog-header">[`Create filter`]</h3>
+                <div class="dialog-content">
+                    <div class="dialog-content-indent">
+                        {$settings}
+                    </div>
+                </div>
+                <div class="dialog-footer">
+                    {$buttons}
+                </div>
+            </div>
+        </form>
+        <script>
+            $(function() {
+                const dialog = $('#{$dialog_id}');
+                $('.f-create-folder-dialog').not(dialog).remove();
+                dialog.filesDialog({
+                    onOpen: function($dialog, dialog_instance) {
+                        $dialog.find('[type="submit"]').on('click', function(e) {
+                            e.preventDefault();
+
+                            $(this).find('.fa-spinner').removeClass('hidden');
+                            this.disabled = true;
+
+                            $.files.filterSettingsFormSubmit($(this), {
+                                onSuccess: function() {
+                                    dialog_instance.close();
+                                },
+                                onAlways:() => {
+                                    this.disabled = false;
+                                    $(this).find('.fa-spinner').addClass('hidden');
+                                }
+                            });
+                        })
+                    }
+                });
+            });
+        </script>
+    </div>
+{else}
+    <div id="f-create-filter-block">
+        <form>
+            <h1 class="h-main-title">[`Create filter`]</h1>
+            {$settings}
+            {$buttons}
+        </form>
+    </div>
+    <script>
+        $(function() {
+            (function(container) {
+                container.find('form').submit(function() {
+                    $.files.filterSettingsFormSubmit($(this));
+                    return false;
+                });
+                container.find('.js-close-dialog').on('click', function() {
+                    history.back();
+                });
+            })($('#f-create-filter-block'));
+        });
+      </script>
+{/if}
+
+
+<script>
+    $(function() {
+        $.files.config.getSidebar().trigger('notify', [{
+            hash: 'filter/new'
+        }]);
+    });
+</script>

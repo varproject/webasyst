@@ -1,0 +1,24 @@
+<div class="dialog" id="h-categories">
+    <div class="dialog-background"></div>
+
+    <div class="dialog-body">
+        <form method="post">
+            <header class="dialog-header">
+                <h1>[`Categories`]</h1>
+            </header>
+
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+                    {if !empty($categories)}
+                        {include './include.categories.html' inline}
+                    {/if}
+                </div>
+            </div>
+
+            <footer class="dialog-footer">
+                <button type="submit" class="button green">[`Assign and close`]</button>
+                [`or`] <a class="cancel js-dialog-close" href="#">[`close`]</a>
+            </footer>
+        </form>
+    </div>
+</div>

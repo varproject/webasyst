@@ -1,0 +1,286 @@
+{strip}
+
+{capture assign="file_content"}
+    {if $file.file_type === filesConfig::FILE_TYPE_IMAGE && !empty($file.photo_url.file_info)}
+        <div class="f-file-content-img">
+            <img src="{$file.photo_url.file_info}">
+        </div>
+    {else if $file.file_type === filesConfig::FILE_TYPE_TEXT}
+        <div class="f-file-content-text-wrapper">
+            {if $file.content_size > $text_file_show_max_size}
+                <div class="f-file-content-text-size">
+                    [`First `]{$text_file_show_max_size_str}:
+                </div>
+            {/if}
+            <div class="f-file-content-text">
+                {if $file.content|escape|count_characters <= 0 && $file.content_size > 0}
+                    <pre class="state-error-hint">[`Probably binary data in this file!`]</pre>
+                {else}
+                    <pre>{$file.content|escape}{if $file.content_size > $text_file_show_max_size}...{/if}</pre>
+                {/if}
+            </div>
+        </div>
+    {/if}
+
+    <!-- plugin hook: 'backend_file.preview' -->
+    {* @event backend_file.%plugin_id%.preview *}
+    {foreach $backend_file as $plugin_id => $item}
+        {if !empty($item.preview)}{$item.preview}{/if}
+    {/foreach}
+
+{/capture}
+
+<div class="f-single-file-wrapper" id="f-file-info-{$file.id}">
+    <h1 class="f-main-header-wrapper flexbox middle">
+        <a class="f-back-to-list small back" href="javascript:void(0);" title="[`Back`]"><i class="fas fa-arrow-circle-left custom-mr-4"></i></a>
+        {if $can_rename && !$in_sync}
+            <span class="f-editable-header editable{if !empty($file.mark)} highlighted {$file.mark}{/if}" data-confirm-text="[`You are going to change file extension. This may cause unavailability of file content. Are you sure?`]">{$file.name|escape}</span>
+        {else}
+            {$file.name|escape}
+        {/if}
+        {if $file.is_personal}<i class="fas fa-lock text-light-gray smallest" title="[`Only you can access this file`]"></i>{/if}
+        {if $file.source.icon_html}
+            <span class="f-header-icon">
+                {if $file.source.access}
+                    <a href="#/source/{$file.source.id}/" title="{sprintf('[`via %s (%s)`]', $file.source.provider_name|escape, $file.source.name|escape)}">{$file.source.icon_html}</a>
+                {else}
+                    {$file.source.icon_html}
+                {/if}
+            </span>
+        {/if}
+    </h1>
+
+    <div class="article custom-ml-0">
+        <div class="article-header custom-pl-0 custom-pt-0">
+            {if $file.is_personal}
+                {include file="../../include.personal_warn_block.html" storage_id=$storage.id}
+            {/if}
+
+            <div class="flexbox space-4 wrap-mobile">
+                <a href="{$file.download_url}" class="button blue rounded">
+                    <i class="fas fa-cloud-download-alt custom-mr-8"></i><span class="custom-mr-4">[`Download`]</span>{if $file.source_id == 0 || $file.size > 0}<span class="smaller opacity-80">{$file.size_str}</span>{/if}
+                </a>
+                {if $has_full_access_to_file}
+                    <a id="f-public-link" class="button light-gray rounded f-public-link" href="javascript:void(0);" title="[`Public link`] ">
+                        <i class="fas fa-globe{if $file.hash} text-blue{else} text-gray{/if}"></i>
+                        <span class="custom-ml-4 desktop-only">[`Public link`]</span>
+                    </a>
+                    <a id="f-share-link" class="f-share-link button light-gray rounded" href="javascript:void(0);">
+                        <i class="fas fa-users text-gray"></i>
+                        <span class="custom-ml-4 desktop-only">[`Access`]</span>
+                    </a>
+                {/if}
+                {if $file.size < $attach_max_size}
+                    <a class="button light-gray rounded f-send-file" href="javascript:void(0);" title="[`Send as attachment`] ">
+                        <i class="fas fa-envelope text-yellow"></i>
+                    </a>
+                {/if}
+                {if $has_full_access_to_file && !$file.locked}
+                    <a class="button light-gray rounded f-delete-file {if $in_sync}f-in-sync{/if}" href="javascript:void(0);" title="[`Delete file`] ">
+                        <i class="fas fa-trash-alt text-red"></i>
+                    </a>
+                {/if}
+
+                <!-- plugin hook: 'backend_file.menu' -->
+                {* @event backend_file.%plugin_id%.menu *}
+                {foreach $backend_file as $plugin_id => $item}
+                    {if !empty($item.menu)}{$item.menu}{/if}
+                {/foreach}
+
+            </div>
+
+            <div class="flex middle space-4 custom-mt-16 custom-mb-16" {if !$file.hash}style="display:none;"{/if}>
+                <i class="fas fa-globe text-blue custom-mr-4"></i>
+                <input type="text" readonly="readonly" value="{$file.frontend_url|escape}" id="f-frontend-url" style="min-width: 75%;">
+                <a href="{$file.frontend_url|escape}" target="_blank"><i class="fas fa-external-link-alt custom-ml-8"></i></a>
+            </div>
+
+            {if !empty($breadcrumbs)}
+                <ul class="breadcrumbs custom-mb-4 custom-mt-16">
+                    {foreach $breadcrumbs|default:[] as $breadcrumb}
+                        {if !$breadcrumb@last}
+                            <li>
+                                <a href="{$breadcrumb.backend_url}" title="{$breadcrumb.name|escape}">{$breadcrumb.name|escape|truncate:64}</a>
+                            </li>
+                        {/if}
+                    {/foreach}
+                </ul>
+            {/if}
+
+            <!-- plugin hook: 'backend_file.top' -->
+            {* @event backend_file.%plugin_id%.top *}
+            {foreach $backend_file as $plugin_id => $item}
+                {if !empty($item.top)}{$item.top}{/if}
+            {/foreach}
+
+            {if $file_content}
+                <div class="f-file-content-wrapper custom-mt-24" id="f-file-content-wrapper">
+                    {$file_content}
+                </div>
+            {/if}
+
+            {if $can_edit_tags || $file.tags_str}
+                <h5 class="heading custom-mt-24 custom-mb-4 custom-ml-0">[`Tags`]</h5>
+                <div class="f-tags-wrapper" data-add-tag-text="[`enter tags`]">
+                    <div class="flexbox">
+                        <input id="f-file-tags" type="text" name="tags" value="{$file.tags_str|escape}">
+                        <a class="saved-link text-green custom-ml-8 small" href="javascript:void(0);"><i class="fas fa-check-circle text-green custom-mr-4"></i>[`Saved`]</a>
+                    </div>
+                    {if $can_edit_tags}
+                        {$_count = count($popular_tags)}
+                        {if $_count > 0}
+                            <div class="flexbox middle f-popular-tags">
+                                <span class="custom-mr-8">[`Popular tags`]:</span>
+                                <ul class="chips tags small">
+                                    {foreach $popular_tags as $tag_id => $tag_name name=tloop}
+                                        <li><a href="javascript:void(0);" title="{$tag_name|escape}"><i class="fas fa-hashtag"></i> {$tag_name|escape|truncate:20}</a></li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                        {/if}
+                    {/if}
+                </div>
+            {/if}
+
+            <div class="fields custom-mt-24">
+                {if $file.author.exists}
+                    <div class="field">
+                        <div class="name">[`Uploaded by`]</div>
+                        <div class="value">
+                            <a href="{$contacts_url}#/contact/{$file.author.id}/" class="flexbox middle space-4">
+                                <i class="userpic userpic-32 custom-mr-4" style="background-image: url('{$file.author.photo_url}');"></i>
+                                {$file.author.name|escape}
+                            </a>
+                        </div>
+                    </div>
+                {/if}
+
+                <div class="field">
+                    <div class="name">[`Uploaded`]</div>
+                    <div class="value">{$file.create_datetime|wa_date:'humandatetime'}</div>
+                </div>
+
+                {if $file.update_datetime != $file.create_datetime}
+                    <div class="field">
+                        <div class="name">[`Updated`]</div>
+                        <div class="value">{$file.update_datetime|wa_date:'humandatetime'}</div>
+                    </div>
+                {/if}
+
+                {if $has_full_access_to_file}
+                    <div class="field">
+                        <div class="name" style="padding-top: 8px;">[`Mark`]</div>
+                        <div class="value">
+                            <ul class="flexbox middle f-settings-colorbox">
+                                {foreach $marks as $mark}
+                                    {strip}
+                                        <li class="f-settings-item{if $mark} {$mark}{/if}{if $file.mark == $mark} selected{/if}" data-mark="{$mark}">
+                                            <i class="fas fa-{if $mark}check{else}ban{/if} text-white{if $file.mark != $mark} hidden{/if}"></i>
+                                        </li>
+                                    {/strip}
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+                {/if}
+
+                {if !empty($file.comments)}
+                    <div class="field">
+                        <div class="name">[`Comments`]</div>
+                        <div class="value">
+                            <div class="f-comments-wrapper">
+                                {foreach $file.comments as $comment}
+                                    <div class="f-comment-item" data-id="{$comment.id}">
+                                        <header class="f-comment-header">
+                                            <a href="{if $comment.author.id}{$contacts_url}#/contact/{$comment.author.id}/{else}javascript:void(0);{/if}">
+                                                <i class="icon userpic userpic-20 custom-mr-4" style="background-image: url('{$comment.author.photo_url}');"></i>
+                                                <span>{$comment.author.name|escape}</span>
+                                            </a>
+                                            <span class="f-comment-date hint">{$comment.datetime|wa_date:'humandatetime'}</span>
+                                            {if $comment.has_rights}
+                                                <a href="javascript:void(0);" class="small f-comment-delete" title="[`Remove`]">
+                                                    <i class="icon10 no"></i>
+                                                </a>
+                                            {/if}
+                                        </header>
+                                        <div class="f-comment-content">
+                                            {$comment.content|escape|nl2br}
+                                        </div>
+                                    </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                {/if}
+
+                {if $can_comment}
+                    <div class="field">
+                        <div class="name">[`Add comment`]</div>
+                        <div class="value">
+                            <div class="f-comment-form">
+                                <form id="f-add-comment-form">
+                                    <header class="f-form-header">
+                                        <i class="userpic userpic-20 custom-mr-4" style="background-image: url('{waContact::getPhotoUrl($wa->user('id'), $wa->user('photo'), '20')}');"></i>
+                                        {$wa->user('name')}
+                                    </header>
+                                    <div class="f-textarea-wrapper custom-mt-4 custom-mb-12">
+                                        <textarea name="content" class="f-text"></textarea>
+                                    </div>
+                                    <div class="">
+                                        <input type="button" class="f-button small" value="[`Add comment`]">
+                                        <em class="hint">[`Ctrl+Enter`]</em>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- plugin hook: 'backend_file.bottom' -->
+{* @event backend_file.%plugin_id%.bottom *}
+{foreach $backend_file as $plugin_id => $item}
+    {if !empty($item.bottom)}{$item.bottom}{/if}
+{/foreach}
+
+{/strip}
+
+<script>( function($) { "use strict";
+
+    // Init File
+    new File({
+        $file: $("#f-file-info-{$file.id}"),
+        file_id: "{$file.id}",
+        can_edit_tags: {$can_edit_tags|json_encode},
+        can_rename: {if $can_rename}true{else}false{/if},
+        can_comment: {if $can_comment}true{else}false{/if},
+        full_access: {if $has_full_access_to_file}true{else}false{/if},
+        marks: {$marks|json_encode},
+        locale: {
+            copied: '[`Copied`]'
+        }
+    });
+
+    // Pretty print text file with source-code
+    {if $file.file_type === filesConfig::FILE_TYPE_TEXT}
+        ( function() {
+            var wrapper = $('#f-file-content-wrapper'),
+                el = wrapper.find('.f-file-content-text pre');
+
+            if (!el.hasClass('state-error-hint')) {
+                wrapper.find('.f-file-content-text pre').addClass('prettyprint');
+                prettyPrint();
+            }
+        })();
+    {/if}
+
+    // Set Title
+    $.files.setBrowserTitle('{$file.name|escape:"javascript"}');
+
+    // Save file info
+    $.files.config.setPageInfo("file/{$file.id}", {$file|json_encode});
+
+})(jQuery);</script>

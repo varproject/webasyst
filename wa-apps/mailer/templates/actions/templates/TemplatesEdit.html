@@ -1,0 +1,344 @@
+{$form_id = uniqid('form-edit-template')}
+<form id="{$form_id}" action="?module=templates&action=save" method="post" style="overflow:visible" class="width-100">
+    <div class="article">
+        <div class="article-body">
+            <div class="campaign-header">
+                <div class="flexbox middle custom-mb-24 small">
+                    <a href="#/templates/" class="text-gray js-link-back" title="[`Templates`]">
+                        <i class="fas fa-arrow-circle-left large"></i>
+                        <span class="custom-ml-4">[`Templates`]</span>
+                    </a>
+                    <a href="{if $creator.id > 0}/webasyst/contacts/#/contact/{$creator.id}{else}javascript:void(0){/if}" class="flexbox middle custom-ml-auto semibold text-dark-gray">
+                        <span class="icon userpic size-24"><img src="{$creator->getPhoto(32)}" alt="{$creator.name|escape}"></span>
+                        <span class="custom-ml-8">{$creator.name|escape}</span>
+                    </a>
+                    <span class="text-gray custom-ml-8">{ifempty($t.create_datetime, time())|wa_date:'humandatetime'}</span>
+                </div>
+
+                <div class="flexbox middle m-subject">
+                    <input id="message-subject" class="full-width custom-m-0 bold" type="text" name="data[subject]" value="{if isset($t.id)}{$t.subject|escape}{/if}"
+                           placeholder="[`Subject`]"/>
+                    {if !empty($t.id)}
+                        <input type="hidden" name="id" value="{$t.id}"/>
+                    {/if}
+                    {if isset($params.sort)}
+                        <input type="hidden" name="params[sort]" value="{$params.sort|escape}"/>
+                    {/if}
+                </div>
+                <div class="flexbox wrap">
+                    <ul class="unstyled custom-mb-16 custom-mr-12 wide">
+                        <li class="js-description-link custom-mb-8 small semibold">
+                            {if trim(ifset($params.description))}
+                                <span class="uppercase bold gray">[`Description`]</span>
+                                <span class="wa-tooltip custom-mr-16"
+                                      data-wa-tooltip-content="[`Type here a description for your reference only. It will not be shown to your campaign recipients.`]">
+                                    <i class="fas fa-question-circle text-dark-gray"></i>
+                                </span>
+                            {/if}
+                            <a href="javascript:void(0)" class="text-gray">
+                                {if trim(ifset($params.description))}
+                                    <i class="fas fa-pen small"></i>
+                                    <span>[`Edit description`]</span>
+                                {else}
+                                    <i class="fas fa-plus"></i>
+                                    <span>[`Add a description`]</span>
+                                {/if}
+                            </a>
+                            {if !trim(ifset($params.description))}
+                                <span class="wa-tooltip"
+                                      data-wa-tooltip-content="[`Type here a description for your reference only. It will not be shown to your campaign recipients.`]">
+                                    <i class="fas fa-question-circle text-dark-gray"></i>
+                                </span>
+                            {/if}
+                        </li>
+                        <li id="description-viewer">
+                            <p class="small">{ifset($params.description)|escape}</p>
+                        </li>
+                        <li id="description-editor" style="display:none;">
+                            <textarea name="params[description]" class="width-100 smaller" style="height: 56px">{ifset($params.description)|escape}</textarea>
+                            {if !empty($t.id)}
+                                <input type="button" class="button smaller gray custom-mt-8" value="[`Save`]">
+                            {/if}
+                            <button type="button" class="button smaller custom-mt-8 text-dark-gray light-gray">[`Cancel`]</button>
+                        </li>
+                    </ul>
+                    <ul class="unstyled custom-mt-0 custom-mb-32 js-switch-redactor-container small semibold">
+                        <li class="selected hidden"><a href="#" class="js-switch-redactor text-gray" data-editor="ace"><i class="fas fa-code"></i> [`HTML mode (advanced)`]</a></li>
+                        <li class="selected hidden"><a href="#" class="js-switch-redactor" data-editor="revolv"><i class="fas fa-file-image"></i> [`Back to visual editor`]</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="js-editor-revolv">
+                {include file="../../../js/vendor/revolvapp/templates/index.html" assign="revolv_default"}
+                {if !isset($t.id)}
+                    {* new template *}
+                    {$revolv_default}
+                {else}
+                    {* existing template *}
+                    {$t.rebody}
+                {/if}
+            </div>
+            <textarea name="data[rebody]" class="hidden js-revolv-body">{if isset($t.id)}{$t.rebody|escape}{else}{$revolv_default|escape}{/if}</textarea>
+            <div class="js-editor-redactor">
+                <textarea name="data[body]" class="js-redactor-body">{if isset($t.id)}{$t.body|escape}{/if}</textarea>
+            </div>
+            <section class="bottombar sticky flexbox middle space-16 width-100 custom-mt-32 bordered-top shadowless">
+                <div class="wide">
+                    <button type="submit" class="button js-template-save">
+                        <span>[`Save`]</span>
+                    </button>
+
+                    <em class="hint custom-mr-20">[`Ctrl+S`]</em>
+                {if !empty($t.id)}
+                    {if class_exists('ZipArchive')}
+                        <a href="?module=templates&action=export&id={$t.id}" class="semibold small button outlined">
+                            <i class="fas fa-download"></i>
+                            <span class="desktop-and-tablet-only">[`Export to file (ZIP)`]</span>
+                        </a>
+                    {/if}
+                    <a href="#" id="message-delete" class="semibold small button outlined red">
+                        <i class="fas fa-trash-alt"></i>
+                        <span class="desktop-and-tablet-only">[`Delete template`]</span>
+                    </a>
+                {/if}
+                </div>
+                <a href="[`https://support.webasyst.com/mailer/`]" target="_blank" class="small">[`Tips & lessons`]<i class="fas fa-external-link-alt custom-ml-4 small"></i></a>
+            </section>
+        </div>
+    </div>
+</form>
+
+<script>
+    var wa_url = "{$wa_url}";
+    var wa_app = "{$wa->app()}";
+
+    ( function($) {
+        $.wa.locale = $.extend($.wa.locale, {
+            'to_advanced_title': '[`Switch to HTML mode`]',
+            'to_advanced': '[`<strong>HTML editing mode is for experienced users only.</strong> If you switch to the HTML mode now, you will have to keep it for this particular email campaign until it is sent. Changes made directly to the HTML content may not be supported by the WYSIWYG editor!`]',
+            'to_base_title': '[`All custom HTML changes will be lost`]',
+            'to_base': '[`<strong>Stop here!</strong> If you switch to the visual editor now then all changes made to the HTML code in the advanced mode will be lost because they are not supported in the visual editing mode. <strong>Drop all HTML code changes?</strong>`]',
+            'cancel': '[`Cancel`]',
+            'change': '[`Switch`]'
+        });
+
+        $('.wa-tooltip').waTooltip();
+
+        var accountName = "{$wa->accountName()|replace:'"':'\"'}";
+
+        // DOM
+        const $form = $('#{$form_id}');
+        const $subject = $form.find('#message-subject');
+        let $submit_btn = $form.find('.js-template-save');
+        let templ_id = $form.find('[name="id"]').val() || '';
+        let $link_back = $('.js-link-back');
+        let hash = $.storage.get('mailer/hash').split('/');
+
+        $link_back.attr('href', (hash.indexOf('shop') === -1 ? '#/templates/' : '#/templates/shop/'));
+        $(window).on('wa_mailer_editor_changes', function(event) {
+            if ($submit_btn) {
+                $submit_btn.addClass('yellow');
+            }
+        });
+
+        $(window).on('wa_loaded', function() {
+            $.wa.mailer.setEditor($form, {
+                revolvPath: '{$wa_app_static_url}js/vendor/revolvapp/',
+                uploadPath: '?module=files&action=uploadimage&r=x&absolute=1&message_id='+ templ_id,
+                csrf: '{waRequest::cookie("_csrf", "")}',
+                oldStyle: {if isset($t.id) && empty($t.rebody)}true{else}false{/if},
+                defaultTemplate: `{include file="../../../js/vendor/revolvapp/templates/index.html"}`
+            });
+        });
+
+        // Save button: save template without leaving the page
+        const saveTemplate = () => {
+            if ($submit_btn.attr('disabled')) {
+                return;
+            }
+
+            $.wa.mailer.buttonLoader({
+                $button: $submit_btn,
+                status: 'loader'
+            });
+
+            $.post($form.attr('action'), $form.serialize(), function (response) {
+
+                if (response.status !== 'ok') {
+                    console.warn(response);
+                    $.wa.mailer.buttonLoader({
+                        $button: $submit_btn,
+                        status: 'failed'
+                    });
+                    return;
+                }
+
+                const descr = $.trim($('#description-editor').hide().find('textarea').val());
+                $('#description-viewer').show().find('p').text(descr);
+                if (descr) {
+                    $('.js-description-link').show().find('a span').addClass('small').html("[`Edit description`]");
+                } else {
+                    $('.js-description-link').show().find('a span').removeClass('small').html("[`Add a description`]");
+                }
+
+                $submit_btn.removeClass('yellow');
+                $.wa.mailer.buttonLoader({
+                    $button: $submit_btn,
+                    status: 'success',
+                    callback() {
+                        $link_back.attr('href', (response.data.shop > 0 ? '#/templates/shop/' : '#/templates/'));
+                        $.wa.setHash('#/template/'+ (response.data.shop > 0 ? 'shop/' : '') + response.data.id + "/");
+                        $(document).prop('title', $subject.val() + ' – ' + accountName);
+                    }
+                });
+            }, "json");
+        };
+
+        $form.on('submit', function(event) {
+            event.preventDefault();
+            saveTemplate();
+        });
+
+        // Save on Ctrl+S, or Cmd+S
+        let h;
+        $(document).on('keydown', h = function(event) {
+            if (!$form.closest('body').length) {
+                $(document).off('keydown', h);
+            }
+            return submitIfCtrlS(event);
+        });
+        function submitIfCtrlS(event) {
+            if ($.wa.mailer.isCtrlS(event)) {
+                event.preventDefault();
+
+                $form.submit();
+            }
+        }
+
+        // Confirmation before user leaves page
+        let h2;
+        $(window).on('wa.before_dispatched', h2 = function (e, context) {
+            if ($submit_btn && $submit_btn.hasClass('yellow') && $form && $form.closest('html').length) {
+                e.preventDefault();
+                const context_hash = context.getHash()
+                $.waDialog.confirm({
+                    text: "[`Unsaved changes will be lost if you leave this page now. Are you sure?`]",
+                    success_button_title: '[`OK`]',
+                    cancel_button_title: '[`Cancel`]',
+                    onSuccess(){
+                        $.wa.setHash(context_hash)
+                        $(window).off('wa.before_dispatched', h2);
+                    }
+                })
+            }else{
+                $(window).off('wa.before_dispatched', h2);
+                $(document).off('keydown', h);
+                return true;
+            }
+        });
+
+        // Description editor
+        $('.js-description-link a, #description-viewer').on('click', function (event) {
+            event.preventDefault();
+
+            $('#description-viewer').hide();
+            $('.js-description-link').find('a').hide();
+            $('#description-editor').show();
+
+            if(!$('.js-description-link').find('span:contains("[`Description`]")').length) {
+                $('.js-description-link').prepend('<span class="uppercase bold gray">[`Description`]</span>')
+            }
+        });
+        $('#description-editor button').on('click', function (event) {
+            event.preventDefault();
+
+            $('#description-viewer').show();
+            $('.js-description-link').find('a').show().prev('span.uppercase').remove();
+            $('#description-editor').hide();
+        })
+        $('#description-editor input').on('click', function () {
+            var ta = $(this).siblings('textarea');
+            var descr = $.trim(ta.val());
+            $('#description-viewer').show().find('p').text(descr);
+            if (descr) {
+                $('.js-description-link')
+                    .find('a')
+                    .show()
+                    .html('<i class="fas fa-pen small"></i>&nbsp;<span>[`Edit description`]</span>').end()
+                    .find('> span')
+                    .remove().end()
+                    .prepend('<span class="uppercase bold gray">[`Description`]</span>&nbsp;<span class="wa-tooltip custom-mr-16" data-wa-tooltip-content="[`Type here a description for your reference only. It will not be shown to your campaign recipients.`]"><i class="fas fa-question-circle text-dark-gray"></i></span>');
+                $('.wa-tooltip').waTooltip();
+            } else {
+                $('.js-description-link')
+                    .find('a')
+                    .show()
+                    .html('<i class="fas fa-plus"></i>&nbsp;<span>[`Add a description`]</span>')
+                    .prevAll('span')
+                    .remove().end()
+                    .find('.wa-tooltip').remove();
+
+                $('.js-description-link a').after('&nbsp;<span class="wa-tooltip custom-mr-16" data-wa-tooltip-content="[`Type here a description for your reference only. It will not be shown to your campaign recipients.`]"><i class="fas fa-question-circle"></i></span>');
+                $('.wa-tooltip').waTooltip();
+            }
+            $('#description-editor').hide();
+            $.post($form.attr('action'), { 'params[description]' : ta.val(), 'id': '{ifempty($t.id)}' });
+        });
+
+        // Link to delete template
+        {if !empty($t.id)}
+        $("#message-delete").off('click').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            $.waDialog.confirm({
+                title: "",
+                text: {"[`Do you really want to remove this template (you will not be able to undo this action)?`]"|json_encode},
+                success_button_title: '[`Delete`]',
+                success_button_class: 'danger',
+                cancel_button_title: '[`Cancel`]',
+                cancel_button_class: 'light-gray',
+                onSuccess() {
+                    $.post("?module=campaigns&action=delete", { id: '{$t.id}' }, function (response) {
+                        if (response.status == 'ok') {
+                            $.storage.del('mailer/hash');
+                            $.wa.mailer.stopDispatch(1);
+                            window.location.hash = '#/templates/'+ (hash.indexOf('shop') === -1 ? '' : 'shop/');
+                            $.wa.mailer.load("?module=templates"+ (hash.indexOf('shop') === -1 ? '' : '&tab=shop'), function () {
+                                $submit_btn = null;
+                                $.wa.mailer.alertNotification({
+                                    isCloseable: true,
+                                    alertTimeout: 3000,
+                                    alertClass: 'success',
+                                    customClass: 'width-auto',
+                                    alertContent: `<i class="fas fa-check-circle custom-mr-4"></i>{sprintf_wp('Template &ldquo;%s&rdquo; has been successfully deleted.', htmlspecialchars(ifempty($t.subject, _w('<no subject>'))))}`
+                                })
+                            });
+                            $.wa.mailer.reloadSidebar();
+                        }
+                    }, "json");
+                },
+                onCancel() {
+                    return false;
+                }
+            });
+        });
+        {/if}
+
+        // Highlight link in sidebar
+        $('#wa-app > .sidebar .selected').removeClass('selected');
+        $('#templates-list-item').addClass('selected');
+
+        // Upload files and images
+        $('#{$form_id}').on('click', '.js-ace-upload', function () {
+            $.get('?module=backend&action=files', {
+                template_id: {$t.id|default:0},
+                campaign_id: {$campaign.id|default:0}
+            }, html => $.waDialog({ html }))
+        })
+
+        $.wa.mailer.setTitle();
+
+    })(jQuery);
+</script>

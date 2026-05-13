@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        {$title = $wa->title()}
+        <title>{$wa->appName()}{if $title}: {$title|escape}{/if}  &mdash; {$wa->accountName()}</title>
+
+        {$wa->css()}
+        <link href="{$wa_url}wa-content/css/wa/wa-2.0.css?{$wa->version(true)}" type="text/css" rel="stylesheet">
+        <link href="{$wa_url}wa-content/js/prettify/prettify.css?{$wa->version(true)}" type="text/css" rel="stylesheet">
+        <link href="{$wa_app_static_url}css/frontend.css?{$wa->version()}" type="text/css" rel="stylesheet">
+        <script defer="" src="{$wa_url}wa-content/js/fontawesome/fontawesome-all.min.js?v{$wa->version(true)}"></script>
+
+        {wa_js}
+            {$wa_url}wa-content/js/jquery/jquery-1.11.1.min.js
+            {$wa_url}wa-content/js/jquery-wa/wa.js
+            {$wa_url}wa-content/js/jquery-wa/wa.core.js
+            {$wa_url}wa-content/js/prettify/prettify.js
+            {$wa_app_static_url}js/item.js
+        {/wa_js}
+    </head>
+    <body>
+        <div id="wa-app">
+            {$navigation}
+
+            <div class="content custom-pt-16">
+                {$content}
+            </div>
+        </div>
+    </body>
+</html>

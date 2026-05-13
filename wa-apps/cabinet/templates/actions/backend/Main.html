@@ -1,0 +1,69 @@
+{*
+    ОСНОВНОЙ BACKEND-ШАБЛОН ПРИЛОЖЕНИЯ "cabinet"
+
+    Назначение:
+    - единая входная точка для всех backend-экшенов;
+    - внутри него подключается конкретный шаблон модуля и его сайдбар.
+
+    Как использовать в экшенах:
+    Каждый backend-модуль/экшен обязан указывать этот шаблон как основной:
+    $this->setTemplate(wa()->getAppPath('templates/actions/backend/main.html', 'cabinet'));
+
+    Цепочка рендеринга backend-страницы:
+    cabinetBackend.layout.php      (PHP-layout приложения)
+    → templates/layouts/Backend.html   (общий каркас бекенда)
+    → переменная $content внутри Backend.html
+    → этот шаблон main.html (единая точка входа для экшенов)
+
+    Подключение шаблона конкретного модуля:
+    Внутри main.html по текущему модулю/экшену формируется путь
+    к "рабочему" шаблону модуля, и этот шаблон подключается динамически.
+    Экшены не должны напрямую указывать свои .html — только main.html.
+
+    Управление сайдбаром модуля из экшена:
+    $this->view->assign([
+        // Вкл/выкл сайдбар.
+        // По умолчанию true — сайдбар показывается.
+        'action_sidebar_mode'   => false,
+
+        // Использовать собственный (модульный) сайдбар вместо общего.
+        // При true ожидается шаблон вида "<модуль>/<модуль>Sidebar.html".
+        // По умолчанию false — используется общий сайдбар по умолчанию.
+        'action_sidebar_custom' => true,
+    ]);
+
+    Подключение страницы экшена внутри модуля через параметр $action_mode
+    После этого будет сформирован динамический путь к шаблону экшена, например 'Statuses.html', где экшен = statusesAction
+    $this->view->assign([
+        'action_tpl_mode'  => true, // По умолчанию false
+        'action_tpl_path'  => 'StatusesTest.html', // любой путь на уровне папки модуля. По умолчанию false
+    ]);
+*}
+
+{* Контент модуля/экшена *}
+<div class="flexbox">
+
+    {* Сайдбар экшена *}
+    {if $action_sidebar_tpl_mode}
+        <div class="sidebar width-adaptive overflow-visible flexbox mobile-friendly bordered-right blank">
+            {if !empty($action_sidebar_tpl_path)}
+                {include file="./{$module}/{$action_sidebar_tpl_path}" inline}
+            {else}
+                {include file="./MainSidebar.html" inline}
+            {/if}
+        </div>
+    {/if}
+
+    {* Контент экшена *}
+    <div class="box contentbox width-100">
+        {if !empty($action_tpl_mode)}
+            {if !empty($action_tpl_path)}
+                {include file="./{$module}/{$action_tpl_path}" inline}
+            {else}
+                {include file="./{$module}/{$action}.html" inline}
+            {/if}
+        {else}
+            {include file="./{$module}/{$module}.html" inline}
+        {/if}
+    </div>
+</div>

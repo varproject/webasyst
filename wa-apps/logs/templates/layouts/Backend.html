@@ -1,0 +1,182 @@
+{capture name="app"}
+    <div id="wa-app"{if $wa->isMobile()} class="mobile"{/if}>
+        <div class="navigation">
+            {$navigation}
+        </div>
+        <div class="content custom-pt-16">
+            {$content}
+        </div>
+    </div>
+{/capture}
+
+{if $ajax}
+    {$smarty.capture.app}
+{else}
+    <!DOCTYPE HTML>
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            {$title = $wa->title()}
+            <title>{$wa->appName()}{if $title}: {$title|escape}{/if} &mdash; {$wa->accountName()}</title>
+
+            {$wa->css()}
+            <link href="{$wa_url}wa-content/js/prettify/prettify.css" type="text/css" rel="stylesheet">
+            <link href="{$wa_app_static_url}css/backend.css?v{$wa->version()}" type="text/css" rel="stylesheet">
+
+            {wa_js}
+                {$wa_url}wa-content/js/jquery/jquery-1.11.1.min.js
+                {$wa_url}wa-content/js/jquery-wa/wa.js
+                {$wa_url}wa-content/js/prettify/prettify.js
+
+                {$wa_app_static_url}js/backend/logs.js
+
+                {if in_array($wa->get('action'), [
+                    logsItems::ENTRY_FILE,
+                    logsItems::ENTRY_ACTION
+                ])}
+                    {$wa_app_static_url}js/item.js
+                {/if}
+            {/wa_js}
+        </head>
+        <body id="logs-app"{if $wa->isMobile()} class="mobile"{/if}>
+            <div id="wa" class="{$wa->get('action', '')}">
+                {$wa->header()}
+                {$smarty.capture.app}
+            </div>
+
+            {* dialog templates *}
+
+            <div class="dialog-template-error hidden">
+                <div class="dialog">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body">
+                        <header class="dialog-header"><h1>[`Error`]</h1></header>
+                        <div class="dialog-content">
+                            <span class="state-error bold"></span>
+                        </div>
+                        <footer class="dialog-footer">
+                            <button class="button light-gray js-submit">[`Close`]</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-template-delete hidden">
+                <div class="dialog logs-dialog-delete">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body" style="width: 900px;">
+                        <header class="dialog-header"></header>
+                        <div class="dialog-content"><i class="fas fa-spinner fa-spin"></i></div>
+                        <footer class="dialog-footer">
+                            <div>
+                                <button class="button blue js-submit">[`Delete`]</button>
+                                <button class="button light-gray js-close-dialog">[`Close`]</button>
+                            </div>
+                            <p class="hint"><i class="far fa-thumbs-up text-strong"></i> [`Deleting log files does not affect the functioning of your Webasyst account.`]</p>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-template-search hidden">
+                <div class="dialog logs-dialog-search">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body" style="width: 900px;">
+                        <header class="dialog-header">
+                            <h1>[`Text search in file`]</h1>
+                        </header>
+                        <div class="dialog-content"><i class="fas fa-spinner fa-spin"></i></div>
+                        <footer class="dialog-footer">
+                            <div>
+                                <button class="button light-gray js-close-dialog">[`Close`]</button>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-template-file-publish hidden">
+                <div class="dialog logs-dialog-file-publish">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body" style="width: 900px;">
+                        <header class="dialog-header"><h1>[`Public link`]</h1></header>
+                        <div class="dialog-content"><i class="fas fa-spinner fa-spin"></i></div>
+                        <footer class="dialog-footer">
+                            <button class="button light-gray js-close-dialog">[`Close`]</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-template-phpinfo hidden">
+                <div class="dialog">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body" style="width: 900px;">
+                        <header class="dialog-header"><h1>[`PHP configuration`]</h1></header>
+                        <div class="dialog-content"><i class="fas fa-spinner fa-spin"></i></div>
+                        <footer class="dialog-footer">
+                            <button class="button light-gray js-close-dialog">[`Close`]</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-template-rename hidden">
+                <div class="dialog logs-dialog-rename">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body" style="width: 900px;">
+                        <header class="dialog-header"><h1>[`Rename`]</h1></header>
+                        <div class="dialog-content"><i class="fas fa-spinner fa-spin"></i></div>
+                        <footer class="dialog-footer">
+                            <button class="button blue js-submit">[`Rename`]</button>
+                            <button class="button light-gray js-close-dialog">[`Close`]</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-template-settings hidden">
+                <div class="dialog logs-dialog-settings">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body" style="width: 900px;">
+                        <header class="dialog-header"><h1>[`Settings`]</h1></header>
+                        <div class="dialog-content"><i class="fas fa-spinner fa-spin"></i></div>
+                        <footer class="dialog-footer">
+                            <button class="button blue js-submit">[`Save`]</button>
+                            <button class="button light-gray js-close-dialog">[`Close`]</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-template-tracked-file hidden">
+                <div class="dialog">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body" style="width: 900px;">
+                        <header class="dialog-header"><h1>[`File updates tracking`]</h1></header>
+                        <div class="dialog-content"><i class="fas fa-spinner fa-spin"></i></div>
+                        <footer class="dialog-footer">
+                            <button class="button light-gray js-close-dialog">[`Close`]</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog-template-premium hidden">
+                <div class="dialog logs-dialog-premium">
+                    <div class="dialog-background"></div>
+                    <div class="dialog-body" style="width: 900px;">
+                        <header class="dialog-header">
+                            <h1>[`Logs+`]</h1>
+                        </header>
+                        <div class="dialog-content custom-pb-0"><i class="fas fa-spinner fa-spin"></i></div>
+                        <footer class="dialog-footer">
+                            <a href="{$wa_backend_url}installer/store/app/logs/" class="button get-premium-button green custom-mb-8-mobile">[`Get these features`]</a>
+                            <button class="button light-gray js-close-dialog">[`Close`]</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>
+{/if}

@@ -1,0 +1,114 @@
+/*
+// nav
+*/
+@use 'sass:map';
+@use 'sass:math';
+@use '../functions' as func;
+@use '../mixins/bootstrap' as bt;
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+
+.nav {
+    font-size: func.rem(14);
+}
+.nav-tabs {
+    .nav-item + .nav-item {
+        @include dir.scope {
+            #{dir.$margin-inline-start}: func.rem(5);
+        }
+    }
+    .nav-link {
+        font-weight: bt.$font-weight-medium;
+        color: inherit;
+        border: none;
+        border-bottom: 1px solid transparent; // SKIP-PIXELS
+        padding: .75rem 1rem;
+        position: relative;
+        border-radius: .125rem .125rem 0 0;
+
+        &:hover,
+        &:focus {
+            background: vs.$sa-nav-tabs__item--hover-bg-color;
+        }
+    }
+    .nav-link-sa-indicator {
+        display: block;
+        content: '';
+        position: absolute;
+        left: 0; // SKIP-RTL
+        bottom: -.125rem;
+        width: 100%;
+        height: func.rem(3);
+        border-radius: func.rem(3 * .5);
+        pointer-events: none;
+        background: vs.$sa-nav-tabs__item--indicator-color;
+        box-shadow: vs.$sa-nav-tabs__item--indicator-shadow;
+        opacity: 0;
+    }
+    .nav-link.active,
+    .nav-item.show .nav-link {
+        color: inherit;
+        background: transparent;
+        border-color: transparent;
+
+        .nav-link-sa-indicator {
+            opacity: 1;
+        }
+    }
+}
+.card-header-tabs .nav-link {
+    border-radius: 0;
+}
+.nav-pills {
+    .nav-item + .nav-item {
+        @include dir.scope {
+            #{dir.$margin-inline-start}: func.rem(5);
+        }
+    }
+    .nav-link {
+        color: inherit;
+        font-weight: bt.$font-weight-medium;
+
+        &:not(.active):hover,
+        &:not(.active):focus {
+            background: vs.$sa-nav-pills__item--hover-bg-color;
+        }
+
+        &.disabled {
+            color: vs.$sa-nav-pills__item--disabled-font-color;
+        }
+
+        &.active {
+            font-weight: bt.$font-weight-medium;
+        }
+    }
+}
+.nav-link {
+    --sa-arrow-opacity: .2;
+
+    &:hover,
+    &.show {
+        --sa-arrow-opacity: .35;
+    }
+    &.active {
+        --sa-arrow-opacity: .4;
+    }
+}
+
+$local-gutter: .5rem;
+$local-shift: .125rem;
+
+.dropdown-toggle.nav-link:after {
+    vertical-align: 0;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: $local-gutter;
+        #{dir.$margin-inline-end}: -($local-shift + func.rem(1));
+    }
+}
+.dropdown-toggle.nav-link:before {
+    @include dir.scope {
+        #{dir.$margin-inline-start}: -($local-shift + func.rem(1));
+        #{dir.$margin-inline-end}: $local-gutter;
+    }
+}

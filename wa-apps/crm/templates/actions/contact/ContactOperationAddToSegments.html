@@ -1,0 +1,55 @@
+{$wrapper_id = uniqid('crm-contact-operation-add-to-segment-wrapper-')}
+<div class="dialog crm-contact-operation-add-to-segment-wrapper" id="{$wrapper_id}">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <header class="dialog-header">
+            <h1>[`Add to segments`]</h1>
+        </header>
+
+        <div class="dialog-content">
+            {foreach ['shared' => '[`Shared segments`]', 'my' => '[`My segments`]'] as $shared_type => $block_name}
+                {if $segments[$shared_type]}
+                    <div class="block">
+                        <h5 class="heading custom-ml-0 custom-pb-4" style="font-size: 0.85rem">{$block_name}:</h5>
+                        <ul class="menu">
+                            {foreach $segments[$shared_type] as $segment}
+                                <li data-id="{$segment.id}" class="c-segment-item">
+                                    <label>
+                                        <input type="checkbox" name="segment[]"
+                                                value="{$segment.id}"
+                                                {if $segment.checked}checked="checked"{/if}
+                                                {if $segment.disabled}disabled="disabled"{/if}>
+                                        <span class="c-name-wrapper">
+                                            {if !empty($segment.icon_path)}
+                                                <span class="userpic" style="background: url({$segment.icon_path}); border-radius: 0;"></span>
+                                            {elseif !empty($segment.icon)}
+                                                <span class="icon size-16">
+                                                    <i class="fas fa-{$segment.icon}"></i>
+                                                </span>
+                                            {/if}
+                                            <span class="c-name">{$segment.name|escape}</span>
+                                        </span>
+                                    </label>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+            {/foreach}
+
+            <div class="block">
+                <a href="javascript:void(0);" class="button small rounded light-gray crm-add-new-segment-link">
+                    <i class="fas fa-plus-circle text-green add"></i> [`New segment`]
+                    <span class="icon loading crm-add-new-segment-loading" style="display: none"><i class="fas fa-spinner wa-animation-spin speed-1000"></i></span>
+                </a>
+            </div>
+
+        </div>
+
+        <footer class="dialog-footer">
+            <button class="button green js-save" {if !$is_assign}disabled="disabled"{/if}>[`Save`]</button>
+            <a class="button light-gray js-close-dialog" href="javascript:void(0);">[`Cancel`]</a>
+            <span class="icon loading crm-loading" style="display: none"><i class="fas fa-spinner wa-animation-spin speed-1000"></i></span>
+        </footer>
+    </div>
+</div>

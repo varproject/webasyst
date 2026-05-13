@@ -1,0 +1,69 @@
+{$_title = "[s`Contact fields`] — {$wa->accountName(false)}"}
+{wa_js}
+    {$wa_url}wa-content/js/jquery-ui/jquery.ui.core.min.js
+    {$wa_url}wa-content/js/jquery-ui/jquery.ui.widget.min.js
+    {$wa_url}wa-content/js/jquery-ui/jquery.ui.mouse.min.js
+    {$wa_url}wa-content/js/jquery-ui/jquery.ui.sortable.min.js
+{/wa_js}
+<div class="article s-field-settings-page" id="s-field-settings-page">
+  <div class="article-body">
+    <h1 class="s-page-header">[s`Contact fields`]</h1>
+    <p class="s-description small">[s`System-wide contact field configuration for all installed Webasyst apps.`]</p>
+    <div class="s-field-settings-fields-block">
+        <div class="s-field-constructor">
+            <div class="fieldset wa-main-fields fields">
+                {* Main fields *}
+                <div class="fields-group blank custom-mt-0">
+
+                    <h4 class="heading">[`Primary fields`]</h4>
+
+                    {foreach $fields.main as $field}
+
+                        <div class="field">
+                            <div class="name">{$field.name|escape}</div>
+                            <div class="value">
+                                <span class="custom-mr-16 small {if $field.pStatus === 'disabled'}gray{else}semibold{/if}"><i class="fas fa-{if $field.pStatus === 'disabled'}ban{else}check text-green{/if}"></i> [s`person`]</span>
+                                <span class="custom-mr-16 small {if $field.cStatus === 'disabled'}gray{else}semibold{/if}"><i class="fas fa-{if $field.cStatus === 'disabled'}ban{else}check text-green{/if}"></i> [s`company`]</span>
+                            </div>
+                        </div>
+                    {/foreach}
+
+                    <hr class="custom-my-20">
+                    <p class="small gray custom-mt-12"><i class="fas fa-lock text-light-gray custom-mr-4"></i> [s`Main contact fields cannot be modified or disabled.`]</p>
+
+                </div>
+            </div>
+
+            <div class="fieldset wa-other-fields fields">
+
+                {* Other fields *}
+                <div class="js-other-fields fields-group blank">
+
+                    <h4 class="heading">[`Custom fields`]</h4>
+
+                    {foreach $fields.other as $field}
+                        {include file="./SettingsFieldRow.inc.html" field=$field inline}
+                    {/foreach}
+
+                    {* New field *}
+                    <div class="s-new-field custom-mt-8 custom-mb-4">
+                        <a href="javascript:void(0);" class="js-edit-field-link button light-gray custom-mt-16 small">
+                            <i class="fas fa-plus-circle text-green custom-mr-4"></i> [s`New field`]
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    (function($) {
+        new WASettingsField({
+            '$wrapper': $('#s-field-settings-page')
+        });
+        $.wa.title.set({$_title|json_encode});
+    })(jQuery);
+</script>

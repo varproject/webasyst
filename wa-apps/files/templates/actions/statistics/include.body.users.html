@@ -1,0 +1,21 @@
+{foreach $stat as $item}
+    <tr class="f-statistics-item">
+        <td class="nowrap">
+            <div class="f-name-wrapper">
+                <i class="icon userpic userpic-20 custom-mr-4" style="background-image: url('{$item.photo_url_20}')"></i>
+                {$item.name|escape}
+            </div>
+        </td>
+        <td class="nowrap">{$item.size_str}</td>
+        <td>{$item.count}</td>
+    </tr>
+{/foreach}
+<tr class="f-total-size">
+    <td class="">
+        <div class="f-name-wrapper">
+            [`Total`]
+        </div>
+    </td>
+    <td>{$total.size_str}</td>
+    <td>{$total.count}</td>
+</tr>

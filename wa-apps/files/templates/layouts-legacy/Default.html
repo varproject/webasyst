@@ -1,0 +1,88 @@
+<!DOCTYPE html><html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    {$wa->css()}
+    <link href="{$wa_app_static_url}css-legacy/files.css?v{$wa->version()}" rel="stylesheet" type="text/css" />
+    <link href="{$wa_url}wa-content/css/jquery-ui/base/jquery.ui.autocomplete.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{$wa_url}wa-content/js/jquery-plugins/jquery-tagsinput/jquery.tagsinput.css">
+    <link rel="stylesheet" href="{$wa_url}wa-content/js/jquery-plugins/ibutton/jquery.ibutton.min.css">
+    <link rel="stylesheet" href="{$wa_url}wa-content/js/prettify/prettify.css">
+
+    <script src="{$wa_url}wa-content/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="{$wa_url}wa-content/js/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="{$wa_url}wa-content/js/prettify/prettify.js"></script>
+    <script src="{$wa_app_static_url}js-legacy/files.min.js?v{$wa->version()}"></script>
+    <script type="text/javascript" src="?action=loc&amp;v{$wa->version()}"></script>
+
+    {$wa->js()}
+
+    <!-- plugin hook: 'backend_assets' -->
+    {* @event backend_assets.%plugin_id% Extra head tag content *}
+    {foreach $backend_assets as $item}
+        {$item}
+    {/foreach}
+
+</head>
+<body>
+    {if empty($sidebar_width)}
+        {$sidebar_width = 200}
+    {/if}
+    <div id="wa">
+        {$wa->header()}
+        <div id="wa-app">
+
+            <aside class="f-sidebar-wrapper sidebar left{$sidebar_width}px" id="f-sidebar">
+                {$sidebar}
+            </aside>
+
+            <main class="f-content-wrapper content left{$sidebar_width}px" id="f-core">
+                <div class="block f-core-content f-load-block">
+                    <div class="f-loading">
+                        [`Loading...`]<i class="icon16 loading"></i>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div class="f-file-dragover-wrapper">
+            <div class="f-message-wrapper">
+                [`Drop anywhere to upload`]
+            </div>
+        </div>
+    </div>
+
+    {$uploader}
+
+    <div class="f-dialogs-section">
+        {include file="../include.dialogs.html" inline}
+    </div>
+
+
+
+    <script>
+        (function($) {
+            $(function() {
+                $.files.init({
+                    config: $.extend({$js_options|json_encode}, {
+                        sidebar_id: 'f-sidebar',
+                        file_list_id: 'f-catalog-wrapper',
+                        main_container_id: 'f-core',
+                        sidebar_width: (parseInt('{$sidebar_width}', 10) || false),
+                        contact_id: {$wa->user('id')},
+                        statistics_container_id: 'f-statistics-container',
+                        source_count: (parseInt('{$source_count}', 10) || 0),
+                    })
+                });
+            });
+        })(jQuery);
+    </script>
+
+    <!-- plugin hook: 'backend_layout' -->
+    {* @event backend_layout.%plugin_id%. Custom HTML blocks from plugins *}
+    {foreach $backend_layout_blocks as $html}
+        {$html}
+    {/foreach}
+
+</body>
+</html>

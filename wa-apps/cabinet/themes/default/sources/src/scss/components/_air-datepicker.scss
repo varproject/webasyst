@@ -1,0 +1,273 @@
+/*
+// .air-datepicker
+*/
+@use 'sass:math';
+@use 'sass:color';
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.datepicker {
+    border: none;
+    border-radius: .125rem;
+    font-family: inherit;
+    box-shadow: vs.$air-datepicker--shadow;
+    background: vs.$air-datepicker--bg-color;
+    color: vs.$air-datepicker--font-color;
+    font-size: func.rem(12);
+    font-weight: bt.$font-weight-medium;
+
+    .datepicker-inline & {
+        background: bt.$input-bg;
+        border: 1px solid bt.$input-border-color; // SKIP-PIXELS
+    }
+}
+.datepicker.datepicker-sa-embedded {
+    border: none;
+    border-radius: 0;
+    width: 100%;
+}
+
+.datepicker--pointer {
+    background: transparent;
+    border: none;
+    overflow: hidden;
+    pointer-events: none;
+
+    $local-size: .375rem;
+    $local-size-unitless: math.div($local-size, ($local-size * 0 + 1));
+    $local-container-size: ($local-size * 2) + 1rem;
+    $local-arrow-size-unitless: math.sqrt(math.pow($local-size-unitless, 2) * 2);
+    $local-arrow-size: $local-arrow-size-unitless * 1rem;
+
+    $local-arrow-bounding-box: math.sqrt(math.pow($local-arrow-size-unitless, 2) * 2) * 1rem;
+    $local-arrow-base-offset: math.div(($local-container-size - $local-arrow-bounding-box), 2) * -1;
+
+    $local-container-position: 100%;
+
+    --sa-popover-arrow-container-size: #{$local-container-size};
+    --sa-popover-arrow-box-size: #{$local-arrow-size};
+    --sa-popover-arrow-size: #{$local-size};
+
+    &:after {
+        display: block;
+        content: '';
+        border: none;
+        position: absolute;
+        width: var(--sa-popover-arrow-box-size);
+        height: var(--sa-popover-arrow-box-size);
+        background: vs.$air-datepicker--bg-color;
+        box-shadow: vs.$air-datepicker--base-shadow;
+    }
+
+    .-bottom-left- &, // SKIP-RTL
+    .-bottom-center- &,
+    .-bottom-right- &, // SKIP-RTL
+    .-top-left- &, // SKIP-RTL
+    .-top-center- &,
+    .-top-right- & { // SKIP-RTL
+        transform: none;
+
+        width: var(--sa-popover-arrow-container-size);
+        height: calc(var(--sa-popover-arrow-container-size) / 2);
+
+        &:after {
+            left: 50%; // SKIP-RTL
+        }
+    }
+
+    .-left-top- &, // SKIP-RTL
+    .-left-center- &, // SKIP-RTL
+    .-left-bottom- &, // SKIP-RTL
+    .-right-top- &, // SKIP-RTL
+    .-right-center- &, // SKIP-RTL
+    .-right-bottom- & { // SKIP-RTL
+        transform: none;
+
+        width: calc(var(--sa-popover-arrow-container-size) / 2);
+        height: var(--sa-popover-arrow-container-size);
+
+        &:after {
+            top: 50%;
+        }
+    }
+
+    .-bottom-left- &, // SKIP-RTL
+    .-bottom-center- &,
+    .-bottom-right- & { // SKIP-RTL
+        bottom: #{$local-container-position};
+
+        &:after {
+            transform-origin: top left; // SKIP-RTL
+            transform: rotateZ(45deg);
+            top: calc(100% - var(--sa-popover-arrow-size));
+        }
+    }
+    .-top-left- &, // SKIP-RTL
+    .-top-center- &,
+    .-top-right- & { // SKIP-RTL
+        top: #{$local-container-position};
+
+        &:after {
+            transform-origin: bottom left; // SKIP-RTL
+            transform: rotateZ(-45deg);
+            bottom: calc(100% - var(--sa-popover-arrow-size));
+        }
+    }
+
+    .-right-top- &, // SKIP-RTL
+    .-right-center- &, // SKIP-RTL
+    .-right-bottom- & { // SKIP-RTL
+        @include dir.scope {
+            #{dir.$inset-inline-end}: #{$local-container-position};
+        }
+
+        &:after {
+            @include dir.scope {
+                transform-origin: top #{dir.$inline-start};
+                transform: rotateZ(#{-45deg * dir.$transform-direction});
+                #{dir.$inset-inline-start}: calc(100% - var(--sa-popover-arrow-size));
+            }
+        }
+    }
+
+    .-left-top- &, // SKIP-RTL
+    .-left-center- &, // SKIP-RTL
+    .-left-bottom- & { // SKIP-RTL
+        @include dir.scope {
+            #{dir.$inset-inline-start}: #{$local-container-position};
+        }
+
+        &:after {
+            @include dir.scope {
+                transform-origin: top #{dir.$inline-end};
+                transform: rotateZ(#{45deg * dir.$transform-direction});
+                #{dir.$inset-inline-end}: calc(100% - var(--sa-popover-arrow-size));
+            }
+        }
+    }
+
+    .-top-left- &, // SKIP-RTL
+    .-bottom-left- & { // SKIP-RTL
+        @include dir.scope {
+            #{dir.$inset-inline-start}: #{$local-arrow-base-offset + $local-size};
+            #{dir.$inset-inline-end}: auto;
+        }
+    }
+    .-top-right- &, // SKIP-RTL
+    .-bottom-right- & { // SKIP-RTL
+        @include dir.scope {
+            #{dir.$inset-inline-start}: auto;
+            #{dir.$inset-inline-end}: #{$local-arrow-base-offset + $local-size};
+        }
+    }
+    .-top-center- &,
+    .-bottom-center- & {
+        left: calc(50% - #{math.div($local-container-size, 2)}); // SKIP-RTL
+    }
+    .-left-top- &, // SKIP-RTL
+    .-right-top- & { // SKIP-RTL
+        top: #{$local-arrow-base-offset + $local-size};
+    }
+    .-left-bottom- &, // SKIP-RTL
+    .-right-bottom- & { // SKIP-RTL
+        bottom: #{$local-arrow-base-offset + $local-size};
+    }
+    .-left-center- &, // SKIP-RTL
+    .-right-center- & { // SKIP-RTL
+        top: calc(50% - #{math.div($local-container-size, 2)});
+    }
+}
+.datepicker--nav-action svg {
+    @include dir.scope {
+        transform: scaleX(#{dir.$transform-direction}); // SKIP-RTL
+    }
+}
+.datepicker--nav-title {
+    border-radius: .125rem;
+    font-size: func.rem(13);
+
+    &:hover {
+        background: vs.$air-datepicker--hover-bg-color;
+    }
+
+    i {
+        color: vs.$air-datepicker--font-dim-color;
+    }
+}
+.datepicker--cell {
+    border-radius: .125rem;
+}
+.datepicker--cell.-focus- {
+    background: vs.$air-datepicker--hover-bg-color;
+}
+.datepicker--cell.-current- {
+    background: color.scale(vs.$air-datepicker__selected-cell--bg-color, $alpha: -75%);
+    color: inherit;
+}
+.datepicker--cell.-selected-,
+.datepicker--cell.-selected-.-current- {
+    &,
+    &:hover,
+    &.-other-month-,
+    &.-other-decade- {
+        background: vs.$air-datepicker__selected-cell--bg-color;
+        color: vs.$air-datepicker__selected-cell--font-color;
+    }
+
+    .datepicker-sa-dot {
+        color: currentColor;
+        opacity: .3;
+    }
+}
+.datepicker--days-names {
+    margin-top: .375rem;
+    margin-bottom: .25rem;
+}
+.datepicker--day-name {
+    color: vs.$air-datepicker__day-name--font-color;
+    font-size: func.rem(11);
+}
+.datepicker--cell-day.-other-month-,
+.datepicker--cell-year.-other-decade- {
+    font-weight: bt.$font-weight-normal;
+
+    &,
+    &:hover {
+        color: vs.$air-datepicker--font-dim-color;
+    }
+}
+.datepicker--nav-action:hover,
+.datepicker--nav-title:hover {
+    background: vs.$air-datepicker--hover-bg-color;
+    border-radius: .125rem;
+}
+.datepicker--cell {
+    padding: .4375rem 0;
+    user-select: none;
+}
+.datepicker--cell-day {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: auto;
+}
+
+.datepicker-sa-dots {
+    margin: -.0625rem 0 -.1875rem;
+    display: flex;
+}
+.datepicker-sa-dot {
+    --datepicker-sa-dot--color: #{vs.$air-datepicker--dot-color};
+
+    color: var(--datepicker-sa-dot--color);
+    width: .25rem;
+    height: .25rem;
+    border-radius: 50%;
+    background: currentColor;
+}
+.datepicker-sa-dot + .datepicker-sa-dot {
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .125rem;
+    }
+}

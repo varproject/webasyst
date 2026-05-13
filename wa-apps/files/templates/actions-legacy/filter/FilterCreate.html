@@ -1,0 +1,82 @@
+{capture assign="settings"}
+    <h1 class="h-main-title">[`Create filter`]</h1>
+    {$filter_settings_html}
+    {foreach $file_ids as $file_id}
+        <input type="hidden" name="file_id[]" value="{$file_id}">
+    {/foreach}
+{/capture}
+
+{capture assign="buttons"}
+    {$wa->csrf()}
+    <input class="button green" type="submit" value="[`Create filter`]">
+    <i class="icon16 loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+{/capture}
+
+{if $filter.acting_type === filesFilterModel::ACTING_TYPE_LIST}
+    {$dialog_id = uniqid('f-create-filter-dialog-')}
+    <div class="dialog width650px height300px f-create-filter-dialog" id="{$dialog_id}" style="display:none;">
+        <form>
+            <div class="dialog-background"></div>
+            <div class="dialog-window">
+                <div class="dialog-content">
+                    <div class="dialog-content-indent">
+                        {$settings}
+                    </div>
+                </div>
+                <div class="dialog-buttons">
+                    <div class="dialog-buttons-gradient">
+                        {$buttons}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+            $(function() {
+                var dialog = $('#{$dialog_id}');
+                $('.f-create-folder-dialog').not(dialog).remove();
+                dialog.filesDialog({
+                    onLoad: function() {
+                        $('.f-filter-settings', dialog).trigger('reinit_ibuttons');
+                    },
+                    onSubmit: function() {
+                        $.files.filterSettingsFormSubmit($(this), {
+                            onSuccess: function() {
+                                dialog.trigger('close').remove();
+                            }
+                        });
+                        return false;
+                    }
+                });
+            });
+      </script>
+{else}
+    <div id="f-create-filter-block">
+        <form>
+            {$settings}
+            {$buttons}
+        </form>
+    </div>
+    <script>
+            $(function() {
+                (function(container) {
+                    container.find('form').submit(function() {
+                        $.files.filterSettingsFormSubmit($(this));
+                        return false;
+                    });
+                    container.find('.cancel').click(function() {
+                        history.back();
+                    });
+                })($('#f-create-filter-block'));
+            });
+      </script>
+{/if}
+
+
+<script>
+    $(function() {
+        $.files.config.getSidebar().trigger('notify', [{
+            hash: 'filter/new'
+        }]);
+    });
+</script>

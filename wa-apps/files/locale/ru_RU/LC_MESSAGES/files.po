@@ -1,0 +1,1151 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: files\n"
+"POT-Creation-Date: 2015-08-17 19:37+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: files\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.3.2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+msgid "Files"
+msgstr "Файлы"
+
+msgid "Share this folder"
+msgstr "Совместный доступ"
+
+msgid "Download"
+msgstr "Скачать"
+
+msgid "download"
+msgstr "скачать"
+
+msgid "Move"
+msgstr "Переместить"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Name"
+msgstr "Название"
+
+msgid "Link"
+msgstr "Ссылка"
+
+msgid "Size"
+msgstr "Размер"
+
+msgid "Meta"
+msgstr "Мета"
+
+msgid "Upload files"
+msgstr "Загрузить файлы"
+
+msgid "All files"
+msgstr "Все файлы"
+
+msgid "Favorites"
+msgstr "Избранное"
+
+msgid "Document"
+msgstr "Документ"
+
+msgid "Images"
+msgstr "Изображения"
+
+msgid "Input file name"
+msgstr "Укажите имя файла"
+
+msgid "Storage"
+msgstr "Папки"
+
+msgid "Shared"
+msgstr "Общие"
+
+msgid "Trash"
+msgstr "Корзина"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Loading..."
+msgstr "Загрузка..."
+
+msgid "Create folder"
+msgstr "Создать папку"
+
+msgid "Create subfolder"
+msgstr "Создать подпапку"
+
+msgid "Common files"
+msgstr "Общие файлы"
+
+msgid "No access"
+msgstr "Доступ запрещен"
+
+msgid "View only"
+msgstr "Только просмотр"
+
+msgid "View and comment"
+msgstr "Просмотр и комментирование"
+
+msgid "Add new files"
+msgstr "Добавление новых файлов"
+
+msgid "Full access"
+msgstr "Полный доступ"
+
+msgid "My files"
+msgstr "Мои файлы"
+
+msgid "Show more files"
+msgstr "Показать больше файлов"
+
+msgid "Loading"
+msgstr "Загрузка"
+
+msgid "%d comment"
+msgid_plural "%d comments"
+msgstr[0] "%d комментарий"
+msgstr[1] "%d комментария"
+msgstr[2] "%d комментариев"
+
+msgid "%d file"
+msgid_plural "%d files"
+msgstr[0] "%d файл"
+msgstr[1] "%d файла"
+msgstr[2] "%d файлов"
+
+msgid "of %d"
+msgstr "из %d"
+
+msgid "Download file"
+msgstr "Скачать файл"
+
+msgid "Uploaded"
+msgstr "Загружен"
+
+msgid "Updated"
+msgstr "Обновлен"
+
+msgid "Contact doesn't exist"
+msgstr "Контакт не существует"
+
+msgid "Comments"
+msgstr "Комментарии"
+
+msgid "Add comment"
+msgstr "Добавить комментарий"
+
+msgid "No permissions to create a folder"
+msgstr "Недостаточно прав для создания папки"
+
+msgid "or"
+msgstr "или"
+
+msgid "cancel"
+msgstr "отменить"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Couldn't create folder"
+msgstr "Не удалось создать папку"
+
+msgid "Create storage"
+msgstr "Создать папку"
+
+msgid "Can create storage"
+msgstr "Может создавать корневые папки"
+
+msgid "Storage name"
+msgstr "Название папки"
+
+msgid "Access rights"
+msgstr "Доступ"
+
+msgid "There are no user groups in your Webasyst account. Add groups using Contacts app to be able to manage access to storage."
+msgstr "В вашем Webasyst-аккаунте не настроены группы пользователей. Создайте группы с помощью приложения «Контакты», чтобы распределить права доступа к папке."
+
+msgid "Couldn't create storage"
+msgstr "Не удалось создать папку"
+
+msgid "Share file"
+msgstr "Совместный доступ"
+
+msgid "Share folder"
+msgstr "Совместный доступ"
+
+msgid "Share storage"
+msgstr "Совместный доступ"
+
+msgid "Groups/users"
+msgstr "Группы и пользователи"
+
+msgid "Access level"
+msgstr "Уровень доступа"
+
+msgid "Couldn't share folder"
+msgstr "Не удалось сделать папку общей"
+
+msgid "Select files"
+msgstr "Выберите файлы"
+
+msgid "or drag files here"
+msgstr "или перетащите файлы сюда"
+
+msgid "Start upload"
+msgstr "Начать загрузку"
+
+msgid "Stop upload"
+msgstr "Остановить загрузку"
+
+msgid "Files were uploaded with errors."
+msgstr "Файлы загружены с ошибками."
+
+msgid "Server error"
+msgstr "Ошибка сервера"
+
+msgid "Upload files (%d)"
+msgstr "Загрузка файлов (%d)"
+
+msgid "Upload to"
+msgstr "Место назначения"
+
+msgid "Empty result"
+msgstr "Пустой результат"
+
+msgid "Insufficient file write permissions for folder %s."
+msgstr "Недостаточные права на запись файлов для папки %s."
+
+msgid "Database error"
+msgstr "Ошибка базы данных"
+
+msgid "This field is required"
+msgstr "Это обязательное поле"
+
+msgid "There are forbidden characters."
+msgstr "Введены недопустимые символы."
+
+msgid "Name is not unique. Try to rename."
+msgstr "Введено неуникальное название. Измените его."
+
+msgid "Not unique"
+msgstr "Неуникальное название"
+
+msgid "Saving error"
+msgstr "Ошибка сохранения"
+
+msgid "Rename"
+msgstr "Переименовать"
+
+msgid "Restore"
+msgstr "Восстановить"
+
+msgid "Delete permanently"
+msgstr "Удалить навсегда"
+
+msgid "An error occurred"
+msgstr "Произошла ошибка"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "%d file will be deleted"
+msgid_plural "%d files will be deleted"
+msgstr[0] "%d файл будет удален"
+msgstr[1] "%d файла будут удалены"
+msgstr[2] "%d файлов будут удалены"
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "Private link"
+msgstr "Приватная ссылка"
+
+msgid "Remove link"
+msgstr "Удалить ссылку"
+
+msgid "Files with the following names already exist in the specified folder"
+msgstr "Файлы с указанными именами уже существуют в указанной папке"
+
+msgid "Select an action to resolve the name conflict:"
+msgstr "Выберите действие, чтобы разрешить конфликт имен:"
+
+msgid "Replace"
+msgstr "Заменить"
+
+msgid "Exclude"
+msgstr "Исключить"
+
+msgid "Move files and folders"
+msgstr "Переместить файлы и папки"
+
+msgid "No permissions to move these files"
+msgstr "Недостаточно прав для перемещения этих файлов"
+
+msgid "Move the rest"
+msgstr "Переместить остальные"
+
+msgid "Visibility"
+msgstr "Видимость"
+
+msgid "To me only"
+msgstr "Только мне"
+
+msgid "To everyone"
+msgstr "Всем"
+
+msgid "Everyone"
+msgstr "Общий"
+
+msgid "Icon"
+msgstr "Иконка"
+
+msgid "Filter conditions"
+msgstr "Условия фильтра"
+
+msgid "File name"
+msgstr "Имя файла"
+
+msgid "All storages"
+msgstr "Все папки"
+
+msgid "File type"
+msgstr "Тип файла"
+
+msgid "All types"
+msgstr "Все типы"
+
+msgid "Custom file name extension"
+msgstr "Указать другое расширение имени файла"
+
+msgid "Submit"
+msgstr "Сохранить"
+
+msgid "Delete filter"
+msgstr "Удалить фильтр"
+
+msgid "Are you sure?"
+msgstr "Вы уверены?"
+
+msgid "Create filter"
+msgstr "Создать фильтр"
+
+msgid "Create"
+msgstr "Создать"
+
+msgid "Who already got shared access"
+msgstr "Кто уже получил совместный доступ"
+
+msgid "Edit share settings"
+msgstr "Настройки общего доступа"
+
+msgid "Save settings"
+msgstr "Сохранить настройки"
+
+msgid "Remove all sharings"
+msgstr "Отменить все настройки совместного доступа"
+
+msgid "Couldn't delete sharings"
+msgstr "Не удалось удалить настройки совместного доступа"
+
+msgid "Couldn't save settings"
+msgstr "Ошибка сохранения настроек"
+
+msgid "Rename file"
+msgstr "Переименовать файл"
+
+msgid "New filter"
+msgstr "Новый фильтр"
+
+msgid "Plugins"
+msgstr "Плагины"
+
+msgid "Files from the same place"
+msgstr "Файлы из одного источника"
+
+msgid "Couldn't save filter"
+msgstr "Не удалось сохранить фильтр"
+
+msgid "Documents"
+msgstr "Документы"
+
+msgid "Extension"
+msgstr "Расширение"
+
+msgid "Search results of"
+msgstr "Результаты поиска"
+
+msgid "Text"
+msgstr "Текст"
+
+msgid "Video"
+msgstr "Видео"
+
+msgid "Audio"
+msgstr "Аудио"
+
+msgid "eBooks"
+msgstr "Эл. книги"
+
+msgid "Search results"
+msgstr "Результаты поиска"
+
+msgid "Group “%s”"
+msgstr "Группа «%s»"
+
+msgid "User %s"
+msgstr "Пользователь %s"
+
+msgid "Excluded from upload because of name conflict."
+msgstr "Исключены из загрузки из-за конфликта имен."
+
+msgid "File is not visible in the public frontend because there are no routing rules for the Files app in your website settings. Use Site app (“Structure” section) to settle Files app on your website."
+msgstr "Файл не будет виден пользователям фронтенда, потому что для приложения «Файлы» не заданы правила маршрутизации. Поселите «Файлы» в настройках приложения «Сайт» (раздел «Структура»)."
+
+msgid "Copy"
+msgstr "Копировать"
+
+msgid "Mark"
+msgstr "Выделить"
+
+msgid "Share this file"
+msgstr "Совместный доступ"
+
+msgid "First "
+msgstr "Первые "
+
+msgid "Probably binary data in this file!"
+msgstr "Возможно, файл содержит бинарные данные!"
+
+msgid "Ctrl+Enter"
+msgstr ""
+
+msgid "Delete the file"
+msgstr "Удалить этот файл"
+
+msgid "You are going to change file extension. This may cause unavailability of file content. Are you sure?"
+msgstr "Вы собираетесь изменить расширение имени файла. Это может привести к невозможности прочитать содержимое файла. Вы уверены?"
+
+msgid "Restore files and folders"
+msgstr "Восстановить файлы и папки"
+
+msgid "Restore the rest"
+msgstr "Восстановить оставшееся"
+
+msgid "Chosen groups/users"
+msgstr "Выбранные группы/пользователи"
+
+msgid "Delete storage"
+msgstr "Удалить папку"
+
+msgid "Color"
+msgstr "Цвет"
+
+msgid "None"
+msgstr "Нет"
+
+msgid "Delete storage and all files"
+msgstr "Удалить папку и все файлы"
+
+msgid "This will permanently delete “%s”, and <strong>all %d files and folders</strong>. Are you sure?"
+msgstr "Будет навсегда удалено «%s», а также <strong>все %d файлов и папок</strong>. Вы уверены?"
+
+msgid "Copy files"
+msgstr "Копировать файлы"
+
+msgid "No permissions to copy these files"
+msgstr "Недостаточно прав доступа для копирования этих файлов"
+
+msgid "Copying started"
+msgstr "Копирование запущено"
+
+msgid "Mark files"
+msgstr "Выделить файлы"
+
+msgid "Change upload path"
+msgstr "Изменить папку загрузки"
+
+msgid "Change"
+msgstr "Изменить"
+
+msgid "change"
+msgstr "изменить"
+
+msgid "No permissions to rename this file"
+msgstr "Недостаточно прав доступа для переименования этого файла"
+
+msgid "New source"
+msgstr "Новый источник"
+
+msgid "Sources"
+msgstr "Источники"
+
+msgid "File IDs:"
+msgstr "Идентификаторы файлов:"
+
+msgid "Frontend type"
+msgstr "Тип фронтенда"
+
+msgid "Published files"
+msgstr "Опубликованные файлы"
+
+msgid "Incorrect data for saving"
+msgstr "Некорректные данные для сохранения"
+
+msgid "Load more"
+msgstr "Показать еще"
+
+msgid "Uploaded %d file"
+msgid_plural "Uploaded %d files"
+msgstr[0] "Загружен %d файл"
+msgstr[1] "Загружены %d файла"
+msgstr[2] "Загружено %d файлов"
+
+msgid "B"
+msgstr "Б"
+
+msgid "KB"
+msgstr "КБ"
+
+msgid "MB"
+msgstr "МБ"
+
+msgid "Welcome to Files application!"
+msgstr "Добро пожаловать в приложение «Файлы»!"
+
+msgid "Start uploading files by clicking the link above or by dragging selected files anywhere on this page."
+msgstr "Начните загрузку файлов с помощью кнопки выше или перетаскивая файлы в любое место на этой странице."
+
+msgid "Drag some photos anywhere on this page to start upload"
+msgstr "Перетащите фотографии в любое место на этой странице, чтобы начать загрузку"
+
+msgid "Info"
+msgstr "Информация"
+
+msgid "Storage ID"
+msgstr "ID папки"
+
+msgid "Storage access type"
+msgstr "Доступ к папке"
+
+msgid "Total size of files"
+msgstr "Общий размер файлов"
+
+msgid "Personal"
+msgstr "Приватный"
+
+msgid "Limited"
+msgstr "Ограниченный"
+
+msgid "Unknown"
+msgstr "Неизвестное"
+
+msgid "Total size"
+msgstr "Общий размер"
+
+msgid "Release<br> to create new filter."
+msgstr "Отпустите,<br> чтобы создать новый новый фильтр."
+
+msgid "Search files"
+msgstr "Поиск файлов"
+
+msgid "New storage"
+msgstr "Новая папка"
+
+msgid "Only you can access files in this storage"
+msgstr "Только вы имеете доступ к файлам в этой папке"
+
+msgid "Only you can access this file"
+msgstr "Только вы имеете доступ к этому файлу"
+
+msgid "Only you can access files in this folder"
+msgstr "Только вы имеете доступ к файлам в этой папке"
+
+msgid "Admin"
+msgstr "Администратор"
+
+msgid "Root"
+msgstr "Корень"
+
+msgid "No permissions to delete these files"
+msgstr "Недостаточно прав для удаления этих файлов"
+
+msgid "Files will be deleted PERMANENTLY without the ability to restore. Are you sure?"
+msgstr "Файлы будут удалены НАВСЕГДА без возможности восстановления. Вы уверены?"
+
+msgid "Files will be moved to trash. Are you sure?"
+msgstr "Файлы будут перенесены в корзину. Вы уверены?"
+
+msgid "You don’t have permissions to delete these files."
+msgstr "У вас недостаточно прав доступа для удаления этих файлов."
+
+msgid "Delete the rest"
+msgstr "Удалить остальные"
+
+msgid "Send as attachment"
+msgstr "Отправить по почте"
+
+msgid "Delete file"
+msgstr "Удалить файл"
+
+msgid "Uploaded by"
+msgstr "Загрузил пользователь"
+
+msgid "enter tags"
+msgstr "Добавить тег"
+
+msgid "Mark the rest"
+msgstr "Выделить остальные"
+
+msgid "No permissions to mark this files"
+msgstr "Недостаточно прав доступа для маркировки этих файлов"
+
+msgid "To:"
+msgstr "Кому:"
+
+msgid "One email per line or separated by a \";\""
+msgstr "Указывайте новые email-адреса с новой строки или разделяйте адреса символом «;»"
+
+msgid "Subject:"
+msgstr "Тема:"
+
+msgid "Text:"
+msgstr "Текст:"
+
+msgid "Attachments:"
+msgstr "Вложения:"
+
+msgid "File size exceeds the limit set for email messages."
+msgstr "Размер файлов превышает установленное ограничение для email-сообщений."
+
+msgid "Send"
+msgstr "Отправить"
+
+msgid "Notifications on new uploaded files"
+msgstr "Уведомления о новых загружаемых файлах"
+
+msgid "App icon badge count"
+msgstr "Счетчик на иконке"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Selected users"
+msgstr "Выбранные пользователи"
+
+msgid "Click “Save” button below to commit changes."
+msgstr "Сохраните изменения с помощью кнопки «Сохранить»."
+
+msgid "Create link"
+msgstr "Создать ссылку"
+
+msgid "Limited access"
+msgstr "Ограниченный доступ"
+
+msgid "Insufficient access rights"
+msgstr "Недостаточные права доступа"
+
+msgid "Edit source \"%s\""
+msgstr "Редактировать источник «%s»"
+
+msgid "Create source"
+msgstr "Создать источник"
+
+msgid "Delete source"
+msgstr "Удалить источник"
+
+msgid "Source name"
+msgstr "Имя источника"
+
+msgid "Source provider"
+msgstr "Поставщик источника"
+
+msgid "Source paired with"
+msgstr "Источник синхронизирован с"
+
+msgid "Select folder to pair"
+msgstr "Выберите папку для синхронизации"
+
+msgid "Pair"
+msgstr "Синхронизировать"
+
+msgid "Save source"
+msgstr "Сохранить источник"
+
+msgid "Source adapter not found"
+msgstr "Адаптер источника не найден"
+
+msgid "There are no source provider plugins."
+msgstr "Плагины для подключения поставщиков источников отсутствуют."
+
+msgid "All backend users"
+msgstr "Все пользователи бекенда"
+
+msgid "Only certain backend users will be able to access this storage"
+msgstr "Только определенные пользователи бекенда будут иметь доступ этой папке"
+
+msgid "Clear trash"
+msgstr "Очистить корзину"
+
+msgid "Do you really want to clean the trash and delete all files?"
+msgstr "Вы действительно хотите очистить корзину и удалить из нее все файлы?"
+
+msgid "Duplicate"
+msgstr "Создать копию"
+
+msgid "Please specify valid email address"
+msgstr "Укажите правильный email-адрес"
+
+msgid "Invalid email address"
+msgstr "Неверный email-адрес"
+
+msgid "Source settings updated"
+msgstr "Настройки источника обновлены"
+
+msgid "kB"
+msgstr "КБ"
+
+msgid "Off"
+msgstr "Выкл"
+
+msgid "My favorite folders only"
+msgstr "Только мои избранные папки"
+
+msgid "All folders"
+msgstr "Все папки"
+
+msgid "New shared files and folders"
+msgstr "Новые общие файлы и папки"
+
+msgid "New uploaded files (favorite folders only)"
+msgstr "Новые загруженные файлы (только в избранных папках)"
+
+msgid "New uploaded files (all folders)"
+msgstr "Новые загруженные файлы (во всех папках)"
+
+msgid "uploaded"
+msgstr "загрузил"
+
+msgid "created new folder"
+msgstr "создал новую папку"
+
+msgid "created new storage"
+msgstr "создал новую папку"
+
+msgid "renamed"
+msgstr "переименовал"
+
+msgid "moved"
+msgstr "переместил"
+
+msgid "duplicated"
+msgstr "создал копию"
+
+msgid "deleted"
+msgstr "удалил"
+
+msgid "restored"
+msgstr "восстановил"
+
+msgid "WebDav"
+msgstr ""
+
+msgid "Saved"
+msgstr "Сохранено"
+
+msgid "Popular tags"
+msgstr "Популярные теги"
+
+msgid "Remove"
+msgstr "Удалить"
+
+msgid "Skip"
+msgstr "Пропустить"
+
+msgid "Start typing user name..."
+msgstr "Начните писать имя пользователя..."
+
+msgid "Link to this file"
+msgstr "Ссылка на этот файл"
+
+msgid "Link to this folder"
+msgstr "Ссылка на эту папку"
+
+msgid "Create link to this file"
+msgstr "Создать ссылку на этот файл"
+
+msgid "Create link to this folder"
+msgstr "Создать ссылку на эту папку"
+
+msgid "Share with the team"
+msgstr "Настроить доступ по пользователям"
+
+msgid "Currently shared with <strong>%s</strong>"
+msgstr "Доступ: <strong>%s</strong>"
+
+msgid "Customize"
+msgstr "Настроить"
+
+msgid "Assign tags"
+msgstr "Назначить теги"
+
+msgid "Assign"
+msgstr "Назначить"
+
+msgid "Files uploaded with errors"
+msgstr "Файлы, загруженные с ошибками"
+
+msgid "share"
+msgstr "настроить доступ"
+
+msgid "favorites"
+msgstr "избранное"
+
+msgid "Sharing settings"
+msgstr "Настройки общего доступа"
+
+msgid "Drop anywhere to upload"
+msgstr "Перетащите в любое место, чтобы загрузить"
+
+msgid "Group:"
+msgstr "Группа:"
+
+msgid "User:"
+msgstr "Пользователь:"
+
+msgid "Files IDs:"
+msgstr "ID файлов:"
+
+msgid "Me only"
+msgstr "Только я"
+
+msgid "Release<br> to create new filter"
+msgstr "Создать<br> новый фильтр"
+
+msgid "Add tag"
+msgstr "Добавить тег"
+
+msgid "There are a forbidden symbols"
+msgstr "Указаны недопустимые символы"
+
+msgid "Uploaded by %s"
+msgstr "Загрузил %s"
+
+msgid "Created by %s"
+msgstr "Создал %s"
+
+msgid "Storage not found"
+msgstr "Папка не найдена"
+
+msgid "Access denied to storage"
+msgstr "Доступ в папку закрыт"
+
+msgid "Folder not found"
+msgstr "Папка не найдена"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "empty"
+msgstr "пусто"
+
+msgid "Total"
+msgstr "Итого"
+
+msgid "clear"
+msgstr "очистить"
+
+msgid "Trash summary"
+msgstr "Корзины"
+
+msgid "User statistics"
+msgstr "Пользователи"
+
+msgid "User"
+msgstr "Пользователь"
+
+msgid "Storage summary"
+msgstr "Папки"
+
+msgid "File type statistics"
+msgstr "Типы файлов"
+
+msgid "File extension"
+msgstr "Расширение файла"
+
+msgid "Statistics"
+msgstr "Статистика"
+
+msgid "All"
+msgstr "Все"
+
+msgid "You have not enough rights to upload files"
+msgstr "У вас недостаточно прав для загрузки файлов"
+
+msgid "Release to create new filter"
+msgstr "Сохранить как фильтр"
+
+msgid "Deleted contact"
+msgstr "Контакт удален"
+
+msgid "Page not found"
+msgstr "Страница не найдена"
+
+msgid "Access denied"
+msgstr "Доступ запрещен"
+
+msgid "Please contact app developer."
+msgstr "Свяжитесь с разработчиком приложения."
+
+msgid "Group %s"
+msgstr "Группа %s"
+
+msgid "No available storages"
+msgstr "Нет доступных папок"
+
+msgid "Rename folder"
+msgstr "Переименовать папку"
+
+msgid "File size exceeds the limit"
+msgstr "Размер файла превысил допустимое значение"
+
+msgid "Not allowed file type"
+msgstr "Недопустимый тип файла"
+
+msgid "Max number of files exceeded"
+msgstr "Количество загружаемых файлов превысило максимально допустимое значение"
+
+msgid "Uploaded bytes exceed file size"
+msgstr "Количество полученных байт превысило объявленный размер файла"
+
+msgid "Unidentified error"
+msgstr "Неопознанная ошибка"
+
+msgid "All delete files"
+msgstr "Все удаленные файлы"
+
+msgid "My private files"
+msgstr "Мои личные файлы"
+
+msgid "Connect new source"
+msgstr "Подключение внешнего источника"
+
+msgid "Connect"
+msgstr "Подключить"
+
+msgid "Provider"
+msgstr "Провайдер"
+
+msgid "Load authorize page"
+msgstr "Загрузка страницы авторизации"
+
+msgid "Receive connection code"
+msgstr "Получить код подключения"
+
+msgid "Connection code"
+msgstr "Код подключения"
+
+msgid "Source %s"
+msgstr "Внешний источник %s"
+
+msgid "Owner"
+msgstr "Владелец"
+
+msgid "Mounted"
+msgstr "Подключен"
+
+msgid "Mount point"
+msgstr "Точка подключения"
+
+msgid "Mount as storage"
+msgstr "Подключить в корень"
+
+msgid "Mount as subfolder"
+msgstr "Подключить как подпапку"
+
+msgid "Unmount source"
+msgstr "Отключить источник"
+
+msgid "This will remove source and related folder from application. All files inside your source will remain unchanged."
+msgstr "Источник и связанные папки будут удалены из приложения. Все оригинальные файлы во внешнем источнике останутся без изменений."
+
+msgid "Unmount"
+msgstr "Отключить"
+
+msgid "Mount"
+msgstr "Подключить"
+
+msgid "Source authorization code is canceled or expired"
+msgstr "Код авторизации внешнего источника истек или был отменен"
+
+msgid "Renew authorization code"
+msgstr "Обновить код авторизации"
+
+msgid "You need to install any source plugin before connecting sources."
+msgstr "Для подключения внешних источников необходимо установить соответствующие плагины."
+
+msgid "Delete folder"
+msgstr "Удалить папку"
+
+msgid "Public link to"
+msgstr "Ссылка на"
+
+msgid "Public link"
+msgstr "Ссылка"
+
+msgid "Right now this content is private and can be viewed by authorized backend users only. Enabling public link option will create a secret direct link that you can send to other people so they can access and download this content too."
+msgstr "Сейчас доступ есть только у зарегистрированных пользователей бекенда с необходимыми правами доступа. Прямая ссылка — это секретная ссылка на скачивание, не требующая авторизации. Удобный способ открыть доступ к данным кому угодно без предоставления доступа к бекенду."
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "via %s (%s)"
+msgstr "через %s (%s)"
+
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] "%d элемент"
+msgstr[1] "%d элемента"
+msgstr[2] "%d элементов"
+
+msgid "public link"
+msgstr "ссылка"
+
+msgid "Are you sure you want move folder <strong>\"%s\"</strong> and all files in it to trash?"
+msgstr "Переместить в корзину папку <strong>«%s»</strong> и все файлы в ней?"
+
+msgid "Sync is in process. No changes available until synchronization finish."
+msgstr "Синхронизация выполняется. Изменения не будут доступны до ее окончания ."
+
+msgid "Register application on %s"
+msgstr "Зарегистрировать приложение на %s"
+
+msgid "Connect %s account:"
+msgstr "Подключить аккаунт %s:"
+
+msgid "Synchronization process may take several minutes."
+msgstr "Процесс синхронизации может занять несколько минут."
+
+msgid "Do not leave this page until the process is completed."
+msgstr "Не покидайте эту страницу до завершения процесса."
+
+msgid "Application"
+msgstr "Приложение"
+
+msgid "Source not found"
+msgstr "Источник не найден"
+
+msgid "Can't create storage"
+msgstr "Не удалось создать папку"
+
+msgid "Can't create folder"
+msgstr "Не удалось создать подпапку"
+
+msgid "All files from remote source have been pulled"
+msgstr "Получены все файлы из удаленного источника"
+
+msgid "Source plugin not found"
+msgstr "Плагин источника не найден"
+
+msgid "Without a <tt>cron</tt> job set up for copy task file copy process may complete at slower rate."
+msgstr "Без настройки <tt>cron</tt> для задачи копирования, процесс копирования больших файлов может выполняться медленнее."
+
+msgid "Without a <tt>cron</tt> job set up for external sources, the synchronization process may complete at a slower rate."
+msgstr "Без настройки <tt>cron</tt> для обмена данными с внешними источниками процедура синхронизации может выполняться медленнее."
+
+msgid "Please set up a <tt>cron</tt> job (<a href=\"http://www.webasyst.com/framework/docs/server/cron/\" target=\"_blank\">view instructions</a>) using the command specified below in your web-hosting control panel:"
+msgstr "Настройте задание <tt>cron</tt> (<a href=\"http://www.webasyst.ru/developers/docs/tips/cron/\" target=\"_blank\">инструкция по настройке</a>) с указанной ниже командой в контрольной панели вашего хостинга:"
+
+msgid "<tt>cron</tt> job is set up properly."
+msgstr "<tt>cron</tt> настроен и работает."
+
+msgid "Cron Tasks"
+msgstr "Задачи cron"
+
+msgid "This is your personal folder. No one but you has access here."
+msgstr "Это ваша персональная папка. Никто, кроме вас, не имеет к ней доступа."
+
+msgid "If you need to share files with someone else use folders with common access."
+msgstr "Используйте папки общего доступа, если вы планируете совместную работу с вашими файлами."
+
+msgid "Cron tasks"
+msgstr "Задачи cron"
+
+msgid "You need the settlement of Files to create public link. Use <a href=\"%s\">Site</a> to create new settlement."
+msgstr "Для создания ссылок требуется поселение приложения «Файлы» во фронтенде. Создайте поселение в приложении «<a href=\"%s\">Сайт</a>»."
+
+msgid "Copy process may take several minutes."
+msgstr "Процесс копирования может занять несколько минут."
+
+msgid "Continue in background"
+msgstr "Закрыть и продолжить в фоновом режиме"
+
+msgid "Cancel the copy process? All files that is not finished will be deleted"
+msgstr "Отменить копирование?"
+
+msgid "Move process may take several minutes."
+msgstr "Процесс перемещения может занять несколько минут."
+
+msgid "specify settings"
+msgstr "настроить"
+
+msgid "Account"
+msgstr "Аккаунт"
+
+msgid "Authorization code renewal is not possible. You need to unlink the source and connect it again."
+msgstr "Обновление кода авторизации невозможно. Для работы с источником, отключите его и подключите повторно."
+
+msgid "Authorize failed"
+msgstr "В доступе отказано"
+
+msgid "All files have been copied"
+msgstr "Копирование всех файлов завершено"
+
+msgid "Move files"
+msgstr "Перемещение файлов"
+
+msgid "Maximum amount of folders for one copy process is %s."
+msgstr "Максимально допустимое количество папок &mdash; %s."
+
+msgid "Storages"
+msgstr "Папки"
+
+msgid "Too many requests to external source service. Please try again in a few minutes."
+msgstr "Слишком много запросов на внешний сервис. Попробуйте позже"
+
+msgid "GB"
+msgstr "ГБ"
+
+msgid "There are no files available to pack"
+msgstr "Нет доступных файлов для упаковки в архив"
+
+msgid "Choose destination folder or storage"
+msgstr "Папка для восстановления файлов не выбрана"
+
+msgid "added new comment"
+msgstr "добавлен новый комментарий"
+
+msgid "in copying/moving process"
+msgstr "в процессе копирования/перемещения"
+
+msgid " GB"
+msgstr ""
+
+msgid "Group: "
+msgstr ""
+
+msgid "Files IDs: "
+msgstr ""
+
+msgid "Access"
+msgstr "Доступ"

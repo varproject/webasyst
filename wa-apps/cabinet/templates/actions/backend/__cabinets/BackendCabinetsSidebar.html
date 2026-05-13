@@ -1,0 +1,36 @@
+{* sidebar-header  *}
+<div class="sidebar-header custom-mt-20 custom-p-10">
+    <h5 class="heading custom-mr-8">
+        <span>{$title}</span>
+        <a href="{$backend_full_url}site/" target="_blank" class="count action"><i
+                class="fas fa-plus-circle" style="color: #6bb532;"></i></a>
+    </h5>
+</div>
+
+{* sidebar-body *}
+<div class="sidebar-body">
+    <div class="box custom-py-0">
+        <ul class="menu rounded">
+            <li class="rounded {if !$app_filter_domain}selected{/if}">
+                <a class="item" href="{$wa_app_url}cabinets/">
+                    <span class="s-icon-main icon">
+                        <i class="fas fa-lock" {if !$app_filter_domain}style="color: var(--text-color-link);" {/if}></i>
+                    </span>
+                    <span class="s-name">Все кабинеты</span>
+                    <span class="count">{$app_routes_count|default:'0'}</span>
+                </a>
+            </li>
+
+            {foreach $app_routes as $domain => $route}
+                <li class="rounded{if $app_filter_domain == $domain} selected{/if}">
+                    <a class="item" href="{$wa_app_url}cabinets/?domain={$domain}">
+                        <span class="s-icon-main icon">
+                            <i class="fas fa-globe" {if $app_filter_domain == $domain}style="color: var(--text-color-link);" {/if}></i>
+                        </span>
+                        <span class="s-name">{$domain}</span>
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>

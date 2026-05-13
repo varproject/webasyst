@@ -1,0 +1,197 @@
+<div class="dialog" id="form_schedule_dialog">
+    <div class="dialog-background"></div>
+
+<form id="form-schedule" action="?module=schedule&action=save" method="post" class="dialog-body">
+    <h3 class="dialog-header">[`Scheduled sending`]</h3>
+    <div class="dialog-content fields">
+{*if $cron_ok*}
+    {if isset($campaign.id)}<input type="hidden" name="id" value="{$campaign.id}" />{/if}
+
+        <div class="datetime">
+            <div class="state-with-inner-icon right">
+                <input class="js-datepicker small shorter" name="schedule_datetime[]" type="text"  value="{if $schedule_date}{$schedule_date|wa_date}{else}{'today'|wa_date}{/if}">&nbsp;
+                <span class="icon cursor-pointer js-datepicker-trigger">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </div>
+            <div class="wa-select">
+                <select name="schedule_datetime[]" class="time" data-role="datetime_hours">
+                    {for $h=0 to 23}
+                        <option value="{$h}" {if $h==$schedule_hour}selected="selected"{/if}>{"%02d"|sprintf:$h}</option>
+                    {/for}
+                </select>
+            </div>
+            :
+            <div class="wa-select">
+                <select name="schedule_datetime[]" class="time" data-role="datetime_minutes">
+                    {for $m=0 to 59 step 10}
+                        <option value="{$m}" {if $m==$schedule_min}selected="selected"{/if}>{"%02d"|sprintf:$m}</option>
+                    {/for}
+                </select>
+        </div>
+    </div>
+
+        <span class="hint" style="line-height: 2em;">(<span class="user-date-format"><!-- format placeholder --></span> [`format`], [`current time is`] <span class="current-user-time">{time()|wa_date:'time'}</span>)</span>
+
+        <div id="past-time-error-msg" class="state-error-hint" style="display: none">[`Incorrect date or time`]</div>
+
+        {if $cron_ok && $last_cron_time}
+            <p class="hint">
+                <i class="fas fa-check-circle text-green"></i>
+                {$last_cron_time|wa_datetime:'humandatetime'|string_format:'[`Cron is working properly. Latest execution time: %s`]'}
+            </p>
+        {/if}
+
+    </div>
+    <footer class="dialog-footer flexbox middle wrap">
+        <input type="submit" class="button" data-action="schedule" value="[`Schedule`]" />
+        <a href="#/senders/" class="js-close-dialog button light-gray">[`Cancel`]</a>
+    </footer>
+{*else}
+    <div class="error red">[`Scheduled sending is unavailable (no <tt>cron</tt> jobs set up)!`]</div>
+    <div class="hidden buttons">
+        <div class="hidden buttons">
+            <input type="submit" class="button green" disabled="disabled" data-action="schedule" value="[`Schedule`]" />
+            <span> [`or`] </span>
+            <a href="#/senders/" class="cancel cancel-link">[`cancel`]</a>
+        </div>
+    </div>
+{/if*}
+</form>
+
+
+
+<script>
+(function() {
+    'use strict';
+
+    const $form_campaign = $('#form-campaign');
+    const $form = $('#form-schedule');
+
+    // Set up dialog buttons
+    const buttons = $form.find('.dialog-footer');
+{*if $cron_ok*}
+
+    buttons.find('input').on('click',function(e){
+        e.preventDefault();
+        const min_val = $form.find('[data-role="datetime_minutes"]').val(),
+            hours_val = $form.find('[data-role="datetime_hours"]').val(),
+            $validation_content = $('#send-main-wrapper').find('.validation-content'),
+            $date = $form.find('.js-datepicker');
+
+        $form.find(':input').removeClass('state-error');
+
+        if ($date.val().length === 0) {
+            $date.addClass('state-error');
+            $('#past-time-error-msg').show();
+            return false;
+        }
+
+        if (validateHour(hours_val) && validateMinute(min_val)) {
+
+            $.post($form.attr('action'), $form.serialize(), function(data){
+                if (data.status === 'ok') {
+                    // save campaign!
+                    $.wa.mailer.saveCampaign($form_campaign, $form_campaign.find(':submit:last'), function() {
+                        // hide dialog
+                        $form.find('.js-close-dialog').trigger('click');
+                        // hide big green button
+                        // show message about "sending is scheduled" and cancel button
+                        $validation_content.html('<i class="fas fa-spin fa-spinner"></i>');
+                        $.ajax({
+                            type: 'POST',
+                            url: '?module=campaigns&action=presend&campaign_id={$campaign.id}',
+                            data: { send: 1 },
+                            dataType: 'html',
+                            success: function (r) {
+                                $validation_content.html(r);
+                                // renew sidebar
+                                $.wa.mailer.reloadSidebar();
+                            },
+                            global: false, // prevent ajaxError handlers to trigger
+                            error: function() {
+                                $.wa.mailer.redispatch();
+                            },
+                            timeout: 20000
+                        });
+
+                    }, true);
+                } else if (data.status === 'fail') {
+                    $('#past-time-error-msg').show();
+                }
+            }, "json");
+        } else {
+            $form.find('[data-role="datetime_minutes"]').addClass('state-error');
+            $form.find('[data-role="datetime_hours"]').addClass('state-error');
+            $('#past-time-error-msg').show();
+        }
+        return false;
+    });
+
+    $form.find('input').focus(function(e){
+        $('#past-time-error-msg').hide();
+        $(this).removeClass('state-error');
+    });
+
+    $form.find('.js-datepicker-trigger').on('click', function () {
+        $(this).parent().find('input').trigger('focus')
+    });
+
+    initDatepicker();
+
+    $('.user-date-format').text(getDateFormat());
+
+    /**
+     * Validate hour
+     * @param hour
+     * @returns Boolean
+     */
+    function validateHour(hour)
+    {
+        return hour >= 0 && hour <= 24;
+    }
+
+    /**
+     * Validate Minute
+     * @param minute
+     * @returns Boolean
+     */
+    function validateMinute(minute)
+    {
+        return minute >= 0 && minute <= 60;
+    }
+
+    function initDatepicker() {
+
+        $form.find(".js-datepicker").datepicker({
+                changeMonth : true,
+                changeYear : true,
+                shortYearCutoff: 2,
+                altFormat: "yy-mm-dd",
+                beforeShow: function(input, ui) {
+                    ui.dpDiv.on("click", function(event) {
+                        event.stopPropagation();
+                    });
+
+                    setTimeout(() => ui.dpDiv.css({
+                        "z-index": '1051'
+                    }));
+
+                }
+            });
+
+    }
+
+    /**
+     * Get format in what inputed dates must be
+     *
+     * @returns String
+     */
+    function getDateFormat()
+    {
+        return $form.find(".js-datepicker").datepicker('option', 'dateFormat').toUpperCase().replace('YY', 'YYYY');
+    }
+{*/if*}
+})();
+</script>
+</div>

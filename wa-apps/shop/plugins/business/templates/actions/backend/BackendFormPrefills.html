@@ -1,0 +1,187 @@
+<a href="javascript:void(0)" class="js-show-business-lead-form small">Уже есть ИП/ООО</a>
+<div id="form-prefills" class="s-business-lead-form" style="display:none;">
+<form>
+    <div class="s-business-lead-form__header">
+        <h3>Уже есть ИП/ООО</h3>
+        <a href="javascript:void(0)" class="js-hide-business-lead-form s-business-lead-form__close-btn"><i class="fas fa-times"></i></a>
+        <p class="small">Укажите реквизиты своего бизнеса для автоматического заполнения различных форм настроек Shop-Script и упрощения отправки заявок в банки-партнеры.</p>
+    </div>
+    <div class="s-business-lead-form__content custom-my-32">
+        <div class="fields">
+            <div class="js-fields-container custom-mt-24">
+                <div class="field">
+                    <div class="name for-input">[`ИНН`]</div>
+                    <div class="value">
+                        <input type="text" class="long" data-app-field="business_inn" inputmode="numeric" maxlength="15" value="" {literal}data-mask="^\d{10}$|^\d{12}$|^\d{13}$|^\d{15}$"{/literal}>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">[`Название организации`]</div>
+                    <div class="value">
+                        <input type="text" class="long" data-app-field="business_company" {literal}data-mask=^[\d\s\-\.\(\)\,\"\/:/+#№»«а-яА-ЯёЁa-zA-Z]{1,150}${/literal}>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="name for-input">[`Имя`]</div>
+                    <div class="value">
+                        <input type="text" class="long" data-app-field="business_firstname" value="" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">[`Фамилия`]</div>
+                    <div class="value">
+                        <input type="text" class="long" data-app-field="business_lastname" value="" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">[`Отчество`]</div>
+                    <div class="value">
+                        <input type="text" class="long" data-app-field="business_middlename" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}>
+                    </div>
+                </div>
+
+                <div class="js-collasible-container custom-mt-16">
+                    <a href="javascript:void(0)" class="js-toggle-collasible semibold small">
+                        Дополнительные сведения о юридическом лице
+                        <span class="js-collapsable-toggle-caret icon">
+                            <i class="fas fa-caret-right"></i>
+                        </span>
+                    </a>
+                    <div class="js-collasible-content" style="display: none;">
+                        <div class="custom-mt-16">
+                            <div class="field">
+                                <div class="name for-input">Сайт</div>
+                                <div class="value">
+                                    <input type="text" class="long" data-app-field="business_url" placeholder="https://www.example.com">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="name for-input">Основные виды деятельности</div>
+                                <div class="value">
+                                    <textarea rows="2" data-app-field="business_description"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="name for-input">Адрес регистрации</div>
+                                <div class="value">
+                                    <textarea rows="2" data-app-field="business_address"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="name for-input">БИК банка</div>
+                                <div class="value">
+                                    <input type="text" class="long" data-app-field="business_bik" maxlength="9" data-mask="^\d+$">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="name for-input">Номер расчетного счета организации</div>
+                                <div class="value">
+                                    <input type="text" class="long" data-app-field="business_account" maxlength="20" data-mask="^\d+$">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="s-business-lead-form__footer flexbox middle wrap space-4">
+        <button type="submit" class="s-business-lead-form__submit button green">[`Save`]</button>
+        <span class="js-loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+    </div>
+</form>
+
+<script>
+    $(function () { "use strict";
+        const $form = $('#form-prefills').children();
+        const $footer = $form.find('.s-business-lead-form__footer');
+
+        // EVENTS
+        bindCheckFields();
+        initChangeSubmit();
+        $form.on('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (isInvalidFormFields()) {
+                return;
+            }
+
+            const $loading = $('.js-loading', $footer).show();
+            $.shop.business.updateFormPrefills($form)
+                .then(() => {
+                    setTimeout(() => {
+                        $loading.hide();
+                        $('<span><i class="fas fa-check-circle text-green"></i> '+"[`Saved`]"+'</span>').animate({ opacity: 0 }, 1500, function() {
+                            $(this).remove();
+                        }).insertAfter($footer.find(':submit'));
+                        initChangeSubmit();
+                    }, 100);
+                })
+        });
+
+        $('.js-show-business-lead-form').on('click', function () {
+            const $button = $(this).hide();
+            const $parent = $button.next().show();
+
+            $parent.find('.js-hide-business-lead-form').one('click', function () {
+                $button.show();
+            });
+        });
+
+        // FUNCTIONS
+        function bindCheckFields () {
+            $form.find('[data-app-field]').each(function () {
+                const $field = $(this);
+                const field_name = $field.attr('name');
+
+                let input_mask = $field.data('mask');
+                if (input_mask) {
+                    const regExp = new RegExp(input_mask);
+
+                    $field.off('change.validation').on('change.validation', function () {
+                        const val = $(this).val();
+
+                        $field.siblings('.state-caution-hint').remove();
+                        $field.removeClass('state-caution');
+                        if (!val) {
+                            return true;
+                        }
+
+                        const is_invalid = !regExp.test(val);
+                        if (is_invalid) {
+                            $field.addClass('state-caution');
+                            const $field_wrapper = $field.closest('.value');
+                            const msg = !!val ? '[`Invalid value`]' : '[`Field is empty`]';
+                            $field_wrapper.append('<div class="state-caution-hint">'+msg+'</div>');
+                            return false;
+                        }
+                    });
+                }
+            });
+        }
+
+        function initChangeSubmit () {
+            const $submit = $form.find(':submit').addClass('green').removeClass('yellow');
+            $form.one('input', function () {
+                $submit.addClass('yellow').removeClass('green');
+            });
+        }
+
+        function isInvalidFormFields () {
+            clearErrors();
+            $form.find('[data-app-field]').trigger('change.validation');
+
+            return $form.find('.state-caution').length > 0;
+        }
+        function clearErrors () {
+            $form.find('span.state-caution,.state-caution-hint').remove();
+            $form.find('.state-caution').removeClass('state-caution');
+        }
+    });
+</script>
+</div>

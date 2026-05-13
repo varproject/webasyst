@@ -1,0 +1,381 @@
+{if empty($disabled_waid)}
+
+{function name="label_required" is_permanent=false}{strip}
+    <span class="js-required-field{if $is_permanent} js-required-permanent{/if} s-business__field-required text-orange custom-ml-4">*</span>
+{/strip}{/function}
+
+{if !empty($assets)}{$assets}{/if}
+<div id="lead-form-tbank" class="s-business-lead-form">
+<form>
+    <div class="s-business-lead-form__header">
+        {$is_plugin_setup = $is_closable || $is_collapsible}
+        <h2>{if $is_plugin_setup}Подключиться к {/if}Т-Банк</h2>
+        <a href="javascript:void(0)" class="js-hide-business-lead-form s-business-lead-form__close-btn"{if !$is_closable} style="display: none;"{/if}><i class="fas fa-times"></i></a>
+        <a href="javascript:void(0)" class="js-collapse-business-lead-form s-business-lead-form__close-btn"{if !$is_collapsible} style="display: none;"{/if}><i class="fas fa-chevron-up fa-xs"></i></a>
+    </div>
+
+    <div class="s-business-lead-form__content">
+        <ul class="js-business-product-list chips rounded">
+            {foreach $products as $id => $p}
+            <li class="small" data-id="{$id}">
+                <a href="javascript:void(0);">{$p.title|default:$id}</a>
+            </li>
+            {/foreach}
+        </ul>
+        <input name="product" type="hidden" value="{if !empty($pre_fill_product)}{$pre_fill_product}{/if}">
+
+        <div class="s-business-lead-form__header-description">
+            <div class="js-business-product-description small"></div>
+        </div>
+        <div class="js-content">
+            <p class="js-business-registration-required small custom-mt-16" style="display: none;">
+                Для подключения необходимо быть <a href="#/business/TBank/Регистрация ИП/">зарегистрированным как ИП/ООО</a>.
+            </p>
+            <div class="fields custom-my-32">
+                <div class="custom-mt-24">
+                    <div class="field">
+                        <div class="name for-input">[`Телефон`]</div>
+                        <div class="value nowrap">
+                            <input type="text" class="long" name="phoneNumber" data-app-field="phone" inputmode="numeric" maxlength="12" value="" {literal}data-mask="^\+7\d{10}$"{/literal}>
+                            <span class="js-field-phoneNumber-status"></span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="name for-input">[`Email`]</div>
+                        <div class="value">
+                            <input type="email" class="long" name="email" data-app-field="email" {literal}data-mask="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"{/literal}>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name for-input">[`Название организации`]</div>
+                        <div class="value">
+                            <input type="text" class="long" name="companyName" data-app-field="business_company" {literal}data-mask=^[\d\s\-\.\(\)\,\"\/:/+#№»«а-яА-ЯёЁa-zA-Z]{1,150}${/literal}>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="name for-input">[`ИНН или ОГРН`]</div>
+                        <div class="value">
+                            <input type="text" class="long" name="innOrOgrn" data-app-field="business_inn" inputmode="numeric" maxlength="15" value="" {literal}data-mask="^\d{10}$|^\d{12}$|^\d{13}$|^\d{15}$"{/literal}>
+                        </div>
+                    </div>
+
+                    {* FIO *}
+                    <div class="field">
+                        <div class="name for-input">[`Имя`]</div>
+                        <div class="value">
+                            <input type="text" class="long" name="firstName" data-app-field="business_firstname" value="" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="name for-input">[`Фамилия`]</div>
+                        <div class="value">
+                            <input type="text" class="long" name="lastName" data-app-field="business_lastname" value="" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="name for-input">[`Отчество`]</div>
+                        <div class="value">
+                            <input type="text" class="long" name="middleName" data-app-field="business_middlename" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}>
+                        </div>
+                    </div>
+
+                    {* Общие поля *}
+                    <div class="field">
+                        <div class="name for-input">[`Комментарий к заявке`]</div>
+                        <div class="value">
+                            <textarea rows="2" name="comment"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="js-custom-content custom-my-16"></div>
+        <div class="s-business-lead-form__footer flexbox middle wrap space-4">
+            <button type="submit" class="s-business-lead-form__submit button yellow large">Отправить заявку в Т-Банк</button>
+            <span class="js-loading hidden"><i class="fas fa-spinner fa-spin"></i><span>
+        </div>
+        <div class="place-for-errors custom-mt-12"></div>
+        <p class="js-bottom-hint hint">Заявка передается напрямую в Т-Банк, и ее обрабатывают менеджеры банка. Webasyst заявки не сохраняет и не обрабатывает.</p>
+    </div>
+</form>
+
+<script>
+    $(function () { "use strict";
+        const $required_fields_by_product = Object.freeze({$required_fields_by_product|json_encode});
+        const $products_data = Object.freeze({$products|json_encode});
+        const $wrapper = $('#lead-form-tbank');
+        const $form = $wrapper.children();
+        const $submit = $form.find('[type=submit]');
+        const $footer = $form.find('.s-business-lead-form__footer');
+        const $place_for_errors = $form.find('.place-for-errors');
+
+        const default_product = '{if !empty($pre_fill_product)}{$pre_fill_product}{/if}';
+        const label_required_html = '{label_required}';
+
+        const requestAPI = new class {
+            constructor () {
+                this.base_url = '?plugin=business&module=tBankApi&action=';
+            }
+            _getFormData() {
+                const fields_map = $form.serializeArray().reduce(function(acc, field) {
+                    if (field.value && String(field.value).trim()) {
+                        acc[field.name] = field.value;
+                    }
+                    return acc;
+                }, {});
+
+                return fields_map;
+            }
+            createApplication() {
+                const form_data = this._getFormData();
+                return $.post(this.base_url + 'createApplication', form_data);
+            }
+            checkPhone(phone_number) {
+                return $.get(this.base_url + 'checkPhone&phoneNumber=' + encodeURIComponent(phone_number))
+            }
+        };
+
+        // INIT
+        $form.find('.js-business-product-list [data-id]').on('click', function () {
+            const $item = $(this);
+            const id = $item.data('id');
+            const data = $products_data[id];
+
+            const show_custom_content = !!data.custom_content;
+            $form.find('.js-content').toggle(!show_custom_content);
+            $form.find('.js-bottom-hint').toggle(!show_custom_content);
+            $footer.toggle(!show_custom_content);
+            $wrapper.find('.js-custom-content').empty().html(show_custom_content ? data.custom_content : '');
+
+            const inn_required = !!data.inn_required;
+            $item.addClass('selected').siblings().removeClass('selected');
+            $('.js-business-product-description', $form).html(data.description || '');
+            $('.js-business-registration-required', $form).toggle(inn_required);
+            ['companyName', 'innOrOgrn'].forEach(key => {
+                $form.find(`[name="${ key }"]`).closest('.field').toggle(inn_required);
+            });
+
+            $form.find('[name="product"]').val(id);
+            clearErrors();
+            defineRequiredFields();
+        });
+
+        const selected_product = $form.find('[name="product"]').val();
+        if (selected_product) {
+            $form.find('.js-business-product-list [data-id="'+selected_product+'"]').trigger('click');
+        }
+
+        $form.find("[data-wa-tooltip-content]").waTooltip();
+
+        // hide exist products
+        $(document).on('loaded_form_prefills.business', function () {
+            $('[data-app-field]', $form).each(function () {
+                const $field = $(this);
+                switch ($field.data('app-field')) {
+                    case 'business_inn':
+                        const excludes = ['Регистрация ИП', 'Регистрация ООО'];
+                        $(excludes.map(e => `a[data-id="${ e }"]`).join(','), $form.find('#dropdown-product'))
+                            .parent().toggle(!$field.val());
+                        break;
+                }
+            });
+        });
+
+        $form.on('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!$form.find('.js-loading').hasClass('hidden')) {
+                return false;
+            }
+            if (isInvalidFormFields()) {
+                return;
+            }
+
+            $form.find('.js-loading').removeClass('hidden');
+            requestAPI.createApplication()
+                .always(() => {
+                    $form.find('.js-loading').addClass('hidden');
+                })
+                .done((r) => {
+                    if (r.status === 'ok' && r.data) {
+                        $('.js-field-phoneNumber-status', $form).empty();
+                        if (r.data.message_html) {
+                            $form.find('.s-business-lead-form__header').nextUntil().hide();
+                            $form.append(r.data.message_html);
+                        }
+                        if (r.data.success) {
+                            {if $is_plugin_setup}
+                                $('.js-collapse-business-lead-form').hide();
+                                $('.js-hide-business-lead-form').show();
+                            {/if}
+                            $.shop.business.updateFormPrefills($form);
+                        } else {
+                            $place_for_errors.append('<span class="state-caution">'+String(r.data.errorMessage).replace('\n', '<br>')+'<br><span class="hint">requestId: '+r.data.requestId+'</span></span>');
+                        }
+                    }
+                    handleErrors(r);
+                });
+        });
+
+        const checkPermissionsByPhoneNumber = (phone) => {
+            const $status_wrapper = $('.js-field-phoneNumber-status', $form);
+            $status_wrapper.html('<i class="fas fa-spinner fa-spin"></i>');
+
+            requestAPI.checkPhone(phone).done(function (r) {
+                $status_wrapper.empty();
+                $submit.prop('disabled', false);
+                if (r.status === 'ok') {
+                    $submit.prop('disabled', r.data.permissions === 'PROHIBITED');
+                    $status_wrapper.html(r.data.html);
+                }
+                handleErrors(r);
+            });
+        };
+        $('[name="phoneNumber"]', $form).on('change', function () {
+            const $phone = $(this);
+            $phone.removeClass('state-caution');
+            $form.find('.js-phone-error').remove();
+
+            const val = $phone.val();
+            if ((new RegExp($phone.data('mask'))).test(val)) {
+                checkPermissionsByPhoneNumber(val);
+            } else {
+                $phone.addClass('state-caution');
+                $phone.closest('.value').append('<div class="js-phone-error state-caution-hint">[`Invalid value`]</div>');
+            }
+        });
+
+        function defineRequiredFields () {
+            const product_type = $form.find('[name="product"]').val();
+            if (!$required_fields_by_product[product_type]) {
+                return;
+            }
+            clearRequiredLabels();
+
+            $form.find('[name]').off('change.validation');
+            $form.find('[name]:not(:disabled)').each(function () {
+                const $field = $(this);
+                const field_name = $field.attr('name');
+                const required_fields = $required_fields_by_product[product_type];
+
+                let is_required = false;
+                for (const required_field_name of required_fields) {
+                    is_required = field_name === required_field_name;
+                    if (!is_required && required_field_name[0] === '[') {
+                        is_required = String(field_name).endsWith(required_field_name);
+                    }
+                    if (is_required) {
+                        $field.closest('.field').children('.name').append(label_required_html);
+                        break;
+                    }
+                }
+
+                let input_mask = $field.data('mask');
+                if (is_required && !input_mask) {
+                    input_mask = "^.+$";
+                }
+                if (input_mask) {
+                    const data_min = $field.data('min');
+                    const data_max = $field.data('max');
+                    const regExp = new RegExp(input_mask);
+
+                    $field.on('change.validation', function () {
+                        const val = $(this).val();
+
+                        $field.siblings('.state-caution-hint').remove();
+                        $field.removeClass('state-caution');
+                        if (!is_required && !val) {
+                            return false;
+                        }
+
+                        const is_invalid = !regExp.test(val);
+                        const $field_wrapper = $field.closest('.value');
+                        if (is_invalid) {
+                            const msg = !!val ? '[`Invalid value`]' : '[`Field is empty`]';
+                            addFieldError($field, msg);
+                            return false;
+                        } else if (!isNaN(val)) {
+                            if (data_min && !isNaN(data_min) && parseFloat(val) < parseFloat(data_min)) {
+                                $field_wrapper.append('<div class="state-caution-hint">Сумма должна быть не меньше '+data_min+' ₽</div>');
+                                return false;
+                            }
+                            if (data_max && !isNaN(data_max) && parseFloat(val) > parseFloat(data_max)) {
+                                $field_wrapper.append('<div class="state-caution-hint">Сумма должна быть не больше '+data_max+' ₽</div>');
+                                return false;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function isInvalidFormFields () {
+            clearErrors();
+            $form.find('[name]:not(disabled)').trigger('change.validation');
+
+            const $field_type = $form.find('[name="product"]');
+            const is_valid_field_type = !!$field_type.val();
+            if (!is_valid_field_type) {
+                $('<div class="state-caution-hint">Необходимо выбрать продукт</div>').insertAfter($field_type);
+            }
+
+            const is_invalid = !is_valid_field_type || $form.find('.state-caution').length > 0;
+            if (is_invalid) {
+                $place_for_errors.append('<span class="state-caution">[`Please fill required fields`]</span>');
+                const $field_with_error = $form.find('.field .state-caution,.field .state-caution-hint').closest('.value');
+                if ($field_with_error.length) {
+                    const elementPosition = $field_with_error.get(0).getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.scrollY - ($('#wa-nav').height() || 0);
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                }
+            }
+
+            return is_invalid;
+        }
+
+        function clearErrors () {
+            $form.find('span.state-caution,.state-caution-hint').remove();
+            $form.find('.state-caution').removeClass('state-caution');
+            $place_for_errors.empty();
+        }
+
+        function clearRequiredLabels () {
+            $('.js-required-field:not(.js-required-permanent)', $form).remove();
+        }
+
+        function handleErrors(r) {
+            if (r.status !== 'fail' || !r.errors) {
+                return;
+            }
+            let error_html = '';
+            if (r.errors.error_html) {
+                error_html = r.errors.error_html;
+            } else {
+                error_html = '<span class="state-caution">'+r.errors.error_description+'</span>';
+                if (Array.isArray(r.errors.required_fields)) {
+                    r.errors.required_fields.forEach(f => addFieldError(f.field, f.message));
+                } else if (r.errors.error === 'invalid_phone') {
+                    addFieldError('phoneNumber');
+                } else if (r.errors.error === 'invalid_email') {
+                    addFieldError('email');
+                }
+            }
+            $place_for_errors.html(error_html);
+        }
+
+        function addFieldError(field, message) {
+            const $field = typeof field === 'object' ? field : $form.find('[name="'+field+'"]');
+            if ($field.length) {
+                $field.addClass('state-caution');
+                if (message) {
+                    $field.closest('.value').append('<div class="state-caution-hint">'+message+'</div>');
+                }
+            }
+        }
+    });
+</script>
+</div>
+{/if}

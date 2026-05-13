@@ -1,0 +1,52 @@
+/*
+// .sa-article
+*/
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-article {
+    --sa-article--toc-width: 0rem;
+
+    padding: 1.5rem .75rem 4rem;
+}
+.sa-article--has-toc {
+    --sa-article--toc-width: #{vs.$sa-toc--width};
+}
+
+// Styles.
+.sa-article__header {
+    margin-bottom: 1.5rem;
+}
+.sa-article__breadcrumb {
+    margin-bottom: 0.4375rem;
+}
+.sa-article__title {
+    margin: 0;
+}
+.sa-article__subtitle {
+    @include bt.font-size(1.25rem);
+
+    font-weight: bt.$font-weight-light;
+    line-height: 1.5;
+    margin-top: .5rem;
+    color: bt.$text-muted;
+}
+
+@include bt.media-breakpoint-up(lg) {
+    .sa-article {
+        @include dir.scope {
+            #{dir.$padding-inline-end}: calc(var(--sa-article--toc-width) + .75rem);
+        }
+    }
+    .sa-article__toc {
+        position: fixed;
+        top: var(--sa-toolbar-visible-height);
+        width: var(--sa-article--toc-width);
+        height: calc(100vh - var(--sa-toolbar-visible-height) - var(--sa-footer-visible-height));
+
+        @include dir.scope {
+            #{dir.$inset-inline-end}: 0;
+        }
+    }
+}

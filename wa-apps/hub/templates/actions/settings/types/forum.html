@@ -1,0 +1,63 @@
+<div class="field">
+    <div class="name">
+        [`Posts per page`]
+    </div>
+
+    <div class="value small">
+        <input type="text" name="type[settings][posts_per_page]" value="{$type.settings.posts_per_page|default:20|sprintf:'%d'}">
+    </div>
+</div>
+
+<div class="field">
+    <div class="name">
+        [`Auto archive`]
+    </div>
+
+    <div class="value small">
+        <label>
+            <span class="wa-checkbox">
+                <input type="checkbox" name="type[settings][auto_archive]"{if !empty($type.settings.auto_archive)} checked="checked"{/if}>
+                <span>
+                    <span class="icon">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </span>
+            </span>
+            {sprintf('[`Automatically archive topics after %s days of inactivity`]',"<input type=\"text\" class=\"numerical short\" name=\"type[settings][auto_archive_days]\" value=\"`$type.settings.auto_archive_days|default:90|sprintf:'%d'`\">")}
+        </label>
+
+        <p class="hint">[`Archived topics are available for viewing only and cannot be commented.`]</p>
+    </div>
+</div>
+
+<div class="field">
+    <div class="name for-input">
+        [`Badges`]
+    </div>
+
+    <div class="value small h-badge-list">
+        <ul class="chips custom-my-0">
+            <li class="custom-my-0">
+                <span class="h-badge badge squared small" data-name="">[`None`]</span>
+            </li>
+
+            <li class="custom-my-0">
+                <span class="h-badge badge squared small" data-name="archived">[`Archived`]</span>
+            </li>
+        </ul>
+    </div>
+</div>
+<input type="hidden" name="type[settings][commenting]" value="1">
+
+<script type="text/javascript">
+    $(function () {
+        $(':input[name="type\\[settings\\]\\[auto_archive\\]"]').change(function () {
+            var $input = $(this).parents('div.field').find(':input[name="type\\[settings\\]\\[auto_archive_days\\]"]');
+            if (this.checked) {
+                $input.attr('disabled', null);
+            } else {
+                $input.attr('disabled', true);
+            }
+        }).change();
+    });
+</script>

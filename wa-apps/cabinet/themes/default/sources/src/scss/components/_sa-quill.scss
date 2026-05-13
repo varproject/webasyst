@@ -1,0 +1,158 @@
+/*
+// .sa-quill
+*/
+@use 'sass:map';
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+@mixin _button-sate($state) {
+    background: map.get(vs.$sa-quill__button, $state, bg-color);
+    color: map.get(vs.$sa-quill__button, $state, font-color);
+}
+
+.sa-quill-control--ready {
+    display: none;
+}
+.sa-quill {
+    $local-button-size: 1.875rem;
+    $local-border-radius: .125rem;
+
+    border-color: bt.$input-border-color;
+
+    .ql-toolbar {
+        --sa-quill-toolbar-gutter: .3125rem;
+
+        padding: var(--sa-quill-toolbar-gutter);
+        border-radius: .125rem .125rem 0 0;
+        background: vs.$sa-quill__toolbar--bg-color;
+        border-color: inherit;
+
+        &:before {
+            display: block;
+            content: '';
+            margin-bottom: calc(var(--sa-quill-toolbar-gutter) * -1);
+        }
+
+        button,
+        .ql-picker-label,
+        .ql-expanded .ql-picker-label {
+            @include _button-sate(normal);
+
+            &,
+            &:hover,
+            &:focus,
+            &.ql-active {
+                .ql-fill {
+                    fill: currentColor;
+                }
+                .ql-stroke {
+                    stroke: currentColor;
+                }
+            }
+
+            &:hover,
+            &:focus {
+                @include _button-sate(hover);
+            }
+
+            &:active,
+            &.ql-active {
+                @include _button-sate(active);
+            }
+        }
+        .ql-expanded .ql-picker-label {
+            @include _button-sate(hover);
+        }
+
+        button {
+            height: $local-button-size;
+            width: calc(#{$local-button-size} + .125rem);
+            padding: calc((#{$local-button-size} - 1.125rem) / 2) calc((#{$local-button-size} - 1.125rem) / 2 + .0625rem);
+
+            @include dir.scope {
+                float: #{dir.$inline-start};
+            }
+
+            &:first-child {
+                @include dir.scope {
+                    #{dir.$border-start-start-radius}: $local-border-radius;
+                    #{dir.$border-end-start-radius}: $local-border-radius;
+                }
+            }
+            &:last-child {
+                @include dir.scope {
+                    #{dir.$border-start-end-radius}: $local-border-radius;
+                    #{dir.$border-end-end-radius}: $local-border-radius;
+                }
+            }
+        }
+
+        .ql-picker {
+            height: $local-button-size;
+
+            @include dir.scope {
+                float: #{dir.$inline-start};
+            }
+
+            &:first-child .ql-picker-label {
+                @include dir.scope {
+                    #{dir.$border-start-start-radius}: $local-border-radius;
+                    #{dir.$border-end-start-radius}: $local-border-radius;
+                }
+            }
+            &:nth-last-child(2) .ql-picker-label {
+                @include dir.scope {
+                    #{dir.$border-start-end-radius}: $local-border-radius;
+                    #{dir.$border-end-end-radius}: $local-border-radius;
+                }
+            }
+
+            &.ql-expanded .ql-picker-label {
+                border-color: transparent;
+            }
+        }
+        .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) {
+            .ql-picker-label {
+                padding-top: .125rem;
+                padding-bottom: .125rem;
+
+                @include dir.scope {
+                    #{dir.$padding-inline-start}: .5rem;
+                    #{dir.$padding-inline-end}: .125rem;
+                }
+            }
+            svg {
+                @include dir.scope {
+                    #{dir.$inset-inline-start}: auto;
+                    #{dir.$inset-inline-end}: 0;
+                }
+            }
+        }
+
+        .ql-formats {
+            display: block;
+            margin-top: var(--sa-quill-toolbar-gutter);
+
+            @include dir.scope {
+                #{dir.$margin-inline-start}: 0;
+                #{dir.$margin-inline-end}: var(--sa-quill-toolbar-gutter);
+
+                float: #{dir.$inset-inline-start};
+            }
+        }
+    }
+    .ql-container {
+        border-radius: 0 0 .125rem .125rem;
+        background: bt.$input-bg;
+        border-color: inherit;
+        font-size: func.rem(15);
+    }
+    .ql-editor {
+        padding: .75rem .875rem;
+        font-size: func.rem(15);
+        line-height: 1.5;
+        min-height: calc(.75rem * 2 + (#{func.rem(15)} * 1.5) * 8);
+    }
+}

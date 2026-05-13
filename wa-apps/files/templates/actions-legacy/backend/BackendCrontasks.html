@@ -1,0 +1,38 @@
+<h1>[`Cron Tasks`]</h1>
+
+<div style="margin-top: 20px;">
+    {if !$copy_cli_start}
+        <p class="red bold">
+            <i class="icon16 exclamation"></i>
+            [`Without a <tt>cron</tt> job set up for copy task file copy process may complete at slower rate.`]
+        </p>
+        <p>
+            [`Please set up a <tt>cron</tt> job (<a href="http://www.webasyst.com/framework/docs/server/cron/" target="_blank">view instructions</a>) using the command specified below in your web-hosting control panel:`]
+        </p>
+        <p class="bold">
+            <code>{$copy_cron_command}</code>
+        </p>
+    {/if}
+    {if !$sync_cli_start}
+        <p class="red bold">
+            <i class="icon16 exclamation"></i>
+            [`Without a <tt>cron</tt> job set up for external sources, the synchronization process may complete at a slower rate.`]
+        </p>
+        <p>
+            [`Please set up a <tt>cron</tt> job (<a href="http://www.webasyst.com/framework/docs/server/cron/" target="_blank">view instructions</a>) using the command specified below in your web-hosting control panel:`]
+        </p>
+        <p class="bold">
+            <code>{$sync_cron_command}</code>
+        </p>
+    {/if}
+    {if $copy_cli_start && $sync_cli_start}
+        <p>
+           [`<tt>cron</tt> job is set up properly.`]
+        </p>
+    {/if}
+</div>
+<script>
+    $(function () {
+        $.files.setBrowserTitle('[`Cron Tasks`]');
+    });
+</script>

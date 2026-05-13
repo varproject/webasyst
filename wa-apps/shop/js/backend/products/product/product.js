@@ -1,0 +1,435 @@
+( function($) {
+
+    var Page = ( function($) {
+
+        Page = function(options) {
+            var that = this;
+
+            // DOM
+            that.$wrapper = options["$wrapper"],
+            that.$nearest_products_wrapper = that.$wrapper.find(".js-nearest-products");
+
+            // CONST
+            that.urls = options["urls"];
+            that.templates = options["templates"];
+            that.context = options["context"];
+            that.sidebar_toggle_class = options["sidebar_toggle_class"];
+
+            that.sidebar = that.initSidebar();
+            that.product_uri = options["product_uri"];
+            that.product_id = options["product_id"];
+
+            // DYNAMIC VARS
+
+            // INIT
+            that.init();
+        };
+
+        Page.prototype.init = function() {
+            var that = this;
+
+            var ready_promise = that.$wrapper.data("ready");
+            ready_promise.resolve(that);
+            that.$wrapper.trigger("ready", [that]);
+
+            that.initCallback();
+
+            var $product_name = that.$wrapper.find(".js-product-name");
+            that.$wrapper.on("change_product_name", function(event, product_name) {
+                $product_name.text(product_name);
+            });
+
+            that.initMobileSidebar();
+        };
+        /**
+         * @deprecated
+         */
+        Page.prototype.initCallback = function() {
+            var that = this;
+
+            that.$wrapper.on("click", ".js-show-callback-dialog", function() {
+                var $button = $(this);
+
+                $.waDialog({
+                    html: that.templates["callback_dialog"],
+                    onOpen: initDialog,
+                    options: {
+                        onSuccess: function() {
+                            $button.removeClass("animation-pulse");
+                        }
+                    }
+                });
+            });
+
+            function initDialog($dialog, dialog) {
+                var is_locked = false;
+
+                var loading = "<span class=\"icon top\" style='margin-right: .5rem;'><i class=\"fas fa-spinner fa-spin\"></i></span>";
+
+                var $textarea = $dialog.find("textarea:first");
+
+                $textarea.on("focus", function() {
+                    var $textarea = $(this);
+
+                    var placeholder = $textarea.data("placeholder");
+                    if (!placeholder) {
+                        placeholder = $textarea.attr("placeholder");
+                        $textarea.data("placeholder", placeholder);
+                    }
+
+                    $textarea.attr("placeholder", "");
+                });
+
+                $textarea.on("blur", function() {
+                    var $textarea = $(this);
+
+                    var placeholder = $textarea.data("placeholder");
+                    if (placeholder) {
+                        $textarea.attr("placeholder", placeholder);
+                    }
+                });
+
+                $dialog.on("click", ".js-success-button", function() {
+                    var $submit_button = $(this);
+
+                    var value = $.trim($textarea.val());
+                    if (!value.length) { return false; }
+
+                    if (!is_locked) {
+                        is_locked = true;
+                        var $loading = $(loading).prependTo( $submit_button.attr("disabled", true) );
+
+                        addCallback()
+                            .always( function() {
+                                is_locked = false;
+                                $submit_button.attr("disabled", false);
+                                $loading.remove();
+                            })
+                            .done( function() {
+                                $dialog.find(".dialog-header, .dialog-footer").remove();
+                                $dialog.find(".dialog-body").html( that.templates["callback_dialog_success"] );
+                                setTimeout( function() {
+                                    if ($.contains(document, $dialog[0])) {
+                                        dialog.options.onSuccess();
+                                        dialog.close();
+                                    }
+                                }, 3000);
+                            });
+                    }
+                });
+
+                function addCallback() {
+                    // TODO change url
+                    var href = '', //that.urls["callback_submit"],
+                        data = $dialog.find(":input").serializeArray();
+
+                    return $.post(href, data, "json");
+                }
+            }
+        };
+
+        Page.prototype.initSidebar = function() {
+            var that = this;
+
+            return $.wa_shop_products.init.initProductSidebar({
+                $wrapper: that.$wrapper.find(".js-page-sidebar"),
+                $nearest_products_wrapper: that.$nearest_products_wrapper,
+                context: that.context
+            });
+        };
+
+        Page.prototype.initStickyFooter = function($footer) {
+            var that = this,
+                $close_button = $footer.find('.js-product-close-button');
+
+            if (that.context.another_section_url.length) {
+                $close_button.attr('href', that.context.another_section_url);
+            } else if (that.context.presentation > 0) {
+                var context = {
+                    presentation: that.context.presentation,
+                };
+                if (that.context.page > 0) {
+                    context.page = that.context.page;
+
+                    $close_button.on('click', function () {
+                        sessionStorage.setItem("shop_products_table_scroll_page", that.context.page);
+                        sessionStorage.setItem("shop_products_table_scroll_product_id", that.product_id);
+                    });
+                }
+                $close_button.attr('href', $close_button.attr('href') + '?' + $.param(context));
+            }
+
+            var $window = $(window),
+                $observer = $("<div />");
+
+            var sticky_class = "is-sticky";
+
+            observe();
+
+            $window.on("scroll section_mounted", scrollWatcher);
+            function scrollWatcher() {
+                var is_exist = $.contains(document, $footer[0]);
+                if (is_exist) {
+                    observe();
+                } else {
+                    $window.off("scroll section_mounted", scrollWatcher);
+                }
+            }
+
+            function observe() {
+                $observer.insertAfter($footer);
+
+                var observer_top = $observer.offset().top,
+                    scroll_top = $window.scrollTop(),
+                    window_h = $window.height();
+
+                if (observer_top > scroll_top + window_h) {
+                    $footer.addClass(sticky_class);
+                } else {
+                    $footer.removeClass(sticky_class);
+                }
+
+                $observer.detach();
+            }
+        };
+
+        Page.prototype.initProductDelete = function($wrapper) {
+            $wrapper = (typeof $wrapper === "object" ? $wrapper : that.$wrapper);
+
+            var that = this;
+
+            var loading = "<span class=\"icon top\"><i class=\"fas fa-spinner fa-spin\"></i></span>";
+
+            $wrapper.on("click", ".js-product-delete", function(event) {
+                event.preventDefault();
+
+                var $delete_button = $(this);
+
+                if (!that.is_locked) {
+                    that.is_locked = true;
+
+                    var $icon = $delete_button.find(".icon"),
+                        $loading = $(loading);
+
+                    $delete_button.attr("disabled", true);
+                    $loading.insertBefore($icon.hide());
+
+                    showConfirm()
+                        .always( function() {
+                            that.is_locked = false;
+                        })
+                        .done( function() {
+                            that.is_locked = true;
+
+                            request(that.urls["product_delete"], { "product_id[]": that.product_id })
+                                .always( function() {
+                                    $loading.remove();
+                                    $icon.show();
+                                    $delete_button.attr("disabled", false);
+                                    that.is_locked = false;
+                                })
+                                .done( function() {
+                                    var href = $.wa_shop_products.section_url;
+                                    $.wa_shop_products.router.load(href);
+                                });
+                        })
+                        .fail( function() {
+                            $loading.remove();
+                            $icon.show();
+                            $delete_button.attr("disabled", false);
+                        });
+                }
+            });
+
+            function showConfirm() {
+                var deferred = $.Deferred();
+                var is_success = false;
+
+                var data = {
+                    product_id: that.product_id
+                };
+
+                $.post(that.urls["product_delete_dialog"], data, "json")
+                    .done( function(html) {
+                        $.waDialog({
+                            html: html,
+                            onOpen: function($dialog, dialog) {
+                                $dialog.on("click", ".js-success-action", function(event) {
+                                    event.preventDefault();
+                                    is_success = true;
+                                    dialog.close();
+                                });
+                            },
+                            onClose: function() {
+                                if (is_success) {
+                                    deferred.resolve();
+                                } else {
+                                    deferred.reject();
+                                }
+                            }
+                        });
+                    });
+
+                return deferred.promise();
+            }
+
+            function request(href, data) {
+                var deferred = $.Deferred();
+
+                $.post(href, data, "json")
+                    .done( function(response) {
+                        if (response.status === "ok") {
+                            deferred.resolve(response.data);
+
+                        } else {
+                            if (response.errors) {
+                                that.renderErrors(response.errors);
+                            }
+                            deferred.reject("errors", (response.errors ? response.errors: null));
+                        }
+                    })
+                    .fail( function() {
+                        deferred.reject("server_error", arguments);
+                    });
+
+                return deferred.promise();
+            }
+        };
+
+        Page.prototype.initMobileSidebar = function() {
+            const that = this;
+            that.$wrapper.find('.js-show-mobile-sidebar').on('click', () => {
+                that.$wrapper.addClass(that.sidebar_toggle_class);
+
+                that.$wrapper.find('.js-hide-mobile-sidebar').one('click', () => {
+                    that.$wrapper.removeClass(that.sidebar_toggle_class);
+                });
+            });
+
+            const loadWatcher = () => {
+                if (that.$wrapper.hasClass(that.sidebar_toggle_class)) {
+                    that.$wrapper.removeClass(that.sidebar_toggle_class);
+                }
+            };
+            $(document).on("wa_loaded", loadWatcher);
+        };
+
+        return Page;
+
+    })($);
+
+    $.wa_shop_products.containsSmartyCode = function (str) {
+        const smarty_regex = /\{[^\s][^}]+\}/;
+        return smarty_regex.test(str);
+    };
+
+    $.wa_shop_products.stockVerification = function (skus, stocks) {
+        skus = skus || {};
+        stocks = stocks || {};
+
+        for (const sku_id in skus) {
+            if (!stocks[sku_id]) {
+                showRepairProductStocksAlert();
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    $.wa_shop_products.init.initProductPage = function(options) {
+        var that = this;
+
+        return new Page(options);
+    };
+
+    $.wa_shop_products._waAIAction = function ({ productId, onUpdate }) {
+        const $btn = $(this);
+        if ($btn.prop('disabled')) {
+            return false;
+        }
+
+        $btn.prop('disabled', true);
+        $btn.find('.webasyst-magic-wand-ai').addClass('shimmer');
+        const hideLoading = () => {
+            $btn.find('.webasyst-magic-wand-ai').removeClass('shimmer');
+            $btn.prop('disabled', false);
+        };
+        const handleError = (r) => {
+            if (r?.errors?.length) {
+                $.wa.notice({
+                    title: $_('An error occurred'),
+                    text: r.errors[0].error_description || r.errors[0].error,
+                    button_name: $_('Close')
+                });
+            }
+        };
+
+        const updateProp = $btn.closest('[data-update-prop]').data('update-prop');
+        if ($btn.hasClass('js-quick-mode')) {
+            $.post('?module=prod&action=aiGenerateDescription', {
+                product_id: productId,
+                fields_to_fill: { [updateProp]: 1 }
+            }, (r) => {
+                if (r.data && r.data.product) {
+                    if (typeof onUpdate === 'function') {
+                        onUpdate(updateProp, r.data.product);
+                    }
+                } else {
+                    handleError(r);
+                }
+                hideLoading();
+            });
+        } else {
+            $.post('?module=prod&action=aiGenerateDescriptionDialog', {
+                product_id: productId,
+                field_to_fill: updateProp,
+                do_not_save: $btn.hasClass('js-dialog-always') ? 1 : 0
+            }, "json").done((dialog_html) => {
+                $.waDialog({
+                    html: dialog_html,
+                    onOpen: ($dialog, dialog) => {
+                        $dialog.one('ai_generate_do_not_ask', () => {
+                            $('.js-ai-generate-description:not(.js-dialog-always)').addClass('js-quick-mode');
+                            $('.js-ai-generate-description.js-dialog-always').removeClass('hidden');
+                        });
+                        $dialog.one('ai_generate_success', (e, r) => {
+                            if (r.data && r.data.product) {
+                                if (typeof onUpdate === 'function') {
+                                    onUpdate(updateProp, r.data.product);
+                                }
+                            } else {
+                                handleError(r);
+                            }
+                            dialog.close();
+                        });
+                        hideLoading();
+                    }
+                });
+            }).fail(() => {
+                console.log('Unable to load AI generation dialog');
+                hideLoading();
+            });
+        }
+    };
+    $.wa_shop_products.useComponentAIToolbar = ({ $toolbar, productId, onUpdate }) => {
+        $toolbar.find('.js-ai-generate-description').click(function() {
+            $.wa_shop_products._waAIAction.call(this, { productId, onUpdate });
+        });
+    };
+
+    function showRepairProductStocksAlert() {
+        const $wrapper = $('#js-product-page');
+
+        $wrapper.find('.js-page-sidebar, .js-page-content').hide();
+        $wrapper.find('.s-page-alerts, .js-repair-product-stocks-wrapper').show();
+        $wrapper.find('.js-repair-prodoct-stocks')
+            .off('click').on('click', function () {
+                $('#wa-app').trigger('wa_before_load');
+                $.post('?module=repair&action=productStocks', {}, function () {
+                    location.reload();
+                });
+            });
+    }
+
+})(jQuery);

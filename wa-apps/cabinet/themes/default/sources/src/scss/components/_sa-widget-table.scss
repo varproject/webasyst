@@ -1,0 +1,65 @@
+/*
+// .sa-widget-table
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-widget-table {
+    --sa-widget-table--padding-x: 1.25rem;
+
+    --sa-widget-table__cell--padding-y: .5rem;
+    --sa-widget-table__cell--padding-x: .5rem;
+
+    --sa-widget-table__head-cell--padding-y: var(--sa-widget-table__cell--padding-y);
+    --sa-widget-table__body-cell--padding-y: var(--sa-widget-table__cell--padding-y);
+    --sa-widget-table__foot-cell--padding-y: var(--sa-widget-table__cell--padding-y);
+
+    font-size: .875rem;
+    overflow-x: auto;
+
+    table {
+        width: 100%;
+    }
+    th,
+    td {
+        padding: var(--sa-widget-table__cell--padding-y) var(--sa-widget-table__cell--padding-x);
+
+        &:first-child {
+            @include dir.scope {
+                #{dir.$padding-inline-start}: var(--sa-widget-table--padding-x);
+            }
+        }
+        &:last-child {
+            @include dir.scope {
+                #{dir.$padding-inline-end}: var(--sa-widget-table--padding-x);
+            }
+        }
+    }
+    thead {
+        th,
+        td {
+            padding-top: var(--sa-widget-table__head-cell--padding-y);
+            padding-bottom: var(--sa-widget-table__head-cell--padding-y);
+            color: vs.$sa-card--font-muted-color;
+            font-size: func.rem(13);
+            font-weight: bt.$font-weight-medium;
+        }
+    }
+    tbody {
+        th,
+        td {
+            padding-top: var(--sa-widget-table__body-cell--padding-y);
+            padding-bottom: var(--sa-widget-table__body-cell--padding-y);
+            border-top: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+        }
+    }
+    tfoot {
+        th,
+        td {
+            padding-top: var(--sa-widget-table__foot-cell--padding-y);
+            padding-bottom: var(--sa-widget-table__foot-cell--padding-y);
+        }
+    }
+}

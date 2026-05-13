@@ -1,0 +1,9 @@
+/*
+// validation
+*/
+@use '../custom-variables' as vs;
+
+.valid-tooltip,
+.invalid-tooltip {
+    color: vs.$sa-validation-tooltip--font-color;
+}

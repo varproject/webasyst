@@ -1,0 +1,36 @@
+{* Левый блок *}
+{if $main_toolbar_left_enabled}
+    <div id="main_toolbar_left" class="left d-flex gap-2 w-50">
+
+        {* Заголовок страницы *}
+        {if $main_toolbar_left_title_enabled}
+            <span id="main_toolbar_left_title" class="h5 fw-bold m-0 me-3 lh-base text-nowrap d-none d-xl-block">
+                {$main_toolbar_left_title_text|escape}
+            </span>
+        {/if}
+
+        {* Контроллы управления (left) *}
+        {if !empty($main_toolbar_left_items)}
+            <div id="main_toolbar_left_items" class="d-contents">
+                {foreach $main_toolbar_left_items as $item}
+                    {$item}
+                {/foreach}
+            </div>
+        {/if}
+
+    </div>
+{/if}
+
+{* Правый блок *}
+{if $main_toolbar_right_enabled}
+    <div id="main_toolbar_right" class="right d-flex gap-2 justify-content-end">
+
+        {* Контроллы управления (right) *}
+        {if !empty($main_toolbar_right_items)}
+            {foreach $main_toolbar_right_items as $item}
+                {$item}
+            {/foreach}
+        {/if}
+
+    </div>
+{/if}

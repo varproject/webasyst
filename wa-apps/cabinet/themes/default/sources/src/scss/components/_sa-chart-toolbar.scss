@@ -1,0 +1,84 @@
+/*
+// .sa-chart-toolbar
+*/
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-chart-toolbar {
+    &:before {
+        // Disable collapsing margins.
+        content: '';
+        height: 1px; // SKIP-PIXELS
+        margin-bottom: -1px; // SKIP-PIXELS
+        display: block;
+    }
+}
+.sa-chart-toolbar__body {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -.75rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: -.75rem;
+    }
+}
+.sa-chart-toolbar__item {
+    display: flex;
+    align-items: center;
+    margin-top: .75rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .75rem;
+    }
+}
+.sa-chart-toolbar__item-label {
+    font-size: .875rem;
+    color: bt.$text-muted;
+    white-space: nowrap;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .75rem;
+    }
+}
+
+.sa-chart-toolbar__item-select {
+    flex-basis: 8rem;
+}
+.sa-chart-toolbar__item-range {
+    display: flex;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .5rem;
+    }
+
+    .form-control {
+        flex-basis: 8rem;
+    }
+}
+
+
+@include bt.media-breakpoint-down(md) {
+    .sa-chart-toolbar__item {
+        display: block;
+        width: 100%;
+    }
+    .sa-chart-toolbar__item-label {
+        margin-bottom: .25rem;
+
+        @include dir.scope {
+            #{dir.$margin-inline-end}: 0;
+        }
+    }
+    .sa-chart-toolbar__item-range {
+        margin-top: .5rem;
+        width: 100%;
+
+        @include dir.scope {
+            #{dir.$margin-inline-start}: 0;
+        }
+
+        .form-control {
+            flex-grow: 1;
+        }
+    }
+}

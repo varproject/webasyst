@@ -1,0 +1,82 @@
+/*
+// .saw-chart-circle
+*/
+@use 'sass:math';
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+
+.saw-chart-circle {
+    display: flex;
+    flex-direction: column;
+}
+.saw-chart-circle__header {
+    padding: 1.25rem 1.25rem 0;
+}
+.saw-chart-circle__body {
+    flex-grow: 1;
+    padding-bottom: min(80%, 20rem);
+    min-height: 12rem;
+    position: relative;
+}
+.saw-chart-circle__container {
+    position: absolute;
+    left: 0; // SKIP-RTL
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1.25rem;
+}
+.saw-chart-circle__table {
+    --sa-widget-table__body-cell--padding-y: .25rem;
+
+    border-bottom: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    margin-bottom: 1rem;
+}
+.saw-chart-circle__symbol {
+    --saw-chart-circle__symbol--color: #{vs.$saw-chart-circle--symbol-default-color};
+
+    width: func.rem(7);
+    height: func.rem(7);
+    background: var(--saw-chart-circle__symbol--color);
+    border-radius: func.rem(1.5);
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .375rem;
+    }
+}
+
+.saw-chart-circle--size--lg {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .saw-chart-circle__header {
+        width: 100%;
+    }
+    .saw-chart-circle__body {
+        min-width: (math.div(1, 3) * 100%);
+        min-height: 13.75rem;
+        padding-bottom: 0;
+
+        margin: 4%;
+        flex-grow: 0;
+    }
+    .saw-chart-circle__container {
+        padding: 0;
+    }
+    .saw-chart-circle__table {
+        --sa-widget-table--padding-x: .75rem;
+        --sa-widget-table__head-cell--padding-y: .375rem;
+        --sa-widget-table__body-cell--padding-y: .25rem;
+
+        margin: 4%;
+        flex-grow: 1;
+        border: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+        border-radius: .125rem;
+        align-self: center;
+
+        @include dir.scope {
+            #{dir.$margin-inline-start}: 0;
+        }
+    }
+}

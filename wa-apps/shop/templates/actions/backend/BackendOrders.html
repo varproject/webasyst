@@ -1,0 +1,426 @@
+{include file="./include.orders_assets.html" inline}
+{$is_courier = $wa->user()->getRights('shop', 'orders') == shopRightConfig::RIGHT_ORDERS_COURIER}
+<div id="s-order-nav" class="flexbox wrap-mobile s-order-nav" style="display:none;">
+
+    <div class="s-order-nav-block js-order-nav-view flexbox space-8 wide-mobile">
+
+        <!-- VIEW -->
+        <div class="s-order-nav-view s-order-view-toggle js-order-view wide">
+            <ul class="chips custom-my-0" id="s-orders-views">
+                <li data-view="split" class="rounded transparent custom-mx-0">
+                    <a href="#" title="[`List`]"><i class="fas fa-user-circle"></i></a>
+                </li>
+
+                <li data-view="table" class="rounded transparent custom-mx-0">
+                    <a href="#" title="[`Table`]"><i class="fas fa-list"></i></a>
+                </li>
+
+                <li data-view="split" class="rounded transparent custom-mx-0 js-view-pos">
+                    <a class="s-position-relative" href="#" title="[`Point of sale`]">
+                        <i class="fas fa-cash-register"></i>
+                    </a>
+                </li>
+
+                <li data-view="kanban" class="rounded transparent custom-mx-0">
+                    <a class="s-position-relative" href="#" title="[`Kanban`]">
+                        <i class="fas fa-table"></i>
+                        {if !shopLicensing::isPremium()}<i class="fas fa-star s-premium-status"></i>{/if}
+                    </a>
+                </li>
+
+                <!-- plugin hook: 'backend_orders.viewmode_li' -->
+                {* @event backend_orders.%plugin_id%.viewmode_li *}
+                {foreach $backend_orders as $_}{ifset($_.viewmode_li)}{/foreach}
+            </ul>
+        </div>
+
+        <div class="s-order-nav-view flexbox space-8">
+            <!-- SORT -->
+            <div class="s-order-nav-sort js-orders-sort">
+                <div class="flexbox space-8">
+                    <div class="dropdown s-orders-sort-dropdown js-sort-dropdown">
+                        <button type="button" class="dropdown-toggle without-arrow button nobutton circle nowrap text-gray light-gray" title="[`Sort order`]" data-sort="" data-order="">
+                            <i class="fas fa-sort-amount-up count hidden asc"></i>
+                            <i class="fas fa-sort-amount-down count hidden desc"></i>
+                        </button>
+
+                        <div class="dropdown-body right">
+                            <ul class="menu">
+                                <li class="s-sort" data-sort="create_datetime">
+                                    <a href="#" data-sort="create_datetime">
+                                        <span>[`Time created`]</span>
+                                        <i class="fas fa-sort-amount-up count hidden asc"></i>
+                                        <i class="fas fa-sort-amount-down count hidden desc"></i>
+                                    </a>
+                                </li>
+
+                                <li class="s-sort" data-sort="updated">
+                                    <a href="#" data-sort="updated">
+                                        <span>[`Time updated`]</span>
+                                        <i class="fas fa-sort-amount-up count hidden asc"></i>
+                                        <i class="fas fa-sort-amount-down count hidden desc"></i>
+                                    </a>
+                                </li>
+
+                                <li class="s-sort" data-sort="paid_datetime">
+                                    <a href="#" data-sort="paid_datetime">
+                                        <span>[`Time paid`]</span>
+                                        <i class="fas fa-sort-amount-up count hidden asc"></i>
+                                        <i class="fas fa-sort-amount-down count hidden desc"></i>
+                                    </a>
+                                </li>
+
+                                <li class="s-sort" data-sort="shipping_datetime">
+                                    <a href="#" data-sort="shipping_datetime">
+                                        <span>[`Shipping time`]</span>
+                                        <i class="fas fa-sort-amount-up count hidden asc"></i>
+                                        <i class="fas fa-sort-amount-down count hidden desc"></i>
+                                    </a>
+                                </li>
+
+                                <li class="s-sort" data-sort="state_id">
+                                    <a href="#" data-sort="state_id">
+                                        <span>[`Order status`]</span>
+                                        <i class="fas fa-sort-amount-up count hidden asc"></i>
+                                        <i class="fas fa-sort-amount-down count hidden desc"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- SEARCH -->
+            <div class="s-order-nav-search">
+                <button type="button" class="button nobutton light-gray circle js-orders-search-show">
+                    <span class="icon text-gray"><i class="fas fa-search"></i></span>
+                </button>
+                <!-- teleport for view=split or mobile after parent block -->
+                <div class="s-order-search hidden js-orders-search">
+                    <div class="search-wrapper">
+                        <input type="search" id="s-orders-search" class="search-input small" placeholder="[`Search orders`]">
+                        <button type="button" class="button light-gray circle custom-pr-4 js-orders-search-hide">
+                            <span class="icon"><i class="fas fa-times"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {if !$is_courier}
+                <!-- NEW ORDER -->
+                <a class="rounded button small nowrap s-order-nav-plus-button" href="#/orders/new/" title="[`New order`]">
+                    <span class="icon"><i class="fas fa-plus"></i></span>
+                    <span class="s-order-nav-plus-button-label"><span class="desktop-and-tablet-only">[`New order`]</span></span>
+                </a>
+            {/if}
+        </div>
+
+    </div>
+
+    <div class="s-order-nav-block hide-when-not-view-pos" id="js-orders-stats"></div>
+
+    {if !$is_courier}
+    <!-- PRIMARY FILTERS -->
+    <div class="s-order-nav-block s-order-nav-block-split-filters hide-when-view-pos">
+
+        <!-- plugin hook: 'backend_orders.sidebar_section' -->
+        {* @event backend_orders.%plugin_id%.sidebar_section *}
+        {if !empty($backend_orders)}{foreach $backend_orders as $_}{ifset($_.sidebar_section)}{/foreach}{/if}
+
+        <div class="bricks s-order-nav-bricks custom-m-0 custom-mb-4">
+            <a href="#/orders/state_id=new|processing|auth|paid|pickup" class="brick shadowed js-orders-link js-orders-hide-filters js-order-nav-brick" id="s-pending-orders">
+                {$_pending_count = (empty($pending_count)) ? 0 : $pending_count}
+                <span class="custom-pr-4 icon js-pending-counter js-pending_counters-counter bold">{$_pending_count}</span>
+                {if $wa->user()->getRights('shop', 'orders') > 1}<span class="count js-total_processing-counter"></span>{/if}
+                <span class="label nowrap semibold">[`Processing`]{if $state_counters.new} <span class="badge orange small squared custom-px-4 js-new-order-counter">+{$state_counters.new}</span>{/if}</span>
+            </a>
+            <a href="#/orders/all/" class="brick shadowed js-orders-link js-orders-show-filters js-order-nav-brick" id="s-all-orders">
+                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                <span class="count js-all-counter">{$all_count}</span>
+                <span class="label semibold">[`All orders`]</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- SECONDAY FILTERS -->
+    <div class="s-order-nav-block s-order-nav-block-chips js-order-nav-block-secondary s-order-nav-block-filters hide-when-view-pos" style="display: none;">
+    <ul class="sidebar-dropdown-container chips small custom-m-0">
+        <li class="s-order-nav-button-wrapper s-order-nav-only-table-kanban">
+            <a href="#/orders/state_id=new|processing|auth|paid|pickup" class="button light-gray js-orders-link js-orders-hide-filters js-order-nav-brick s-order-nav-button js-pending-orders">
+                <span class="label">[`Processing`]</span>
+                <span class="badge orange small squared custom-px-4 js-new-order-counter">+{$state_counters.new}</span>
+                <span class="hint">
+                    <span class="js-pending-counter js-pending_counters-counter">{$_pending_count}</span>,
+                    <span class="js-total_processing-counter"></span>
+                </span>
+            </a>
+        </li>
+        {if !empty($couriers) || !empty($contacts_as_courier)}
+            <li class="dropdown js-orders-dropdown">
+                <button class="dropdown-toggle light-gray full-width align-left nowrap" data-text="[`Couriers`]">[`Couriers`]</button>
+                <div class="dropdown-body">
+                    <ul class="menu">
+                        <li>
+                            <a href="javascript:void(0)" class="custom-pl-16" data-param="all=params.courier_id|courier_contact_id">
+                                <span>[`All couriers`]</span>
+                            </a>
+                        </li>
+                        {if !empty($couriers)}
+                            {foreach $couriers as $courier}
+                                <li>
+                                    <a href="javascript:void(0)" data-param="params.courier_id={$courier.id|escape}" class="js-orders-link">
+                                        <span class="icon">
+                                            {if $courier.contact_id}
+                                                <i style="background-image: url({waContact::getPhotoUrl($courier.contact_id, $courier.photo, 40)});vertical-align: middle;"></i>
+                                            {else}
+                                                <i class="fas fa-walking"></i>
+                                            {/if}
+                                        </span>
+                                        <span>{$courier.name|escape}</span>
+                                        <span class="count">{$courier.count}</span>
+                                    </a>
+                                </li>
+                            {/foreach}
+                        {/if}
+                        {if !empty($contacts_as_courier)}
+                            {foreach $contacts_as_courier as $courier}
+                                <li>
+                                    <a href="javascript:void(0)" data-param="courier_contact_id={$courier.id|escape}" class="js-orders-link">
+                                        <span class="icon">
+                                            <i class="userpic" style="background-image: url({waContact::getPhotoUrl($courier.id, $courier.photo, 20)});"></i>
+                                        </span>
+                                        <span>{$courier.name|escape}</span>
+                                        <span class="count">{$courier.count}</span>
+                                    </a>
+                                </li>
+                            {/foreach}
+                        {/if}
+                    </ul>
+                </div>
+            </li>
+        {/if}
+
+        {if !empty($shipping)}
+            <li class="dropdown js-orders-dropdown more-indent-icon">
+                <button class="dropdown-toggle light-gray full-width align-left nowrap" data-text="[`Shipping`]">[`Shipping`]</button>
+                <div class="dropdown-body">
+                    <ul class="menu">
+                        <li>
+                            <a href="javascript:void(0)" class="custom-pl-12" data-param="all=params.shipping_id">
+                                <span>[`All shipping methods`]</span>
+                            </a>
+                        </li>
+                        {foreach $shipping as $s}
+                            <li>
+                                <a href="javascript:void(0)" data-param="params.shipping_id={$s.id|escape}" class="js-orders-link">
+                                    <span class="icon">
+                                        {if $s.logo}
+                                            <i style="background-image: url({$s.logo|escape});background-repeat:no-repeat;background-size:cover;"></i>
+                                        {elseif !empty($s.info.img)}
+                                            <i style="background-image: url({$s.info.img|escape});background-repeat:no-repeat;background-size:cover;"></i>
+                                        {else}
+                                            <i class="fas fa-truck"></i>
+                                        {/if}
+                                    </span>
+                                    <span>{$s.name|escape}</span>
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </li>
+        {/if}
+
+        {if !empty($payments)}
+            <li class="dropdown js-orders-dropdown more-indent-icon">
+                <button class="dropdown-toggle light-gray full-width align-left nowrap" data-text="[`Payment`]">[`Payment`]</button>
+                <div class="dropdown-body">
+                    <ul class="menu">
+                        <li>
+                            <a href="javascript:void(0)" class="custom-pl-16" data-param="all=params.payment_id">
+                                <span>[`All payment methods`]</span>
+                            </a>
+                        </li>
+                        {foreach $payments as $payment}
+                            <li>
+                                <a href="javascript:void(0)" data-param="params.payment_id={$payment.id|escape}" class="js-orders-link">
+                                    <span class="icon">
+                                        {if $payment.logo}
+                                            <i style="background-image: url({$payment.logo|escape});background-repeat:no-repeat;background-size:cover;"></i>
+                                        {elseif !empty($payment.info.img)}
+                                            <i style="background-image: url({$payment.info.img|escape});background-repeat:no-repeat;background-size:cover;"></i>
+                                        {else}
+                                            <i class="fas fa-credit-card"></i>
+                                        {/if}
+                                    </span>
+                                    <span>{$payment.name|escape}</span>
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </li>
+        {/if}
+
+        <li class="dropdown js-orders-dropdown s-orders-dropdown-status">
+            <button class="dropdown-toggle light-gray nowrap" data-text="[`Status`]">
+                [`Status`]
+            </button>
+
+            <div class="dropdown-body">
+                <ul class="menu">
+                    <li>
+                        <a href="javascript:void(0)" class="custom-pl-12" data-param="all=state_id">
+                            <span>[`All statuses`]</span>
+                        </a>
+                    </li>
+
+                    <!-- plugin hook: 'backend_orders.sidebar_top_li' -->
+                    {* @event backend_orders.%plugin_id%.sidebar_top_li *}
+                    {if !empty($backend_orders)}{foreach $backend_orders as $_}{ifset($_.sidebar_top_li)}{/foreach}{/if}
+
+                    {foreach $states as $id => $state}
+                        <li data-state-id="{$id}">
+                            <a href="#/orders/state_id={$id}/" data-param="state_id={$id|escape}" class="js-orders-link" style="{$state->getStyle()}">
+                                <span class="icon"><i class="{$wa->shop->convertIcon($state->getOption('icon'))}" style="{$state->getStyle()}"></i></span>
+                                <span class="label">{$state->getName()|escape}</span>
+                                <span class="count">{if isset($state_counters[$id])}{$state_counters[$id]}{else}0{/if}</span>
+                            </a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </li>
+
+        <li class="dropdown js-orders-dropdown s-orders-dropdown-sales_channels">
+            <button class="dropdown-toggle light-gray nowrap" data-text="[`Sales channels`]">
+                [`Sales channels`]
+            </button>
+
+            <div class="dropdown-body">
+                <ul class="menu menus-storefronts-filter">
+                    <li>
+                        <a href="javascript:void(0)" class="custom-pl-16" data-param="all=params.storefront|params.sales_channel">
+                            <span>[`All channels`]</span>
+                        </a>
+                    </li>
+
+                    {foreach $sales_channels as $channel_id => $channel}
+                        {$channel_id_escaped = {$channel_id|escape}}
+                        {$has_storefront = strpos($channel_id_escaped, 'storefront:') !== false && strpos($channel_id_escaped, '/') !== false}
+
+                        {if empty({$channel.storefront|escape})}
+                            {$param_channel = 'sales_channel='|cat:$channel_id_escaped}
+                        {else}
+                            {$param_channel = str_replace('storefront:', '', $channel_id_escaped)}
+                            {$param_channel = 'storefront='|cat:$param_channel}
+                        {/if}
+
+                        {$param_channel = 'params.'|cat:$param_channel|cat:{($has_storefront) ? '/' : ''}}
+                        <li data-storefront="{$channel.storefront|escape}" data-sales-channel="{$channel_id_escaped}" class="list">
+                            <a href="{$channel.url|escape}" class="js-orders-link" data-param="{$param_channel}">
+                                <span class="icon">{$channel.menu_icon|default:'<i class="fas fa-shopping-cart">'}</i></span>
+                                <span class="label">{$channel.name|escape}</span>
+                                <span class="count">{$channel.count}</span>
+                            </a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </li>
+
+        <!-- plugin hook: 'backend_orders.sidebar_bottom_li' -->
+        {* @event backend_orders.%plugin_id%.sidebar_bottom_li *}
+        {if !empty($backend_orders)}{foreach $backend_orders as $_}{ifset($_.sidebar_bottom_li)}{/foreach}{/if}
+
+        <li class="transparent js-remove-filters-link hidden">
+            <a href="#/orders/all/" class="s-remove-filters-link gray">
+                <i class="fas fa-times-circle" title="[`Clear filters`]"></i>
+            </a>
+        </li>
+    </ul>
+    </div>
+    {/if}
+
+</div>
+<div class="flexbox" id="s-content">
+    {* order list & order primary data view *}
+    <div id="skeleton_orders" class="width-100"></div>
+</div>
+
+{* check mobile device *}
+<div id="js-media-mobile" class="mobile-only"></div>
+
+<script>
+    (function() {
+        function getNeedView(prop) {
+            var hashParams = { };
+            var e,
+                a = /\+/g,
+                r = /([^&;=]+)=?([^&;]*)/g,
+                d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+                q = window.location.hash.substring(1 + 0);
+
+            while (e = r.exec(q)) {
+                var prop = d(e[1]);
+                var val = d(e[2]);
+                if (val) {
+                    var regex = new RegExp('\\w+', 'g');
+                    var m = regex.exec(val);
+                    if (m.length) {
+                        val = m[0];
+                    }
+                }
+
+                if(['/orders/view', 'view'].includes(prop)) {
+                    return val;
+                }
+
+                var regOrder= new RegExp('order/\\d+', 'g');
+                if (regOrder.test(prop)) {
+                    return 'order';
+                }
+            }
+
+            return null;
+        }
+
+        var view = getNeedView() || $.storage.get('shop/orders/view');
+
+        // :TODO fix if/else for type orders on the backend
+        var skeleton_template;
+        switch (view) {
+            case 'table':
+                skeleton_template = '{{include '../orders/skeleton/table.html'}|strip}';
+                break;
+            case 'kanban':
+                skeleton_template = '{{include '../orders/skeleton/kanban.html' select='kanban'}|strip}';
+                break;
+            case 'order':
+                skeleton_template = '{{include '../orders/skeleton/split.html' no_sidebar=true inline}|strip}';
+                break;
+            default:
+                skeleton_template = '{{include '../orders/skeleton/split.html'}|strip}';
+                break;
+        }
+
+        $('#skeleton_orders').html(skeleton_template);
+
+        const class_hide_mobile = 'desktop-and-tablet-only';
+        if (new RegExp('id=\\d+').test(window.location.hash)) {
+            $('#js-split-order-sidebar').addClass(class_hide_mobile);
+        } else {
+            $('#js-split-order-content').addClass(class_hide_mobile);
+        }
+    })();
+
+    $(function() {
+        if ($.wa_push) {
+            $.wa_push.init();
+        }
+
+        $.orders.init({
+            view: '{$default_view}',
+            wa_app_static_url: '{$wa_app_static_url}'
+        });
+    });
+</script>

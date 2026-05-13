@@ -1,0 +1,39 @@
+{strip}
+
+<div class="t-return-form-block" id="return-wrapper-{$task.id}">
+    <form method="post" action="?module=tasksLog&action=return&id={$task.id}" data-task-action="return" data-task-id="{$task.id}" data-task-uuid="{$task.uuid}">
+    <div class="fields">
+        <div class="field">
+            <div class="name for-checkbox">[`Return to status`]</div>
+            <div class="value">{tasksHelper::statusNameHTML($task.return_status.id)}</div>
+        </div>
+        <div class="field">
+            <div class="name for-checkbox">[`Assign to`]</div>
+            <div class="value">
+                <div class="flexbox middle space-4">
+                    <i class="userpic userpic-20" style="background-image: url({$task.return_actor->getPhoto(40, 40)})"></i>
+                    <span class="semibold">{$task.return_actor->getName()|escape}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="custom-mt-16">
+        <input type="hidden" name="prev_status_id" value="{$task.return_status.id}">
+        <input type="hidden" name="prev_actor_contact_id" value="{$task.return_actor.id}">
+
+        {include file="./TaskStatusForm.DropArea.html" inline}
+
+    </div>
+
+    <div class="field t-buttons-block">
+        <div class="name"></div>
+        <div class="value">
+            <button type="submit" class="button large">[`Return task`]</button>
+        </div>
+    </div>
+
+    </form>
+</div>
+
+{/strip}

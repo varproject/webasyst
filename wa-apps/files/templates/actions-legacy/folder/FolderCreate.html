@@ -1,0 +1,110 @@
+{function form_begin}
+    {if $can_add && !$in_sync}<form>{/if}
+{/function}
+{function form_end}
+    {if $can_add && !$in_sync}</form>{/if}
+{/function}
+
+{$dialog_id = uniqid('f-create-folder-dialog')}
+
+<div class="dialog width450px height150px f-dialog f-create-folder-dialog" id="{$dialog_id}" style="display:none;">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+                    <h1>[`Create folder`]</h1>
+                    {if !$can_add}
+                        [`No permissions to create a folder`]
+                    {elseif $in_sync}
+                        [`Sync is in process. No changes available until synchronization finish.`]
+                    {else}
+                        <div class="fields form width100px">
+                            <div class="field">
+                                <div class="name">[`Name`]</div>
+                                <div class="value">
+                                    <input type="text" value="" name="name" placeholder="" autocomplete="off" class="bold">
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {if $can_add && !$in_sync}
+                        {$wa->csrf()}
+                        <input class="button green" type="submit" value="[`Create folder`]">
+                        <i class="icon16 loading" style="display: none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                        {if !empty($folder_id)}
+                            <input type="hidden" name="folder_id" value="{$folder_id}">
+                        {else}
+                            <input type="hidden" name="storage_id" value="{$storage_id}">
+                        {/if}
+                    {else}
+                        <input class="button gray cancel" type="button" value="[`Close`]">
+                    {/if}
+                </div>
+            </div>
+        </div>
+    {form_end}
+</div>
+
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-create-folder-dialog').not(dialog).remove();
+
+        {if !$can_add || $in_sync}
+
+            // just open dialog
+            dialog.filesDialog();
+
+        {else}
+
+            dialog.filesDialog({
+                onLoad: function() {
+                    dialog.find(':input[name="name"]').focus().val('');
+                },
+                onSubmit: function() {
+                    var form = $(this);
+                    if (form.data('loading')) {
+                        return false;
+                    }
+                    form.data('loading', 1);
+                    form.find('.loading').show();
+                    $.files.clearValidateErrors(form);
+
+                    var error = function(r)  {
+                        dialog.trigger('close');
+                        $.files.alertError("[`Couldn't create folder`]", r);
+                    };
+
+                    // make post request
+                    $.files.jsonPost({
+                        url: '?module=folder&action=save',
+                        data: form.serialize(),
+                        onSuccess: function(r) {
+                            if (r.status !== 'ok') {
+                                $.files.showValidateErrors(r.errors, form);
+                            } else if (!r.data.folder) {
+                                error(r.data);
+                            } else {
+                                $.files.controller.reloadPage();
+                                $.files.refreshSidebar();
+                                dialog.trigger('close');
+                            }
+                        },
+                        onFailure: error,
+                        onAlways: function() {
+                            form.data('loading', 0);
+                            form.find('.loading').hide();
+                        }
+                    });
+                    return false;
+                }
+            });
+        {/if}
+    });
+</script>

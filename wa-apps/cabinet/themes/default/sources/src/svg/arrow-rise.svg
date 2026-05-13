@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="currentColor">
+    <path d="M9,0L8,6.1L2.8,1L9,0z" />
+    <circle cx="1" cy="8" r="1" />
+    <rect x="0" y="4.5" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -2.864 4.0858)" width="7.1" height="2" />
+</svg>

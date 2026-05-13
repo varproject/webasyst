@@ -1,0 +1,100 @@
+@use 'sass:list';
+@use 'custom-variables' as vs;
+
+$direction: vs.$direction;
+$both-directions: vs.$both-directions;
+
+$inline-start:              null;
+$inline-end:                null;
+$transform-direction:       null;
+
+// margin
+$margin-inline-start:       null;
+$margin-inline-end:         null;
+// padding
+$padding-inline-start:      null;
+$padding-inline-end:        null;
+// inset (left, right)
+$inset-inline-start:        null;
+$inset-inline-end:          null;
+// border
+$border-inline-start:       null;
+$border-inline-end:         null;
+$border-inline-start-width: null;
+$border-inline-end-width:   null;
+// border-radius
+$border-start-start-radius: null;
+$border-start-end-radius:   null;
+$border-end-start-radius:   null;
+$border-end-end-radius:     null;
+
+@mixin configure($direction, $both-directions) {
+    $direction:       $direction       !global;
+    $both-directions: $both-directions !global;
+
+    @include switch-to($direction);
+}
+
+@mixin switch-to($new) {
+    $direction: $new !global;
+
+    @if($new == 'ltr') {
+        $inline-start:        left  !global;
+        $inline-end:          right !global;
+        $transform-direction: 1     !global;
+    } @else {
+        $inline-start:        right !global;
+        $inline-end:          left  !global;
+        $transform-direction: -1    !global;
+    }
+
+    $margin-inline-start:       margin-#{$inline-start}               !global;
+    $margin-inline-end:         margin-#{$inline-end}                 !global;
+    $padding-inline-start:      padding-#{$inline-start}              !global;
+    $padding-inline-end:        padding-#{$inline-end}                !global;
+    $inset-inline-start:        #{$inline-start}                      !global;
+    $inset-inline-end:          #{$inline-end}                        !global;
+
+    $border-inline-start:       border-#{$inline-start}               !global;
+    $border-inline-end:         border-#{$inline-end}                 !global;
+    $border-inline-start-width: border-#{$inline-start}-width         !global;
+    $border-inline-end-width:   border-#{$inline-end}-width           !global;
+
+    $border-start-start-radius: border-top-#{$inline-start}-radius    !global;
+    $border-start-end-radius:   border-top-#{$inline-end}-radius      !global;
+    $border-end-start-radius:   border-bottom-#{$inline-start}-radius !global;
+    $border-end-end-radius:     border-bottom-#{$inline-end}-radius   !global;
+}
+
+@mixin scope() {
+    @if($both-directions) {
+        @include switch-to(ltr);
+
+        [dir="ltr"] & {
+            @content;
+        }
+
+        @include switch-to(rtl);
+
+        [dir="rtl"] & {
+            @content;
+        }
+    } @else {
+        @content;
+    }
+}
+
+@mixin margin($values) {
+    @if (list.length($values) == 4) {
+        $block-start: list.nth($values, 1);
+        $inline-start: list.nth($values, if($direction == 'ltr', 2, 4));
+        $block-end: list.nth($values, 3);
+        $inline-end: list.nth($values, if($direction == 'ltr', 4, 2));
+
+        margin: $block-start $inline-start $block-end $inline-end;
+    } @else {
+        margin: $values;
+    }
+}
+
+@include switch-to($direction);

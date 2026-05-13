@@ -1,0 +1,216 @@
+{$container_id = uniqid('f-share-settings-')}
+
+{function group_levels info=[]}{strip}
+    {if $info.disabled && $info.checked && $info.min_level == filesRightConfig::RIGHT_LEVEL_FULL}
+        <span class="small highlighted">[`Full access`]</span>
+    {else}
+    <select name="level[{$info.id}]" class="f-share-settings-level-select{if $is_dialog} small{/if}">
+        {foreach $levels|default:[] as $level => $name}
+            {if $level >= $info.min_level}
+                <option value="{$level}" {if $level == $info.level}selected="selected"{/if}>{$name|escape}</option>
+            {/if}
+        {/foreach}
+    </select>
+    {/if}
+{/strip}{/function}
+
+
+{function user_levels info=[]}{strip}
+    <select name="level[-{$info.id}]"
+            class="f-share-settings-level-select"
+            {if $info.disabled|default:''}disabled="disabled"{/if}
+            {foreach $info.data|default:[] as $k => $v}data-{$k}-{$v}{/foreach}>
+
+        {foreach $levels|default:[] as $level => $name}
+            {if $level >= $info.min_level}
+                <option value="{$level}" {if $level == $info.level}selected="selected"{/if}>{$name|escape}</option>
+            {/if}
+        {/foreach}
+
+    </select>
+{/strip}{/function}
+
+{function group_checkbox info=[]}
+    <label>
+        <input type="checkbox" value="1" name="group_id[{$info.id}]"
+            {if $info.checked}checked="checked"{/if}
+            {if $info.disabled}disabled="disabled"{/if}>
+        {$info.name|escape}
+    </label>
+{/function}
+
+<div id="{$container_id}">
+    <div class="fields f-share-settings">
+        {if !empty($groups)}
+            <div class="f-group-settings">
+                {foreach $groups|default:[] as $group_id => $info}
+                    <div class="field">
+                        <div class="name">
+                            {group_checkbox info=$info}
+                        </div>
+                        <div class="value" style="display: none;">
+                            {group_levels info=$info}
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+        {else}
+            <p>
+                [`There are no user groups in your Webasyst account. Add groups using Contacts app to be able to manage access to storage.`]
+            </p>
+        {/if}
+
+        <div class="f-user-settings custom-mt-24{if $is_dialog} small{/if}">
+            <h{if $is_dialog}5{else}4{/if}>[`Selected users`]</h{if $is_dialog}5{else}4{/if}>
+            <table class="{if $is_dialog}borderless{else}zebra{/if}">
+                <tbody>
+                    {foreach $users|default:[] as $user}
+                        <tr>
+                            <td>
+                                <a href="{$wa_backend_url}contacts/#/contact/{$user.id}" title="{$user.name|escape}">
+                                    <i class="icon userpic userpic-20 f-userpick" style="background-image: url({$user.photo_url_20});"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <span class="f-name bold">{$user.name|escape}</span>
+                            </td>
+                            <td>
+                                {user_levels info=$user}
+                            </td>
+                            <td>
+                                {if $user.delete}
+                                    <a href="javascript:void(0)" class="f-delete"><i class="fas fa-trash-alt text-red"></i></a>
+                                {else}
+                                    <i class="fas fa-trash-alt text-light-gray"></i>
+                                {/if}
+                            </td>
+                        </tr>
+                    {/foreach}
+                    <tr class="f-template" style="display: none;">
+                        <td>
+                            <a class="f-url" href="{$wa_backend_url}contacts/#/contact/" title="">
+                                <i class="icon userpic userpic-20 f-userpic"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <span class="f-name bold"></span>
+                        </td>
+                        <td>
+                            {user_levels info=[
+                                'id' => 0,
+                                'min_level' => filesRightConfig::RIGHT_LEVEL_NONE,
+                                'level' => filesRightConfig::RIGHT_LEVEL_ADD_FILES,
+                                'disabled' => 1
+                            ]}
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" class="f-delete"><i class="fas fa-trash-alt text-red"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="min-width"><i class="fas fa-plus"></i></td>
+                        <td><input type="text" class="bold f-autocomplete" placeholder="[`Start typing user name...`]" name=""></td>
+                        <td>
+                            {user_levels info=[
+                                'id' => 0,
+                                'min_level' => filesRightConfig::RIGHT_LEVEL_NONE,
+                                'level' => filesRightConfig::RIGHT_LEVEL_ADD_FILES,
+                                'disabled' => 1,
+                                'data' => ['enabled-ignore' => 1]
+                            ]}
+                        </td>
+                        <td></td>
+                    </tr>
+                    {if !$is_dialog}
+                    <tr class="f-changed-message" style="display: none">
+                        <td class="min-width"></td>
+                        <td colspan="3">
+                            <em class="highlighted">[`Click “Save” button below to commit changes.`]</em>
+                        </td>
+                    </tr>
+                {/if}
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        (function(container) {
+
+            // group checkbox
+            (function(block) {
+                var clickHanlder = function(checkbox) {
+                    var field = checkbox.closest('.field');
+                    if (checkbox.is(':checked')) {
+                        field.find('.value').show().find(':input').not('[data-enable-ignore=1]').attr('disabled', false);
+                    } else {
+                        field.find('.value').hide().find(':input').not('[data-enable-ignore=1]').attr('disabled', true);
+                    }
+                };
+                $(':input[name^=group_id]', block).on('click', function() {
+                    clickHanlder($(this));
+                }).each(function() {
+                    clickHanlder($(this));
+                });
+            })($('.f-group-settings', container));
+
+            // user settings
+            (function(block) {
+
+                var showMessage = function() {
+                    $('.f-changed-message', block).show();
+                };
+
+                const selectedUsers = [];
+                // autocomplete
+                $('.f-autocomplete', block).autocomplete({
+                    source: '?action=autocomplete&type=contact',
+                    minLength: 2,
+                    delay: 300,
+                    select: function(event, ui) {
+                        $(this).val('');
+
+                        if (selectedUsers.includes(ui.item.id)) {
+                            return false;
+                        }
+                        selectedUsers.push(ui.item.id);
+
+                        var tr = container.find('.f-template').clone().show().removeClass('f-template');
+
+                        var href = tr.find('.f-url').attr('href');
+                        tr.find('.f-url').attr('href', href + ui.item.id + '/');
+                        tr.find('.f-name').text(ui.item.name);
+                        tr.find('.f-userpic').css({
+                            backgroundImage: 'url(' + ui.item.userpic20 + ')'
+                        });
+                        tr.find('select').attr('name', "level[-" + ui.item.id + "]").attr('disabled', false);
+
+                        container.find('tbody').append(tr);
+
+                        showMessage();
+
+                        $('.f-autocomplete', block).trigger('autocomplete_select');
+                        block.closest('.dialog').data('dialog')?.resize();
+                        return false;
+                    },
+                    focus: function (event, ui) {
+                        this.value = ui.item.name;
+                        return false;
+                    }
+                });
+
+                // delete link
+                block.off('click', '.f-delete').on('click', '.f-delete', function() {
+                    $(this).closest('tr').remove();
+                    showMessage();
+                });
+
+            })($('.f-user-settings', container));
+
+        })($('#{$container_id}'));
+    });
+</script>

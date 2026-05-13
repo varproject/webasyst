@@ -1,0 +1,54 @@
+/*
+// .sa-folder
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+
+.sa-folder {
+    display: flex;
+    align-items: center;
+    border: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    border-radius: .25rem;
+    padding: .75rem;
+    transition:
+        background-color .12s ease-in-out,
+        border-color .12s ease-in-out;
+
+    &,
+    &:hover {
+        color: inherit;
+    }
+
+    &:hover {
+        background: vs.$sa-folder--hover-bg-color;
+        text-decoration: none;
+    }
+}
+.sa-folder__image {
+    display: flex;
+    justify-content: center;
+    width: 2.75rem;
+    font-size: 2rem;
+    color: vs.$sa-folder--icon-color;
+
+    svg {
+        display: block;
+    }
+}
+.sa-folder__image + .sa-folder__info {
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .625rem;
+    }
+}
+.sa-folder__name {
+    font-size: func.rem(15);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sa-folder__meta {
+    font-size: func.rem(13);
+    color: vs.$sa-card--font-muted-color;
+    margin-top: -1px; // SKIP-PIXELS
+}

@@ -1,0 +1,93 @@
+/*
+// input-group
+*/
+@use 'sass:map';
+@use 'sass:math';
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+@use '../mixins/loader';
+
+.input-group .input-group-text {
+    --sa-input-padding-x: 0;
+    --sa-input-padding-y: 0;
+
+    padding: var(--sa-input-padding-y) var(--sa-input-padding-x);
+}
+
+@each $size, $variables in vs.$sa-input--sizes {
+    $local-prefix: '';
+
+    @if($size != 'default') {
+        $local-prefix: '-' + $size;
+    }
+
+    $local-line-height: map.get($variables, line-height);
+
+    @if (math.is-unitless($local-line-height)) {
+        $local-line-height: map.get($variables, font-size) * map.get($variables, line-height);
+    }
+
+    .input-group#{$local-prefix} .input-group-text,
+    .input-group#{$local-prefix} .form-control,
+    .input-group#{$local-prefix} .form-select {
+        --sa-input-padding-x: #{map.get($variables, padding-x)};
+        --sa-input-padding-y: #{map.get($variables, padding-y)};
+
+        font-size: map.get($variables, font-size);
+        line-height: $local-line-height;
+        min-height: calc(#{$local-line-height} + #{vs.$sa-input--border-width * 2} + var(--sa-input-padding-y) * 2);
+    }
+
+    .input-group#{$local-prefix} .form-select {
+        @include dir.scope {
+            #{dir.$padding-inline-end}: calc(var(--sa-input-padding-x) * 2 + #{func.rem(5)});
+
+            background-position: #{dir.$inline-end} var(--sa-input-padding-x) center;
+        }
+    }
+}
+
+.input-group .btn {
+    --sa-button-padding-x: 0rem;
+    --sa-button-padding-y: 0rem;
+
+    border-width: 1px; // SKIP-PIXELS
+    padding: calc(var(--sa-button-padding-y) + 1px) calc(var(--sa-button-padding-x) + 1px); // SKIP-PIXELS
+}
+
+%input-group-button {
+    border-color: vs.$sa-input-group__button--border-color;
+}
+
+@each $style, $states in vs.$sa-button--styles {
+    .input-group .btn-#{$style} {
+        @extend %input-group-button;
+    }
+}
+
+@each $size, $variables in vs.$sa-button--sizes {
+    $local-prefix: '';
+
+    @if($size != 'default') {
+        $local-prefix: '-' + $size;
+    }
+
+    $local-line-height: map.get($variables, line-height);
+
+    @if (math.is-unitless($local-line-height)) {
+        $local-line-height: map.get($variables, font-size) * map.get($variables, line-height);
+    }
+
+    .input-group#{$local-prefix} .btn {
+        --sa-button-padding-x: #{map.get($variables, padding-x)};
+        --sa-button-padding-y: #{map.get($variables, padding-y)};
+
+        font-size: map.get($variables, font-size);
+        line-height: $local-line-height;
+
+        &.btn-sa-loading:before {
+            @include loader.loader-size($local-line-height);
+        }
+    }
+}

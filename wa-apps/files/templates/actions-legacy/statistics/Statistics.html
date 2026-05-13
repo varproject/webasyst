@@ -1,0 +1,25 @@
+<div class="shadowed f-statistics-container" id="f-statistics-container">
+    <div class="sidebar left200px">
+        <ul class="menu-v with-icons stack f-statistics-menu">
+            <li><a href="#/statistics/storages/"><i class="icon16 folder"></i> [`Storage summary`]</a></li>
+            <li><a href="#/statistics/trash/"><i class="icon16 trash"></i> [`Trash summary`]</a></li>
+            <li><a href="#/statistics/file_types/"><i class="icon16 notebook"></i> [`File type statistics`]</a></li>
+            <li><a href="#/statistics/users/"><i class="icon16 contact"></i> [`User statistics`]</a></li>
+        </ul>
+    </div>
+    <div class="content left200px blank bordered-left">
+        <div class="block double-padded">
+            <div class="f-statistics-content f-load-block">
+                <div class="f-loading">
+                    [`Loading...`]<i class="icon16 loading"></i>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        $.files.setBrowserTitle("[`Statistics`]");
+    });
+</script>

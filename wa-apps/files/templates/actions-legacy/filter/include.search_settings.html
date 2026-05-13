@@ -1,0 +1,137 @@
+<div class="field-group">
+    <br>
+    <h3 class="heading">[`Filter conditions`]</h3>
+    <br>
+    <div class="field">
+        <div class="name">
+            [`File name`]
+        </div>
+        <div class="value">
+            <input class="large bold" type="text" name="conditions[name]" value="{$filter.conditions_parsed.name.val|default:''|escape}">
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            [`Tags`]
+        </div>
+        <div class="value">
+            <input type="text" name="conditions[tag]" id="{$container_id}-tags" value="{$filter.conditions_parsed.tag.val|default:''|escape}">
+        </div>
+    </div>
+    <div class="field">
+        <div class="name padding1px">
+            [`Storage`]
+        </div>
+        <div class="value">
+            <ul class="menu-v h-filter-storages">
+                <li>
+                    <label>
+                        <input type="checkbox" name="conditions[storage_id][]" value="" {if empty($filter.conditions_parsed.storage_id)}checked="checked"{/if}> [`All storages`]
+                    </label>
+                </li>
+                {foreach $storages as $storage}
+                    <li>
+                        <label>
+                            <input type="checkbox" name="conditions[storage_id][]" value="{$storage.id}" {if $filter.conditions_parsed.storage_id.val_map[$storage.id]|default:'' == $storage.id}checked="checked"{/if}> {$storage.name|escape}
+                        </label>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+    <div class="field">
+        <div class="name padding1px">
+            [`File type`]
+        </div>
+        <div class="value">
+            <ul class="menu-v h-filter-types">
+                <li>
+                    <label>
+                        <input type="checkbox" name="conditions[file_type][]" value="" {if empty($filter.conditions_parsed.file_type) && empty($filter.conditions_parsed.ext)}checked="checked"{/if}> [`All types`]
+                    </label>
+                </li>
+                {foreach $types as $type_id => $type}
+                    <li>
+                        <label>
+                            <input type="checkbox" name="conditions[file_type][]" value="{$type_id}"
+                                {if ($filter.conditions_parsed.file_type.val_map[$type_id]|default:'') == $type_id}checked="checked"{/if}>
+                            {$type.name|escape}
+                            <span class="hint">{strip}
+                                {foreach $type.ext|default:[] as $ext}
+                                    {if $ext}
+                                        {$ext|escape}
+                                        {if !$ext@last}, {/if}
+                                    {/if}
+                                {/foreach}
+                            {/strip}</span>
+                        </label>
+                    </li>
+                {/foreach}
+                <li>
+                    <label>
+                        <input type="checkbox" name="conditions[file_type][]" value=":custom" {if !empty($filter.conditions_parsed.ext)}checked="checked"{/if}> [`Custom file name extension`]
+                    </label>
+                </li>
+                <li {if empty($filter.conditions_parsed.ext)}style="display:none;"{/if}>
+                    <input type="text" name="conditions[file_type][ext]" {if empty($filter.conditions_parsed.ext)}disabled="disabled"{/if} value="{$filter.conditions_parsed.ext.val|default:''|escape}">
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        (function(container) {
+            $('.h-filter-storages, .h-filter-types', container).each(function() {
+                var context = $(this);
+                var all_check = $(':checkbox[value=""]', context);
+                all_check.click(function() {
+                    $(':checkbox[value!=""]', context).not(':checkbox[value=":custom"]').attr('checked', all_check.is(':checked'));
+                });
+                if ($(':checkbox[value=""]', context).is(':checked')) {
+                    $(':checkbox[value!=""]', context).not(':checkbox[value=":custom"]').attr('checked', true);
+                }
+                $(':checkbox[value!=""]', context).not(':checkbox[value=":custom"]').click(function() {
+                    if (!$(this).is(':checked')) {
+                        all_check.attr('checked',false);
+                    }
+                });
+            });
+
+            $(':input[name="conditions[tag]"]', container).tagsInput({
+                defaultText: '[`enter tags`]',
+                autocomplete_url: '',
+                autocomplete: {
+                    source: function(request, response) {
+                        $.getJSON('?module=tag&action=autocomplete&term=' + request.term,
+                        function(r) {
+                            if (r.status === 'ok') {
+                                response(r.data.tags || []);
+                            } else {
+                                response([]);
+                            }
+                        });
+                    }
+                }
+            });
+
+            $('.h-filter-types :checkbox', container).click(function() {
+                var el = $(this);
+                var val = el.val();
+                if (val === ':custom') {
+                    var input = $('.h-filter-types [name="conditions[file_type][ext]"]', container);
+                    var li_ext = input.closest('li');
+                    if (el.is(':checked')) {
+                        li_ext.show();
+                        input.attr('disabled', false);
+                    } else {
+                        li_ext.hide();
+                        input.attr('disabled', true);
+                    }
+                }
+            });
+
+        })($('#{$container_id}'));
+    });
+</script>

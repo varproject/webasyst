@@ -1,0 +1,435 @@
+<div class="sidebar-header box custom-pt-20">
+    <button class="button full-width align-center f-upload-link" id="t-new-user-link"><i class="fas fa-cloud-upload-alt fa-w-20 custom-mr-4"></i> <span class="s-title small">[`Upload files`]</span></button>
+</div>
+
+<div class="sidebar-body">
+    <div class="block">
+        <ul class="menu mobile-friendly custom-mb-0">
+            <li class="f-all-files-wrapper">
+                <a href="#/">
+                    <i class="fas fa-folder"></i>
+                    <span>[`All files`]</span>
+                    <span class="count">{$counters.all}</span>
+                </a>
+            </li>
+            <li class="f-favorite-files-wrapper">
+                <a href="#/favorite/">
+                    <i class="fas fa-star"></i>
+                    <span>[`Favorites`]</span>
+                    <span class="count">{$counters.favorite}</span>
+                </a>
+            </li>
+
+            <!-- plugin hook: 'backend_sidebar.menu' -->
+            {* @event backend_sidebar.%plugin_id%.menu *}
+            {foreach $backend_sidebar as $plugin_id => $item}
+                {if !empty($item.menu)}
+                    {if is_array($item.menu)}
+                        {foreach $item.menu as $i => $item_menu}
+                            <li id="f-sidebar-menu-{$plugin_id}-{$i}"><span>{$item_menu}</span></li>
+                        {/foreach}
+                    {else}
+                        <li id="f-sidebar-menu-{$plugin_id}"><span>{$item.menu}</span></li>
+                    {/if}
+                {/if}
+            {/foreach}
+
+        </ul>
+
+        <div class="f-filter-list-wrapper f-drop-zone">
+            <ul class="menu f-filter-list mobile-friendly custom-mt-0">
+                {foreach $all_filters as $type => $filters}
+                    {foreach $filters as $filter}
+                        <li class="f-filter" data-id="{$filter.id}">
+                            <a href="#/filter/{$filter.id}/" title="{$filter.name|escape}">
+                                {if $filter.icon_url}
+                                    <i class="icon16" style="background-image: url({$filter.icon_url}); background-size: contain;"></i>
+                                {else}
+                                    <i class="icon16 {$filter.icon}"></i>
+                                {/if}
+                                <span class="menu-item">{$filter.name|escape}</span>
+                                <span class="count">{$filter.count}</span>
+                            </a>
+                        </li>
+                    {/foreach}
+                {/foreach}
+                <li class="f-new-filter-wrapper">
+                    <a href="#/filter/new/" class="small f-add-filter">
+                        <i class="fas fa-plus-circle fa-xs"></i>
+                        <span>[`New filter`]</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="f-dragover-message">
+                <p>[`Release to create new filter`]</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="box custom-py-0">
+        <form class="f-sidebar-search-form state-with-inner-icon left width-100">
+            <input class="f-sidebar-search-input small full-width custom-mr-0" type="search" placeholder="[`Search files`]">
+            <button class="icon t-search-submit" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="f-storage-list-wrapper block f-drop-zone custom-mb-24">
+        <details data-id="storage" open>
+            <summary class="heading">
+            <span class="cursor-pointer">
+                <span class="caret">
+                    <i class="fas fa-caret-right"></i>
+                    <i class="fas fa-caret-down" style="display: none;"></i>
+                </span>
+                [`Storage`]
+            </span>
+                {if $can_create_storage}
+                    <a href="#/storage/new/" class="count action f-add-storage"><i class="fas fa-plus-circle" title="[`New storage`]"></i></a>
+                {/if}
+            </summary>
+            <ul class="menu f-storage-list mobile-friendly">
+                {foreach $all_storages as $storage}
+                    <li data-id="{$storage.id}" data-hash="storage" class="f-storage">
+                        <a href="#/storage/{$storage.id}/" title="{$storage.name|escape}">
+                            {$storage.icon_str}
+                            <span>
+                            {$storage.name|escape}
+                            <span class="small">
+                            {if $storage.access_type == filesStorageModel::ACCESS_TYPE_PERSONAL}
+                                &nbsp;<i class="fas fa-lock" title="[`Only you can access files in this storage`]"></i>
+                            {/if}
+                                {if !$storage.source_has_valid_token}
+                                    &nbsp;<i class="fas fa-lock" title="[`Source authorization code is canceled or expired`]"></i>
+                                {/if}
+                            </span>
+                        </span>
+                            <strong class="small highlighted f-new-count" style="display: none;"></strong>
+                            <span class="count">{$storage.count}</span>
+                        </a>
+                    </li>
+                {/foreach}
+                {foreach $shared[filesFileModel::TYPE_FOLDER]|default:[] as $folder}
+                    <li data-id="{$folder.id}" class="f-shared-folder">
+                        <a href="{$folder.backend_url}" title="{$folder.name|escape}">
+                            <i class="fas fa-users"></i>
+                            <span class="menu-item">{$folder.name|escape}</span>
+                            <span class="count">{$folder.count}</span>
+                        </a>
+                    </li>
+                {/foreach}
+            </ul>
+        </details>
+    </div>
+
+    <div class="shared-list-wrapper block f-drop-zone custom-mb-24" {if empty($shared[filesFileModel::TYPE_FILE])}style="display: none;"{/if}>
+        <details data-id="shared" open>
+            <summary class="heading">
+                <span class="cursor-pointer">
+                    <span class="caret">
+                        <i class="fas fa-caret-right"></i>
+                        <i class="fas fa-caret-down" style="display: none;"></i>
+                    </span>
+                    [`Shared`]
+                </span>
+            </summary>
+            <ul class="menu f-shared-files mobile-friendly">
+                {foreach $shared[filesFileModel::TYPE_FILE]|default:[] as $file}
+                    <li data-id="{$file.id}">
+                        <a href="{$file.backend_url}" title="{$file.name|escape}">
+                            <i class="icon16 icon userpic" style="background-image: url({$file.photo_url.sidebar}); background-size: contain;"></i>
+                            <span class="menu-item">{$file.name|escape}</span>
+                        </a>
+                    </li>
+                {/foreach}
+            </ul>
+        </details>
+    </div>
+
+    {if $has_access_to_source_module && $is_any_source_plugin_installed}
+        <div class="f-source-list-wrapper custom-mb-24">
+            <details data-id="source" open>
+                <summary class="heading">
+                    <span class="cursor-pointer">
+                        <span class="caret">
+                            <i class="fas fa-caret-right"></i>
+                            <i class="fas fa-caret-down" style="display: none;"></i>
+                        </span>
+                        [`Sources`]
+                    </span>
+                    <a href="#/source/new/" class="count action f-add-source"><i class="fas fa-plus-circle" title="[`New source`]"></i></a>
+                </summary>
+
+                <ul class="menu collapsible f-sources mobile-friendly">
+                    {if !empty($sources)}
+                        {foreach $sources|default:[] as $source}
+                            <li>
+                                <a href="#/source/{$source.id}" title="{$source.name|default:$source.type|escape}">
+                                    {if !empty($source.icon)}
+                                        <i class="icon" style="background: url({$source.icon}) no-repeat; background-size: contain;"></i>
+                                    {else}
+                                        <i class="fas fa-plug"></i>
+                                    {/if}
+                                    <span>
+                                        {$source.name|default:$source.type|escape}
+                                    </span>
+                                    {if !$source.has_valid_token}
+                                        <i class="fas fa-exclamation-triangle text-yellow count" title="[`Source authorization code is canceled or expired`]"></i>
+                                    {/if}
+                                </a>
+                            </li>
+                        {/foreach}
+                    {/if}
+                </ul>
+            </details>
+        </div>
+    {/if}
+
+    <!-- plugin hook: 'backend_sidebar.section' -->
+    {* @event backend_sidebar.%plugin_id%.section *}
+    {foreach $backend_sidebar as $plugin_id => $item}{if !empty($item.section)}
+        <div class="block" id="sidebar-section-{$plugin_id}">{$item.section}</div>
+    {/if}{/foreach}
+</div>
+
+<div class="sidebar-footer shadowed">
+    <div class="block f-drop-zone">
+        <ul class="menu mobile-friendly">
+            <li class="f-trash-files-wrapper">
+                <a href="#/trash/">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>[`Trash`]</span>
+                    <span class="count">{$counters.trash}</span>
+                </a>
+            </li>
+            {*
+            <li>
+                <a href="#/settings/">
+                    <i class="fas fa-cog"></i>
+                    <span>[`Settings`]</span>
+                </a>
+            </li>
+            *}
+            {if $is_admin}
+                <li>
+                    <a href="#/plugins/">
+                        <i class="fas fa-plug"></i>
+                        <span>[`Plugins`]</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#/statistics/storages/">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>[`Statistics`]</span>
+                    </a>
+                </li>
+                {if !$copy_cli_start || !$sync_cli_start}
+                    <li id="f-crontasks-menu-item">
+                        <a href="#/crontasks/">
+                            <i class="fas fa-clock"></i>
+                            <span>[`Cron tasks`]</span>
+                        </a>
+                    </li>
+                {/if}
+            {/if}
+        </ul>
+    </div>
+</div>
+<script>( function($) {
+    {* TODO: REPLACE TO JS -> FILES.JS *}
+
+    $( function() {
+
+        var sidebar = $('#f-sidebar');
+
+        // SORTABLE for storages
+        ( function(list) {
+            list.sortable({
+                animation: 150,
+                delay: 200,
+                delayOnTouchOnly: true,
+                onEnd() {
+                    const items = list.find('.f-storage,.f-shared-folder').map(function() {
+                        const el = $(this);
+                        return (el.hasClass('f-storage') ? 'storage-' : 'folder-') + el.data('id');
+                    }).toArray();
+                    $.files.config.getLocaleStorage().set('files/storages_and_folders', items)
+                }
+            });
+
+            // Sorting
+            const items = $.files.config.getLocaleStorage().get('files/storages_and_folders') || [];
+            $.each(items, function (idx, key) {
+                let cls = '', id = 0;
+                if ((key || '').slice(0, 7) === 'folder-') {
+                    cls = 'f-shared-folder';
+                    id = key.slice(7)
+                } else {
+                    cls = 'f-storage';
+                    id = key.slice(8);
+                }
+                list.find('.' + cls + '[data-id="' + id + '"]').appendTo(list);
+
+            });
+
+        })($('.f-storage-list', sidebar));
+
+
+        // SORTABLE for filters
+        ( function(list) {
+            list.sortable({
+                animation: 150,
+                delay: 200,
+                delayOnTouchOnly: true,
+                onEnd() {
+                    const filters = list.find('.f-filter').map( function() {
+                        return $(this).data('id');
+                    }).toArray();
+                    $.files.config.getLocaleStorage().set('files/filters', filters);
+                }
+            });
+
+            // Sorting
+            const filters = $.files.config.getLocaleStorage().get('files/filters') || [];
+            $.each(filters, function(k, id) {
+                list.find('.f-filter[data-id="' + id + '"]').appendTo(list);
+            });
+            list.find(".f-new-filter-wrapper").appendTo(list);
+
+        })($('.f-filter-list', sidebar));
+
+        // HIGHLIGHT storage counts
+        (function(list) {
+            var all_counters = $.files.config.getLocaleStorage().get('files/counters') || {};
+            var counters = all_counters.storage || {};
+            list.find('li').each(function() {
+                var li = $(this);
+                var id = li.data('id');
+                var old_count = parseInt(counters[id], 10);
+                var new_count = parseInt(li.find('.count').text(), 10);
+                if (old_count < new_count) {
+                    li.find('.f-new-count').show().text('+' + (new_count - old_count));
+                }
+            });
+        })($('.f-storage-list', sidebar), 'storage_counters');
+
+        // SOME HELPER FUNCTIONS
+        var selectByHash = function(hash) {
+            sidebar.find('li.selected').removeClass('selected');
+            if (!hash) {
+                sidebar.find('.f-all-files-wrapper').addClass('selected');
+            } else {
+                sidebar.find('a[href="#/' + hash + '/"]').closest('li').addClass('selected');
+            }
+        };
+        var updateCountByHash = function(hash, count) {
+            var link;
+            if (!hash) {
+                link = sidebar.find('a[href="#/"]');
+            } else {
+                link = sidebar.find('a[href="#/' + hash + '/"]');
+            }
+            if (link.length) {
+                var li = link.closest('li');
+                li.find('.count').text(count);
+                li.find('.f-new-count').hide();
+
+                var local_storage = $.files.config.getLocaleStorage();
+                var all_counters = local_storage.get('files/counters') || {};
+                var li_hash = li.data('hash');
+                all_counters[li_hash] = all_counters[li_hash] || {};
+                all_counters[li_hash][li.data('id')] = count;
+                local_storage.set('files/counters', all_counters);
+
+                if (li_hash === 'storage' || li_hash === 'folder') {
+                    var all_counters_update_times = local_storage.get('files/all_counters_update_times') || {};
+                    all_counters_update_times[li_hash] = all_counters_update_times[li_hash] || {};
+                    all_counters_update_times[li_hash][li.data('id')] = {time()};
+                    local_storage.set('files/all_counters_update_times', all_counters_update_times);
+                }
+            }
+        };
+        // shortcut
+        var empty = $.isEmptyObject;
+
+        // EVENT-BASED INTERFACE WITH OTHER PART OF APPLICATION
+        sidebar.bind('notify', function(e, message) {
+            if (message.hash !== undefined) {
+                selectByHash(message.hash);
+            }
+            if (!empty(message.counters)) {
+                var counters = message.counters;
+                if (counters.all) {
+                    updateCountByHash('', counters.all);
+                    delete counters.all;
+                }
+                if (!empty(counters)) {
+                    for (var key in counters) {
+                        if (!counters.hasOwnProperty(key)) {
+                            continue;
+                        }
+                        if (typeof counters[key] === 'object' && !empty(counters[key])) {
+                            for (var id in counters[key]) {
+                                if (!counters[key].hasOwnProperty(id) && typeof counters[key][id] === 'number') {
+                                    continue;
+                                }
+                                updateCountByHash(key + '/' + id, counters[key][id]);
+                            }
+                        } else if (typeof counters[key] === 'number') {
+                            updateCountByHash(key, counters[key]);
+                        }
+                    }
+                }
+            }
+        });
+
+        // UPLOAD FILES DIALOG TRIGGER
+        sidebar.find('.f-upload-link', sidebar).on('click', function() {
+            $('#f-uploader').trigger('openUploader');
+        });
+
+        // COLLAPSIBLE
+        ( function() {
+            const locale_storage = $.files.config.getLocaleStorage();
+            const detailsState = locale_storage.get('files/collapsed') || { };
+
+            if (Object.keys(detailsState).length) {
+                sidebar.find('details').each(function() {
+                    const id = $(this).data('id');
+                    if (!detailsState[id]) {
+                        $(this).removeAttr('open');
+                    }
+                });
+            }
+            sidebar.find('details').on('click', 'summary > span', function() {
+                const details = this.closest('details');
+                detailsState[details.dataset.id] = !details.hasAttribute('open');
+                locale_storage.set(`files/collapsed`, detailsState);
+            });
+        })();
+
+        // SEARCH
+        ( function() {
+            const search = function() {
+                const val = ($('.f-sidebar-search-input', sidebar).val() || '').trim();
+                if (!val) {
+                    $.files.controller.gotoDefaultPage();
+                } else {
+                    $.files.controller.gotoSearchPage("name*=" + encodeURIComponent(val));
+                }
+
+                $('#f-sidebar.-active').find('.sidebar-mobile-toggle').click();
+            };
+            $('.f-sidebar-search-input', sidebar).on('search', function() {
+                search();
+                return false;
+            });
+            $('.f-sidebar-search-form', sidebar).submit( function() {
+                search();
+                return false;
+            });
+        })();
+
+    });
+})(jQuery);</script>

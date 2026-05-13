@@ -1,0 +1,11 @@
+**/vendor/
+**/vendors/
+**/node_modules/
+
+# Игнорируем содержимое системных папок
+/wa-data/
+/wa-log/
+/wa-cache/
+
+# Системный файл контрольных сумм
+.files.md5

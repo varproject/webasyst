@@ -1,0 +1,22 @@
+<ul class="menu">
+    <li :class="getMenuClass('')" title="[`Транзакции`]">
+        <router-link to="{$wa_backend_url}devapi/">
+            <i class="fas fa-coins"></i>
+        </router-link>
+    </li>
+    <li :class="getMenuClass('reports')" title="[`Отчеты`]">
+        <router-link to="{$wa_backend_url}devapi/reports/">
+            <i class="fas fa-chart-line"></i>
+        </router-link>
+    </li>
+    <li :class="getMenuClass('accounts')" title="[`Аккаунты разработчика`]">
+        <router-link to="{$wa_backend_url}devapi/accounts/">
+            <i class="fas fa-users"></i>
+        </router-link>
+    </li>
+    <li :class="getMenuClass('settings')" title="[`Настройки`]">
+        <router-link to="{$wa_backend_url}devapi/settings/">
+            <i class="fas fa-cogs"></i>
+        </router-link>
+    </li>
+</ul>

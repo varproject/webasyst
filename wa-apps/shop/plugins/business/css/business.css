@@ -1,0 +1,142 @@
+html {
+  --tbank-primary-color: #F9DD57;
+  --yookassa-primary-color: #2F71E8;
+  --modulbank-primary-color: #072DA0;
+  --sberbank-primary-color: #21BA72;
+  --tochka-primary-color: #7F42E1;
+  --alfabank-primary-color: #EF3124;
+  --robokassa-primary-color: #023D5E;
+}
+
+.s-business-bricks-wrapper { display: grid; }
+.s-business-bricks { position: relative; margin: 0; min-height: 6rem; display: flex; align-items: baseline; gap: 0.5rem; overflow-x: auto; }
+.s-business-bricks .brick { aspect-ratio: 200 / 110; min-width: 80px; max-height: fit-content; transform: translateY(1rem); background-position: center !important; background-size: cover !important; }
+.s-business-bricks .brick .badge { position: absolute; height: 1.5rem; top: -0.5rem; right: -0.5rem; display: flex; align-items: center; }
+
+.s-business-lead-form-list .s-business-lead-form-wrapper:not(.is-show) { display: none; }
+
+.s-business-lead-form {
+  position: relative;
+  padding: 1rem 1.5rem 1.5rem;
+  border-style: solid;
+  border-width: 3px;
+  border-radius: 1rem;
+  background-color: var(--background-color-blank);
+}
+.s-business-lead-form.is-collapsed {
+  padding: 0.5rem 1.5rem;
+}
+.s-business-lead-form.is-collapsed .s-business-lead-form__header h2 {
+  margin: 0;
+  font-size: 1.375rem;
+}
+.s-business-lead-form ul.chips > li.selected > * {
+  font-weight: 500;
+}
+.s-business-lead-form .s-business-lead-form__close-btn {
+  color: var(--text-color);
+  opacity: 0.25;
+  position: absolute;
+  top: 2rem;
+  right: 1.5rem;
+  font-size: 1.75rem;
+  transform: translate(0, -50%);
+}
+.s-business-lead-form.is-collapsed .s-business-lead-form__close-btn {
+  top: 1.25rem;
+}
+.s-business-lead-form .s-business-lead-form__close-btn:hover {
+  opacity: 0.8;
+}
+.s-business-lead-form .s-business-lead-form__links {
+  font-weight: 500;
+}
+.s-business-lead-form .s-business-lead-form__links li {
+  margin-bottom: 1rem;
+}
+
+.s-business-lead-form .dropdown .dropdown-toggle {
+  border: none;
+  background-color: var(--background-color-input);
+  color: var(--text-color-input);
+  min-width: 200px;
+  text-align: left;
+}
+.s-business-lead-form #dropdown-product .dropdown-toggle {
+  min-width: 227px;
+  white-space: nowrap;
+}
+
+.s-business-lead-form .dropdown .dropdown-toggle:hover {
+  background-color: var(--background-color-input);
+}
+.s-business-lead-form .dropdown .dropdown-toggle:not(.without-arrow):after {
+  color: var(--text-color-hint);
+}
+
+.s-business-lead-form textarea { width: 100%; height: auto; }
+.s-business-lead-form .state-caution-hint { white-space: normal; }
+
+/* Т-Банк */
+#lead-form-tbank {
+  --yellow: var(--tbank-primary-color);
+  --accent-color: var(--yellow);
+  border-color: var(--yellow);
+}
+
+#lead-form-tbank .s-business-lead-form__submit {
+  color: var(--text-color-strong);
+}
+#lead-form-tbank .s-business-lead-form__submit:disabled {
+  pointer-events: none;
+  background-color: transparent;
+}
+
+
+/* Уже есть */
+#form-prefills {
+  --accent-color: var(--light-gray);
+  border-color: var(--light-gray);
+  max-width: max-content;
+}
+
+/* ЮKassa */
+#lead-form-yookassa {
+  --blue: var(--yookassa-primary-color);
+  --accent-color: var(--blue);
+  border-color: var(--blue);
+}
+
+/* Модульбанк */
+#lead-form-modulbank {
+  --blue: var(--modulbank-primary-color);
+  --accent-color: var(--blue);
+  border-color: var(--blue);
+}
+
+/* Сбербанк */
+#lead-form-sberbank {
+  --green: var(--sberbank-primary-color);
+  --accent-color: var(--green);
+  border-color: var(--green);
+}
+
+/* Точка */
+#lead-form-tochka {
+  --green: var(--tochka-primary-color);
+  --accent-color: var(--green);
+  border-color: var(--green);
+}
+
+/* Альфа-Банк */
+#lead-form-alfabank {
+  --red: var(--alfabank-primary-color);
+  --accent-color: var(--red);
+  border-color: var(--red);
+}
+
+/* Робокасса */
+#lead-form-robokassa {
+  --accent-color: var(--robokassa-primary-color);
+  border-color: var(--accent-color);
+}

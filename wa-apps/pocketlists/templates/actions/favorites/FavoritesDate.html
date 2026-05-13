@@ -1,0 +1,103 @@
+{if $print}
+<html>
+<head>
+    <title>[`My favorites`]{if $date} - {$date|wa_date:'humandate'}{/if} &mdash; {$wa->accountName()}</title>
+    <link type="text/css" rel="stylesheet" href="{$wa_app_static_url}css/pocketlists-print.css">
+</head>
+<body>
+<div class="pl-print-button">
+    <button onclick="window.print();">[`Print`]</button>
+</div>
+{/if}
+
+
+<main class="blank pl-inner-content pl-items pl-list-items pl-favorites" id="pl-list-content">
+<div class="pl-pseudo-article">
+
+    <header class="pl-title">
+        {if !$date}
+        <h1 class="not-padded">
+            [`Favorites`]
+        </h1>
+        <span></span>
+        {else}
+        <h1 class="not-padded" pl-todo-stream="date">
+            {if !$print} <a href="#" class="back button light-gray circle" style="font-size: 20px; position: relative; top: -4px;" title="[`All favorites`]"><i class="fas fa-arrow-left"></i></a>{/if}
+            <span>{waDateTime::date(waDateTime::getFormat('humandate'), $date)}</span>
+        </h1>
+        {/if}
+    </header>
+
+    <div class="pl-list-items" id="pl-list-items">
+
+        <section id="pl-undone-items" data-pl-items="undone">
+            <ul class="menu-v">
+                {if !empty($undone_items)}
+                {include '../item/Item.html' parent_id=0 items=$undone_items}
+                {/if}
+            </ul>
+        </section>
+
+        {if !$print}
+        <section id="pl-complete-log" class="pl-logbook">
+            <h5 class="heading">[`Logbook`]</h5>
+            <ul class="menu-v">
+                {if $count_done_items}
+                {include '../item/Item.html' parent_id=0 items=$done_items}
+                {/if}
+            </ul>
+            <div class="block double-padded lazyloading" style="display: none;">
+                <i class="icon16 loading"></i> [`Loading...`]
+            </div>
+        </section>
+
+        <div class="box align-center custom-mt-16">
+            <a href="#" id="pl-complete-log-link" class="button light-gray small" {if !$count_done_items}style="display:none;"{/if}><i class="fas fa-check"></i> [`Show all completed to-dos`]</a>
+        </div>
+        {/if}
+
+    </div>
+
+    <div class="clear-both"></div>
+
+    {if !$print}
+        {$itemAdd}
+    {/if}
+
+    {include '../../include/itemdetails.html' inline}
+
+</div>
+</main>
+{if !$print}
+<script type="text/javascript">
+    (function(){
+        $.pocketlists.initNotice('#pl-stream-notice');
+
+        var $all_items_wrapper = $('#pl-list-items');
+
+        new $.pocketlists.Items($all_items_wrapper, {
+            enableAddLinkOnHover: false,
+            enableChangeLevel: false,
+            enableSortItems: false,
+//            assignUser: parseInt('{$wa->user()->getId()}'),
+            showMessageOnEmptyList: {if $date}false{else}true{/if},
+            dueDate: '{if $timestamp}{$timestamp}{/if}',
+            filter: 'favorites',
+            userHasLinkedApps: {$user->hasLinkedApps()},
+            current_user_id: {$user->getContact()->getId()},
+            externalApp: '{$externalApp|default:''}'
+        });
+
+        new $.pocketlists.Comments($all_items_wrapper);
+
+        $.pocketlists.lazyItems({
+            $loading: $('#pl-list-content .lazyloading'),
+            html_selector: '#pl-complete-log > .menu-v',
+            url: '?module=item&action=lazyDone&type=favorites&date={$date}&external_app={$externalApp|default:''|escape}'
+        });
+    }());
+</script>
+{else}
+</body>
+</html>
+{/if}

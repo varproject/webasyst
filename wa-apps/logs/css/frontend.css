@@ -1,0 +1,146 @@
+/* webasyst */
+#wa-app {
+    width: 90%;
+    padding: 0 20px 20px 20px;
+    margin: 0 auto;
+    background: var(--background-color-blank);
+    line-height: 1.5;
+}
+
+.navigation {
+    position: sticky;
+    top: 0;
+    background: var(--background-color-blank);
+    z-index: 1;
+    box-shadow: 0 4px 8px -4px var(--light-gray);
+    border-radius: 0 0 8px 8px;
+    padding: 16px;
+}
+
+/* file view */
+
+.item-data .item-contents {
+    border-style: solid;
+    border-color: var(--background-color);
+    border-width: 0 8px;
+    padding: 4px 20px;
+    margin: 0;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    border-radius: 0;
+}
+
+.item-data .pagination {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+ul.action-menu {
+    display: flex;
+    list-style: none;
+    line-height: 2;
+    padding: 0;
+    margin: 0;
+}
+
+ul.action-menu li {
+    margin-right: 0.5em;
+}
+
+.action-menu svg {
+    color: var(--text-color);
+}
+
+.action-menu svg:hover {
+    color: var(--orange);
+}
+
+/* load more lines */
+
+.item-data .item-lines {
+    background: var(--background-color);
+    text-align: center;
+    cursor: pointer;
+    padding: 2px 0;
+}
+
+.item-data .item-lines.previous {
+    border-radius: 10px 10px 0 0;
+}
+
+.item-data .item-lines.next {
+    border-radius: 0 0 10px 10px;
+}
+
+.item-data .item-lines.disabled {
+    cursor: default;
+}
+
+.item-data .item-lines.disabled .arrow {
+    visibility: hidden;
+}
+
+.item-data .item-lines * {
+    color: var(--text-color);
+}
+
+.item-data .item-lines .message {
+    display: block;
+    font-size: 16px;
+}
+
+.item-data .item-lines .arrow.hidden {
+    display: none;
+}
+
+/* to match prettyprint hacks for dark mode in backend.css */
+
+.prettyprint .pln {
+    color:var(--alert-text-color);
+}
+.prettyprint .tag {
+    color:var(--text-color-link);
+}
+.prettyprint .atn {
+    color:var(--brown);
+}
+.prettyprint .kwd {
+    color:var(--text-color-link);
+}
+.prettyprint .com {
+    color:var(--gray);
+}
+.prettyprint .typ {
+    color:var(--purple);
+}
+
+/* navigation */
+
+/* breadcrumbs */
+
+.back-link {
+    margin-right: 10px;
+    color: var(--white);
+    background: var(--blue);
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.breadcrumbs {
+    font-weight: bold;
+    display: inline;
+}
+
+.breadcrumbs .breadcrumb {
+    color: #555;
+}
+
+.breadcrumbs .breadcrumb a {
+    color: #558FCE;
+}
+
+.breadcrumbs-separator {
+    color: #999;
+    margin: 0 0.3em;
+}

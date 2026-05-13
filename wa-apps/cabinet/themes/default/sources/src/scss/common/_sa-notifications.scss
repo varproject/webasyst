@@ -1,0 +1,110 @@
+/*
+// .sa-notifications
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-notifications {
+    width: 20rem;
+    max-height: min(28rem, calc(100vh - var(--sa-toolbar-height) - 1.5rem));
+    display: flex;
+    flex-direction: column;
+}
+.sa-notifications__header {
+    padding: .5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid vs.$sa-dropdown--divider-color; // SKIP-PIXELS
+    flex-shrink: 0;
+}
+.sa-notifications__header-title {
+    font-size: .875rem;
+    font-weight: bt.$font-weight-medium;
+}
+.sa-notifications__header-action {
+    font-size: func.rem(13);
+}
+.sa-notifications__footer {
+    border-top: 1px solid vs.$sa-dropdown--divider-color; // SKIP-PIXELS
+    color: vs.$sa-dropdown--font-muted-color;
+    font-size: func.rem(13);
+    flex-shrink: 0;
+}
+.sa-notifications__footer-action {
+    padding: .375rem 1rem calc(.375rem + 1px); // SKIP-PIXELS
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: inherit;
+    transition: background-color .12s ease-out;
+
+    &:hover {
+        color: inherit;
+        text-decoration: none;
+        background: vs.$sa-dropdown--hover-bg-color;
+    }
+    &:active {
+        background-color: vs.$sa-dropdown--touch-bg-color;
+        transition-duration: 0s;
+    }
+}
+.sa-notifications__list {
+    padding: .5rem 0;
+    margin: 0;
+    list-style: none;
+    overflow-y: auto;
+}
+.sa-notifications__item {
+    &:hover {
+        background: vs.$sa-dropdown--hover-bg-color;
+    }
+    &:active {
+        background: vs.$sa-dropdown--touch-bg-color;
+    }
+}
+.sa-notifications__item-button {
+    display: flex;
+    align-items: center;
+    padding: .5rem 1rem;
+    line-height: 1.25;
+
+    &,
+    &:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+}
+.sa-notifications__item-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .75rem;
+    }
+}
+.sa-notifications__item-body {
+    overflow: hidden;
+}
+.sa-notifications__item-title {
+    font-size: .875rem;
+    font-weight: bt.$font-weight-medium;
+}
+.sa-notifications__item-title--nowrap {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.sa-notifications__item-subtitle {
+    color: vs.$sa-dropdown--font-muted-color;
+    font-size: func.rem(13);
+    margin-top: .125rem;
+}
+.sa-notifications__item-subtitle--nowrap {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

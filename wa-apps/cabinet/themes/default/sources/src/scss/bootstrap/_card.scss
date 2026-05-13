@@ -1,0 +1,63 @@
+/*
+// card
+*/
+@use 'sass:math';
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.card {
+    box-shadow: vs.$sa-card--shadow;
+    font-size: func.rem(15);
+
+    & > .list-group {
+        border-top: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+        border-bottom: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    }
+
+    @each $key, $value in vs.$sa-card--divider-colors {
+        &.bg-#{$key} {
+            .card-header,
+            .card-footer {
+                border-color: $value;
+            }
+        }
+    }
+}
+.card-sa-border {
+    box-shadow: none;
+    border: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+}
+.card-group {
+    @include bt.media-breakpoint-up(sm) {
+        background: vs.$sa-card--bg-color;
+        box-shadow: vs.$sa-card--shadow;
+        border-radius: .125rem;
+
+        & > .card {
+            box-shadow: none;
+        }
+
+        & > .card + .card {
+            @include dir.scope {
+                #{dir.$border-inline-start}: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+            }
+        }
+    }
+}
+.card-header {
+    border-bottom-width: 1px; // SKIP-PIXELS
+}
+.card-footer {
+    border-top-width: 1px; // SKIP-PIXELS
+}
+.card-header-tabs {
+    margin-top: -.875rem;
+    margin-right: 0; // SKIP-RTL
+    margin-left: 0; // SKIP-RTL
+}
+.card-header-pills {
+    margin-top: -.25rem;
+    margin-bottom: -.25rem;
+}

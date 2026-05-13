@@ -1,0 +1,135 @@
+<div>
+    {if !empty($error)}
+        <header class="dialog-header">
+            <h1>[`Error`]</h1>
+        </header>
+        <div class="dialog-content">
+            <div class="fields">
+                <div class="field">
+                    <div class="value">
+                        <span class="state-error">
+                            <i class="fas fa-exclamation-triangle"></i> {$error}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {else}
+        <header class="dialog-header">
+            <h1>{$title}</h1>
+        </header>
+        <div class="dialog-content">
+            {if !empty($warnings)}
+                <div class="alert small">
+                    {foreach $warnings as $warning}
+                        <p>
+                            <i class="fas fa-info-circle text-blue"></i>
+                            {$warning}
+                        </p>
+                    {/foreach}
+                </div>
+            {/if}
+
+            <div class="fields">
+                <div class="field">
+                    <div class="value">
+                        <span class="state-error"></span>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name custom-pt-0" style="line-height: 1;">[`What will be deleted`]</div>
+                    <div class="value">
+                        <ul class="list">
+                            {$icons = [
+                                'dir' => [
+                                    'icon' => 'folder',
+                                    'title' => _w('Directory')
+                                ],
+                                'published' => [
+                                    'icon' => 'globe',
+                                    'title' => _w('Public link')
+                                ],
+                                'tracked' => [
+                                    'icon' => 'flag',
+                                    'title' => _w('Tracked file')
+                                ]
+                            ]}
+
+                            {$items_icons = []}
+                            {$max_icon_count = 0}
+
+                            {foreach $items as $item}
+                                {$item_icons = []}
+
+                                {if $item.published}
+                                    {$item_icons[] = 'published'}
+                                {/if}
+
+                                {if $item.tracked}
+                                    {$item_icons[] = 'tracked'}
+                                {/if}
+
+                                {$items_icons[] = $item_icons}
+
+                                {if $item.dir}
+                                    {$max_icon_count = max($max_icon_count, 1)}
+                                {else}
+                                    {$max_icon_count = max($max_icon_count, count($item_icons))}
+                                {/if}
+                            {/foreach}
+
+                            {foreach $items as $i => $item}
+                                <li>{strip}
+                                    {if $item.dir}
+                                        {if $max_icon_count > 1}
+                                            {for $empty_counter = 1 to $max_icon_count - 1}
+                                                <i class="icon custom-mr-4"></i>
+                                            {/for}
+                                        {/if}
+
+                                        <i class="fas fa-{$icons.dir.icon} text-blue custom-mr-4" title="{$icons.dir.title}"></i>
+                                    {else}
+                                        {$file_icons = $items_icons[$i]}
+
+                                        {if $max_icon_count > count($file_icons)}
+                                            {for $empty_counter = 1 to $max_icon_count - count($file_icons)}
+                                                <i class="icon custom-mr-4"></i>
+                                            {/for}
+                                        {/if}
+
+                                        {foreach $file_icons as $file_icon}
+                                            <i class="fas fa-{$icons[$file_icon].icon} text-gray custom-mr-4" title="{$icons[$file_icon].title}"></i>
+                                        {/foreach}
+                                    {/if}
+
+                                    <strong class="break-all custom-ml-8" data-item-path="{$item.path}">
+                                        <span class="text-gray">wa-log/</span>{$item.path}{if $item.dir}/{/if}
+                                    </strong>
+                                {/strip}</li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {if !empty($show_bulk_delete_promo)}
+                <div class="alert info small logs-premium-feature-alert custom-mb-0 custom-mt-32">
+                    <div class="flexbox full-width">
+                        <div class="flexbox middle">
+                            <span>
+                                [`You can <strong>delete multiple files at once</strong> with the <em>Logs+</em> license.`]
+                                <a href="javascript: void(0);" class="view-premium-link nowrap" data-feature="bulk-delete">[`Read more`] ›</a>
+                            </span>
+                        </div>
+                        <button type="button" title="[`Do not show again`]" class="alert-close nobutton" data-feature="bulk-delete" style="float: none;"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            {/if}
+
+            <form>
+                <input type="hidden" name="selected_paths" value="{$selected_paths|json_encode|escape}">
+                <input type="hidden" name="paths" value="{$paths|json_encode|escape}">
+            </form>
+        </div>
+    {/if}
+</div>

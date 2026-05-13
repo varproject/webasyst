@@ -1,0 +1,79 @@
+/*
+// .sa-suggestions
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+
+$local-padding-x: 1rem;
+$local-padding-y: .625rem;
+
+.sa-suggestions {}
+.sa-suggestions__section {
+    padding: $local-padding-y 0;
+}
+.sa-suggestions__section + .sa-suggestions__section {
+    border-top: 1px solid vs.$sa-suggestions--divider-color; // SKIP-PIXELS
+}
+.sa-suggestions__section-title {
+    font-size: func.rem(13);
+    color: vs.$sa-suggestions--font-muted-color;
+    padding: .25rem $local-padding-x;
+    position: relative;
+}
+.sa-suggestions__item {
+    padding: 0 $local-padding-x;
+    cursor: pointer;
+
+    &:hover {
+        background: vs.$sa-suggestions__item--hover-bg-color;
+        color: vs.$sa-suggestions__item--hover-font-color;
+    }
+}
+.sa-suggestions__item--type--default {
+    $local-padding-y: .25rem;
+
+    padding-top: $local-padding-y;
+    padding-bottom: $local-padding-y;
+    font-size: func.rem(15);
+}
+.sa-suggestions__item--type--link {
+    $local-padding-y: .25rem;
+
+    padding-top: $local-padding-y;
+    padding-bottom: $local-padding-y;
+    font-size: func.rem(14);
+    color: vs.$sa-suggestions--link-color;
+}
+.sa-suggestions__item--type--product + .sa-suggestions__item--type--link {
+    margin-top: .25rem;
+}
+.sa-suggestions__product {
+    display: flex;
+    align-items: center;
+    font-size: func.rem(15);
+    line-height: 1.2;
+    padding: .5rem 0;
+}
+.sa-suggestions__product-image {
+    overflow: hidden;
+    border-radius: .125rem;
+    flex-shrink: 0;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .75rem;
+    }
+}
+.sa-suggestions__product-info {
+    overflow: hidden;
+}
+.sa-suggestions__product-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+.sa-suggestions__product-meta {
+    margin-top: .125rem;
+    font-size: func.rem(13);
+}

@@ -1,0 +1,59 @@
+{* TODO: delete this tempate *}
+
+{$dialog_id = uniqid('f-file-preview-dialog-')}
+
+<div class="dialog f-file-preview-dialog" id="{$dialog_id}">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <h3 class="dialog-header">[`Private link`]</h3>
+        <div class="dialog-content">
+            {if $link}
+                <div>
+                    <div style="margin-bottom: 6px;">
+                        <span>{$file.name|escape}</span>
+                    </div>
+                    <input name="link" value="{$link}" class="f-file-preview-link" style="width: 90%;">
+                    <a href="{$link}" target="_blank"><i class="icon16 new-window"></i></a>
+                </div>
+            {else}
+                <p>[`File is not visible in the public frontend because there are no routing rules for the Files app in your website settings. Use Site app (“Structure” section) to settle Files app on your website.`]</p>
+            {/if}
+        </div>
+        <div class="dialog-footer dialog-buttons">
+            <div class="dialog-buttons-gradient">
+                {$wa->csrf()}
+                <input class="button gray cancel" type="submit" value="[`Close`]">
+                <a class="float-right f-delete small red" href="javascript:void(0);" style="margin-top: 14px;">[`Remove link`]</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function() {
+    var dialog = $('#{$dialog_id}');
+    $('.f-file-preview-dialog').not(dialog).remove();
+    dialog.filesDialog({
+        onFirstLoad: function() {
+            var select = function() {
+                return $('.f-file-preview-link', dialog).select();
+            };
+            select().click(select);
+
+            $('.f-catalog-item[data-id="{$file.id}"] .show-sharing-dialog', $.files.config.getFileList())
+                .addClass('f-always-visible');
+
+            $('.f-delete', dialog).on('click', function() {
+                $.files.jsonPost({
+                    url: '?module=file&action=privateLinkDelete&id={$file.id}',
+                    onSuccess: function() {
+                        $('.f-catalog-item[data-id="{$file.id}"] .show-sharing-dialog', $.files.config.getFileList())
+                            .removeClass('f-always-visible');
+                        dialog.trigger('close').remove();
+                    }
+                });
+            });
+        }
+    });
+});
+</script>

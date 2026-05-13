@@ -1,0 +1,74 @@
+<div class="article">
+    <div class="article-body js-envelope">
+        <div class="flexbox wrap">
+            <h1 class="js-core-header h2 wide custom-mb-4 custom-mr-16">[`New campaign`]</h1>
+            {if $wa->mailer->isAdmin()}
+                <a href="#/templates/" class="custom-my-12 text-dark-gray semibold small"><i class="fas fa-brush text-purple custom-mr-4"></i> [`Manage templates`]</a>
+            {/if}
+        </div>
+        <div class="article-description custom-mb-32 text-gray small">
+            <p class="custom-mb-12">
+                [`Please choose one of these templates to create a new email campaign. If none of the templates suits your needs, click on &ldquo;Blank&rdquo; to compose a new message.`] [`To create a new campaign as a copy of a previously sent one, open the desired message and click “Create new from this”.`]
+                {sprintf_wp('See also %stips & lessons%s', '<a href="https://support.webasyst.ru/mailer/" target="_blank">', '<i class="fas fa-external-link-alt custom-ml-4 small"></i></a>')}
+            </p>
+        </div>
+        <ul id="template-list" class="templates-tiles thumbs li250px">
+            <li rel="">
+                <div class="wrapper">
+                    <div class="preview">
+                        <div class="no-image"
+                             style="background:white;font-size:150%;font-weight:bold;color:#999;display:flex;align-items:center;justify-content:center;}">
+                            [`Blank`]
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            {foreach from=$templates item=t}
+                <li rel="{$t.id}">
+                    <div class="wrapper">
+                        <div class="preview">
+                            {if $t.image}
+                                <img src="{$t.image}" alt="">
+                            {else}
+                                <div class="hidden iframe-preview-content"
+                                     id="iframe-preview-{$t.id}-content">{$t.preview_content|escape}</div>
+                                <div class="no-image">
+                                    <iframe id="iframe-preview-{$t.id}" scrolling="no"></iframe>
+                                    <div class="catch-clicks"></div>
+                                </div>
+                                <script>(function () {
+                                        var ifrm = $('#iframe-preview-{$t.id}')[0];
+                                        ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
+                                        ifrm.document.open();
+                                        ifrm.document.write($('#iframe-preview-{$t.id}-content').text());
+                                        ifrm.document.close();
+                                        $('#iframe-preview-{$t.id}-content').contents().find('a[href]').attr('target', "_blank");
+                                    })();</script>
+                            {/if}
+                        </div>
+                        <h6 class="custom-mt-12 custom-mb-0">{$t.subject|escape}{if empty($t.rebody)} (HTML){/if}</h6>
+                        {if $t.description}
+                            <p class="hint custom-mt-4">
+                                {$t.description|escape}
+                            </p>
+                        {/if}
+                    </div>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>
+<script>
+    (function () {
+        "use strict";
+
+        // Click on a template creates campaign from that template
+        $('#template-list').on('click', 'li', function () {
+            const template_id = $(this).attr('rel');
+            $.wa.mailer.campaignsLetterAction('new', (template_id ? template_id : ''))
+        });
+
+        $.wa.mailer.setTitle();
+    })();
+</script>

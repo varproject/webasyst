@@ -1,0 +1,91 @@
+/*
+// .sa-price-card
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-price-card {
+    max-width: 22rem;
+}
+.sa-price-card__badge {
+    background: vs.$sa-price-card__badge--bg-color;
+    color: vs.$sa-price-card__badge--font-color;
+    font-size: func.rem(13);
+    font-weight: bt.$font-weight-medium;
+    padding: .1875rem 1rem;
+    border-radius: .125rem;
+    margin: -.5rem auto 0;
+    width: fit-content;
+}
+.sa-price-card__title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bt.$font-weight-medium;
+}
+.sa-price-card__subtitle {
+    text-align: center;
+    color: bt.$text-muted;
+}
+.sa-price-card__price {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: .75rem;
+}
+.sa-price-card__price-value {
+    font-size: 2.5rem;
+    font-weight: bt.$font-weight-medium;
+}
+.sa-price-card__price-period {
+    font-size: func.rem(15);
+    color: bt.$text-muted;
+    padding-bottom: .625rem;
+
+    @include dir.scope {
+        #{dir.$padding-inline-start}: .25rem;
+    }
+}
+.sa-price-card__button {
+    padding-top: .25rem;
+    display: flex;
+    justify-content: center;
+}
+.sa-price-card__features-list {
+    list-style: none;
+    padding: .25rem .625rem;
+    margin: 0;
+}
+.sa-price-card__feature {
+    display: flex;
+    align-items: center;
+    padding: .375rem 0;
+}
+.sa-price-card__feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: vs.$sa-price-card__feature-icon--default-bg-color;
+    color: vs.$sa-price-card__feature-icon--default-font-color;
+    overflow: hidden;
+    font-size: 1rem;
+    flex-shrink: 0;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .625rem;
+    }
+}
+.sa-price-card__feature--included {
+    .sa-price-card__feature-icon {
+        background: vs.$sa-price-card__feature-icon--active-bg-color;
+        color: vs.$sa-price-card__feature-icon--active-font-color;
+    }
+}
+.sa-price-card__feature--not-included {
+    color: vs.$sa-price-card__feature--disabled-font-color;
+    text-decoration: line-through;
+}

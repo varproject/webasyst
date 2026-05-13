@@ -1,0 +1,39 @@
+{capture assign="before_links_block"}
+    <div class="f-toggle toggle normal rounded">
+        <span{if $type !== filesFileModel::TRASH_TYPE_PERSONAL} class="selected"{/if} data-type>[`All delete files`]</span>
+        <span{if $type === filesFileModel::TRASH_TYPE_PERSONAL} class="selected"{/if} data-type="{filesFileModel::TRASH_TYPE_PERSONAL}">[`My private files`]</span>
+    </div>
+{/capture}
+
+
+{include file="../../files/include.files.html"
+    hidden_cols=['link', 'favorite', 'share']
+    operations=['restore', 'delete']
+    before_links_block=$before_links_block
+    is_trash=true
+inline}
+
+<script>
+    $(function() {
+        $(".f-toggle").waToggle({
+            change: function(event, target) {
+
+                $.files.jsonPost({
+                    url: '?module=trash&action=save',
+                    data: { type: !target.dataset.type ? '' : target.dataset.type },
+                    onAlways: function() {
+                        $.files.controller.reloadPage();
+                    }
+                });
+            }
+        });
+
+
+        $.files.config.getSidebar().trigger('notify', {
+            hash: 'trash',
+            counters: {
+                trash: {$total_count}
+            }
+        });
+    });
+</script>

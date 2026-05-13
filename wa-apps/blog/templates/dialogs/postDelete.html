@@ -1,0 +1,21 @@
+<div class="dialog" id="postdelete-dialog">
+  <div class="dialog-background"></div>
+  <div class="dialog-body">
+      {if isset($post) && $post}
+        <h3 class="dialog-header">[`Delete post`] <i class="fas fa-exclamation-triangle text-red fa-xs"></i></h3>
+      {else}
+        <h3 class="dialog-header">[`Delete posts`] <i class="fas fa-exclamation-triangle text-red fa-xs"></i></h3>
+      {/if}
+    <div class="dialog-content">
+        {if isset($post) && $post}
+          <p>{$post.title|default:'[`(empty title)`]'|escape|string_format:'[`The post <b>%s</b> will be permanently deleted without the ability to recover. Delete?`]'}</p>
+        {else}
+          <p>[`Selected posts will be permanently deleted without the ability to recover. Delete?`]</p>
+        {/if}
+    </div>
+    <div class="dialog-footer">
+        <input type="button" name="delete" class="button red" value="[`Delete`]">
+         <a href="#" class="js-close-dialog button light-gray">[`Cancel`]</a>
+    </div>
+  </div>
+</div>

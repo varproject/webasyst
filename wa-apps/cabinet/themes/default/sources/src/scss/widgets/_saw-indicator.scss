@@ -1,0 +1,109 @@
+/*
+// .saw-indicator
+*/
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+@use '../functions' as func;
+@use '../mixins/bootstrap' as bt;
+
+.saw-indicator {
+    padding: 1.25rem;
+
+    .sa-widget-header__title {
+        font-size: func.rem(14);
+        font-weight: bt.$font-weight-normal;
+        color: vs.$sa-card--font-dim-color;
+    }
+}
+.saw-indicator__header {
+    margin-bottom: 1rem;
+}
+.saw-indicator__body {
+    display: grid;
+    padding: .125rem 0;
+}
+.saw-indicator__value {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: center;
+    margin-top: .25rem;
+    margin-bottom: .75rem;
+
+    font-size: 2rem;
+    font-weight: bt.$font-weight-medium;
+    letter-spacing: -.02em;
+    line-height: 1;
+}
+.saw-indicator__delta {
+    grid-column: 1;
+    grid-row: 2;
+    justify-content: center;
+
+    display: flex;
+    align-items: center;
+    font-size: func.rem(14);
+    font-weight: bt.$font-weight-medium;
+}
+.saw-indicator__delta-direction {
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .25rem;
+        transform: scaleX(dir.$transform-direction); // SKIP-RTL
+    }
+
+    svg {
+        display: block;
+    }
+}
+.saw-indicator__delta--rise {
+    color: vs.$saw-indicator--font-rise-color;
+}
+.saw-indicator__delta--fall {
+    color: vs.$saw-indicator--font-fall-color;
+}
+.saw-indicator__caption {
+    grid-column: 1;
+    grid-row: 3;
+    text-align: center;
+    margin-top: .25rem;
+    font-size: func.rem(12);
+    color: vs.$sa-card--font-dim-color;
+}
+
+
+.saw-indicator--size--lg {
+    .saw-indicator__header {
+        margin-bottom: 1.25rem;
+    }
+    .saw-indicator__body {
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto;
+    }
+    .saw-indicator__value {
+        grid-column: 1;
+        grid-row: 1 / 3;
+        align-self: center;
+        margin: 0;
+
+        @include dir.scope {
+            #{dir.$margin-inline-end}: .75rem;
+            text-align: dir.$inline-start;
+        }
+    }
+    .saw-indicator__delta {
+        grid-column: 2;
+        grid-row: 1;
+        justify-content: flex-end;
+
+        @include dir.scope {
+            text-align: dir.$inline-end;
+        }
+    }
+    .saw-indicator__caption {
+        grid-column: 2;
+        grid-row: 2;
+
+        @include dir.scope {
+            text-align: dir.$inline-end;
+        }
+    }
+}

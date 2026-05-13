@@ -1,0 +1,45 @@
+{* RENDER FOLDER IN PLAIN LIST HELPER *}
+{function render_folders_plain}
+    {foreach $folders as $folder}
+        <li data-id="{$folder.id}" data-type="folder">
+            {include file='./include.item.html' type='folder' item=$folder inline}
+            <ul class="menu-v with-icons" style="display: none;"></ul>
+        </li>
+    {/foreach}
+{/function}
+
+{* RENDER FOLDER HIERARCHY HELPER *}
+{function render_folders_hierarchly folders=[]}
+    {if empty($folders)}
+        <ul class="menu-v with-icons" style="display: none;"></ul>
+    {else}
+        {$folder = array_shift($folders)}
+        <li data-id="{$folder.id}" data-type="folder">
+            {include file='./include.item.html' type='folder' item=$folder inline}
+            <ul class="menu-v with-icons">
+                {render_folders_hierarchly folders=$folders}
+            </ul>
+        </li>
+    {/if}
+{/function}
+
+{if $view_type|default:'plain' === 'plain'}
+    {render_folders_plain}
+{else}
+    {render_folders_hierarchly folders=$folders}
+{/if}
+
+{if $include_js|default:true}
+    <script>
+        (function (browser) {
+            {* inject data for accessing by side js *}
+            browser.data(
+                'folders',
+                $.extend(true,
+                    browser.data('folders'),
+                    {$folders|json_encode}
+                )
+            );
+        })($('#{$browser_id}'));
+    </script>
+{/if}

@@ -1,0 +1,92 @@
+{$container_id = uniqid('f-filter-settings-')}
+
+<div class="f-filter-settings" id="{$container_id}">
+    <div class="fields">
+
+        {if $filter.id}
+            <a href="javascript:void(0);" class="f-filter-delete text-red">
+                <i class="fas fa-trash-alt"></i>
+                <span class="desktop-only custom-ml-4">[`Delete filter`]</span>
+            </a>
+        {/if}
+
+        <div class="field {if $wa->param('style') === 'inline'}{/if}">
+            <div class="name">
+                [`Name`]
+            </div>
+            <div class="value">
+                <input type="text" name="name" value="{$filter.name|escape}" class="bold">
+            </div>
+        </div>
+
+        {if $is_admin}
+            <div class="field">
+                <div class="name">
+                    [`Visibility`]
+                </div>
+                <div class="value">
+                    <div class="f-toggle toggle normal smaller">
+                        <span{if $filter.access_type !== filesFilterModel::ACCESS_TYPE_SHARED} class="selected"{/if} data-type>[`Me only`]</span>
+                        <span{if $filter.access_type === filesFilterModel::ACCESS_TYPE_SHARED} class="selected"{/if} data-type="{filesFilterModel::ACCESS_TYPE_SHARED}">[`Everyone`]</span>
+                    </div>
+                    <input type="hidden" name="access_type">
+                </div>
+            </div>
+        {/if}
+
+        {if !$filter.icon_url}
+            <div class="field">
+                <div class="name">
+                    [`Icon`]
+                </div>
+                <div class="value">
+                    <ul class="flexbox wrap middle space-16 f-filter-icons">
+                        {foreach $icons as $icon}
+                            <li class="custom-m-0{if (!$filter.icon && $icon@index == 0) || $filter.icon == $icon} selected{/if}" data-val="{$icon}">
+                                <a href="javascript:void(0)" class="text-{if (!$filter.icon && $icon@index == 0) || $filter.icon == $icon}blue{else}gray{/if}"><i class="{$icon}"></i></a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                    <input type="hidden" name="icon" value="{$filter.icon|default:$icons[0]}">
+                </div>
+            </div>
+        {/if}
+
+        {if $filter.acting_type === filesFilterModel::ACTING_TYPE_SEARCH}
+            {include file="./include.search_settings.html" inline}
+        {/if}
+
+        <input type="hidden" name="acting_type" value="{$filter.acting_type}">
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        (function(container) {
+            container.find(':input[name="name"]').focus();
+
+            {if !$filter.icon_url}
+                $('.f-filter-icons li', container).on('click', function() {
+                    container.find('[data-icon]').removeClass('text-blue').addClass('text-gray');
+                    $(this).find('[data-icon]').addClass('text-blue').removeClass('text-gray');
+                    $('.f-filter-icons li.selected', container).removeClass('selected');
+                    $(this).addClass('selected');
+                    container.find(':input[name="icon"]').val($(this).data('val'));
+                });
+            {/if}
+
+            const access_type = container.find(':input[name="access_type"]');
+            $(".f-toggle").waToggle({
+                ready: function($toggle) {
+                    {if $filter.access_type === filesFilterModel::ACCESS_TYPE_SHARED}
+                        access_type.val('{filesFilterModel::ACCESS_TYPE_SHARED}');
+                    {/if}
+                },
+                change: function(event, target) {
+                    access_type.val(target.dataset.type);
+                }
+            });
+        })($('#{$container_id}'));
+    });
+</script>

@@ -1,0 +1,34 @@
+/*
+// .simplebar
+*/
+@use '../custom-variables' as vs;
+
+$local-scrollbar-thumb-width: .375rem;
+$local-scrollbar-thumb-margin: .3125rem;
+
+.simplebar-track {
+    --simplebar-track--color: #{vs.$sa-simplebar-track--default-color};
+}
+.simplebar-track.simplebar-vertical {
+    width: $local-scrollbar-thumb-width + ($local-scrollbar-thumb-margin * 2);
+}
+.simplebar-track.simplebar-vertical .simplebar-scrollbar {
+    &:before {
+        display: block;
+        content: '';
+        position: absolute;
+        left: $local-scrollbar-thumb-margin; // SKIP-RTL
+        right: $local-scrollbar-thumb-margin; // SKIP-RTL
+        top: $local-scrollbar-thumb-margin;
+        bottom: $local-scrollbar-thumb-margin;
+        background: var(--simplebar-track--color);
+        border-radius: ($local-scrollbar-thumb-width * .5);
+    }
+}
+.simplebar-scrollbar.simplebar-visible:before {
+    opacity: .6;
+    transition: opacity .2s linear;
+}
+.simplebar-scrollbar.simplebar-hover:before {
+    opacity: .9;
+}

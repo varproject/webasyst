@@ -1,0 +1,184 @@
+<div style="display:none;" class="f-frontend-url-wrapper" id="f-frontend-url-wrapper">
+    <i class="icon16 globe"></i>
+    <div style="display: inline-block">
+        <span class="f-frontend-url-width" style="position: absolute; visibility: hidden; z-index: -1;">{$folder.frontend_url|escape}</span>
+        <input type="text" readonly="readonly" value="{$folder.frontend_url|escape}" class="f-frontend-url" id="f-frontend-url">
+        <a href="{$folder.frontend_url|escape}" target="_blank"><i class="icon10 new-window"></i></a>
+        <br>
+        <span class="hint">{ldelim}$wa->files->folderHtml('{$folder.hash|substr:0:16}{$folder.id}{$folder.hash|substr:16}'){rdelim}</span>
+    </div>
+</div>
+
+{capture assign="after_links_block"}{strip}
+    {$container_id = uniqid('s-folders-files-after-links-block')}
+    <span id="{$container_id}">
+        {if $can_delete}
+            {if !$is_source_root}
+                <a class="f-delete-link {if $in_sync}f-in-sync{/if}" id="f-delete-folder-link" href="javascript:void(0);"
+                    data-confirm-text='{sprintf('[`Are you sure you want move folder <strong>"%s"</strong> and all files in it to trash?`]', $folder.name)}'>
+                    <i class="icon16 delete"></i>[`Delete folder`]
+                </a>
+            {else}
+                {include file='../source/include.unmount.html' container_id=$container_id source_id=abs(intval($folder['source_id'])) inline}
+                <a class="f-unmount" href="javascript:void(0);" data-confirm=1>
+                    <i class="icon16 delete"></i>[`Unmount source`]
+                </a>
+            {/if}
+        {/if}
+    </span>
+    <!-- plugin hook: 'backend_folder.menu' -->
+    {* @event backend_folder.%plugin_id%.menu *}
+    {foreach $backend_folder as $plugin_id => $item}
+        {if !empty($item.menu)}{$item.menu}{/if}
+    {/foreach}
+{/strip}{/capture}
+
+{capture assign='after_breadcrumbs_block'}{strip}
+    {if $folder.is_personal}
+        {include file="../../include.personal_warn_block.html" storage_id=$storage.id}
+    {/if}
+{/strip}{/capture}
+
+{include file="../../files-legacy/include.files.html"
+    can_create_folder=true
+    can_share_folder=true
+    folder_id=$folder.id
+inline}
+
+<script>( function($) {
+    var folder_id = {$folder.id|json_encode},
+        sidebar = $.files.config.getSidebar(),
+        $frontUrl = $("#f-frontend-url-wrapper"),
+        notify_hash = 'storage/{$folder.storage_id}';
+
+    if (sidebar.find('.f-shared-files li[data-id="' + folder_id + '"]').length) {
+        notify_hash = 'folder/' + folder_id;
+    }
+
+    sidebar.trigger('notify', {
+        hash: notify_hash,
+        counters: {
+            storage: {
+                {$storage.id}: {$storage.count}
+            }
+        }
+    });
+
+    $.files.config.setPageInfo("file/{$folder.id}", {$folder|json_encode});
+
+    var main_container = $.files.config.getMainContainer();
+
+    $('.f-breadcrumbs-wrapper', main_container).after($frontUrl);
+    {if $folder.hash}
+        $frontUrl.show();
+    {/if}
+
+    var header_name = $.files.config.getMainContainer().find('.f-header-name');
+    {if $folder.is_personal}
+        header_name.after('<span class="f-header-icon"><i class="icon16 lock-bw" title="[`Only you can access files in this folder`]"></i></span>');
+    {/if}
+
+    {if $can_rename && !$in_sync}
+        header_name.addClass('editable');
+        header_name.inlineEditable({
+            minSize: {
+                width: header_name.width()
+            },
+            maxSize: {
+                width: 600
+            },
+            size: {
+                height: 30
+            },
+            inputClass: 'bold',
+            afterBackReadable: function (input, data) {
+                if (!data.changed) {
+                    return false;
+                }
+                $.files.jsonPost({
+                    url: '?module=rename&action=file',
+                    data: { id: '{$folder.id}', name: $(input).val() },
+                    onSuccess: function(r) {
+                        if (r.status !== 'ok' || !r.data.file) {
+                            header_name.text(data.old_text);
+                            if (r.errors && r.errors.sync) {
+                                alert(r.errors.sync.msg);
+                            }
+                        } else {
+                            $.files.controller.reloadPage();
+                        }
+                    }
+                });
+            }
+        });
+    {/if}
+
+    {if $can_delete && !$in_sync && !$is_source_root}
+        $('#f-delete-folder-link').click(function(e) {
+            e.preventDefault();
+
+            var folder_id = {$folder.id};
+            $.files.confirmDelete(
+                {
+                    title: "[`Delete folder`]",
+                    msg: $(this).data('confirmText')
+                },
+                function() {
+                    var dialog = $(this);
+                    $.files.jsonPost({
+                        url: '?module=delete&action=files',
+                        data: { file_id: [folder_id] },
+                        onSuccess: function(r) {
+                            if (r.status === 'ok') {
+                                $.files.refreshSidebar();
+                                if (!$.isEmptyObject(r.data.files) && !$.isEmptyObject(r.data.files[folder_id])) {
+                                    if (r.data.files[folder_id].parent_id > 0) {
+                                        $.files.controller.gotoFolderPage(r.data.files[folder_id].parent_id);
+                                    } else {
+                                        $.files.controller.gotoStoragePage(r.data.files[folder_id].storage_id);
+                                    }
+                                } else {
+                                    $.files.controller.gotoDefaultPage();
+                                }
+                            } else {
+                                $.files.alertError(r.errors[0][0]);
+                            }
+                        },
+                        onFailure: function(r) {
+                            $.files.alertError('[`Server error`]', r);
+                        },
+                        onAlways: function() {
+                            dialog.trigger('close');
+                        }
+                    });
+                }
+            );
+        });
+    {/if}
+
+    /**
+     * Input.#FrontEndUrl
+     * */
+    ( function() {
+        var $frontUrl = $("#f-frontend-url"),
+            $frontUrlWidth = $(".f-frontend-url-width"),
+            width;
+
+        if ($frontUrlWidth.length && $frontUrl.length) {
+            width = $frontUrlWidth.width();
+
+            // Set width
+            if (width) {
+                $frontUrl.width(width);
+            }
+
+            // Autoselect
+            $frontUrl.on("click", function() {
+                $(this).select();
+            });
+        }
+    })();
+
+
+
+})(jQuery);</script>

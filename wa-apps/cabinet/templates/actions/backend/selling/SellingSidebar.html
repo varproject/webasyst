@@ -1,0 +1,93 @@
+{* header  *}
+{* <div class="sidebar-header custom-mt-20 custom-p-10">
+    <h5 class="heading custom-mr-8">
+        <span>{$sidebar_heading}</span>
+        <a href="" target="_blank" class="count action"><i class="fas fa-plus-circle" style="color: #6bb532;"></i></a>
+    </h5>
+</div> *}
+
+
+{* body *}
+<div class="sidebar-body">
+    <div class="box custom-py-0">
+        <ul class="menu rounded">
+
+            {foreach $statuses as $group}
+
+
+                {* Заголовок группы меню *}
+                <li class="menu-heading">
+                    <h5 class="heading header">
+                        <span>{$group.name|escape}</span>
+                    </h5>
+                </li>
+
+                {if !empty($group.statuses)}
+                    {foreach $group.statuses as $item}
+
+                        {* Обычный пункт меню *}
+                        <li class="rounded">
+                            <a class="item" href="{$item.id}">
+                                {if !empty($item.icon)}
+                                    <span class="s-icon-main icon">
+                                        <i class="{$item.icon}" {if !empty($item.active)} style="color: var(--text-color-link);"
+                                            {/if}></i>
+                                    </span>
+                                {/if}
+                                <span class="s-name">{$item.name|escape}</span>
+                            </a>
+                        </li>
+
+                    {/foreach}
+                {/if}
+
+
+            {/foreach}
+
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{* footer *}
+{* <div class="sidebar-footer">
+    <div class="box custom-py-0">
+        {if !empty($selling_status_settings)}
+            <ul class="menu rounded">
+                <li class="rounded{if !empty($item.active)} selected{/if}">
+                    <a class="item {$selling_status_settings.class|escape}" href="{$selling_status_settings.full_url}">
+
+                        {if !empty($selling_status_settings.icon)}
+                            <span class="s-icon-main icon">
+                                <i class="{$selling_status_settings.icon}"></i>
+                            </span>
+                        {/if}
+                        <span class="s-name">{$selling_status_settings.name|escape}</span>
+                    </a>
+                </li>
+            </ul>
+        {/if}
+    </div>
+</div> *}
+
+
+
+
+
+<style>
+    #cabinet .heading.header {
+        margin: 15px 5px 8px;
+    }
+
+    #cabinet .heading.body {
+        margin: 15px 5px 8px;
+    }
+</style>

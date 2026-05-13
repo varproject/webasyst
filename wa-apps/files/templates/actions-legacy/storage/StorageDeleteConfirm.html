@@ -1,0 +1,47 @@
+{$dialog_id = uniqid('f-storage-delete-')}
+
+<div class="dialog {if $files_count > 0}width450px height200px{else}width450px height100px{/if} f-storage-delete" id="{$dialog_id}" style="display:none;">
+    <form>
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+                    <h1>[`Delete storage`]</h1>
+                    {if $files_count > 0}
+                        <p>
+                            {sprintf(_w("This will permanently delete “%s”, and <strong>all %d files and folders</strong>. Are you sure?"), $storage.name|escape, $files_count)}
+                        </p>
+                    {/if}
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    <input class="button red" type="submit" value="{if $files_count > 0}[`Delete storage and all files`]{else}[`Delete storage`]{/if}">
+                    <i class="icon16 loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+$(function() {
+    var dialog = $('#{$dialog_id}');
+    $('.f-storage-dialog').remove();
+    dialog.filesDialog({
+        onSubmit: function() {
+            $.files.jsonPost({
+                url: '?module=storage&action=delete',
+                data: { id: "{$storage.id}" },
+                onSuccess: function() {
+                    $.files.refreshSidebar();
+                    $.files.controller.gotoDefaultPage();
+                    dialog.trigger('close').remove();
+                }
+            });
+            return false;
+        }
+    });
+});
+</script>

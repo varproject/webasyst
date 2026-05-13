@@ -1,0 +1,25 @@
+{$is_tmpl = $type|substr:0:5 === 'tmpl-'}
+{if $is_tmpl}
+    {$type = $type|substr:5}
+{/if}
+
+<a class="f-browser-{$type} flexbox middle" href="javascript:void(0);">
+    {if !$is_tmpl && ($type === 'storage' || empty($item.is_leaf))}
+        <i class="fas fa-caret-right f-collapse-handler"></i>
+    {/if}
+    {if $type === 'storage'}
+        {$item.icon_str}
+    {else}
+        <i class="fas fa-folder text-blue"></i>
+    {/if}
+    <span class="f-name">
+        {if $is_tmpl}
+            <input class="small" type="text" name="tmpl_name" value="">
+        {else}
+            {$item.name|escape}
+        {/if}
+        {if !empty($item.is_personal)}
+            <i class="fas fa-lock" style="font-size: 75%"></i>
+        {/if}
+    </span>
+</a>

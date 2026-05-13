@@ -1,0 +1,55 @@
+/*
+// progress
+*/
+@use 'sass:map';
+@use '../mixins/bootstrap' as bt;
+@use '../custom-variables' as vs;
+
+.progress {
+    --sa-progress--value: 0%;
+
+    position: relative;
+
+    &:after {
+        display: block;
+        content: '';
+        position: absolute;
+        left: 0; // SKIP-RTL
+        right: 0; // SKIP-RTL
+        top: 0;
+        bottom: 0;
+        border-radius: inherit;
+        box-shadow: vs.$sa-progress--shadow;
+    }
+}
+.progress-bar {
+    --sa-progress--bg-color: #{vs.$sa-progress--default-bg-color};
+    --sa-progress--font-color: #{vs.$sa-progress--default-font-color};
+    --sa-progress--strip-color: #{vs.$sa-progress--default-strip-color};
+
+    color: var(--sa-progress--font-color);
+    background-color: var(--sa-progress--bg-color);
+    font-weight: bt.$font-weight-medium;
+    width: var(--sa-progress--value, 0%);
+}
+.progress-bar-striped {
+    background-image:
+        linear-gradient(
+            45deg,
+            var(--sa-progress--strip-color) 25%,
+            transparent 25%,
+            transparent 50%,
+            var(--sa-progress--strip-color) 50%,
+            var(--sa-progress--strip-color) 75%,
+            transparent 75%, transparent
+        );
+}
+
+// styles
+@each $style, $variables in vs.$sa-progress--styles {
+    .progress-bar-sa-#{$style} {
+        --sa-progress--bg-color: #{map.get($variables, bg-color)};
+        --sa-progress--font-color: #{map.get($variables, font-color)};
+        --sa-progress--strip-color: #{map.get($variables, strip-color)};
+    }
+}

@@ -1,0 +1,199 @@
+{$dialog_id = uniqid('f-share-dialog')}
+
+{function form_begin}
+    {if $file.full_access}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $file.full_access}</form>{/if}
+{/function}
+
+{function title file=[]}
+    {if !$wa->get('public_link')}
+        {if $file.type === filesFileModel::TYPE_FILE}[`Share file`]{else}[`Share folder`]{/if}
+    {else}
+        [`Public link to`]
+    {/if}
+{/function}
+
+{function size}
+    {if $file.full_access}{if !$wa->get('public_link')}width650px height400px{else}width650px height250px{/if}{else}width400px height200px{/if}
+{/function}
+
+<style>
+    .f-file-preview-link-value { padding-top: 1em; }
+    .f-ibutton-checkbox ul.menu-h li { padding: 0.35em 0 0; vertical-align: top; }
+    .f-share-dialog .f-file-preview-link-block { width: 99%; margin-top: 20px; }
+    .f-share-dialog .f-file-preview-link { width: 100%; }
+    .f-share-dialog .f-private-link-on .f-private-link-off-text { display: none; }
+    .f-share-dialog .f-private-link-off .f-private-link-text { color: gray; }
+    .f-share-dialog .f-private-link-off .yes { display: none; }
+    .f-share-dialog .f-private-link-off .f-file-preview-link-block { display: none; }
+</style>
+
+<div class="dialog {size} f-dialog f-share-dialog" id="{$dialog_id}" style="display:none;">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+                    <h1>
+                        {title file=$file}
+                        {$file.name|escape|truncate:32}
+                    </h1>
+
+                    {if $file.full_access}
+                        {if !$wa->get('public_link')}
+                            {include file='./include.share.html' inline}
+                        {else}
+                            {include file='./include.public_link.html' inline}
+                        {/if}
+                    {else}
+                        <p class="errormsg">
+                            [`Insufficient access rights`]
+                        </p>
+                    {/if}
+
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {if $file.full_access}
+                        <input class="button grey cancel" type="button" value="[`Close`]" id="f-share-dialog-cancel">
+                        <div style="display:none;" id="f-share-dialog-ctrl">
+                            <input class="button green" type="submit" value="[`Save`]">
+                            <i class="icon16 loading" style="display: none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                            <input type="hidden" name="file_id" value="{$file.id}">
+                        </div>
+                    {else}
+                        <input class="button red cancel" type="button" value="[`Cancel`]">
+                    {/if}
+                </div>
+            </div>
+        </div>
+    {form_end}
+</div>
+
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-share-dialog').not(dialog).remove();
+
+        var showSubmitButton = function() {
+            $('#f-share-dialog-cancel').slideUp(0, function() {
+                $('#f-share-dialog-ctrl').slideDown(0);
+            });
+        };
+
+        {if $file.full_access}
+            dialog.filesDialog({
+                onFirstLoad: function() {
+
+                    // trigger share block link
+                    (function(link) {
+                        link.click(function() {
+                            var block = $(this).closest('.block');
+                            var groups_block = block.find('.f-groups-block');
+                            if (groups_block.is(':hidden')) {
+                                groups_block.show();
+                            } else {
+                                groups_block.hide();
+                            }
+                        });
+                    })($('.f-share-block-trigger', dialog));
+
+                    // preview link click and select
+                    (function (input) {
+                        input.select().click(function() {
+                            $(this).select();
+                        });
+                    })($('.f-file-preview-link', dialog));
+
+                    var createLink = function() {
+                        var self = $(this);
+                        $.files.jsonPost(
+                            '?module=share&action=createLink',
+                            { file_id: '{$file.id}' },
+                            function(r) {
+                                if (r.status == 'ok' && r.data.link) {
+                                    var private_link = r.data.link;
+                                    var block = $('.f-file-preview-link-value', dialog).removeClass('f-private-link-off').addClass('f-private-link-on');
+                                    block.find('.f-file-preview-link').val(private_link).trigger('click');
+                                    block.find('.f-file-go-link').attr('href', private_link);
+                                    $.files.controller.reloadPage();
+                                }
+                            }
+                        );
+                    };
+
+                    var removeLink = function() {
+                        var self = $(this);
+                        $.files.jsonPost(
+                            '?module=share&action=removeLink',
+                            { file_id: '{$file.id}' },
+                            function(r) {
+                                if (r.status == 'ok') {
+                                    $('.f-file-preview-link-value', dialog).removeClass('f-private-link-on').addClass('f-private-link-off');
+                                    $.files.controller.reloadPage();
+                                }
+                            }
+                        );
+                    };
+
+                    $.files.iButton($('.f-private-link-toggle'))
+                        .change(function() {
+                            if ($(this).is(':checked')) {
+                                createLink();
+                            } else {
+                                removeLink();
+                            }
+                        });
+
+                    {if !$wa->get('public_link')}
+                        $('.f-share-dialog input').change(function() {
+                            showSubmitButton();
+                        });
+                    {/if}
+
+                    $('.f-autocomplete', dialog).bind('autocomplete_select', function() {
+                        showSubmitButton()
+                    });
+                    $('.f-share-settings-level-select', dialog).change(function () {
+                        showSubmitButton();
+                    });
+                    $('.f-delete', dialog).click(function() {
+                        showSubmitButton();
+                    });
+
+                },
+                onSubmit: function() {
+                    var form = $(this);
+                    $.files.jsonPost({
+                        url: '?module=share&action=save',
+                        data: form.serialize(),
+                        onSuccess: function(r) {
+                            dialog.trigger('close').remove();
+                            $.files.refreshSidebar();
+                            var old_file = {$file|json_encode};
+                            var new_file = r && r.status == 'ok' && r.data && r.data.file;
+                            if (new_file && (old_file.hash !== new_file.hash || old_file.is_personal !== new_file.is_personal)) {
+                                $.files.controller.reloadPage();
+                            }
+                        },
+                        onFailure: function(r) {
+                            $.files.alertError("[`Couldn't share folder`]", r);
+                        },
+                        onAlways: function() {
+                            form.data('loading', 0);
+                            form.find('.loading').hide();
+                        }
+                    });
+                    return false;
+                }
+            });
+        {else}
+            dialog.filesDialog();
+        {/if}
+    });
+</script>

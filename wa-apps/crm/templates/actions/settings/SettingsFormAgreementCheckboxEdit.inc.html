@@ -1,0 +1,68 @@
+<template class="c-settings-form-agreement-checkbox-edit-wrapper">
+<div class="dialog crm-dialog-wrapper">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <header class="dialog-header">
+            <h1>[`Consent to terms`]</h1>
+        </header>
+
+        <div class="dialog-content">
+            <div class="fields">
+                <div class="field c-field-id">
+                    <div class="name">[`Field`]</div>
+                    <div class="value"></div>
+                </div>
+                <div class="field c-field-html-label">
+                    <div class="name">[`Terms description`]</div>
+                    <div class="value c-html-label-textarea-wrapper">
+                        <textarea name="params[html_label]"></textarea>
+                    </div>
+                </div>
+                <div class="field c-field-checked-by-default">
+                    <div class="name"></div>
+                    <div class="value">
+                        <label>
+                            <span class="wa-checkbox"><input type="checkbox" name="params[default_checked]" value="1">
+                                <span>
+                                    <span class="icon">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                </span>
+                            </span>
+                            [`Checked by default`]
+                        </label>
+                    </div>
+                </div>
+                <div class="field c-field-captionplace">
+                    <div class="name">[`Checkbox placement`]</div>
+                    <div class="value">
+                        <div class="custom-mb-8">
+                            <label>
+                                <span class="wa-radio">
+                                    <input type="radio" name="params[captionplace]" value="none">
+                                    <span></span>
+                                </span> [`on the form’s left`]
+                            </label>
+                        </div>
+                        <div class="custom-mb-8">
+                            <label>
+                                <span class="wa-radio">
+                                    <input type="radio" name="params[captionplace]" value="left" checked="checked">
+                                    <span></span>
+                                </span> [`on the fields column’s left`]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="dialog-footer">
+            <div class="crm-actions">
+                <input class="button crm-button js-some-action" type="submit" value="[`Apply`]">
+                <a class="button light-gray js-close-dialog" href="javascript:void(0);">[`Cancel`]</a>
+            </div>
+        </footer>
+    </div>
+</div>
+</template>

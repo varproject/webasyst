@@ -1,0 +1,98 @@
+[
+  {
+    "code": "NEWYEAR",
+    "type": "Percentage",
+    "discount": "10%",
+    "status": "Planned",
+    "startDate": "2021-01-01 00:00",
+    "endDate": "2021-01-10 00:00"
+  },
+  {
+    "code": "REDPARTS24",
+    "type": "Fixed amount",
+    "discount": "$10.00",
+    "status": "Enabled",
+    "startDate": "2020-10-19 00:00",
+    "endDate": null
+  },
+  {
+    "code": "FIVESTARS",
+    "type": "Fixed amount",
+    "discount": "$5.55",
+    "status": "Enabled",
+    "startDate": "2020-05-05 00:00",
+    "endDate": "2020-06-05 00:00"
+  },
+  {
+    "code": "PROMO78",
+    "type": "Fixed amount",
+    "discount": "$50.00",
+    "status": "Finished",
+    "startDate": "2020-01-01 12:00",
+    "endDate": "2020-02-01 12:00"
+  },
+  {
+    "code": "LATROP2",
+    "type": "Percentage",
+    "discount": "15%",
+    "status": "Finished",
+    "startDate": "2019-12-05 12:00",
+    "endDate": "2019-12-15 12:00"
+  },
+  {
+    "code": "STROYKASTART",
+    "type": "Fixed amount",
+    "discount": "$15.00",
+    "status": "Finished",
+    "startDate": "2019-02-19 10:00",
+    "endDate": "2019-02-29 10:00"
+  },
+  {
+    "code": "ANNIVERSARY70",
+    "type": "Percentage",
+    "discount": "25%",
+    "status": "Finished",
+    "startDate": "2015-05-09 00:00",
+    "endDate": "2015-05-19 00:00"
+  },
+  {
+    "code": "AUTHORKOS",
+    "type": "Percentage",
+    "discount": "50%",
+    "status": "Finished",
+    "startDate": "2014-03-12 00:00",
+    "endDate": "2014-03-17 00:00"
+  },
+  {
+    "code": "BESTRONG",
+    "type": "Percentage",
+    "discount": "10%",
+    "status": "Finished",
+    "startDate": "2013-01-01 00:00",
+    "endDate": "2013-01-31 00:00"
+  },
+  {
+    "code": "LUCKYDAY",
+    "type": "Fixed amount",
+    "discount": "$100.00",
+    "status": "Planned",
+    "startDate": "2022-02-01 00:00",
+    "endDate": "2022-03-01 00:00"
+  },
+  {
+    "code": "UNKNOWN",
+    "type": "Percentage",
+    "discount": "$100.00",
+    "status": "Planned",
+    "startDate": "2021-11-08 10:00",
+    "endDate": null
+  },
+  {
+    "code": "REBEKKA",
+    "type": "Percentage",
+    "discount": "10%",
+    "status": "Planned",
+    "startDate": "2021-11-08 10:00",
+    "endDate": null
+  }
+]

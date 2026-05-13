@@ -1,0 +1,100 @@
+<div class="c-settings-shop-page" id="js-settings-shop-page">
+    <h1 class="c-page-header">[`Shop-Script integration`]</h1>
+
+    {if !$wa->crm->isPremium()}
+        <p class="small">
+            <i class="fas fa-star text-yellow"></i> [`With CRM premium, integration with Shop-Script is even better. An order screen will automatically show up a customer widget representing full contact profile with conversations, phone calls, notes, reminders, and all business details.`]
+            <a class="bold" href="{$wa_backend_url}crm/upgrade/">[`Upgrade now`] &rsaquo;</a>
+        </p>
+        <hr>
+    {/if}
+
+    <div class="toggle" id="toggle-menu">
+        <a class="selected" href="{$wa_app_url}settings/shop/">[`Automatic deal creation`]</a>
+        <a href="{$wa_app_url}settings/shop/workflow/">[`Workflow-Funnel synchronization`]</a>
+    </div>
+
+    {if !$supported}
+        <p class="small">
+            {sprintf_wp('You need Shop-Script version %s or newer for CRM integration.', crmConfig::SHOP_MINIMAL_VERSION)}
+        </p>
+    {else}
+
+        <p class="small">
+            [`Create deals from orders in your online store!`]
+            [`Set up <i>automatic</i> creation of deals upon execution of various order actions, individually for each of your storefronts.`]
+            [`Or <i>manually</i> create deals in the online store backend, regardless of the settings on this page.`]
+        </p>
+
+        <form action="{$wa_app_url}?module=settings&action=shopSave">
+            <div class="fields c-storefront-list js-storefront-list">
+                {foreach $storefronts as $storefront}
+                    {$_url = $storefront.url|escape}
+
+                    {if $_url}
+                        {$_namespace = "storefront[{$_url}]"}
+                    {else}
+                        {$_namespace = "storefront[NULL]"}
+                    {/if}
+
+                    <div class="fields-group c-storefront">
+
+                        <h4>{$storefront.name|default:''|escape}</h4>
+
+                        <div class="js-ibutton-wrapper">
+                            <span class="switch smaller" id="c-storefront-switch">
+                                <input type="checkbox" class="c-storefont-checkbox js-ibutton" id="js-ibutton-{$storefront@iteration}" name="{$_namespace}[checked]" value="1" {if $storefront.checked}checked{/if}>
+                            </span>
+                            <label for="js-ibutton-{$storefront@iteration}" data-active-text="[`Enabled`]" data-inactive-text="[`Disabled`]">{if $storefront.checked}[`Enabled`]{else}[`Disabled`]{/if}</label>
+                        </div>
+
+                        <div class="c-storefront-params-block" {if !$storefront.checked}style="display: none;"{/if}>
+                            <div class="field">
+                                <div class="name">[`Create deal when`]:</div>
+                                <div class="value">
+                                    <ul class="menu compact" style="margin-top: 0;">
+                                        <li>
+                                            <label>
+                                                <span class="wa-radio"><input type="radio" name="{$_namespace}[create_deal_trigger]" value="order_create" {if !$storefront.create_deal_trigger || $storefront.create_deal_trigger === 'order_create'}checked{/if}><span></span></span>
+                                                [`Order was placed`]
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label>
+                                                <span class="wa-radio"><input type="radio" name="{$_namespace}[create_deal_trigger]" value="order_process" {if $storefront.create_deal_trigger === 'order_process'}checked{/if}><span></span></span>
+                                                [`Order was confirmed and accepted for processing`]
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            {$storefront.deal_block}
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+
+            <div class="c-settings-footer bottombar sticky">
+                <div class="c-footer-actions js-footer-actions">
+                    <input class="button js-submit-button" type="submit" value="[`Save`]">
+                    <span class="c-loading" style="display: none;">
+                        <i class="fas fa-spinner fa-spin loading"></i>
+                        </span>
+                    <span class="c-hidden">
+                        <a href="{$wa_app_url}settings/shop/" class="button light-gray">[`Cancel`]</a>
+                    </span>
+                </div>
+            </div>
+        </form>
+
+        <script>
+            (function($) {
+                new CRMSettingsShop({
+                    $wrapper: $("#js-settings-shop-page")
+                });
+            })(jQuery);
+        </script>
+
+    {/if}
+</div>

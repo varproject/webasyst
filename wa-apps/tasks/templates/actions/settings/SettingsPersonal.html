@@ -1,0 +1,185 @@
+{$wrapper_id = uniqid('t-settings-wrapper-')}
+
+{include file="./SettingsPersonalHelpers.inc.html" inline}
+
+<div class="flexbox" id="t-personal-settings-page-wrapper">
+    {$sidebar_html}
+
+<div class="t-personal-settings-page content not-blank" id="t-personal-settings-page">
+
+<div class="article" id="{$wrapper_id}">
+    <div class="article-body">
+
+        <h1>
+            <span class="icon custom-mr-4"><span class="userpic" style="background-image: url('{$wa->user()->getPhoto(96)}');"></span></span>
+            [`My preferences`]
+        </h1>
+
+        <form action="?module=settingsPersonal&action=save" class="t-setting-form">
+            <input type="hidden" name="settings[notification][]" value="">
+            <div class="t-settings-fields fields">
+
+                <div class="field-group blank">
+                    <div class="field">
+                        <div class="name for-radio">
+                            [`App icon badge`]
+                            <span class="badge red smaller">1</span>
+                        </div>
+                        <div class="value">
+                          <ul class="menu custom-mt-4 custom-mb-8">
+                              <li>
+                                  <label>
+                                      <span class="wa-checkbox">
+                                          <input type="checkbox" name="1" id="checkbox" checked disabled>
+                                          <span>
+                                              <span class="icon">
+                                                  <i class="fas fa-check"></i>
+                                              </span>
+                                          </span>
+                                      </span>
+                                      [`Urgent open tasks assigned to me`]
+                                  </label>
+                              </li>
+                              <li>
+                                  <label>
+                                      <span class="wa-checkbox">
+                                          <input type="checkbox" name="1" id="checkbox" checked disabled>
+                                          <span>
+                                              <span class="icon">
+                                                  <i class="fas fa-check"></i>
+                                              </span>
+                                          </span>
+                                      </span>
+                                      [`Unread @mentions`]
+                                  </label>
+                              </li>
+                          </ul>
+                          <p class="hint custom-my-0">
+                              [`Both settings are force-set to on for every user on your team.`]
+                          </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group blank">
+                    <div class="field">
+                        <div class="name for-radio">
+                            [`Text editor`]
+                        </div>
+                        <div class="value">
+                            <ul class="menu custom-my-4">
+                                <li>
+                                    <label>
+                                        <span class="wa-radio">
+                                            <input type="radio" name="settings[text_editor]" value="wysiwyg" class="js-settings-text_editor"
+                                                   {if $settings.text_editor == 'wysiwyg'}checked="checked"{/if}>
+                                            <span></span>
+                                        </span>
+                                        [`WYSIWYG`]
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <span class="wa-radio">
+                                            <input type="radio" name="settings[text_editor]" value="markdown" class="js-settings-text_editor"
+                                                   {if $settings.text_editor == 'markdown'}checked="checked"{/if}>
+                                            <span></span>
+                                        </span>
+                                        [`Markdown`]
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group blank">
+
+                    <h5 class="heading custom-mb-12">
+                      <span>[`My notification preferences`] <span class="badge small squared custom-ml-4 light-gray">[`Push & Email`]</span></span>
+                    </h5>
+
+                    <p class="small">
+                      {sprintf('[`To receive push notifications, make sure the <a href="https://www.webasyst.com/mobile/" target="_blank">%s Webasyst Teamwork mobile app</a> is installed on your device with push notifications enabled/allowed.`]', '<i class="fab fa-apple text-gray custom-mr-4"></i><i class="fab fa-android text-green"></i>')}
+                    </p>
+
+                    <div class="field">
+                        <div class="name">
+                            [`Notify me on`]
+                        </div>
+                        <div class="value">
+                            <ul class="menu custom-mt-4">
+                                {$_items = [
+                                    'always' => '[`All updates and comments`]',
+                                    'assign' => '[`Assignments only`]',
+                                    'off' => '[`Turn off all notifications`]'
+                                ]}
+                                {foreach $_items as $_id => $_label}
+                                    <li>{action_li_item label=$_label id=$_id}</li>
+                                {/foreach}
+
+                                <li class="custom-mt-16">
+                                    <label>
+                                        <span class="wa-checkbox">
+                                            <input type="checkbox" name="1" id="checkbox" checked disabled>
+                                            <span>
+                                                <span class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        [`New @mentions`]
+                                    </label>
+                                    <p class="hint custom-my-8" style="font-size: 0.8125rem;">
+                                        [`Notifications on new mentions are always on for every user on your team.`]
+                                    </p>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="name">
+                            [`Which tasks`]
+                        </div>
+                        <div class="value">
+                            <ul class="menu t-settings-list custom-mt-4">
+                                {$_items = [
+                                    'assigned_to_me' => '[`Tasks assigned to me`]',
+                                    'created_by_me' => '[`Tasks created by me`]',
+                                    'favorites' => '[`Tasks I’m watching`]',
+                                    'project' => '[`Tasks from selected projects`]'
+                                ]}
+                                {foreach $_items as $_id => $_label}
+                                    <li>
+                                        {task_li_item label=$_label id=$_id}
+                                        {if $_id == 'project'}
+                                            {project_list}
+                                        {/if}
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-m-20 t-settings-buttons">
+                    <input type="submit" class="button" value="[`Save settings`]">
+                    <i class="fas fa-spinner" style="margin-top: 6px; display: none;"></i>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        (function ($) {
+            new TasksSettingsPersonal({
+                $wrapper: $('#{$wrapper_id}')
+            });
+        })(jQuery);
+    </script>
+
+</div>
+
+</div>

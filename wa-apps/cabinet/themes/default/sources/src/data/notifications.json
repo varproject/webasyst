@@ -1,0 +1,26 @@
+[
+  {
+    "icon": "stroyka/statistics-16",
+    "style": "primary",
+    "title": "New report has been received",
+    "subtitle": "24 hours ago"
+  },
+  {
+    "icon": "stroyka/database-16",
+    "style": "warning",
+    "title": "Creating a backup in the process",
+    "subtitle": "Completed: 37% (23.05 MB)"
+  },
+  {
+    "icon": "stroyka/cart-16",
+    "style": "primary",
+    "title": "Product added to cart",
+    "subtitle": "Drill Screwdriver Brandix ALX7054 200 Watts"
+  },
+  {
+    "icon": "stroyka/person-16",
+    "style": "info",
+    "title": "Customer Ryan Ford says",
+    "subtitle": "What is a screen dimension of Brandix Series B monitor?"
+  }
+]

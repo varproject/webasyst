@@ -1,0 +1,70 @@
+{function radio_upload_file_notification txt='' val=''}
+    <li>
+        <label>
+            <input type="radio" name="settings[upload_file_notification]" value="{$val}" {if $settings.upload_file_notification === $val}data-checked="1" checked="checked"{/if}> {$txt}
+        </label>
+    </li>
+{/function}
+
+{function radio_app_on_count txt='' val=''}
+    <li>
+        <label>
+            <input type="radio" name="settings[app_on_count]" value="{$val}" data-app="{$settings.app_on_count}" {if $settings.app_on_count === $val}checked="checked"{/if}> {$txt}
+        </label>
+    </li>
+{/function}
+
+<div class="block">
+    <form id="f-settings-form">
+        <h1>[`Settings`]</h1>
+        <div class="fields">
+            <div class="field">
+                <div class="name">
+                    [`Notifications on new uploaded files`]:
+                </div>
+                <div class="value">
+                    <ul class="menu-v">
+                        {foreach $variants['upload_file_notification'] as $val => $txt}
+                            {radio_upload_file_notification val={$val} txt=$txt}
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+            <div class="field">
+                <div class="name">
+                    [`App icon badge count`]:
+                </div>
+                <div class="value">
+                    <ul class="menu-v">
+                        {foreach $variants['app_on_count'] as $val => $txt}
+                            {radio_app_on_count val={$val} txt=$txt}
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+
+            {$wa->csrf()}
+            <input type="submit" class="button green" value="[`Save`]">
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function () {
+        var form = $('#f-settings-form');
+        form.on('change, click', ':input', function() {
+           form.find(':submit').removeClass('green').addClass('yellow');
+        });
+
+        form.submit(function () {
+            $.files.jsonPost({
+                url: '?module=settings&action=save',
+                data: form.serialize(),
+                onSuccess: function() {
+                    $.files.controller.reloadPage();
+                }
+            });
+            return false;
+        });
+    });
+</script>

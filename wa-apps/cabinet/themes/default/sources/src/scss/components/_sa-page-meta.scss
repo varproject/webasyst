@@ -1,0 +1,52 @@
+/*
+// .sa-page-meta
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+
+$local-gutter: .75rem;
+$local-divider-width: .0625rem;
+$local-divider-shrink: .1875rem;
+
+.sa-page-meta {
+    padding: func.rem(9) 1rem;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    border-top: 1px solid vs.$sa-page-meta--border-color; // SKIP-PIXELS
+    border-bottom: 1px solid vs.$sa-page-meta--border-color; // SKIP-PIXELS
+}
+.sa-page-meta__body {
+    overflow: hidden;
+}
+.sa-page-meta__list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -.25rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: -($local-gutter * 2 + $local-divider-width);
+    }
+}
+.sa-page-meta__item {
+    position: relative;
+    margin-top: .25rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: ($local-gutter * 2 + $local-divider-width);
+    }
+
+    &:before {
+        position: absolute;
+        content: '';
+        display: block;
+        width: $local-divider-width;
+        background: vs.$sa-page-meta--divider-color;
+        top: $local-divider-shrink;
+        height: calc(100% - #{$local-divider-shrink * 2});
+
+        @include dir.scope {
+            #{dir.$inset-inline-start}: -($local-gutter + $local-divider-width);
+        }
+    }
+}

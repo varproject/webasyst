@@ -1,0 +1,355 @@
+{if !empty($assets)}{$assets}{/if}
+
+{function name="label_required" is_permanent=false}{strip}
+    <span class="js-required-field{if $is_permanent} js-required-permanent{/if} s-business__field-required text-orange custom-ml-4">*</span>
+{/strip}{/function}
+
+<div id="lead-form-alfabank" class="s-business-lead-form">
+<form>
+    <div class="s-business-lead-form__header">
+        <div class="flexbox wrap middle space-8">
+            {$is_plugin_setup = $is_closable || $is_collapsible}
+            <h2>{if $is_plugin_setup}Подключиться к {/if}{$bank_name}</h2>
+            <a href="javascript:void(0)" class="js-hide-business-lead-form s-business-lead-form__close-btn"{if !$is_closable} style="display: none;"{/if}><i class="fas fa-times"></i></a>
+            <a href="javascript:void(0)" class="js-collapse-business-lead-form s-business-lead-form__close-btn"{if !$is_collapsible} style="display: none;"{/if}><i class="fas fa-chevron-up fa-xs"></i></a>
+        </div>
+    </div>
+
+    <div class="s-business-lead-form__content">
+        <ul class="js-business-product-list chips rounded custom-m-0">
+            {foreach $products as $id => $p}
+            <li class="small" data-id="{$id}" data-with-product="{$p.with_product_id|default:''}">
+                <a href="javascript:void(0);">
+                    <span class="wa-checkbox">
+                        <input type="checkbox" name="productInfo[{$p@index}][productCode]" value="{$id}"{if !empty($p.enabled)} checked{/if}>
+                        <span>
+                            <span class="icon"><i class="fas fa-check"></i></span>
+                        </span>
+                    </span>
+                    {$p.title|default:$id}
+                </a>
+            </li>
+            {/foreach}
+        </ul>
+
+        <p class="small custom-my-8">Подключайтесь к Альфа-Банку через Webasyst на выгодных условиях:</p>
+        <div class="s-business-lead-form__header-description">
+            {foreach $products as $_id => $p}
+                <p class="js-business-product-description small custom-my-2" data-product="{$_id}" style="display:none;"><i class="fas fa-check text-red"></i> {$p.description|default:''}</p>
+            {/foreach}
+        </div>
+
+        <div class="custom-my-32">
+            <div class="fields">
+                <div class="field">
+                    <div class="name for-input">Название организации</div>
+                    <div class="value"><input type="text" class="long" name="organizationInfo[organizationName]" data-app-field="business_company" {literal}data-mask=^[\d\s\-\.\(\)\,\"\/:/+#№»«а-яА-ЯёЁa-zA-Z]{1,150}${/literal}></div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">ИНН</div>
+                    <div class="value"><input type="text" class="long" name="organizationInfo[inn]" data-app-field="business_inn" inputmode="numeric" maxlength="12" value="" {literal}data-mask="^\d{10}$|^\d{12}$"{/literal}></div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">ФИО</div>
+                    <div class="value"><input type="text" class="long" name="contactInfo[0][fullName]" value=""></div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">Телефон</div>
+                    <div class="value"><input type="text" class="long" name="contactInfo[0][phoneNumber]" data-app-field="phone" placeholder="+7" inputmode="numeric" maxlength="12" value="" {literal}data-mask="^\+7\d{10}$"{/literal}></div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">Email</div>
+                    <div class="value"><input type="text" class="long" name="contactInfo[0][contactEmail]" data-app-field="email" {literal}data-mask="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"{/literal}></div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">
+                        Местоположение
+                    </div>
+                    <div class="value">
+                        <div class="s-business-toggler flexbox middle wrap space-16">
+                            <div class="toggle" id="toggle-fias">
+                                <span data-id="cityCode" class="selected">Город</span>
+                                <span data-id="regionCode">Регион</span>
+                            </div>
+
+                            <div class="s-business-toggler-content">
+                                <div data-toggle="cityCode">
+                                    <div class="wa-select">
+                                        <select name="requestInfo[cityCode]" class="text-ellipsis width-100">
+                                            {foreach $fias.cities as $_id => $_city}
+                                            <option value="{$_id}"{if $_city === 'Москва'} selected{/if}>{$_city|escape}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div data-toggle="regionCode" style="display: none;">
+                                    <div class="wa-select">
+                                        <select name="requestInfo[regionCode]" class="text-ellipsis width-100" disabled>
+                                            {foreach $fias.regions as $_id => $_city}
+                                            <option value="{$_id}">{$_city}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="name for-input">Комментарий к заявке</div>
+                    <div class="value"><textarea name="requestInfo[comment]" rows="2"></textarea></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="s-business-lead-form__footer flexbox middle wrap space-4">
+            <button type="submit" class="s-business-lead-form__submit button large">Отправить заявку в {$bank_name}</button>
+            <span class="js-loading hidden"><i class="fas fa-spinner fa-spin"></i><span>
+        </div>
+        <div class="place-for-errors custom-mt-12"></div>
+        <p class="hint">Заявка передается напрямую в {$bank_name}, и ее обрабатывают менеджеры банка. Webasyst заявки не сохраняет и не обрабатывает.</p>
+    </div>
+</form>
+
+<script>
+    $(function () { "use strict";
+        const $required_fields_by_product = Object.freeze({$required_fields_by_product|json_encode});
+
+        const $wrapper = $('#lead-form-alfabank');
+        const $form = $wrapper.children('form');
+        const $submit = $form.find('[type=submit]');
+        const $footer = $form.find('.s-business-lead-form__footer');
+        const $place_for_errors = $form.find('.place-for-errors');
+
+        const label_required_html = '{label_required}';
+
+        const requestAPI = new class {
+            constructor () {
+                this.base_url = '?plugin=business&module=alfaBankApi&action=';
+            }
+            _getFormData() {
+                const fields_map = $form.serializeArray().reduce(function(acc, field) {
+                    if (field.value && String(field.value).trim()) {
+                        acc[field.name] = field.value;
+                    }
+                    return acc;
+                }, {});
+
+                return fields_map;
+            }
+            createApplication() {
+                const form_data = this._getFormData();
+                return $.post(this.base_url + 'createApplication', form_data);
+            }
+        };
+
+        // INIT
+        const updateDescription = () => {
+            $('.js-business-product-description', $form).hide();
+            $form.find('.js-business-product-list :checkbox:enabled:checked').each(function () {
+                // show description
+                $(`.js-business-product-description[data-product="${ this.value }"]`).show();
+            });
+        };
+        $form.find('.js-business-product-list [data-id]').on('click', function () {
+            const $item = $(this);
+            if (!$item.data('with-product')) {
+                return false;
+            }
+            const is_checked = !$item.find(':checkbox').prop('checked');
+            // checked product
+            $item.find(':checkbox').prop('checked', is_checked);
+
+            clearErrors();
+            updateDescription();
+            defineRequiredFields();
+        });
+
+        defineRequiredFields();
+        updateDescription();
+
+        const initToggler = () => {
+            setTimeout(() => {
+                $("#toggle-fias").waToggle({
+                    change: function(event, target) {
+                        const $toggle = $(target);
+                        const id = $toggle.data('id');
+                        $toggle.closest('.s-business-toggler').find('[data-toggle="'+id+'"]')
+                            .show().find('select').prop('disabled', false)
+                            .end().siblings().hide().find('select').prop('disabled', true);
+                    }
+                });
+            }, 50);
+        };
+        // fix loading waToggle
+        const $menu_item = $('a[data-form-id="alfabank"]');
+        if ($menu_item.is(':empty')) {
+            initToggler();
+        } else {
+            $menu_item.one('click', function () {
+                initToggler();
+            });
+        }
+
+        $form.find("[data-wa-tooltip-content]").waTooltip();
+
+        $form.on('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!$form.find('.js-loading').hasClass('hidden')) {
+                return false;
+            }
+            if (isInvalidFormFields()) {
+                return;
+            }
+
+            $form.find('.js-loading').removeClass('hidden');
+            requestAPI.createApplication()
+                .always(() => {
+                    $form.find('.js-loading').addClass('hidden');
+                })
+                .done((r) => {
+                    if (r.status === 'ok' && r.data) {
+                        $('.js-field-phoneNumber-status', $form).empty();
+                        if (r.data.message_html) {
+                            $form.find('.s-business-lead-form__header').nextUntil().hide();
+                            $form.append(r.data.message_html);
+                        }
+                        if (Array.isArray(r.data.errors)) {
+                            r.data.errors.forEach(err => {
+                                $place_for_errors.append(`<span class="state-caution">${ err.title }: ${ err.detail }<br></span>`);
+                            });
+                        } else {
+                            {if $is_plugin_setup}
+                                $('.js-collapse-business-lead-form').hide();
+                                $('.js-hide-business-lead-form').show();
+                            {/if}
+                            $.shop.business.updateFormPrefills($form);
+                        }
+                    }
+                    handleErrors(r);
+                });
+        });
+
+        function defineRequiredFields () {
+            const product_type = $form.find('[name$="[productCode]"]:checked').val();
+            if (!$required_fields_by_product[product_type]) {
+                return;
+            }
+            clearRequiredLabels();
+
+            const required_fields = JSON.parse(JSON.stringify($required_fields_by_product[product_type]));
+            $form.find('[name]').off('change.validation');
+            $form.find('[name]:enabled').each(function () {
+                const $field = $(this);
+                const field_name = $field.attr('name');
+                let is_required = false;
+                for (const parent_key in required_fields) {
+                    required_fields[parent_key].some((f, i) => {
+                        is_required = field_name === `${ parent_key }[${ f }]`;
+                        if (is_required) {
+                            $field.closest('.field').children('.name').append(label_required_html);
+                            delete required_fields[parent_key][i];
+                        }
+                        return is_required;
+                    })
+                    if (is_required) {
+                        break;
+                    }
+                }
+
+                let input_mask = $field.data('mask');
+                if (is_required && !input_mask) {
+                    input_mask = "^.+$";
+                }
+                if (input_mask) {
+                    const regExp = new RegExp(input_mask);
+
+                    $field.on('change.validation', function () {
+                        const val = $(this).val();
+
+                        $field.siblings('.state-caution-hint').remove();
+                        $field.removeClass('state-caution');
+                        if (!is_required && !val) {
+                            return false;
+                        }
+
+                        const is_invalid = !regExp.test(val);
+                        const $field_wrapper = $field.closest('.value');
+                        if (is_invalid) {
+                            const msg = !!val ? '[`Invalid value`]' : '[`Field is empty`]';
+                            addFieldError($field, msg);
+                            return false;
+                        }
+                    });
+                }
+            });
+        }
+
+        function isInvalidFormFields () {
+            clearErrors();
+            $form.find('[name]:not(disabled)').trigger('change.validation');
+
+            const $field_type = $form.find('[name$="[productCode]"]:checked');
+            const is_valid_field_type = !!$field_type.val();
+            if (!is_valid_field_type) {
+                $('<div class="state-caution-hint">Необходимо выбрать продукт</div>').insertAfter($form.find('.js-business-product-list'));
+            }
+
+            const is_invalid = !is_valid_field_type || $form.find('.state-caution').length > 0;
+            if (is_invalid) {
+                $place_for_errors.append('<span class="state-caution">[`Please fill required fields`]</span>');
+                const $field_with_error = $form.find('.field .state-caution,.field .state-caution-hint').closest('.value');
+                if ($field_with_error.length) {
+                    const elementPosition = $field_with_error.get(0).getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.scrollY - ($('#wa-nav').height() || 0);
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                }
+            }
+
+            return is_invalid;
+        }
+
+        function clearErrors () {
+            $form.find('span.state-caution,.state-caution-hint').remove();
+            $form.find('.state-caution').removeClass('state-caution');
+            $place_for_errors.empty();
+        }
+
+        function clearRequiredLabels () {
+            $('.js-required-field:not(.js-required-permanent)', $form).remove();
+        }
+
+        function handleErrors(r) {
+            if (r.status !== 'fail' || !r.errors) {
+                return;
+            }
+            let error_html = '';
+            if (r.errors.error_html) {
+                error_html = r.errors.error_html;
+            } else {
+                error_html = '<span class="state-caution">'+r.errors.error_description+'</span>';
+                if (Array.isArray(r.errors.required_fields)) {
+                    r.errors.required_fields.forEach(f => addFieldError(f.field, f.message));
+                } else if (r.errors.error === 'invalid_phone') {
+                    addFieldError('phoneNumber');
+                } else if (r.errors.error === 'invalid_email') {
+                    addFieldError('email');
+                }
+            }
+            $place_for_errors.html(error_html);
+        }
+
+        function addFieldError(field, message) {
+            const $field = typeof field === 'object' ? field : $form.find('[name="'+field+'"]');
+            if ($field.length) {
+                $field.addClass('state-caution');
+                if (message) {
+                    $field.closest('.value').append('<div class="state-caution-hint">'+message+'</div>');
+                }
+            }
+        }
+    });
+</script>
+</div>

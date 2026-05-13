@@ -1,0 +1,25 @@
+{$_wrapper_id = uniqid('waSmartcaptchaInvisible')}
+<script src="https://captcha-api.yandex.ru/captcha.js?render=onload&onload={$_wrapper_id}OnloadFunction" defer></script>
+
+<div id="{$_wrapper_id}"></div>
+
+<script>
+    window['{$_wrapper_id}OnloadFunction'] = function () {
+        if (!window.smartCaptcha) {
+            return;
+        }
+
+        window.smartCaptcha.render('{$_wrapper_id}', {
+            sitekey: '{$client_key}',
+            invisible: true,
+            callback: (token) => {
+                $('input[name="smart-token"]').val(token);
+            },
+        });
+
+        window.smartCaptcha.execute();
+
+        $(window).trigger('wa_smartcaptcha_loaded');
+        window.captchaInitialized = true;
+    }
+</script>

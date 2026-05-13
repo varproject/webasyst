@@ -1,0 +1,82 @@
+/*
+// .sa-inbox
+*/
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-inbox {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    display: flex;
+    background: vs.$sa-inbox--bg-color;
+}
+.sa-inbox__sidebar {
+    width: calc(15rem + 1px); // SKIP-PIXELS
+    flex-shrink: 0;
+    padding: 1rem;
+
+    @include dir.scope {
+        #{dir.$border-inline-end}: 1px solid vs.$sa-inbox--divider-color; // SKIP-PIXELS
+    }
+
+    .simplebar-track {
+        --simplebar-track--color: #{vs.$sa-inbox__sidebar--scrollbar-color};
+    }
+}
+.sa-inbox__body {
+    flex-grow: 1;
+    overflow: hidden;
+}
+.sa-inbox__compose-button {
+    margin-bottom: .75rem;
+    width: 100%;
+    display: block;
+}
+
+@include bt.media-breakpoint-down(lg) {
+    .sa-inbox__backdrop {
+        position: fixed;
+        left: 0; // SKIP-RTL
+        right: 0; // SKIP-RTL
+        top: 0;
+        bottom: 0;
+        z-index: 999;
+        background: vs.$sa-inbox__sidebar--backdrop-color;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity .2s;
+    }
+    .sa-inbox__sidebar {
+        position: fixed;
+        background: vs.$sa-inbox__sidebar--bg-color;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        border: none;
+        box-shadow: vs.$sa-inbox__sidebar--shadow;
+        transition: transform .2s;
+
+        @include dir.scope {
+            #{dir.$inset-inline-start}: 0;
+            transform: translateX(calc((100% + .625rem) * #{dir.$transform-direction * -1})); // SKIP-RTL
+        }
+    }
+
+    .sa-inbox--sidebar-open {
+        .sa-inbox__sidebar {
+            transform: none;
+        }
+        .sa-inbox__backdrop {
+            pointer-events: auto;
+            opacity: 1;
+        }
+    }
+    .sa-inbox--switch-device {
+        .sa-inbox__sidebar,
+        .sa-inbox__backdrop {
+            transition: none;
+        }
+    }
+}

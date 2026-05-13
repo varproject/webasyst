@@ -1,0 +1,282 @@
+<nav class="sidebar-mobile-toggle">
+    <div class="box align-center">
+        <a href="javascript:void(0);">
+            <i class="fas fa-bars"></i>&nbsp;
+            [s`Menu`]
+        </a>
+    </div>
+</nav>
+
+{if $wa->mailer->isAuthor()}
+    <div class="sidebar-header box custom-pt-20">
+        <a href="#/campaigns/new/" class="button full-width align-center">
+            <i class="fas fa-paper-plane fa-w-20 custom-mr-4"></i>&nbsp;<span class="s-title small">[`New campaign`]</span>
+        </a>
+    </div>
+{/if}
+<div class="sidebar-body">
+
+    <div class="bricks custom-mt-12">
+        <a href="#/campaigns/archive/" class="brick sending-list-item{if !$wa->mailer->isAdmin()} full-width{/if} text-ellipsis" id="sending-list-item">
+            <span class="icon">
+                <i class="fas fa-flag"></i>
+            </span>
+            <span class="count js-count text-gray">
+                {if $sending_count}
+                    <span class="badge blue blinked">{$sending_count}</span> {$total_sent}
+                {else}
+                    {$total_sent}
+                {/if}
+            </span>
+            <span title="[`Sent`]">[`Sent`]</span>
+        </a>
+        {if $wa->mailer->isAdmin()}
+            <a href="#/subscribers/" class="brick text-ellipsis" id="subscribers-sb-link">
+                <span class="icon text-yellow"><i class="fas fa-users"></i></span>
+                <span class="count js-count text-gray">{$subscribers_count}</span>
+                <span title="[`Subscribers & forms`]">[`Subscribers & forms`]</span>
+            </a>
+        {/if}
+    </div>
+
+    {if $wa->mailer->isAdmin()}
+        <ul class="menu custom-mt-4">
+            <li id="templates-list-item">
+                <a href="#/templates/">
+                    <span class="count js-count">{$templates_count}</span>
+                    <i class="fas fa-brush text-purple"></i>
+                    <span>[`Templates`]</span>
+                </a>
+            </li>
+            <li id="undeliverable-sb-link">
+                <a href="#/undeliverable/">
+                    <span class="count js-count">{$undeliverable_count}</span>
+                    <i class="fas fa-ban text-red"></i>
+                    <span>[`Delivery errors`]</span>
+                </a>
+            </li>
+            <li id="unsubscribers-sb-link">
+                <a href="#/unsubscribed/">
+                    <span class="count js-count">{$unsubscribers_count}</span>
+                    <i class="fas fa-running"></i>
+                    <span>[`Unsubscribed`]</span>
+                </a>
+            </li>
+        </ul>
+    {/if}
+
+    {if $drafts}
+        <header class="heading cursor-pointer" id="m-sb-drafts-header">
+            <span>
+                <span class="title b-all-drafts">[`Drafts`]</span>
+            </span>
+            <span class="count js-count">{count($drafts)}</span>
+        </header>
+
+        <div class="collapsible">
+            <ul class="menu{if count($drafts) > 10} custom-mb-0{/if}">
+                {foreach $drafts as $d}
+                    <li {if $d@iteration > 10 && count($drafts) > 10}style="display:none" data-list="hidden"{/if}>
+                        <a href="#/campaigns/letter/{$d.id}">
+                            {if $d.status == mailerMessageModel::STATUS_PENDING}
+                                <span class="count">
+                                    <i class="fas fa-clock text-blue"></i>
+                                </span>
+                            {/if}
+                            <span class="icon custom-mt-4">
+                                <i class="userpic" style="background-image: url('{if $d.pic_src}{$d.pic_src}{else}{$wa_url}wa-content/img/userpic.svg{/if}');"></i>
+                            </span>
+                            <span{if $d.status == mailerMessageModel::STATUS_PENDING} class="italic"{/if}>{ifempty($d.subject, "[`<no subject>`]")|escape}
+                                <span class="hint small flexbox custom-mt-4">
+                                    {if $d.status == mailerMessageModel::STATUS_PENDING}
+                                        {waDateTime::format('humandate', $d.send_datetime)}
+                                    {else}
+                                        {waDateTime::format('humandate', $d.create_datetime)}
+                                    {/if}
+                                </span>
+                            </span>
+                        </a>
+                    </li>
+                {/foreach}
+            </ul>
+            {if count($drafts) > 10}
+                <p id="b-all-drafts" class="count b-drafts-toggle small custom-m-0 box" data-list="shown">
+                    <a href="javascript:void(0);" class="all-drafts text-gray">[`All drafts`] ({count($drafts)})</a>
+                </p>
+            {/if}
+        </div>
+    {/if}
+</div>
+{if $wa->mailer->isAdmin()}
+    <div class="sidebar-footer shadowed">
+        <ul class="menu">
+            <li class="sidebar-plugins-link">
+                <a href="#/plugins/">
+                    <i class="fas fa-plug"></i>
+                    <span>[`Plugins`]</span>
+                </a>
+            </li>
+            {if $wa->user()->getRights($wa->app(), 'design')}
+                <li class="sidebar-design-link">
+                    <a href="#/design/themes/">
+                        <i class="fas fa-palette"></i>
+                        <span>[`Design`]</span>
+                    </a>
+                </li>
+            {/if}
+        </ul>
+
+        <div class="box custom-mb-4">
+            <div class="blank box rounded js-balance-wrapper">
+                <div class="flexbox space-8">
+                    <div class="wide custom-mt-2">
+                        <header class="heading custom-m-0 custom-pb-4">
+                            <span>
+                                <span class="title b-all-drafts">[`Webasyst Email`]</span>
+                            </span>
+                        </header>
+                        <div class="js-balance-toggle-content">
+                            {if $waid_is_connected}
+                                {if $wa_api_error}
+                                    <p class="state-caution-hint custom-mt-8"><i class="fas fa-exclamation-triangle"></i> [`No access to Webasyst API.`]</p>
+                                    <p class="state-error-hint custom-my-8"><i class="fas fa-exclamation-triangle"></i> {$wa_api_error}</p>
+                                {else}
+                                    {if $wa_total}
+                                        <p class="bold small custom-my-0">{$wa_total|wa_format:false} {_ws('message', 'messages', $wa_total)}</p>
+                                    {/if}
+                                    {if $wa_is_positive_balance}
+                                        <p class="bold small custom-my-0">{$wa_balance}</p>
+                                    {/if}
+
+                                    <p class="hint custom-mt-4 custom-mb-12">
+                                        <i class="fas fa-check-circle text-green"></i> [`Transactional bulk email service with pay-as-you-go pricing.`]
+                                        <a href="[`https://www.webasyst.com/pricing/#services`]" target="_blank" class="nowrap">[`How it works`]</a>
+                                    </p>
+                                    <p class="custom-mt-8 custom-mb-4">
+                                        <a href="javascript:void(0)" class="button green smallest js-balance-button">[`Add credit`]</a>
+                                    </p>
+                                {/if}
+
+                            {elseif $waid_is_broken}
+
+                                <p class="custom-my-4 wrap state-caution-hint">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    [s`Connection to Webasyst ID server is broken. Please re-connect your account to continue using Webasyst Email service.`]
+                                    {sprintf(
+                                        _ws('To do so, open the <a href="%s">Webasyst ID settings</a>, disable sign-in with Webasyst ID and enable it again.'),
+                                        "`{$wa_backend_url}`webasyst/settings/waid/"
+                                    )}
+                                </p>
+
+                            {else}
+                                <p class="hint custom-mt-4 custom-mb-12">
+                                    [`Transactional bulk email service with pay-as-you-go pricing.`]
+                                    <a href="[`https://www.webasyst.com/pricing/#services`]" target="_blank" class="nowrap">[`How it works`]</a>
+                                </p>
+                                <a href="{$wa_backend_url}webasyst/settings/waid/" class="button light-gray smallest custom-mb-4">[s`Enable for free`]</a>
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="custom-mt-0">
+                        <a href="javascript:void(0)" class="js-balance-toggle text-light-gray small">
+                            <span class="js-balance-toggle-content"><i class="fas fa-chevron-up"></i></span>
+                            <span class="js-balance-toggle-content" style="display: none;"><i class="fas fa-chevron-down" style="position: relative; top: -2px;"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dialog" id="js-dialog-elements">
+                <header class="dialog-header js-header-1"><h1>[s`Confirmation code`]</h1></header>
+                <header class="dialog-header js-header-2"><h3>[s`Server response`]</h3></header>
+                <div class="dialog-content">
+                    <input type="text" class="semibold js-code" placeholder="1234">
+                    <button class="button js-code-confirm">[s`Confirm`]</button>
+                    <div class="gray custom-mt-8 js-message"></div>
+                </div>
+                <footer class="dialog-footer"><button class='button gray js-close-dialog'>[s`Close`]</button></footer>
+            </div>
+
+        </div>
+    </div>
+{/if}
+
+<script>
+    $(function() {
+        $.wa.mailer.sending_count = {ifempty($sending_count, 0)};
+
+        $('#b-all-drafts').on('click', 'a', function(e){
+            e.preventDefault();
+            $('#b-all-drafts').hide();
+            $(this).closest('.collapsible').find('li').show();
+        })
+
+        const  $sidebar = $('.js-app-sidebar');
+        $sidebar.waShowSidebar();
+        $sidebar.find(' > div').on('touchstart', 'a', function(){
+            $sidebar.find('.sidebar-mobile-toggle').trigger('touchstart')
+        })
+    });
+
+    (function () {
+        "use strict";
+        const response_code_str = {_w('Response code: %s.')|json_encode};
+        const code_sent_to_phone_str = {_w('Code has been sent to phone number %s.')|json_encode};
+        const code_sent_to_email_str = {_w('Code has been sent to email address %s.')|json_encode};
+
+        const $balance = $('.js-balance-wrapper');
+        let balance_collapsed = localStorage.getItem('mailer_sidebar_balance_collapsed');
+        try {
+            balance_collapsed = balance_collapsed === null ? false : JSON.parse(balance_collapsed);
+        } catch (e) {
+            balance_collapsed = false;
+        }
+        if (balance_collapsed) {
+            $balance.find('.js-balance-toggle-content').toggle();
+        }
+        $balance.on('click', '.js-balance-toggle', function(e){
+            e.preventDefault();
+            $balance.find('.js-balance-toggle-content').toggle();
+            balance_collapsed = !balance_collapsed;
+            localStorage.setItem('mailer_sidebar_balance_collapsed', balance_collapsed);
+        })
+
+        $balance.on('click', '.js-balance-button:not(.disabled)', function (e) {
+            e.preventDefault();
+            $(this).addClass('disabled');
+            const $button = $(this);
+            $.get('?module=senders&action=balanceWa', function (data) {
+                const resp = data.data.response;
+                const status = data.data.status || '-';
+                const err = resp.error_description || resp.error || resp.errors || null;
+                if (data.status === 'fail') {
+                    console.warn('balance', data);
+                    responseDialog(status, '');
+                    $button.removeClass('disabled');
+                } else if (err) {
+                    responseDialog(status, err.toString());
+                    $button.removeClass('disabled');
+                } else if (typeof resp.url !== 'undefined') {
+                    document.location = resp.url;
+                }
+            });
+        });
+
+        function responseDialog(code, message) {
+            let content = response_code_str.replace('%s', code);
+            content += message ? '<br><pre class="small gray">'+ message +'</pre>' : '';
+            $.waDialog({
+                header: $('#js-dialog-elements header.js-header-2').html(),
+                content: content,
+                footer: $('#js-dialog-elements footer').html(),
+            });
+        }
+
+    })();
+</script>
+{*
+ * Plugin blocks
+ *}
+{foreach $plugin_blocks as $block}
+    {$block.html}
+{/foreach}

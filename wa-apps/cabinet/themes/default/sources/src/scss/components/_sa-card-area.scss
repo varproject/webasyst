@@ -1,0 +1,60 @@
+/*
+// .sa-card-area
+*/
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-card-area {
+    width: 100%;
+    position: relative;
+}
+.sa-card-area__card {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0; // SKIP-RTL
+    right: 0; // SKIP-RTL
+    border: 1px solid vs.$sa-card-area--bg-color; // SKIP-PIXELS
+    background-color: vs.$sa-card-area--bg-color;
+    box-shadow: vs.$sa-card-area--shadow;
+    background-clip: padding-box;
+    border-radius: .125rem;
+    font-size: 1.5rem;
+    color: vs.$sa-card-area--icon-color;
+    transition:
+        border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out,
+        background 0.15s ease-in-out;
+
+    svg {
+        position: absolute;
+        bottom: .75rem;
+
+        @include dir.scope {
+            #{dir.$inset-inline-end}: .75rem;
+        }
+    }
+}
+.sa-card-area__area {
+    background: transparent;
+    width: 100%;
+    border: none;
+    padding: 1rem 1.25rem;
+    margin: 0;
+    display: block;
+    resize: none;
+    font-size: inherit;
+
+    &:focus {
+        outline: none;
+    }
+    &::placeholder {
+        color: vs.$sa-card-area--placeholder-color;
+    }
+}
+.sa-card-area__area:focus + .sa-card-area__card {
+    border-color: bt.$input-focus-border-color;
+    box-shadow: bt.$input-focus-box-shadow;
+}

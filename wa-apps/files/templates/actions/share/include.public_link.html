@@ -1,0 +1,26 @@
+<div class="f-file-preview-link-value custom-pt-0 {if $file.hash}f-private-link-on{else}f-private-link-off{/if}">
+
+    {if !$file.frontend_url}
+        <p>{sprintf('[`You need the settlement of Files to create public link. Use <a href="%s">Site</a> to create new settlement.`]', $site_url)}</p>
+    {else}
+        <div class="flexbox middle space-8">
+            <span class="switch js-private-link-toggle">
+                <input type="checkbox" class="f-private-link-toggle" id="f-private-link-toggle" name="" value="1" {if $file.hash}checked="checked"{/if}>
+            </span>
+            <span class="f-private-link-text">
+                <label for="f-private-link-toggle">{if $file.type === filesFileModel::TYPE_FILE}[`Link to this file`]{else}[`Link to this folder`]{/if}</label>
+                <i class="fas fa-check-circle text-green" style="display: none;"></i>
+            </span>
+        </div>
+        <div class="f-file-preview-link-block">
+            <input name="link" type="text" value="{$file.frontend_url}" class="f-file-preview-link" style="width: 90%;" readonly>
+            <a target="_blank" href="{$file.frontend_url}" class="f-file-go-link">
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+        <div class="f-private-link-off-text"><br>
+            <p class="hint custom-mt-0"><i class="fas fa-lock custom-mr-4"></i>[`Right now this content is private and can be viewed by authorized backend users only. Enabling public link option will create a secret direct link that you can send to other people so they can access and download this content too.`]</p>
+        </div>
+    {/if}
+
+</div>

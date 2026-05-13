@@ -1,0 +1,83 @@
+<link type="text/css" href="{$wa_url}wa-content/js/codemirror/lib/codemirror.css" rel="stylesheet" />
+<link type="text/css" href="{$wa_url}wa-content/js/codemirror/mode/xml/xml.css" rel="stylesheet" />
+<link type="text/css" href="{$wa_url}wa-content/js/codemirror/mode/javascript/javascript.css" rel="stylesheet" />
+<link type="text/css" href="{$wa_url}wa-content/js/codemirror/mode/css/css.css" rel="stylesheet" />
+<style>
+    .CodeMirror-wrap { padding: 10px 0 !important; }
+    .CodeMirror-scroll { border: 2px solid var(--border-color-input-outlined); border-radius: .375rem; overflow-y: hidden; overflow-x: auto; height: auto; }
+    .CodeMirror-focused .CodeMirror-scroll { border-color: var(--accent-color); }
+    .CodeMirror-lines { cursor: text; }
+    .theme-reset.disabled { opacity: 0.5; pointer-events: none; }
+</style>
+<script src="{$wa_url}wa-content/js/codemirror/lib/codemirror.js"></script>
+<script src="{$wa_url}wa-content/js/codemirror/mode/xml/xml.js"></script>
+<script src="{$wa_url}wa-content/js/codemirror/mode/javascript/javascript.js"></script>
+<script src="{$wa_url}wa-content/js/codemirror/mode/css/css.js"></script>
+<script src="{$wa_url}wa-content/js/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+
+<form id="mailer-personal-settings" method="post" action="{$wa_backend_url}mailer/?module=personal&action=settingsSave&theme_id={$theme_id}">
+    {foreach $files as $f}
+        <h4 class="break-word">{$f.id|escape}</h4>
+        <div>
+            <textarea name="files[{$f.id|escape}]" id="ta{$f@iteration}" style="width:90%; height:200px;">{$f.content|escape}</textarea>
+        </div>
+    {/foreach}
+
+    <div class="wa-design-save-panel js-app-settings-buttons wide">
+        <div class="flexbox middle full-width">
+            <div class="js-app-settings-buttons-left">
+                <input type="submit" class="button" value="[`Save`]">
+                <i class="fas fa-spinner fa-spin loading" style="display: none;"></i>
+                <span class="save-msg-icon" style="display: none;"><i class="fas fa-check-circle text-green"></i> [`Saved`]</span>
+            </div>
+            <div class="js-app-settings-buttons-right flexbox middle space-4">
+                <a href="javascript:void(0);" class="theme-reset bold text-orange{if $theme.type != waTheme::OVERRIDDEN} disabled{/if}">
+                    <i class="fas fa-undo-alt"></i> [`Revert to original`]
+                </a>
+                {$tooltip_theme_reset_text = _ws('You are using the original version of this design theme. No customizations have been applied to theme files yet, and thus there is nothing to revert for now.')}
+                {if $theme.type == waTheme::OVERRIDDEN}
+                    {$tooltip_theme_reset_text = _ws('This will erase all customizations you’ve made to this theme’s template files using the design editor, and reset this theme to original')}
+                {/if}
+                <span id="tooltip-theme-reset" data-wa-tooltip-content="{$tooltip_theme_reset_text}">
+                    <i class="fas fa-question-circle text-light-gray"></i>
+                </span>
+                <script>
+                    (function($) {
+                        $("#tooltip-theme-reset").waTooltip();
+                    })(jQuery);
+                </script>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+var editor, editor_options = {
+    lineNumbers: false,
+    lineWrapping: true
+};
+$(function() {
+    editor = CodeMirror.fromTextArea(document.getElementById('ta1'), editor_options);
+
+    $('#mailer-personal-settings').submit(function () {
+        var $form = $(this),
+            $footer = $('.js-app-settings-buttons'),
+            $saved_msg = $footer.find('.save-msg-icon'),
+            $loading = $footer.find('.loading');
+
+        $loading.show();
+        $(document).trigger('before_save_personal_app');
+        $.post($form.attr('action'), $form.serialize(), function (r) {
+            $loading.hide();
+            $saved_msg.fadeIn(500).delay(500).fadeOut(500);
+            $(document).trigger('after_save_personal_app', r);
+            if (r && r.status === 'ok') {
+                $('.theme-reset').removeClass('disabled');
+            }
+        }, 'json');
+        return false;
+    });
+});
+</script>
+
+{include file="./theme_dialogs.html" inline}

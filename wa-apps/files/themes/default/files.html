@@ -1,0 +1,51 @@
+<h1>
+    {if $parent && $parent['hash']}
+        <a href="{$parent.frontend_url}">..</a> / 
+    {/if}
+    {$title|escape}
+</h1>
+
+<div id="f-file-list">
+    {if $files}
+        <table class="f-file-list-table zebra" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th class="f-image-column"></th>
+                    <th class="f-name-column">[`Name`]</th>
+                    <th class="f-date-column">[`Updated`]</th>
+                    <th class="f-size-column">[`Size`]</th>
+                </tr>
+            </thead>
+            <tbody class="f-file-list">
+                {foreach $files as $file}
+                    <tr>
+                        <td class="f-image-column">
+                            <a href="{$file.frontend_url}">
+                                <img class="f-file-image" src="{$file.photo_url.file_list_small}" alt="">
+                            </a>
+                        </td>
+                        <td class="f-name-column">
+                            <div class="f-name-wrapper">
+                                <a class="f-file-name" href="{$file.frontend_url}">{$file.name|escape}</a>
+                            </div>
+                        </td>
+                        <td class="f-date-column">{$file.update_datetime_str}</td>
+                        <td class="f-size-column">
+                            {if $file.type === filesFileModel::TYPE_FILE}
+                                {$file.size_str}
+                            {else}
+                                &mdash;
+                            {/if}
+                        </td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+
+        {if isset($pages_count) && $pages_count > 1}
+            <div class="block {if $theme_settings.pagination == 'lazyloading'}f-lazyloading-paging{else}f-paging-nav{/if}"  data-times="2" data-link-text="[`Load more`]" data-loading-str="[`Loading...`]">
+                {wa_pagination total=$pages_count attrs=['class' => "menu-h"]}
+            </div>
+        {/if}
+    {/if}
+</div>

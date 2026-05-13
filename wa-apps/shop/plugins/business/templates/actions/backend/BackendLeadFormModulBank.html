@@ -1,0 +1,352 @@
+{if !empty($assets)}{$assets}{/if}
+
+{function name="label_required" is_permanent=false}{strip}
+    <span class="js-required-field{if $is_permanent} js-required-permanent{/if} s-business__field-required text-orange custom-ml-4">*</span>
+{/strip}{/function}
+
+<div id="lead-form-modulbank" class="s-business-lead-form">
+<form>
+    <div class="s-business-lead-form__header">
+        <div class="flexbox wrap middle space-8">
+            {$is_plugin_setup = $is_closable || $is_collapsible}
+            <h2>{if $is_plugin_setup}Подключиться к {/if}Модульбанк</h2>
+            <a href="javascript:void(0)" class="js-hide-business-lead-form s-business-lead-form__close-btn"{if !$is_closable} style="display: none;"{/if}><i class="fas fa-times"></i></a>
+            <a href="javascript:void(0)" class="js-collapse-business-lead-form s-business-lead-form__close-btn"{if !$is_collapsible} style="display: none;"{/if}><i class="fas fa-chevron-up fa-xs"></i></a>
+        </div>
+    </div>
+    <div class="s-business-lead-form__content">
+        <ul class="js-business-product-list chips rounded custom-m-0">
+            {foreach $products as $id => $p}
+            <li class="small" data-id="{$id}" data-inn-required="{!empty($p.inn_required)}">
+                <a href="javascript:void(0);">
+                    <span class="wa-checkbox">
+                        <input type="checkbox" name="stg[{$id}]" value="{$id}"{if !empty($p.enabled)} checked{/if}>
+                        <span>
+                            <span class="icon"><i class="fas fa-check"></i></span>
+                        </span>
+                    </span>
+                    {$p.title|default:$id}
+                </a>
+            </li>
+            {/foreach}
+        </ul>
+
+        <p class="small custom-my-8">
+            Подключайте продукты Модульбанка через Webasyst на выгодных условиях:
+        </p>
+        <div class="s-business-lead-form__header-description">
+            {foreach $products as $_id => $p}
+                <p class="js-business-product-description small custom-my-2" data-product="{$_id}" style="display:none;"><i class="fas fa-check text-blue"></i> {$p.description|default:''}</p>
+            {/foreach}
+
+            <!-- <p class="js-business-registration-required small custom-my-8" style="display: none;">
+                Для подключения необходимо быть <a href="#/business/ModulBank/FNS.REG/">зарегистрированным как ИП/ООО</a>.
+            </p> -->
+        </div>
+
+        <div class="fields custom-my-32">
+            <div class="field">
+                <div class="name for-input">Форма организации</div>
+                <div class="value">
+                    <div class="wa-select">
+                        <select name="company_type">
+                            {foreach $company_types as $_id => $_name}
+                            <option value="{$_id}">{$_name|escape}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="name for-input">ИНН</div>
+                <div class="value"><input type="text" class="long" name="inn" data-app-field="business_inn" inputmode="numeric" maxlength="15" value="" {literal}data-mask="^\d{10}$|^\d{12}$|^\d{13}$|^\d{15}$"{/literal}></div>
+            </div>
+            <div class="field">
+                <div class="name for-input">ОГРН</div>
+                <div class="value"><input type="text" class="long" name="ogrn" inputmode="numeric" maxlength="15" value="" {literal}data-mask="^\d{10}$|^\d{12}$|^\d{13}$|^\d{15}$"{/literal}></div>
+            </div>
+            <div class="field">
+                <div class="name for-input">Название организации</div>
+                <div class="value"><input type="text" class="long" name="company_name" data-app-field="business_company" {literal}data-mask=^[\d\s\-\.\(\)\,\"\/:/+#№»«а-яА-ЯёЁa-zA-Z]{1,150}${/literal}></div>
+            </div>
+            <div class="field">
+                <div class="name for-input">Телефон</div>
+                <div class="value"><input type="text" class="long" name="person_phone" data-app-field="phone" placeholder="+7" inputmode="numeric" maxlength="12" value="" {literal}data-mask="^\+7\d{10}$"{/literal}></div>
+            </div>
+            <div class="field">
+                <div class="name for-input">Email</div>
+                <div class="value"><input type="text" class="long" name="person_email" data-app-field="email" {literal}data-mask="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"{/literal}></div>
+            </div>
+            <div class="field">
+                <div class="name for-input">Имя</div>
+                <div class="value"><input type="text" class="long" name="person_firstname" data-app-field="business_firstname"  value="" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}></div>
+            </div>
+            <div class="field">
+                <div class="name for-input">Фамилия</div>
+                <div class="value"><input type="text" class="long" name="person_surname" data-app-field="business_lastname" value="" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}></div>
+            </div>
+            <div class="field">
+                <div class="name for-input">Отчество</div>
+                <div class="value"><input type="text" class="long" name="person_middlename" data-app-field="business_middlename" value="" {literal}data-mask="^[A-Za-zА-Яа-яЁё ](( |\-)?[A-Za-zА-Яа-яЁё ]){0,49}$"{/literal}></div>
+            </div>
+            <div class="field">
+                <div class="name for-input">Комментарий к заявке</div>
+                <div class="value"><textarea name="comment" rows="2"></textarea></div>
+            </div>
+        </div>
+
+        <div class="s-business-lead-form__footer flexbox middle wrap space-4">
+            <button type="submit" class="s-business-lead-form__submit button blue large">Отправить заявку в Модульбанк</button>
+            <span class="js-loading hidden"><i class="fas fa-spinner fa-spin"></i><span>
+        </div>
+        <div class="place-for-errors custom-mt-12"></div>
+        <p class="hint">Заявка передается напрямую в Модульбанк, и ее обрабатывают менеджеры банка. Webasyst заявки не сохраняет и не обрабатывает.</p>
+    </div>
+</form>
+
+<script>
+    $(function () { "use strict";
+        const $required_fields_by_product = Object.freeze({$required_fields_by_product|json_encode});
+        const $wrapper = $('#lead-form-modulbank');
+        const $form = $wrapper.children('form');
+        const $submit = $form.find('[type=submit]');
+        const $footer = $form.find('.s-business-lead-form__footer');
+        const $place_for_errors = $form.find('.place-for-errors');
+
+        const label_required_html = '{label_required}';
+
+        const requestAPI = new class {
+            constructor () {
+                this.base_url = '?plugin=business&module=modulBankApi&action=';
+            }
+            _getFormData() {
+                const fields_map = $form.serializeArray().reduce(function(acc, field) {
+                    if (field.value && String(field.value).trim()) {
+                        acc[field.name] = field.value;
+                    }
+                    return acc;
+                }, {});
+
+                return fields_map;
+            }
+            createApplication() {
+                const form_data = this._getFormData();
+                return $.post(this.base_url + 'createApplication', form_data);
+            }
+        };
+
+        // INIT
+        const updateDescription = () => {
+            $('.js-business-product-description', $form).hide();
+            $form.find('.js-business-product-list :checkbox:enabled:checked').each(function () {
+                // show description
+                $(`.js-business-product-description[data-product="${ this.value }"]`).show()
+            });
+        };
+        $form.find('.js-business-product-list [data-id]').on('click', function () {
+            const $item = $(this);
+            const is_checked = !$item.find(':checkbox').prop('checked');
+            if (!is_checked && $form.find('.js-business-product-list [data-id] :checkbox:enabled:checked').length === 1) {
+                if ($item.data('id') !== 'FNS.REG') {
+                    $form.find('.js-business-product-list [data-id="FNS.REG"]').trigger('click');
+                }
+                return;
+            }
+
+            // checked product
+            $item.find(':checkbox').prop('checked', is_checked);
+
+            // need FNS.REG
+            const inn_is_required = !!$item.data('inn-required');
+            $('.js-business-registration-required', $form).toggle(inn_is_required);
+
+            if (inn_is_required) {
+                $form.find('.js-business-product-list [data-id="FNS.REG"]').find(':checkbox').prop('checked', false);
+            } else {
+                $item.siblings().find(':checkbox').prop('checked', false);
+            }
+
+            $form.find('[name=inn],[name=ogrn],[name=company_name]').prop('disabled', !inn_is_required)
+                .closest('.field').toggle(inn_is_required);
+
+            clearErrors();
+            updateDescription();
+            defineRequiredFields();
+        });
+
+        updateDescription();
+        defineRequiredFields();
+
+        $form.find("[data-wa-tooltip-content]").waTooltip();
+
+        // hide exist products
+        $(document).on('loaded_form_prefills.business', function () {
+            $('[data-app-field]', $form).each(function () {
+                const $field = $(this);
+                switch ($field.data('app-field')) {
+                    case 'business_inn':
+                        const excludes = ['FNS.REG'];
+                        $(excludes.map(e => `a[data-id="${ e }"]`).join(','), $form.find('#dropdown-product'))
+                            .parent().toggle(!$field.val());
+                        break;
+                }
+            });
+        });
+
+        $form.on('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!$form.find('.js-loading').hasClass('hidden')) {
+                return false;
+            }
+            if (isInvalidFormFields()) {
+                return;
+            }
+
+            $form.find('.js-loading').removeClass('hidden');
+            requestAPI.createApplication()
+                .always(() => {
+                    $form.find('.js-loading').addClass('hidden');
+                })
+                .done((r) => {
+                    if (r.status === 'ok' && r.data) {
+                        $('.js-field-phoneNumber-status', $form).empty();
+                        if (r.data.message_html) {
+                            $form.find('.s-business-lead-form__header').nextUntil().hide();
+                            $form.append(r.data.message_html);
+                        }
+                        if (r.data?.status === 'err') {
+                            $place_for_errors.append('<span class="state-caution">'+String(r.data.errdesc).replace('\n', '<br>')+'<br><span class="hint">requestId: '+r.data._requestid+'</span></span>');
+                        } else {
+                            {if $is_plugin_setup}
+                                $('.js-collapse-business-lead-form').hide();
+                                $('.js-hide-business-lead-form').show();
+                            {/if}
+                            $.shop.business.updateFormPrefills($form);
+                        }
+                    }
+                    handleErrors(r);
+                });
+        });
+
+        function defineRequiredFields () {
+            const product_type = $form.find('[name^="stg"]:checked').val();
+            if (!$required_fields_by_product[product_type]) {
+                return;
+            }
+            clearRequiredLabels();
+
+            $form.find('[name]').off('change.validation');
+            $form.find('[name]:enabled').each(function () {
+                const $field = $(this);
+                const field_name = $field.attr('name');
+                const required_fields = $required_fields_by_product[product_type];
+
+                let is_required = false;
+                for (const required_field_name of required_fields) {
+                    is_required = field_name === required_field_name;
+                    if (!is_required && required_field_name[0] === '[') {
+                        is_required = String(field_name).endsWith(required_field_name);
+                    }
+                    if (is_required) {
+                        $field.closest('.field').children('.name').append(label_required_html);
+                        break;
+                    }
+                }
+
+                let input_mask = $field.data('mask');
+                if (is_required && !input_mask) {
+                    input_mask = "^.+$";
+                }
+                if (input_mask) {
+                    const data_min = $field.data('min');
+                    const data_max = $field.data('max');
+                    const regExp = new RegExp(input_mask);
+
+                    $field.on('change.validation', function () {
+                        const val = $(this).val();
+
+                        $field.siblings('.state-caution-hint').remove();
+                        $field.removeClass('state-caution');
+                        if (!is_required && !val) {
+                            return false;
+                        }
+
+                        const is_invalid = !regExp.test(val);
+                        const $field_wrapper = $field.closest('.value');
+                        if (is_invalid) {
+                            const msg = !!val ? '[`Invalid value`]' : '[`Field is empty`]';
+                            addFieldError($field, msg);
+                            return false;
+                        }
+                    });
+                }
+            });
+        }
+
+        function isInvalidFormFields () {
+            clearErrors();
+            $form.find('[name]:not(disabled)').trigger('change.validation');
+
+            const $field_type = $form.find('[name^="stg"]');
+            const is_valid_field_type = !!$field_type.val();
+            if (!is_valid_field_type) {
+                $('<div class="state-caution-hint">Необходимо выбрать продукт</div>').insertAfter($field_type);
+            }
+
+            const is_invalid = !is_valid_field_type || $form.find('.state-caution').length > 0;
+            if (is_invalid) {
+                $place_for_errors.append('<span class="state-caution">[`Please fill required fields`]</span>');
+                const $field_with_error = $form.find('.field .state-caution,.field .state-caution-hint').closest('.value');
+                if ($field_with_error.length) {
+                    const elementPosition = $field_with_error.get(0).getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.scrollY - ($('#wa-nav').height() || 0);
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                }
+            }
+
+            return is_invalid;
+        }
+
+        function clearErrors () {
+            $form.find('span.state-caution,.state-caution-hint').remove();
+            $form.find('.state-caution').removeClass('state-caution');
+            $place_for_errors.empty();
+        }
+
+        function clearRequiredLabels () {
+            $('.js-required-field:not(.js-required-permanent)', $form).remove();
+        }
+
+        function handleErrors(r) {
+            if (r.status !== 'fail' || !r.errors) {
+                return;
+            }
+            let error_html = '';
+            if (r.errors.error_html) {
+                error_html = r.errors.error_html;
+            } else {
+                error_html = '<span class="state-caution">'+r.errors.error_description+'</span>';
+                if (Array.isArray(r.errors.required_fields)) {
+                    r.errors.required_fields.forEach(f => addFieldError(f.field, f.message));
+                } else if (r.errors.error === 'invalid_phone') {
+                    addFieldError('phoneNumber');
+                } else if (r.errors.error === 'invalid_email') {
+                    addFieldError('email');
+                }
+            }
+            $place_for_errors.html(error_html);
+        }
+
+        function addFieldError(field, message) {
+            const $field = typeof field === 'object' ? field : $form.find('[name="'+field+'"]');
+            if ($field.length) {
+                $field.addClass('state-caution');
+                if (message) {
+                    $field.closest('.value').append('<div class="state-caution-hint">'+message+'</div>');
+                }
+            }
+        }
+    });
+</script>
+</div>

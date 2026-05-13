@@ -1,0 +1,406 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: status\n"
+"POT-Creation-Date: 2019-12-01 19:48+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: status\n"
+"Language-Team: status\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.1\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+msgid "Status"
+msgstr ""
+
+msgid "Remote"
+msgstr ""
+
+msgid "Sorry. You are not allowed to see anything on this page."
+msgstr ""
+
+msgid "Custom status..."
+msgstr ""
+
+msgid "This week total"
+msgstr ""
+
+msgid "My status"
+msgstr ""
+
+msgid "All users"
+msgstr ""
+
+msgid "Invite users via the <a href=\"%s\">Team app</a> and start tracking time and status together."
+msgstr ""
+
+msgid "Projects"
+msgstr ""
+
+msgid "All projects"
+msgstr ""
+
+msgid "Add projects so everyone can add detalization on what they were working on."
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Widgets"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "No project"
+msgstr ""
+
+msgid "32 out of 40 clocked hours (84%)"
+msgstr ""
+
+msgid "This week"
+msgstr ""
+
+msgid "Tomorrow"
+msgstr ""
+
+msgid "Weekend"
+msgstr ""
+
+msgid "Birthday"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Break"
+msgstr ""
+
+msgid "Add another interval for today"
+msgstr ""
+
+msgid "Enter your daily report here..."
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Saved"
+msgstr ""
+
+msgid "Status for today"
+msgstr ""
+
+msgid "No app activity logged"
+msgstr ""
+
+msgid "(unnamed project)"
+msgstr ""
+
+msgid "New project"
+msgstr ""
+
+msgid "Project name"
+msgstr ""
+
+msgid "Color"
+msgstr ""
+
+msgid "Access rights"
+msgstr ""
+
+msgid "Use <a href=\"%s\">Team app</a> to configure access: select a user or a group of users &gt; Access tab &gt; Status app &gt; apply the proper access level."
+msgstr "Use <a href=“%s”>Team app</a> to configure access: select a user or a group of users &gt; Access tab &gt; Remote app &gt; apply the proper access level."
+
+msgid "Delete project"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "cancel"
+msgstr ""
+
+msgid "Yesterday"
+msgstr ""
+
+msgid "No activity recorded"
+msgstr ""
+
+msgid "h"
+msgstr ""
+
+msgid "0 h"
+msgstr ""
+
+msgid "Custom status"
+msgstr ""
+
+msgid "Status label"
+msgstr ""
+
+msgid "Working remotely"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid "The status will be automatically linked with the selected calendar in the Team app."
+msgstr ""
+
+msgid "No status"
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "Out of total %d weekly working hours"
+msgstr ""
+
+msgid "Project settings"
+msgstr ""
+
+msgid "The user does not have access to the Status app. Grant access rights in the <a href=\"%s\"><i class=\"icon16\" style=\"%s\"></i>Team app</a> so the user can check in too."
+msgstr "The user does not have access to the Remote app. Grant access rights in the <a href=“%s”><i class=“icon16” style=“%s”></i>Team app</a> so the user can check in too."
+
+msgid "Status for tomorrow"
+msgstr ""
+
+msgid "m"
+msgstr ""
+
+msgid "(((1)))"
+msgstr ""
+
+msgid "Can manage self status & timeline"
+msgstr ""
+
+msgid "Can see teammates"
+msgstr ""
+
+msgid "Can see & contribute to projects"
+msgstr ""
+
+msgid "No activity"
+msgstr ""
+
+msgid "%dh"
+msgstr ""
+
+msgid "%dm"
+msgstr ""
+
+msgid "Not found"
+msgstr ""
+
+msgid "Not implemented for now"
+msgstr ""
+
+msgid "Access denied"
+msgstr ""
+
+msgid "Hello! This is a friendly reminder to check in your workday yesterday."
+msgstr ""
+
+msgid "WEEK #%d"
+msgstr ""
+
+msgid "No week found"
+msgstr ""
+
+msgid "No projects access"
+msgstr ""
+
+msgid "No project found"
+msgstr ""
+
+msgid "No project access"
+msgstr ""
+
+msgid "User not found"
+msgstr ""
+
+msgid "No access to this user"
+msgstr ""
+
+msgid "User with not found"
+msgstr ""
+
+msgid "You don`t have access to this user"
+msgstr ""
+
+msgid "You don`t have access to this project"
+msgstr ""
+
+msgid "No app access"
+msgstr ""
+
+msgid "%s on %s"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Remove interval for today"
+msgstr ""
+
+msgid "Reports"
+msgstr ""
+
+msgid "Select dates..."
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Project"
+msgstr ""
+
+msgid "Hours"
+msgstr ""
+
+msgid "Last 30 days"
+msgstr ""
+
+msgid "Last 90 days"
+msgstr ""
+
+msgid "Last 365 days"
+msgstr ""
+
+msgid "All time"
+msgstr ""
+
+msgid "(inactive)"
+msgstr ""
+
+msgid "Can see reports for all projects and users"
+msgstr ""
+
+msgid "No report access"
+msgstr ""
+
+msgid "Webasyst online time"
+msgstr ""
+
+msgid "%s online"
+msgstr ""
+
+msgid "Webasyst online time is tracked automatically based on the user activity across different apps."
+msgstr ""
+
+msgid "Active time is counted when the user is browsing the Webasyst backend with a browser navigating from one app to another. Idle time is counted when the backend is opened in a browser window, but nothing happens, i.e. even a mouse cursor won’t move."
+msgstr ""
+
+msgid "Only the user and the Status app admin can see this online time data."
+msgstr "Only the user and the Remote app admin can see this online time data."
+
+msgid "%s active"
+msgstr ""
+
+msgid "%s idle"
+msgstr ""
+
+msgid "%d minutes of Webasyst online time: %s active, %s idle"
+msgstr ""
+
+msgid "%s (project not specified)"
+msgstr ""
+
+msgid "Webasyst online time: %s active, %s idle"
+msgstr ""
+
+msgid "Automatic backend online time tracking will be enabled only after access to the Status app is granted for the user."
+msgstr "Automatic backend online time tracking will be enabled only after access to the Remote app is granted for the user."
+
+msgid "<strong class=\"highlighted\">Hello and welcome!</strong> Add your first work report by <strong>dragging the time slider</strong> or by <strong>selecting your daily status</strong> in the menu so all your teammates get to know what you are up to on this day."
+msgstr ""
+
+msgid "Menu"
+msgstr ""
+
+msgid "Everyone"
+msgstr ""
+
+msgid "Teams"
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "Show more (%d)"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Daily status"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Set daily status"
+msgstr ""
+
+msgid "Adjust time"
+msgstr ""
+
+msgid "Show promocode"
+msgstr ""
+
+msgid "Use this promocode until it expires:"
+msgstr ""
+
+msgid "Buy now with promocode"
+msgstr ""
+
+msgid "About the plugin"
+msgstr ""
+
+msgid "About the app"
+msgstr ""
+
+msgid "Promocode"
+msgstr ""
+
+msgid "Buy now"
+msgstr ""
+
+msgid "Teamwork"
+msgstr ""
+
+msgid "When tasks become bigger and more complex."
+msgstr ""
+
+msgid "Promocode for our flagship Webasyst app."
+msgstr ""
+
+msgid "Our flagship app."
+msgstr ""
+
+msgid "Amazing companion/upgrade for Pocket Lists when it’s time for real collaboration on <em>bigger and more complex tasks</em>. Assignments, task statuses, deadlines, kanban board, more — the app help bringing the order to any complex teamwork."
+msgstr ""
+
+msgid "Cash Flow"
+msgstr ""
+
+msgid "Forecasts and saves your business money."
+msgstr ""
+
+msgid "Promocode for managing money the smarter way."
+msgstr ""
+
+msgid "Forecasts and saves your money."
+msgstr ""
+
+msgid "Shows exact cash on hand balance for any date in the future. This app could have been a <em>life saver</em> for most businesses which did not survive a cash gap because of not knowing it’s coming."
+msgstr ""
+
+msgid "Checked in working time"
+msgstr ""

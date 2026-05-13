@@ -1,0 +1,48 @@
+/*
+// form-select
+*/
+@use 'sass:map';
+@use 'sass:math';
+@use '../custom-variables' as vs;
+@use '../direction' as dir;
+
+.form-select {
+    --sa-input-padding-x: 0;
+    --sa-input-padding-y: 0;
+
+    padding: var(--sa-input-padding-y) var(--sa-input-padding-x);
+    background-clip: padding-box;
+    transition:
+        border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
+}
+
+@each $size, $variables in vs.$sa-input--sizes {
+    $local-prefix: '';
+
+    @if($size != 'default') {
+        $local-prefix: '-' + $size;
+    }
+
+    $local-line-height: map.get($variables, line-height);
+
+    @if (math.is-unitless($local-line-height)) {
+        $local-line-height: map.get($variables, font-size) * map.get($variables, line-height);
+    }
+
+    .form-select#{$local-prefix} {
+        --sa-input-padding-x: #{map.get($variables, padding-x)};
+        --sa-input-padding-y: #{map.get($variables, padding-y)};
+
+        font-size: map.get($variables, font-size);
+        line-height: $local-line-height;
+        min-height: calc(#{$local-line-height} + #{vs.$sa-input--border-width * 2} + var(--sa-input-padding-y) * 2);
+
+        @include dir.scope {
+            #{dir.$padding-inline-end}: calc(var(--sa-input-padding-x) * 2 + 5px); // SKIP-PIXELS
+
+            background-position: #{dir.$inline-end} var(--sa-input-padding-x) center;
+        }
+    }
+}
+

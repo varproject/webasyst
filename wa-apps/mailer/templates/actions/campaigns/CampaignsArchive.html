@@ -1,0 +1,228 @@
+<div class="box contentbox">
+    <header class="flexbox wrap full-width custom-mb-16">
+        <h1 class="custom-mb-0 custom-mt-4 custom-mr-12 h2">[`Sent`]</h1>
+        <div class="state-with-inner-icon right custom-my-8 small width-100-mobile">
+            <input class="js-search-campaigns long" type="search" placeholder="[`search by words in subject or text`]" value="{$search|escape}">
+            <button class="icon">
+                <i class="fas fa-search"></i>
+                <i class="fas fa-spinner fa-spin hidden"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- plugin hook: 'campaign.archive.%plugin_id%.top' -->
+    {* @event campaign.archive.%plugin_id%.top *}
+    {foreach $event_campaign_archive as $_}{$_.top|default:''}{/foreach}
+
+    {if $messages}
+        {if !empty($search)}
+            <ul class="zebra" id="search-results">
+                {foreach $messages as $c}
+                    <li rel="{$c.id}">
+                        {if $c.finished_datetime_formatted}
+                            <span class="float-right">[`Sent `]: {$c.finished_datetime_formatted}</span>
+                        {/if}
+                        <p>
+                            <a class="bold" href="#/campaigns/letter/{$c.id}/">{$c.subject}</a>
+                        </p>
+                        <p>{$c.text}</p>
+                    </li>
+                {/foreach}
+            </ul>
+        {else}
+            <div class="table-scrollable-x">
+                <table class="zebra js-campaigns">
+                    <thead>
+                        <tr>
+                            <th class="m-first nowrap">
+                                {if $order == 'id'}
+                                    <a href="#/campaigns/archive/{$start}/!id/{$search_url_append}">[`ID`] <i class="fas fa-caret-up"></i></a>
+                                {elseif $order == "!id"}
+                                    <a href="#/campaigns/archive/{$start}/id/{$search_url_append}">[`ID`] <i class="fas fa-caret-down"></i></a>
+                                {else}
+                                    <a href="#/campaigns/archive/{$start}/id/{$search_url_append}">[`ID`]</a>
+                                {/if}
+                            </th>
+                            <th class="nowrap">[`Subject`]</th>
+                            <th class="nowrap">
+                                {if $order == 'sent'}
+                                    <a href="#/campaigns/archive/{$start}/!sent/{$search_url_append}">[`Sent `] <i class="fas fa-caret-up"></i></a>
+                                {elseif $order == "!sent"}
+                                    <a href="#/campaigns/archive/{$start}/sent/{$search_url_append}">[`Sent `] <i class="fas fa-caret-down"></i></a>
+                                {else}
+                                    <a href="#/campaigns/archive/{$start}/sent/{$search_url_append}">[`Sent `]</a>
+                                {/if}
+                            </th>
+                            <th class="nowrap">[`Sender`]</th>
+                            <th class="align-right nowrap">[`Recipients`]</th>
+                            <th class="align-right nowrap">[`Opened`]</th>
+                            <th class="align-right nowrap">[`Bounced`]</th>
+                            <th class="align-right nowrap m-last">[`Unsubscribed`]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="small">
+                    {foreach from=$messages item=m}
+                        <tr rel="{$m.id}"{if  $m.status == mailerMessageModel::STATUS_SENDING_PAUSED} class="m-cmpgn-paused"{elseif $m.status != mailerMessageModel::STATUS_SENT} class="m-cmpgn-sending"{/if}>
+                            <td class="m-first">
+                                {$m.id}
+                            </td>
+                            <td title="{$m.subject}">
+                                <div>
+                                    {if !empty($m.error)}
+                                        <a title="{$m.error|escape}"><i class="fas fa-exclamation-triangle text-orange"></i></a>
+                                    {/if}
+                                    {$m.subject}
+                                    <i class="shortener"></i>
+                                </div>
+                            </td>
+
+                            {if $m.status == mailerMessageModel::STATUS_SENT}
+                                {$title = $m.finished_datetime_formatted}
+                            {elseif $m.status == mailerMessageModel::STATUS_SENDING_PAUSED}
+                                {$title = "[`Paused`] (`$m.percent_complete`%)"}
+                            {else}
+                                {$title = "[`Now sending`] (`$m.percent_complete`%)"}
+                            {/if}
+
+                            <td title="{$title|default:''}">
+                                {if $m.status == mailerMessageModel::STATUS_SENT}
+                                    <div>{$m.finished_datetime_formatted} <i class="shortener"></i></div>
+                                {elseif $m.status == mailerMessageModel::STATUS_SENDING_PAUSED}
+                                    <div><i class="fas fa-pause-circle"></i> [`Paused`] ({$m.percent_complete}%)<i class="shortener"></i></div>
+                                {else}
+                                    <div><span class="spinner valign-middle"></span> [`Now sending`]<i class="shortener"></i></div>
+                                {/if}
+                            </td>
+                            <td title="{$m.from_email}">
+                                <div>
+                                    {$m.from_email}
+                                    <i class="shortener"></i>
+                                </div>
+                            </td>
+                            <td class="align-right m-recipients-num-cell">
+                                {if $m.status == mailerMessageModel::STATUS_SENT}
+                                    {$m.recipients_num}
+                                {else}
+                                    {$m.actualy_sent_num}/{$m.recipients_num - $m.exceptions_num}
+                                {/if}
+                            </td>
+                            <td class="align-right m-opened-num-cell">
+                                {if $m.opened_count_available}
+                                    {$m.opened_num}
+                                {else}
+                                    [`n/a`]
+                                {/if}
+                            </td>
+                            <td class="align-right m-bounced-num-cell">
+                                {$m.bounced_num}{if !$m.return_path}<span class="asterisk-hang-right">*</span>{/if}
+                            </td>
+                            <td class="align-right m-last m-unsubscribed-num-cell">
+                                {$m.unsubscribed_num}{if !$m.has_unsubscribe_link}<span class="asterisk-hang-right">*</span>{/if}
+                            </td>
+                        </tr>
+                        {if $m.status == mailerMessageModel::STATUS_SENDING}
+                            <tr class="m-cmpgn-sending">
+                                <td colspan="8">
+                                    <div class="progressbar custom-mb-8">
+                                        <div class="progressbar-line-wrapper text-inside">
+                                            <div class="progressbar-outer">
+                                                <div class="progressbar-inner" style="width: {$m.percent_complete}%;">
+                                                    <div class="progressbar-text">{$m.percent_complete}%</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {/if}
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        {/if}
+
+        <div class="flexbox full-width wrap small custom-mb-4 custom-mt-24 middle">
+            <span class="custom-mr-12 custom-mt-4 custom-mb-8 text-gray">[`Total campaigns`]: {$total_rows}</span>
+            {if count($pagination) > 1}
+                <ul class="paging custom-mb-8">
+                    {foreach $pagination as $page => $start}
+                        {if $start !== false}
+                            <li{if $current_page == $page} class="selected"{/if}>
+                                <a href="#/campaigns/archive/{$start}/{$order}/{$search_url_append}">{$page}</a>
+                            </li>
+                        {else}
+                            <li><span>...</span></li>
+                        {/if}
+                    {/foreach}
+                </ul>
+            {/if}
+        </div>
+    {else}
+        {if $search}
+            <p class="small gray">[`No campaigns match search criteria.`]</p>
+        {else}
+            <p class="small gray">[`Nothing has been sent yet.`]</p>
+        {/if}
+    {/if}
+
+    <!-- plugin hook: 'campaign.archive.%plugin_id%.bottom' -->
+    {* @event campaign.archive.%plugin_id%.bottom *}
+    {foreach $event_campaign_archive as $_}{$_.bottom|default:''}{/foreach}
+</div>
+<script>
+    (function() {
+
+    // Make table rows clickable (middle-click friendly)
+    $.wa.mailer.makeClickable($('.js-campaigns tbody tr[rel] td'), td => '#/campaigns/report/'+td.parent().attr('rel')+'/');
+
+    $.wa.mailer.showLastSearchBreadcrumb.last_search_ids = { };
+    {if $search}
+        {foreach $messages as $m}
+            $.wa.mailer.showLastSearchBreadcrumb.last_search_ids[{$m.id}] = true;
+        {/foreach}
+        $.wa.mailer.showLastSearchBreadcrumb.last_search_string = '{$search|replace:"'":"\'"}';//"
+    {/if}
+
+    // Search field
+    const submitSearch = function() {
+        const $input = $(this),
+            new_hash = $.wa.mailer.cleanHash('#/campaigns/archive/0/{$order}/' + encodeURIComponent($input.val()));
+        if ($.wa.mailer.getHash() != new_hash) {
+            $input.next('.icon').find('svg').toggleClass('hidden');
+            window.location.hash = new_hash;
+        }
+        return false;
+    };
+
+    $('.js-search-campaigns').keyup(function(e) {
+        if (e.which != 13 && e.which != 10) {
+            return false;
+        }
+        return submitSearch.apply(this);
+    }).bind('search', submitSearch);
+
+    {if !$search}
+        // Number of campaigns currently being sent
+        $.wa.mailer.sending_count = {ifempty($sending_count, 0)};
+        {if $sending_count}
+            $('#sending-list-item').addClass('bold').find('.count').empty().append('<span class="badge blue blinked">{$sending_count}</span> {$total_rows}');
+
+            // Update list every 30 seconds while there's a campaign currently sending
+            if ($.wa.mailer.archive_redispatch_timeout) {
+                clearTimeout($.wa.mailer.archive_redispatch_timeout);
+            }
+            $.wa.mailer.archive_redispatch_timeout = setTimeout(function() {
+                if ($.wa.mailer.getHash().substr(0, 19) == '#/campaigns/archive') {
+                    $.wa.mailer.archive_redispatch_timeout = null;
+                    $.wa.mailer.redispatch();
+                }
+            }, 30000);
+        {else}
+            $('#sending-list-item').removeClass('bold').find('.count').text('{$total_rows}');
+        {/if}
+    {/if}
+
+    $.wa.mailer.setTitle();
+})();
+</script>
+

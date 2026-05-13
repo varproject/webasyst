@@ -1,0 +1,120 @@
+{if $iframe}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$wa->appName()} &mdash; {$wa->accountName()}</title>
+
+    {* CSS *}
+    {$wa->css()}
+    <link href="{$wa_app_static_url}css/crm.css?v={$wa->version()}" rel="stylesheet">
+    <link href="{$wa_app_static_url}css/crm2.css?v={$wa->version()}" rel="stylesheet">
+
+    {wa_js}
+        {$wa_url}wa-content/js/jquery/jquery-3.6.0.min.js
+        {$wa_app_static_url}js/jquery/jquery-ui.min.js
+        {$wa_url}wa-content/js/jquery-plugins/jquery.store.js
+        {$wa_url}wa-content/js/jquery-wa/wa.js
+    {/wa_js}{strip}
+
+
+    {/strip}
+    {wa_js}
+        {$wa_app_static_url}js/crm.js
+        {$wa_app_static_url}js/call.js
+        {$wa_app_static_url}js/call.associateDealDialog.js
+        {$wa_app_static_url}js/call.initContactDialog.js
+        {$wa_app_static_url}js/call.redirectDialog.js
+    {/wa_js}
+
+    {$wa->js()}
+</head>
+<body style="background: var(--background-color-blank);">
+{/if}
+
+{$class = 'c-call-init-contact'}
+{$dialog_id = uniqid($class)}
+
+    <div class="{if $iframe}iframe-style {else}dialog {/if}{$class}" id="{$dialog_id}">
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <form>
+                <header class="dialog-header">
+                    <h2>
+                        [`Outgoing call:`] {$contact.name|escape} <span class="header-number">{$format_client_number|escape}</span>
+                    </h2>
+                </header>
+                <div class="c-content js-content">
+                    {if $call_ready == 'ready'}
+                        <div class="c-call-pending">[`Call started..`]</div>
+                    {else}
+                        <div class="field">
+                            <div class="name">[`Select extension number`]</div>
+                            <div class="value">
+                                <div class="js-numbers-list">
+                                    {foreach $pbx_numbers as $_number}
+                                        <label class="c-call-from js-number-item" data-plugin-id="{$_number.plugin_id}">
+                                            <input type="radio" name="call[from]" value="{$_number.plugin_user_number|escape}">
+                                            {if $_number.plugin_icon|escape}
+                                                <i class="icon" title="{$_number.plugin_name|escape}" style="background-image: url('{$_number.plugin_icon|escape}'); background-size: 16px 16px;"></i>
+                                            {/if}
+                                            {$_number.plugin_user_number|escape}
+                                        </label>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+
+                <footer class="dialog-footer">
+                    <div class="c-footer-actions js-dialog-footer">
+                        {if $call_ready == 'ready'}
+                            <input class="button js-close-dialog" type="submit" value="[`Close`]">
+                            <input type="hidden" name="call[from]" value="{$pbx_numbers.0.plugin_user_number|escape}"/>
+                            <input type="hidden" name="call[plugin_id]" value="{$pbx_numbers.0.plugin_id|escape}" />
+                        {else}
+                            <input type="hidden" class="js-plugin-id" name="call[plugin_id]" />
+
+                            <input class="button js-init-call" type="submit" value="[`Call`]" disabled>
+                            <span style="margin: 0 4px;">[`or`]</span>
+                            <a class="js-close-dialog js-cancel-dialog" href="javascript:void(0);">[`cancel`]</a>
+                        {/if}
+                        <input type="hidden" name="call[contact_id]" value="{$contact.id|escape}" />
+                        <input type="hidden" name="call[to]" value="{$client_number|escape}"/>
+                        <input type="hidden" name="call[deal_id]" value="{$deal_id|escape}"/>
+                    </div>
+                </footer>
+            </form>
+        </div>
+
+        {$_locales = [
+            "Close" => {_w("Close")},
+            "call_pending" => {_w("Call pending")},
+            "call_connected" => {_w("Call connected")},
+            "call_finished" => {_w("Call finished")},
+            "call_error" => {_w("Call error")}
+        ]}
+
+        <script>
+            ( function($) {
+                //var $body = $(window.top.document).find("body");
+                //$.waDialog({
+                    //html: $body.find('#{$dialog_id}').show(),
+                    //onOpen: function($wrapper) {
+                        new CRMCallInitContactDialog({
+                            $wrapper: $('#{$dialog_id}'),
+                            call_ready: "{$call_ready}",
+                            locales: {$_locales|json_encode},
+                            iframe: {$iframe|json_encode}
+                        });
+                  //  }
+                //});
+            })(jQuery);
+        </script>
+    </div>
+
+{if $iframe}
+</body>
+</html>
+{/if}

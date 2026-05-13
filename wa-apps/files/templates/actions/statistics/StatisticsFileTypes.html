@@ -1,0 +1,14 @@
+{* assign $body *}
+{include file="./include.body.file_types.html" assign="body"}
+
+{* render content *}
+{include file="./include.content.html"
+    action = 'file_types'
+    title = '[`File type statistics`]'
+    cols = [
+        'ext' => '[`File extension`]',
+        'size' => '[`Size`]',
+        'count' => '[`Files`]'
+    ]
+    body = $body
+inline}

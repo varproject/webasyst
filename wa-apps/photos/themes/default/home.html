@@ -1,0 +1,55 @@
+{* homepage template *}
+
+{$albums = $wa->photos->childAlbums()}
+
+{if !empty($photos) || !empty($albums)}
+
+    <!-- albums -->
+    {if !empty($albums)}
+        <h1 class="p-page-title">[`Albums`]</h1>
+        <ul class="albums">
+            {foreach $albums as $a}
+                <li{if $a.count > 1} class="layers"{/if}>
+                    <div class="cover">
+                        {if $a.key_photo}
+                            <img src="{$a.key_photo.thumb.url}{if $a.key_photo.edit_datetime}?{strtotime($a.key_photo.edit_datetime)}{/if}" alt="{$a.name}">
+                        {else}
+                            <img src="{$wa_app_static_url}img/album-dummy.png" alt="{$a.name}">
+                        {/if}
+                    </div>
+                    <div class="details">
+                        <p class="p-album-name{if $a.status <= 0} gray{/if}">{$a.name|default:'[`(no name)`]'}{if $a.status <= 0} <i class="icon10 lock-bw"></i>{/if}</p>
+                        <p class="count">{sprintf( _w('%d photo','%d photos',$a.count), $a.count)}</p>
+                    </div>
+                    <a href="{$a.full_url}"{if $a.status <= 0} title="[`Private album`]"{/if}></a>
+                </li>
+            {/foreach}
+        </ul>
+    {/if}
+
+    <{if empty($albums)}h1{else}h2{/if} class="p-page-title">[`Photostream`]</{if empty($albums)}h1{else}h2{/if}>
+
+    {if !empty($photos)}
+        {include file='photos-thumbs.html'}
+    {/if}
+    
+    {*
+        <!-- FOLLOW -->
+        <aside class="connect">
+            <div class="likebox">
+                 your custom social code widgets
+            </div>
+        </aside>
+    *}
+
+{else}
+
+    <div class="welcome">
+        <h1>[`Welcome to your new photo gallery!`]</h1>
+        <p>{sprintf('[`Start by <a href="%s">uploading photos</a> in your gallery backend.`]', $wa_backend_url|cat:'photos/')}</p>
+    </div>
+    <style>
+        .page-content.with-sidebar { margin-left: 0; border-left: 0; }
+    </style>
+
+{/if}

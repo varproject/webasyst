@@ -1,0 +1,38 @@
+<div class="fields">
+    <div class="field">
+        <div class="name">[`URL подключения`]</div>
+        <div class="value">
+            <pre>{$remote_url}</pre>
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">[`Продукты`]</div>
+        <div class="value">
+            <ul>
+                {foreach $products as $p}
+                    <li class="small">{$p.name} <span class="smaller gray">{$p.slug}</span></li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">[`Начиная с`]</div>
+        <div class="value">
+            {if ($start_date)}
+                {$start_date|wa_date}
+                {else}
+                [`Без ограничений`]
+            {/if}
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">[`Создание промокодов`]</div>
+        <div class="value">
+            {if $promo==1}
+                [`Доступно`] <span class="small gray">[максимум {$percent}%]</span>
+                {else}
+                [`Недоступно`]
+            {/if}
+        </div>
+    </div>
+</div>

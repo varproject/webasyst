@@ -1,0 +1,14 @@
+/*
+// .saw-table
+*/
+@use 'sass:math';
+@use '../custom-variables' as vs;
+
+.saw-table {}
+.saw-table__header {
+    padding: 1.25rem 1.25rem .875rem;
+}
+.saw-table__body {
+    border-bottom: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    margin-bottom: 1rem;
+}

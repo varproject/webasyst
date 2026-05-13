@@ -1,0 +1,185 @@
+/*
+// .sa-search
+*/
+@use '../functions' as func;
+@use '../mixins/bootstrap' as bt;
+@use '../custom-variables' as vs;
+@use '../mixins/loader';
+@use '../direction' as dir;
+
+$local-height: vs.$sa-toolbar--inner-height;
+
+.sa-search {
+    height: $local-height;
+    width: 100%;
+    position: relative;
+}
+.sa-search__body {
+    position: relative;
+    z-index: 11;
+    display: flex;
+    height: 100%;
+}
+.sa-search__icon {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: $local-height;
+    height: $local-height;
+    fill: vs.$sa-search--icon-color;
+    opacity: .35;
+    pointer-events: none;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: 1px; // SKIP-PIXELS
+        #{dir.$margin-inline-end}: -1px; // SKIP-PIXELS
+    }
+}
+.sa-search__input {
+    width: 0;
+    flex-basis: 0;
+    min-width: 0;
+    flex-grow: 1;
+    margin: 0;
+    font-size: func.rem(15);
+    color: vs.$sa-search--font-color;
+    font-family: inherit;
+    border: none;
+    background: transparent;
+
+    @include dir.scope {
+        #{dir.$padding-inline-start}: $local-height;
+        #{dir.$padding-inline-end}: .75rem;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &::placeholder {
+        color: vs.$sa-search--placeholder-color;
+    }
+}
+.sa-search__cancel {
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: $local-height;
+    height: $local-height;
+    fill: vs.$sa-search--icon-color;
+    opacity: .6;
+}
+.sa-search__field {
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0; // SKIP-RTL
+    top: 0;
+    background: vs.$sa-search--bg-color;
+    box-shadow: inset 0 0 0 1px transparent; // SKIP-PIXELS
+    z-index: -1;
+    border-radius: .125rem;
+    transition:
+        background .2s,
+        box-shadow .2s;
+}
+.sa-search__dropdown {
+    position: absolute;
+    background: vs.$sa-search__dropdown--bg-color;
+    color: vs.$sa-search__dropdown--font-color;
+    border-radius: .125rem;
+    top: calc(100% + .3125rem);
+    width: 100%;
+    z-index: 11;
+    display: none;
+    max-height: 70vh;
+    overflow: hidden;
+    min-height: 4rem;
+    flex-direction: column;
+}
+.sa-search__dropdown-loader {
+    @include loader.loader-overlay($bg-color: rgba(vs.$sa-search__dropdown--bg-color, .9), $size: 2rem, $thickness: .125rem, $color: vs.$sa-search__dropdown--loader-color) { // SKIP-COLOR
+        z-index: 1;
+        backdrop-filter: blur(1.5px); // SKIP-PIXELS
+        display: none;
+    }
+}
+.sa-search__dropdown-wrapper {
+    overflow-y: auto;
+    backface-visibility: hidden;
+}
+.sa-search__suggestions {
+    display: none;
+}
+.sa-search__help {
+    padding: 1.25rem 1rem;
+    text-align: center;
+    display: none;
+}
+.sa-search__help-title {
+    font-size: func.rem(15);
+    font-weight: bt.$font-weight-medium;
+}
+.sa-search__help-subtitle {
+    font-size: func.rem(14);
+    color: vs.$sa-search__dropdown--font-muted-color;
+    padding-bottom: .125rem;
+}
+.sa-search__backdrop {
+    position: fixed;
+    z-index: 10;
+    left: 0; // SKIP-RTL
+    right: 0; // SKIP-RTL
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity .2s;
+    pointer-events: none;
+    background: vs.$sa-search--backdrop-color;
+}
+
+.sa-search--state--pending {
+    .sa-search__help--type--greeting {
+        display: block;
+    }
+}
+.sa-search--state--has-results {
+    .sa-search__suggestions {
+        display: block;
+    }
+}
+.sa-search--state--no-results {
+    .sa-search__help--type--no-results {
+        display: block;
+    }
+}
+
+.sa-search--hover {
+    .sa-search__field {
+        background: vs.$sa-search--hover-bg-color;
+        box-shadow: vs.$sa-search--hover-shadow;
+    }
+}
+.sa-search--focus {
+    .sa-search__field {
+        background: vs.$sa-search--focus-bg-color;
+        box-shadow: inset 0 0 0 1px transparent; // SKIP-PIXELS
+    }
+    .sa-search__dropdown {
+        display: flex;
+    }
+    .sa-search__backdrop {
+        opacity: 1;
+        pointer-events: all;
+    }
+}
+.sa-search--loading {
+    .sa-search__dropdown-loader {
+        display: block;
+    }
+}

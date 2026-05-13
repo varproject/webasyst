@@ -1,0 +1,42 @@
+/*
+// .sa-error
+*/
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-error {
+    text-align: center;
+    padding: 2.25rem 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.sa-error__background-text {
+    font-weight: bt.$font-weight-bold;
+    color: vs.$sa-error--background-text-color;
+    padding: 0 0 .25rem;
+
+    @include bt.font-size(5rem);
+}
+.sa-error__content {
+    width: 30rem;
+    max-width: 100%;
+    margin: 0 auto;
+}
+.sa-error__title {
+    margin-bottom: 1.5rem;
+}
+.sa-error__text {
+    margin-bottom: 1.25rem;
+}
+.sa-error__controls {
+    margin-bottom: 1.75rem;
+    display: flex;
+}
+.sa-error__input {
+    @include dir.scope {
+        #{dir.$margin-inline-end}: .5rem;
+    }
+}

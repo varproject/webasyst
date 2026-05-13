@@ -1,0 +1,85 @@
+{$class = 'c-call-redirect'}
+{$dialog_id = uniqid($class)}
+
+    <div class="dialog {$class}" id="{$dialog_id}">
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <form>
+                <header class="dialog-header">
+                    <h2>
+                        [`Redirect call`]
+                        {if $call.direction == "IN"}
+                            [`from`]
+                        {else}
+                            [`to`]
+                        {/if}
+                        {if !empty($contact)}
+                            {$contact.name|escape} <span style="color: #888;">{$call.client_number}</span>
+                        {else}
+                            {$call.client_number}
+                        {/if}
+                    </h2>
+                </header>
+
+                <div class="dialog-content">
+                    <div class="field">
+                        <div class="name js-field-name">[`Select number`]</div>
+                        <div class="value">
+                            <div class="c-candidates-list">
+                                {foreach $candidates as $candidate}
+                                <div class="c-candidate"{if $candidate.not_exist} style="opacity: 0.5"{/if}>
+                                    <input type="radio" name="redirect[to]" value="{$candidate.number|escape}"{if $candidate.not_exist} disabled{/if}>
+                                    {if $call.plugin_icon}
+                                        <i class="icon" title="{$call.plugin_name|escape}" style="background-image: url('{$call.plugin_icon|escape}'); background-size: 16px 16px;"></i>
+                                    {/if}
+                                    {$candidate.number_label|escape}
+                                    {if $candidate.not_exist}<span style="font-size: smaller; margin-left: 6px;">[`Number does not exist`]</span>{/if}
+                                    {if !empty($candidate.users)}
+                                    <div class="c-users-list">
+                                        {foreach $candidate.users as $_user}
+                                            <div class="c-contact c-tel-user">
+                                                <i class="icon userpic" style="background-image: url('{$_user.photo_url_16}');"></i>
+                                                {$_user.name|escape}
+                                            </div>
+                                        {/foreach}
+                                    </div>
+                                    {/if}
+                                </div>
+                                {/foreach}
+                                <div class="c-candidate">
+                                    <input class="js-other-candidate" type="radio" name="redirect[to]" />
+                                    <span class="js-other-lbl">[`Other `]</span>
+                                    <span class="c-contact js-candidate hidden">
+                                        <span class="js-label"></span>
+                                        <span class="icon pointer custom-pl-8 delete c-delete js-delete-candidate" title="[`Delete`]"><i class="fas fa-trash-alt " ></i></span>
+                                    </span>
+                                    <input type="text" class="c-autocomplete js-autocomplete ui-autocomplete-input" style="display: none;" autofocus="autofocus" placeholder="[`Phone number`]" autocomplete="off" name="redirect[to]">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="js-errors-place"></div>
+                </div>
+
+                <footer class="dialog-footer">
+                    <input type="hidden" name="call_id" value="{$call.id}" class="js-call-id"/>
+                    <input type="hidden" name="number_type" class="js-number-type"/>
+                    <input type="hidden" name="number" class="js-number"/>
+                    <div class="c-footer-actions js-dialog-footer">
+                        <input class="button js-submit" type="submit" value="[`Redirect`]" disabled>
+                        <a class="button light-gray js-close-dialog js-cancel-dialog" href="javascript:void(0);">[`Cancel`]</a>
+                    </div>
+                </footer>
+            </form>
+        </div>
+
+        <script>
+            ( function($) {
+                var $wrapper = $('#{$dialog_id}')
+                        new CRMCallRedirectDialog({
+                            $wrapper: $wrapper
+                        });
+            })(jQuery);
+        </script>
+    </div>

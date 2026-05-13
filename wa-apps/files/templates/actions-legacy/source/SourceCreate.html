@@ -1,0 +1,194 @@
+<h1 class="h-main-title">[`Connect new source`]</h1>
+
+{if $is_any_source_plugin_installed}
+    {$container_id = uniqid('f-create-source-container')}
+
+    <div id="{$container_id}" class="f-create-source-container">
+
+        <div class="block top-padded f-connect-info-block" style="display: none">
+            <div style="margin-left: -0.25em; padding-bottom: 10px;">
+                <i class="icon16 yes"></i><span class="f-text" style="text-decoration: line-through;">[`Register application on %s`]</span>
+            </div>
+            <div><span class="f-text">2. [`Connect %s account:`]</span></div>
+        </div>
+        
+        <div class="block top-padded">
+            <form method="post" action="?module=source&action=save">
+                <div class="fields form">
+                    <div class="field">
+                        <div class="name">
+                            [`Provider`]
+                        </div>
+                        {foreach $sources as $source_id => $source_provider}
+                            <div class="value s-provider-item-wrapper">
+                                <label>
+                                    {if !empty($source_provider.icon)}
+                                        <i class="icon16" style="background-image: url('{$wa_app_static_url}plugins/{$source_id}/{$source_provider.icon}'); background-size: contain" style="width: 16px;"></i>
+                                    {else}
+                                        <i class="icon16 plugins"></i>
+                                    {/if}
+                                    <input type="radio" name="id" value="{$source_id}" {if empty($source_provider.enabled)}disabled="disabled"{/if}>
+                                    <span class="s-provider-name">
+                                        {$source_provider.name|default:$source_id|escape}
+                                    </span>
+                                    {if !empty($source_provider.required_settings)}
+                                        <a href="#/plugins/{$source_id}/">[`specify settings`]</a>
+                                    {/if}
+                                </label>
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
+                <div class="field-group f-buttons-block">
+                    <div class="field">
+                        <div class="value">
+                            {$wa->csrf()}
+                            <input class="button green" type="submit" value="[`Connect`]" disabled="disabled">
+                            {if $source->getId()}
+                                [`or`] <a href="javascript:void(0);" class="f-delete" data-id="{$source->getId()}">[`cancel`]</a>
+                            {/if}
+                            <i class="icon16 loading" style="display: none;"></i>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="f-authorize-block" style="display: none; margin: 10px 0;">
+            <i class="icon16 loading"></i>
+            [`Load authorize page`]...
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+
+            {if !empty($auth_failed)}
+                $.files.alertError('{$auth_failed}');
+            {/if}
+
+            var container = $('#{$container_id}');
+            var form = $('form', container);
+
+            // default source id
+            var source_id = '';
+
+            {if $source->getId()}
+                source_id = '{$source->getType()}'
+            {/if}
+
+            var source_enabling = { };
+            {foreach $sources as $source_id => $source_provider}
+                source_enabling['{$source_id}'] = {if !empty($source_provider.enabled)}1{else}0{/if};
+            {/foreach}
+
+            if ($('[name=id]', form).length === 1) {
+                source_id = $('[name=id]:first', form).val();
+            }
+
+            // if default source is is presented
+            if (source_id) {
+                $('[name=id]').filter('[value="' + source_id + '"]')
+                    .attr('checked', source_enabling[source_id])
+                    .after('<input type="hidden" value="' + source_id + '" name="id">')
+                if (source_enabling[source_id]) {
+                    form.find('[type=submit]').attr('disabled', false);
+                }
+            }
+
+            container.on('click', '.f-delete', function (e) {
+                e.preventDefault();
+                $.files.deleteSource($(this).data('id'));
+            });
+
+            var isEnabledChoosen = function () {
+                return $('[name=id]:checked:not(:disabled)', form).length > 0;
+            };
+
+            form.find('[name=id]').change(function () {
+                form.find('[type=submit]').attr('disabled', !isEnabledChoosen());
+            });
+
+            setTimeout(function () {
+                form.find('[name=id]').trigger('change');
+            }, 250);
+
+            form.submit(function(e) {
+                e.preventDefault();
+
+                source_id = $('[name=id]:checked', form).val();
+                if (!source_id) {
+                    return;
+                }
+
+                $.files.clearValidateErrors(form);
+                form.find('.loading').show();
+
+                var authorize = function (source_id) {
+                    $('.f-buttons-block', form).hide();
+                    $('.f-authorize-block', container).show();
+
+                    form.find('[name=name]').attr('disabled', true);
+                    form.find('[name=id]').each(function() {
+                        if ($(this).val() != source_id) {
+                            $(this).attr('disabled', true);
+                        }
+                    });
+
+                    $.get('?module=source&action=authorize&id=' + source_id, function(response) {
+                        if ($.isPlainObject(response) && $.isArray(response.errors) && response.errors.length) {
+                            var msg = response.errors[0].msg || response.errors[0].title || 'Authorize failed';
+                            $.files.alertError(msg);
+                        } else {
+                            $('.f-authorize-block').html(response);
+                        }
+                    }).error(function(r) {
+                        $('.f-authorize-block').html(r.responseText);
+                    });
+                };
+
+                {if !$source->getId()}
+                    $.files.jsonPost({
+                        url: '?module=source&action=save',
+                        data: form.serialize(),
+                        onSuccess: function(r) {
+                            if (r.status === 'ok') {
+                                authorize(r.data.source.id);
+                            } else if (r && r.errors) {
+                                $.files.showValidateErrors(r.errors, form);
+                            } else {
+                                $.files.alertError('[`Server error`]');
+                            }
+                        },
+                        onAlways: function() {
+                            form.find('.loading').hide();
+                        },
+                        onError: function() {
+                            $.files.alertError('[`Server error`]');
+                        }
+                    });
+                {else}
+                    authorize({$source->getId()});
+                {/if}
+            });
+
+            {if !$source->getId()}
+                $.files.config.getLocaleStorage().get("files/plugins/refer") && ((function (plugin_id) {
+                    $.files.config.getLocaleStorage().del("files/plugins/refer");
+                    var input = form.find('[name=id][value="' + plugin_id + '"]');
+                    if (input.length) {
+                        input[0].checked = true;
+                        var provider_name = input.closest('.s-provider-item-wrapper').find('.s-provider-name').text();
+                        $('.f-connect-info-block', container).show().find('.f-text').each(function () {
+                            var txt_block = $(this),
+                                txt = txt_block.text() || '';
+                            txt_block.text(txt.replace('%s', provider_name));
+                        });
+                    }
+                })($.files.config.getLocaleStorage().get("files/plugins/refer")));
+            {/if}
+        });
+    </script>
+{else}
+    <p>[`You need to install any source plugin before connecting sources.`]</p>
+{/if}

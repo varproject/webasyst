@@ -1,0 +1,317 @@
+{$container_id = uniqid('f-source-info-')}
+
+<div id="{$container_id}">
+    <h1 class="h-main-title"><span class="f-title">{sprintf('[`Source %s`]', $source->getName()|escape)}</span></h1>
+
+    <div class="fields">
+
+        <div class="field-group">
+            <div class="field">
+                <div class="name">[`Provider`]</div>
+                <div class="value">
+                    {if $source->getIconUrl()}
+                        <img src="{$source->getIconUrl()}" style="width: 16px; margin-right: 8px; display: block; float: left;">
+                    {else}
+                        <i class="fas fa-plug"></i>
+                    {/if}
+                    <span style="display: block; float: left;">
+                        {$source->getProviderName()|escape}
+                    </span>
+                </div>
+            </div>
+            {$account_info_html = $source->getAccountInfoHtml()}
+            {if $account_info_html}
+                <div class="field">
+                    <div class="name">[`Account`]</div>
+                    <div class="value">
+                        {$account_info_html}
+                    </div>
+                </div>
+            {/if}
+            <div class="field">
+                <div class="name">[`Owner`]</div>
+                <div class="value">
+                    <div class="f-name-wrapper">
+                        <span class="f-owner-image">
+                            <i class="icon userpic userpic-20 custom-mr-4"
+                               style="background-image: url({$source->getOwner()->getPhoto(20)})">
+                            </i>
+                        </span>
+                        <span class="f-owner-name">
+                            {$source->getOwner()->getName()|escape}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="f-mount-info-block field" style="{if !$source->isMounted()}display: none;{/if}">
+                <div class="name">[`Mounted`]</div>
+                <div class="value">
+                    <span class="f-mount-datetime">
+                        {$source->getField('create_datetime')|wa_date:"humandate"|escape}
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">[`Mount point`]</div>
+                <div class="value">
+                    <a class="f-mount-path-link" {if !$source->isMounted()}style="display: none;"{/if}>sdfsdfsdf</a>
+                    {if !$source->isMounted()}
+                        <form class="f-mount-form">
+                            <ul class="unstyled">
+                                <li><label><input type="radio" name="point" value="root" checked="checked"> [`Mount as storage`]</label></li>
+                                <li><label><input type="radio" name="point" value="tree"> [`Mount as subfolder`]</label></li>
+                            </ul>
+                            <div class="f-files-browser-wrapper" style="display: none;"><i class="fas fa-spin fa-spinner loading"></i></div>
+                            <input type="hidden" name="folder_id" value="">
+                            <input type="hidden" name="storage_id" value="">
+                            <input type="hidden" name="id" value="{$source->getId()}">
+                            <input type="submit" class="button" value="[`Mount`]" style="margin-top: 10px;">
+                            <span>
+                                <a href="javascript:void(0)" class="js-unmount button light-gray">[`Cancel`]</a>
+                                <i class="fas fa-spin fa-spinner loading" style="display: none;"></i>
+                            </span>
+                        </form>
+
+                        <div class="f-progress-block" style="display: none; margin-top: 40px;">
+                            <div class="progressbar" style="min-width: 300px; width: 70%;">
+                                <div class="progressbar-line-wrapper text-outside">
+                                    <div class="progressbar-outer"><div class="progressbar-inner" style="width: 0%;"></div></div>
+                                    <div class="progressbar-text"><i class="fas fa-spin fa-spinner"></i></div>
+                                </div>
+                            </div>
+
+                            <p class="hint custom-mt-4">
+                                [`Synchronization process may take several minutes.`] [`Do not leave this page until the process is completed.`]
+                            </p>
+                            <div class="f-ready-report" style="display: none;"></div>
+                        </div>
+
+                    {/if}
+                </div>
+            </div>
+
+        </div>
+
+        {if !$source->hasValidToken()}
+            <div class="field-group" style="margin-top: 20px; padding: 20px; background-color: #fee; min-width: 500px;">
+                <strong class="state-error-hint">[`Source authorization code is canceled or expired`]</strong>
+                {if $source->getContactId() == $wa->user()->getId()}
+                    <div class="f-source-receive-token-block" style="margin-top: 10px;">
+                        {if $source->hasAccountInfo()}
+                            <a href="javascript:void(0);" class="f-source-receive-token">
+                                <i class="fas fa-sync-alt"></i>
+                                [`Renew authorization code`]
+                            </a>
+                        {else}
+                            <span>
+                                [`Authorization code renewal is not possible. You need to unlink the source and connect it again.`]
+                            </span>
+                        {/if}
+                    </div>
+                {/if}
+            </div>
+            <div class="f-authorize-block" style="display: none; margin: 10px 0 40px;">
+                <i class="fas fa-spin fa-spinner loading"></i>
+                [`Load authorize page`]...
+            </div>
+        {/if}
+
+        {if $source->inPause()}
+            <div class="field-group" style="margin-top: 20px; padding: 20px; background-color: #fee; min-width: 500px;">
+                <strong class="state-error-hint">[`Too many requests to external source service. Please try again in a few minutes.`]</strong>
+            </div>
+        {/if}
+
+        {if $source->isMounted()}
+
+            <div class="field-group">
+                <div class="field">
+                    <div class="">
+                        <a href="javascript:void(0)" class="js-unmount" data-confirm="1">
+                            <i class="fas fa-trash-alt text-red"></i> [`Unmount source`]
+                        </a>
+                        <i class="fas fa-spin fa-spinner loading" style="display: none;"></i>
+                    </div>
+                </div>
+            </div>
+
+        {/if}
+    </div>
+</div>
+
+{include file='./include.unmount.html' container_id=$container_id source_id=$source->getId() inline}
+
+<script>
+    $(function () {
+        var container = $('#{$container_id}');
+
+        {if $auth_failed}
+            $.files.alertError('{$auth_failed}');
+        {/if}
+
+        var getPathLink = function(path) {
+            var href = '';
+            var endpoint = path.pop();
+            if (endpoint.type === 'storage') {
+                href = '#/storage/' + endpoint.id + '/';
+            } else {
+                href = '#/folder/' + endpoint.id + '/';
+            }
+            path.push(endpoint);
+
+            var link = '<a class="f-mount-path-link" href="' + href + '">';
+            $.each(path, function(i, item) {
+                link += i <= 0 ? item.icon_str + ' ' : ' / ';
+                link += $.wa.encodeHTML(item.name);
+            });
+            link += '</a>';
+            return link;
+        };
+
+        {if !$source->hasValidToken()}
+            $('.f-source-receive-token', container).on('click', function() {
+                $('.f-source-receive-token-block', container).hide();
+                $('.f-authorize-block', container).show();
+                $.get('?module=source&action=authorize&id={$source->getId()}{if $source->isMounted()}&is_renew=1{/if}', function(html) {
+                    $('.f-authorize-block', container).html(html);
+                }).error(function(r) {
+                    $('.f-authorize-block', container).html(r.responseText);
+                });
+            });
+        {/if}
+
+
+        {if !$source->isMounted()}
+
+            var form = $('.f-mount-form', container);
+            var browser = $('.f-files-browser-wrapper', container);
+            var storage_input = form.find('[name=storage_id]');
+            var folder_input = form.find('[name=folder_id]');
+
+            var pullFiles = function(data) {
+
+                $('.f-mount-datetime', container).show().text(data.create_datetime_str);
+                var path_link = getPathLink(data.path);
+                $('.f-mount-path-link', container).replaceWith(path_link);
+                $('.f-mount-info-block', container).show();
+                form.hide();
+
+                $('.progressbar .progressbar-inner', container).css('width', '0%');
+                $('.f-progress-block', container).show();
+
+                var pull_process = new LongActionProcess({
+                    url: '?module=source&action=pull',
+                    post_data: { id: '{$source->getId()}' },
+                    onProgress: function (r) {
+                        if (r.progress) {
+                            $('.progressbar .progressbar-inner', container).css('width', r.progress_str);
+                        }
+                    },
+                    onReady: function(r) {
+                        $('.progressbar .progressbar-inner', container).css('width', '100%');
+                        if ('source_count' in r) {
+                            $.files.config.setSourceCount(r.source_count);
+                            $.files.runSyncWithSources();
+                        }
+                        if (r.report) {
+                            $('.f-ready-report', container).html(r.report);
+                        }
+                    },
+                    onCleanup: function(r) {
+                        $.files.refreshSidebar();
+                        var storage_id = data.source.storage_id;
+                        var folder_id = data.source.folder_id;
+                        if (folder_id) {
+                            $.files.controller.gotoFolderPage(folder_id, true);
+                        } else {
+                            $.files.controller.gotoStoragePage(storage_id, true);
+                        }
+                    },
+                    onError: function(r) {
+                        $.files.alertError((r && r.error) || 'Server error');
+                    }
+                });
+
+                pull_process.start();
+            };
+
+            // choose mount point
+            $(':radio[name=point]', form).change(function() {
+
+                if ($(this).val() === 'root') {
+                    browser.hide().html('<i class="fas fa-spin fa-spinner loading"></i>');
+                    return;
+                }
+
+                browser.show().load(
+                    '?module=browser&level={filesRightConfig::RIGHT_LEVEL_ADD_FILES}',
+                    function() {
+
+                        var disableLi = function(li) {
+                            var type = li.data('type');
+                            li.addClass('grey');
+                            li.find('>.f-collapse-handler').removeClass('f-collapse-handler');
+                            li.find('>.f-browser-' + type)
+                                .removeClass('f-browser-' + type)
+                                .find('.add').remove();
+                        };
+
+                        var browser = $(this).find('.f-browser')
+                            .bind('select', function(e, type, id) {
+                                if (type === 'storage') {
+                                    storage_input.val(id);
+                                    folder_input.val('');
+                                } else if (type === 'folder') {
+                                    storage_input.val('');
+                                    folder_input.val(id);
+                                } else {
+                                    storage_input.val('');
+                                    folder_input.val('');
+                                }
+                            })
+                            .bind('load', function(e, type, id) {
+                                var li = browser.find('li[data-type=' + type + '][data-id=' + id + ']');
+                                var folders = browser.data('folders');
+                                li.find('ul:first li[data-type=folder]').each(function() {
+                                    if (folders[$(this).data('id')].source_id != 0) {
+                                        disableLi($(this));
+                                    }
+                                });
+                            });
+
+                        var storages = browser.data('storages');
+                        browser.find('ul:first li[data-type=storage]').each(function() {
+                            if (storages[$(this).data('id')].source_id != 0) {
+                                disableLi($(this));
+                            }
+                        });
+
+                    }
+                );
+            });
+
+            form.submit(function(e) {
+                e.preventDefault();
+
+                var data = form.serializeArray();
+                $.files.jsonPost({
+                    url: '?module=source&action=save',
+                    data: data,
+                    onSuccess: function(r) {
+                        if (r.status === 'ok') {
+                            pullFiles(r.data);
+                        }
+                    }
+                });
+            });
+
+        {else}
+
+            var path_link = getPathLink({$source->getPath()|json_encode});
+            $('.f-mount-path-link', container).replaceWith(path_link);
+
+        {/if}
+    });
+</script>

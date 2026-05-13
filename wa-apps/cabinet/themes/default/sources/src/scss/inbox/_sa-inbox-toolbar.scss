@@ -1,0 +1,95 @@
+/*
+// .sa-inbox-toolbar
+*/
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-inbox-toolbar {
+    padding: .5rem 1.25rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid vs.$sa-inbox--divider-color; // SKIP-PIXELS
+
+    .btn:focus {
+        z-index: 1;
+    }
+}
+.sa-inbox-toolbar__checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 .625rem;
+    height: 2.25rem;
+    border-radius: .125rem;
+    font-size: .875rem;
+    user-select: none;
+    color: vs.$sa-inbox--font-muted-color;
+    transition:
+        color 0.12s ease-in-out,
+        background-color 0.12s ease-in-out,
+        border-color 0.12s ease-in-out,
+        box-shadow 0.12s ease-in-out;
+
+    &,
+    input {
+        cursor: pointer;
+    }
+    input {
+        font-size: 1rem;
+        margin: 0;
+
+        @include dir.scope {
+            #{dir.$margin-inline-end}: .5rem;
+        }
+    }
+
+    &:hover {
+        background: vs.$sa-inbox--bg-hover-color;
+        color: inherit;
+    }
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: -.625rem;
+    }
+}
+.sa-inbox-toolbar__menu {
+    display: none;
+}
+.sa-inbox-toolbar__back {
+    $local-avatar-size: 2.5rem;
+    $local-avatar-gutter: 1rem;
+
+    display: flex;
+    justify-content: center;
+    width: 3.75rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: (($local-avatar-size - 3.75rem) * .5);
+        #{dir.$margin-inline-end}: ($local-avatar-gutter - ((3.75rem - $local-avatar-size) * .5));
+    }
+}
+.sa-inbox-toolbar__text {
+    color: vs.$sa-inbox--font-muted-color;
+    font-size: .875rem;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: 1rem;
+    }
+}
+
+@include bt.media-breakpoint-down(lg) {
+    .sa-inbox-toolbar {
+        padding: .5rem 1rem;
+    }
+    .sa-inbox-toolbar__checkbox {
+        display: none;
+    }
+    .sa-inbox-toolbar__menu {
+        display: flex;
+
+        @include dir.scope {
+            #{dir.$margin-inline-start}: -.5rem;
+        }
+    }
+}

@@ -1,0 +1,447 @@
+<?php
+
+/*
+ * This file is part of Webasyst framework.
+ *
+ * Licensed under the terms of the GNU Lesser General Public License (LGPL).
+ * http://www.webasyst.com/framework/license/
+ *
+ * @link http://www.webasyst.com/
+ * @author Webasyst LLC
+ * @copyright 2011 Webasyst LLC
+ * @package installer
+ */
+
+class installerConfig extends waAppConfig
+{
+    const ANNOUNCE_CACHE_TTL = 3600; // sec
+    const LICENSE_CACHE_TTL = 3600; // 1 hour
+    const LICENSE_LONG_CACHE_TTL = 86400; // 1 day
+    const LICENSE_FALL_LIMIT = 3;
+
+    const INIT_DATA_CACHE_TTL = 10800; // 3 hours
+    const INIT_DATA_CACHE_TTL_DEBUG = 900; // 15 mins
+
+    private static $model;
+
+    protected $application_config = array();
+
+    public function init()
+    {
+        parent::init();
+        require_once($this->getPath('installer', 'lib/init'));
+    }
+
+    public function getInfo($name = null)
+    {
+        if ($name == 'csrf' && preg_match("~(\/installer\/requirements\/)$~", waRequest::server('REQUEST_URI'))) {
+            return false;
+        }
+
+        return parent::getInfo($name);
+    }
+
+    public function onCount()
+    {
+        $args = func_get_args();
+        $force = array_shift($args);
+
+        $model = self::getAppSettingsModel();
+        $app_id = $this->getApplication();
+        $count = null;
+
+        //check cache expiration time
+        if ($force || ((time() - $model->get($app_id, 'update_counter_timestamp', 0)) > 600) || is_null($count = $model->get($app_id, 'update_counter', null))) {
+            $count = installerHelper::getUpdatesCounter('total');
+            //check available versions for installed items
+            //download if required changelog & requirements for updated items
+            //count applicable updates (optional)
+            $model->ping();
+        } elseif (is_null($count)) {
+            $count = $model->get($app_id, 'update_counter');
+        }
+        if ($count) {
+            $count = array(
+                'count' => $count,
+                'url'   => $url = $this->getBackendUrl(true).$this->application.'/?module=update',
+            );
+        }
+        $this->loadAnnouncements();
+        $this->loadLicenses();
+
+        try {
+            $this->getTokenData();
+        } catch (Exception $e) {}
+
+        return $count;
+    }
+
+    public function setCount($n = null)
+    {
+        $model = self::getAppSettingsModel();
+        $model->ping();
+        $app_id = $this->getApplication();
+        $model->set($app_id, 'update_counter', $n);
+        $model->set($app_id, 'update_counter_timestamp', ($n === false) ? 0 : time());
+
+        if (wa()->getEnv() !== 'backend') {
+            return;
+        }
+        wa()->getStorage()->open();
+        parent::setCount($n);
+    }
+
+    public function explainLogs($logs)
+    {
+        $logs = parent::explainLogs($logs);
+
+        if ($logs) {
+            $app_url = wa()->getConfig()->getBackendUrl(true).$this->getApplication().'/';
+
+            $actions = array(
+                'item_install'   => array(
+                    'apps'    => _wd($this->application, 'App %s installed'),
+                    'plugins' => _wd($this->application, 'Plugin %s installed'),
+                    'widgets' => _wd($this->application, 'Widget %s installed'),
+                    'themes'  => _wd($this->application, 'Theme %s installed'),
+                ),
+                'item_update'    => array(
+                    'apps'    => _wd($this->application, 'App %s updated'),
+                    'plugins' => _wd($this->application, 'Plugin %s updated'),
+                    'widgets' => _wd($this->application, 'Widget %s updated'),
+                    'themes'  => _wd($this->application, 'Theme %s updated'),
+                ),
+                'item_enable'    => array(
+                    'apps'    => _wd($this->application, 'App %s enabled'),
+                    'plugins' => _wd($this->application, 'Plugin %s enabled'),
+                    'widgets' => _wd($this->application, 'Widget %s enabled'),
+                    'themes'  => _wd($this->application, 'Theme %s enabled'),
+                ),
+                'item_disable'   => array(
+                    'apps'    => _wd($this->application, 'App %s disabled'),
+                    'plugins' => _wd($this->application, 'Plugin %s disabled'),
+                    'widgets' => _wd($this->application, 'Widget %s disabled'),
+                    'themes'  => _wd($this->application, 'Theme %s disabled'),
+                ),
+                'item_uninstall' => array(
+                    'apps'    => _wd($this->application, 'App %s uninstalled'),
+                    'plugins' => _wd($this->application, 'Plugin %s uninstalled'),
+                    'widgets' => _wd($this->application, 'Widget %s uninstalled'),
+                    'themes'  => _wd($this->application, 'Theme %s uninstalled'),
+                ),
+            );
+
+            foreach ($logs as $l_id => &$l) {
+                $l['params_html'] = '';
+                if (isset($actions[$l['action']]) && $l['params']) {
+                    $p = json_decode($l['params'], true);
+
+                    if (isset($actions[$l['action']][$p['type']])) {
+                        switch($p['type']) {
+                            case 'apps':
+                                $url = sprintf('%sstore/app/%s/', $app_url, $p['id']);
+                                break;
+                            case 'plugins':
+                                $url = sprintf('%sstore/plugin/%s/', $app_url, str_replace('wa-plugins/', '', $p['id']));
+                                break;
+                            case 'widgets':
+                                $url = sprintf('%sstore/widget/%s/', $app_url, $p['id']);
+                                break;
+                            case 'themes':
+                                $url = sprintf('%sstore/theme/%s/', $app_url, preg_replace('@^.+?/@', '', $p['id']));
+                                break;
+                        }
+                        $name = sprintf('<a href="%s">%s</a>', $url, $p['id']);
+                        $l['params_html'] .= sprintf($actions[$l['action']][$p['type']], $name);
+                    }
+                }
+                unset($l);
+            }
+        }
+        return $logs;
+    }
+
+    /**
+     * Load data from remote Update server, required to initialize the Installer app.
+     * Received data is recommended to be cached. For example using waFunctionCache (see method getInitData).
+     *
+     * The method is public to have is_callable status.
+     *
+     * @param string $locale
+     * @return array
+     * @throws Exception
+     */
+    public function loadInitData($locale)
+    {
+        return installerHelper::getInstaller()->zonedNetQuery([$this, 'getInitDataUrl'], 7, $locale);
+    }
+
+    public function getInitDataUrl($locale)
+    {
+        $wa_installer = installerHelper::getInstaller();
+        $init_url_params = [
+            'locale' => $locale,
+            'hash'   => $wa_installer->getHash(),
+            'domain' => $this->getDomainFromRouting(),
+        ];
+        return $wa_installer->getInstallerInitUrl().'?'.http_build_query($init_url_params);
+    }
+
+    /**
+     * Get the data you need to run the application. Any request is cached for 5 minutes.
+     *
+     * For various reasons, the data may not be returned. This should not be forgotten.
+     *
+     * @param null|string $locale
+     * @return array
+     * @throws Exception
+     */
+    public function getInitData($locale = null)
+    {
+        if (!$locale) {
+            $locale = $this->getLocale();
+        }
+
+        $function_cache = new waFunctionCache(array($this, 'loadInitData'), array(
+            'call_limit' => 1, // Cache all requests
+            'namespace'  => 'installer/init_data',
+            'ttl'        => wa()->getConfig()->isDebug() ? self::INIT_DATA_CACHE_TTL_DEBUG : self::INIT_DATA_CACHE_TTL,
+            'hard_clean' => true,
+            'hash_salt'  => $locale,
+        ));
+
+        return $function_cache->call($locale);
+    }
+
+    public function clearInitDataCache()
+    {
+        waFunctionCache::clearNamespace('installer/init_data');
+    }
+
+    /**
+     * Load token from remote Update server, required to initialize the Installer app.
+     * Received data is recommended to be cached. For example using waFunctionCache (see method getToken).
+     *
+     * @return array
+     * @throws Exception
+     */
+    protected function loadTokenData()
+    {
+        $res = installerHelper::getInstaller()->zonedNetQuery([$this, 'getTokenDataUrl'], 7);
+
+        if (!empty($res['token'])) {
+            // Save the last received token in the app settings
+            $token_data = array('token' => $res['token']['key'], 'expire_datetime' => $res['token']['expire_datetime']);
+            $app_id = $this->getApplication();
+            self::getAppSettingsModel()->set($app_id, 'token_data', json_encode($token_data));
+        }
+
+        return $res;
+    }
+
+    public function getTokenDataUrl()
+    {
+        $wa_installer = installerHelper::getInstaller();
+        $init_url_params = [
+            'hash'   => $wa_installer->getHash(),
+            'domain' => $this->getDomainFromRouting(),
+        ];
+        return $wa_installer->getInstallerTokenUrl().'?'.http_build_query($init_url_params);
+    }
+
+    /**
+     * The method of caching and receiving the installation token
+     * for working with a remote Store.
+     *
+     * @param bool $actual Pass true to request a token from a remote Update server, not dependent on expire_datetime in the cache.
+     * @return null|array
+     * @throws Exception
+     */
+    public function getTokenData($actual = false)
+    {
+        $cache = new waVarExportCache('token', -1, $this->getApplication());
+
+        $cached_token = $cache->get();
+        if ($actual || empty($cached_token) || time() >= strtotime(ifempty($cached_token, 'expire_datetime', null))) {
+
+            $new_token = $this->loadTokenData();
+            if (empty($new_token['token'])) {
+                throw new Exception('Failed to get token from remote Update server');
+            }
+
+            $token_data = array(
+                'token'                  => $new_token['token']['key'],
+                'expire_datetime'        => date('Y-m-d H:i:s', time() + $new_token['token']['expire_timestamp']),
+                'inst_id'                => $new_token['token']['inst_id'],
+                'sign'                   => $new_token['token']['sign'],
+                'remote_expire_datetime' => $new_token['token']['expire_datetime'],
+            );
+            $cache->set($token_data);
+        }
+
+        return $cache->get();
+    }
+
+    protected function loadAnnouncements()
+    {
+        $cache = $this->getAnnouncementsCache();
+        if ($cache->isCached() && ($res = $cache->get())) {
+            return;
+        }
+
+        $res = installerHelper::getInstaller()->zonedNetQuery([$this, 'getAnnouncementsUrl'], 7);
+        if (!$res || !array_key_exists('data', $res)) {
+            return;
+        }
+        $cache->get();
+
+        $cache->set($res);
+
+        $wasm = self::getAppSettingsModel();
+
+        if (!$res['data']) {
+            $this->clearBanners();
+            return;
+        }
+        $ads = (array)$res['data'];
+
+        $old_announcements = $wasm->select('name, value')->where("app_id='installer' AND name LIKE 'a-%'")->fetchAll('name', true);
+        $old_keys = array_keys($old_announcements);
+        $new_keys = array_keys($ads);
+
+        $ins = array_diff($new_keys, $old_keys);
+        $del = array_diff($old_keys, $new_keys);
+
+        if ($ins) {
+            $params = array();
+            foreach ($ins as $key) {
+                $params[] = array(
+                    'app_id' => 'installer',
+                    'name'   => $key,
+                    'value'  => is_array($ads[$key]) ? json_encode($ads[$key]) : $ads[$key],
+                );
+            }
+            $wasm->multipleInsert($params);
+        }
+
+        if ($del) {
+            $wasm->exec("DELETE FROM {$wasm->getTableName()} WHERE app_id = 'installer' AND name IN('"
+                .join("','", $wasm->escape($del))."')");
+
+            $wcsm = new waContactSettingsModel();
+            $wcsm->exec("DELETE FROM {$wcsm->getTableName()} WHERE app_id = 'installer' AND name IN('"
+                .join("','", $wcsm->escape($del))."')");
+        }
+    }
+
+    public function getAnnouncementsUrl()
+    {
+        $wa_installer = installerHelper::getInstaller();
+        $init_url_params = [
+            'hash'   => $wa_installer->getHash(),
+            'domain' => $this->getDomainFromRouting(),
+            'locale' => wa()->getLocale(),
+        ];
+        $token_data = self::getAppSettingsModel()->get('installer', 'token_data', false);
+        if ($token_data) {
+            $token_data = waUtils::jsonDecode($token_data, true);
+            $init_url_params['token'] = ifset($token_data, 'token', null);
+        }
+        return $wa_installer->getInstallerAnnounceUrl().'?'.http_build_query($init_url_params);
+    }
+
+    public function clearAnnouncementsCache()
+    {
+        $this->clearBanners();
+        $this->getAnnouncementsCache()->delete();
+    }
+
+    protected function clearBanners()
+    {
+        $m = new waModel();
+        $m->exec("DELETE FROM wa_app_settings WHERE app_id = 'installer' AND name LIKE 'a-%'");
+        $m->exec("DELETE FROM wa_contact_settings WHERE app_id = 'installer' AND name LIKE 'a-%'");
+    }
+
+    protected function getAnnouncementsCache()
+    {
+        return new waVarExportCache('announcements', self::ANNOUNCE_CACHE_TTL, 'installer');
+    }
+
+    public function loadLicenses()
+    {
+        $cache = new waVarExportCache('licenses', self::LICENSE_CACHE_TTL, $this->getApplication());
+        $cache_data = $cache->get();
+        if (!$cache->isCached() || time() - ifempty($cache_data, 'timestamp', 0) >= self::LICENSE_CACHE_TTL) {
+            $res = installerHelper::getInstaller()->zonedNetQuery([$this, 'getLicensesUrl'], 7);
+
+            if (!empty($res['data'])) {
+                $data = [
+                    'data' => $res['data'],
+                    'timestamp' => time()
+                ];
+                $cache->set($data);
+                self::getAppSettingsModel()->set('installer', 'licenses_data', json_encode($data));
+            }
+
+            return $res;
+        }
+    }
+
+    public function getLicensesUrl()
+    {
+        $wa_installer = installerHelper::getInstaller();
+        $init_url_params = [
+            'hash'   => $wa_installer->getHash(),
+            'domain' => $this->getDomainFromRouting(),
+        ];
+        if ($previous_hash = $wa_installer->getGenericConfig('previous_hash')) {
+            $init_url_params['previous_hash'] = $previous_hash;
+        }
+        $token_data = self::getAppSettingsModel()->get('installer', 'token_data', false);
+        if ($token_data) {
+            $token_data = waUtils::jsonDecode($token_data, true);
+            $init_url_params['token'] = ifset($token_data, 'token', null);
+        }
+        return $wa_installer->getInstallerLicenseUrl().'?'.http_build_query($init_url_params);
+    }
+
+    /** @since 2.9.0 */
+    public function getDomainFromRouting()
+    {
+        $d = waRequest::server('HTTP_HOST');
+        if ($d) {
+            return $d;
+        }
+
+        $domains = wa()->getRouting()->getDomains();
+        foreach($domains as $d) {
+            $d = explode('/', $d, 2)[0];
+            if ($d !== 'localhost') {
+                return $d;
+            } else {
+                $res = 'localhost';
+            }
+        }
+        return ifset($res, null);
+    }
+
+    protected function getLocale() {
+        $locale = self::getAppSettingsModel()->get('webasyst', 'locale');
+        if (empty($locale)) {
+            $locale = wa()->getLocale();
+        }
+        if ($locale != 'ru_RU') {
+            $locale = 'en_US';
+        }
+        return $locale;
+    }
+
+    protected static function getAppSettingsModel()
+    {
+        if (!self::$model) {
+            self::$model = new waAppSettingsModel();
+        }
+        return self::$model;
+    }
+}

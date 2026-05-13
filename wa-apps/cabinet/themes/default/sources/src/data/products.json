@@ -1,0 +1,226 @@
+[
+  {
+    "id": 2043,
+    "sku": "KL370090",
+    "name": "Electric Planer Brandix KL370090 300 Watts",
+    "images": [
+      "images/products/product-1.jpg"
+    ],
+    "price": 749,
+    "stock": {
+      "status": "in-stock",
+      "label": "25 In Stock"
+    },
+    "category": "Planers"
+  },
+  {
+    "id": 1746,
+    "sku": "DPS300SY",
+    "name": "Undefined Tool IRadix DPS300SY 2700 Watts",
+    "images": [
+      "images/products/product-2.jpg"
+    ],
+    "price": 1019,
+    "stock": {
+      "status": "out-of-stock",
+      "label": "Out of Stock"
+    },
+    "category": "Power Tools"
+  },
+  {
+    "id": 8821,
+    "sku": "ALX7054B",
+    "name": "Drill Screwdriver Brandix ALX7054B 200 Watts",
+    "images": [
+      "images/products/product-3.jpg"
+    ],
+    "price": 850,
+    "stock": {
+      "status": "in-stock",
+      "label": "3 In Stock"
+    },
+    "category": "Screwdrivers"
+  },
+  {
+    "id": 5312,
+    "sku": "KSR4590P",
+    "name": "Drill Series 3 Brandix KSR4590P 1500 Watts",
+    "images": [
+      "images/products/product-4.jpg"
+    ],
+    "price": 949,
+    "stock": {
+      "status": "in-stock",
+      "label": "7 In Stock"
+    },
+    "category": "Drills"
+  },
+  {
+    "id": 3326,
+    "sku": "2017ERX9",
+    "name": "Brandix Router Power Tool 2017ERX9",
+    "images": [
+      "images/products/product-5.jpg"
+    ],
+    "price": 1700,
+    "stock": {
+      "status": "preorder",
+      "label": "Preorder"
+    },
+    "category": "Routers"
+  },
+  {
+    "id": 4402,
+    "sku": "DM2019KW",
+    "name": "Brandix Drilling Machine DM2019KW 4kW",
+    "images": [
+      "images/products/product-6.jpg"
+    ],
+    "price": 3199,
+    "stock": {
+      "status": "on-backorder",
+      "label": "On Backorder"
+    },
+    "category": "Drills"
+  },
+  {
+    "id": 9637,
+    "sku": "BDX100PL",
+    "name": "Brandix Pliers",
+    "images": [
+      "images/products/product-7.jpg"
+    ],
+    "price": 24,
+    "stock": {
+      "status": "in-stock",
+      "label": "8 In Stock"
+    },
+    "category": "Hand Tools"
+  },
+  {
+    "id": 2002,
+    "sku": "WATER40C",
+    "name": "Water Hose 40cm",
+    "images": [
+      "images/products/product-8.jpg"
+    ],
+    "price": 15,
+    "stock": {
+      "status": "preorder",
+      "label": "Preorder"
+    },
+    "category": "Plumbing"
+  },
+  {
+    "id": 4955,
+    "sku": "SP0072WR",
+    "name": "Spanner Wrench",
+    "images": [
+      "images/products/product-9.jpg"
+    ],
+    "price": 19,
+    "stock": {
+      "status": "in-stock",
+      "label": "15 In Stock"
+    },
+    "category": "Hand Tools"
+  },
+  {
+    "id": 6428,
+    "sku": "TAP883WT",
+    "name": "Water Tap",
+    "images": [
+      "images/products/product-10.jpg"
+    ],
+    "price": 15,
+    "stock": {
+      "status": "in-stock",
+      "label": "24 In Stock"
+    },
+    "category": "Plumbing"
+  },
+  {
+    "id": 1302,
+    "sku": "HT75002K",
+    "name": "Hand Tool Kit",
+    "images": [
+      "images/products/product-11.jpg"
+    ],
+    "price": 149,
+    "stock": {
+      "status": "in-stock",
+      "label": "9 In Stock"
+    },
+    "category": "Hand Tools"
+  },
+  {
+    "id": 1022,
+    "sku": "AC6660KW",
+    "name": "Ash's Chainsaw 3.5kW",
+    "images": [
+      "images/products/product-12.jpg"
+    ],
+    "price": 666.99,
+    "stock": {
+      "status": "out-of-stock",
+      "label": "Out of Stock"
+    },
+    "category": "Power Tools"
+  },
+  {
+    "id": 7203,
+    "sku": "KZX389PQ",
+    "name": "Brandix Angle Grinder KZX389PQ",
+    "images": [
+      "images/products/product-13.jpg"
+    ],
+    "price": 649,
+    "stock": {
+      "status": "in-stock",
+      "label": "2 In Stock"
+    },
+    "category": "Power Tools"
+  },
+  {
+    "id": 4402,
+    "sku": "DELTA500",
+    "name": "Brandix Air Compressor DELTA500",
+    "images": [
+      "images/products/product-14.jpg"
+    ],
+    "price": 1800,
+    "stock": {
+      "status": "in-stock",
+      "label": "7 In Stock"
+    },
+    "category": "Compressors"
+  },
+  {
+    "id": 5221,
+    "sku": "JIG7000B",
+    "name": "Brandix Electric Jigsaw JIG7000B",
+    "images": [
+      "images/products/product-15.jpg"
+    ],
+    "price": 290,
+    "stock": {
+      "status": "in-stock",
+      "label": "1 In Stock"
+    },
+    "category": "Power Tools"
+  },
+  {
+    "id": 7321,
+    "sku": "SCREW150",
+    "name": "Brandix Screwdriver SCREW150",
+    "images": [
+      "images/products/product-16.jpg"
+    ],
+    "price": 1499,
+    "stock": {
+      "status": "in-stock",
+      "label": "18 In Stock"
+    },
+    "category": "Power Tools"
+  }
+]

@@ -1,0 +1,7 @@
+[
+  { "name": "German", "icon": "vendor/flag-icons/24/DE.png" },
+  { "name": "French", "icon": "vendor/flag-icons/24/FR.png" },
+  { "name": "English", "icon": "vendor/flag-icons/24/GB.png" },
+  { "name": "Russian", "icon": "vendor/flag-icons/24/RU.png" },
+  { "name": "Italian", "icon": "vendor/flag-icons/24/IT.png" }
+]

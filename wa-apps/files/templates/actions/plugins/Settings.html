@@ -1,0 +1,13 @@
+{include file=$orig_path inline}
+<script>
+    $(function () {
+        $.plugins && ((function(plugins) {
+            $(plugins).one("success", function(e, data) {
+                var plugin_id = (plugins.path && plugins.path.plugin) ||
+                        (window.location.hash || "").replace("#/plugins/", "").replace("/", "");
+                $.files.config.getLocaleStorage().set("files/plugins/refer", plugin_id);
+                window.location.hash = "#/source/new/";
+            });
+        })($.plugins));
+    });
+</script>

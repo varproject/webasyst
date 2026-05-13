@@ -1,0 +1,79 @@
+/*
+// form-control
+*/
+@use 'sass:map';
+@use 'sass:math';
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+@mixin _local-button() {
+    padding: var(--sa-input-padding-y) var(--sa-input-padding-x);
+    margin: calc(var(--sa-input-padding-y) * -1) calc(var(--sa-input-padding-x) * -1);
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: var(--sa-input-padding-x);
+    }
+}
+
+.form-control {
+    --sa-input-padding-x: 0;
+    --sa-input-padding-y: 0;
+
+    padding: var(--sa-input-padding-y) var(--sa-input-padding-x);
+
+    //noinspection CssInvalidPseudoSelector
+    &::file-selector-button {
+        @include _local-button;
+    }
+
+    //noinspection CssInvalidPseudoSelector
+    &::-webkit-file-upload-button {
+        @include _local-button;
+    }
+}
+.form-control--search,
+.form-control--search-filled {
+    $local-icon-color: vs.$sa-input-search--icon-color;
+    $local-image: bt.escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='#{$local-icon-color}'><path d='M16.243 14.828C16.243 14.828 16.047 15.308 15.701 15.654C15.34 16.015 14.828 16.242 14.828 16.242L10.321 11.736C9.247 12.522 7.933 13 6.5 13C2.91 13 0 10.09 0 6.5C0 2.91 2.91 0 6.5 0C10.09 0 13 2.91 13 6.5C13 7.933 12.522 9.247 11.736 10.321L16.243 14.828ZM6.5 2C4.015 2 2 4.015 2 6.5C2 8.985 4.015 11 6.5 11C8.985 11 11 8.985 11 6.5C11 4.015 8.985 2 6.5 2Z'></path></svg>"));
+
+    background-image: $local-image;
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+
+    @include dir.scope {
+        #{dir.$padding-inline-start}: 2.25rem;
+        background-position: #{dir.$inline-start} ((2.25rem - 1rem) * .5) center;
+    }
+}
+.form-control--search {
+    border-color: bt.$input-border-color;
+}
+.form-control--search-filled {
+    border-color: vs.$sa-input-search--filled-border-color;
+    background-color: vs.$sa-input-search--filled-bg-color;
+}
+
+@each $size, $variables in vs.$sa-input--sizes {
+    $local-prefix: '';
+
+    @if($size != 'default') {
+        $local-prefix: '-' + $size;
+    }
+
+    $local-line-height: map.get($variables, line-height);
+
+    @if (math.is-unitless($local-line-height)) {
+        $local-line-height: map.get($variables, font-size) * map.get($variables, line-height);
+    }
+
+    .form-control#{$local-prefix} {
+        --sa-input-padding-x: #{map.get($variables, padding-x)};
+        --sa-input-padding-y: #{map.get($variables, padding-y)};
+
+        font-size: map.get($variables, font-size);
+        line-height: $local-line-height;
+        min-height: calc(#{$local-line-height} + #{vs.$sa-input--border-width * 2} + var(--sa-input-padding-y) * 2);
+    }
+}
+

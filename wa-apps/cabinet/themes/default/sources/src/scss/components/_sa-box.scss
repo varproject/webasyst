@@ -1,0 +1,26 @@
+/*
+// .sa-box
+*/
+@use '../custom-variables' as vs;
+
+.sa-box {
+    --sa-box--aspect-ratio: 1;
+}
+.sa-box__body {
+    position: relative;
+    padding-bottom: calc(100% / var(--sa-box--aspect-ratio));
+}
+.sa-box__container {
+    position: absolute;
+    left: 0; // SKIP-RTL
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+@each $selector, $ratio in vs.$sa-box--aspect-ratios {
+    .sa-box--aspect-ratio--#{$selector} {
+        --sa-box--aspect-ratio: #{$ratio};
+    }
+}

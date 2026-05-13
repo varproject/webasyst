@@ -1,0 +1,358 @@
+<style>.errormsg { color: red; }</style>
+
+<div class="flexbox">
+
+    {$sidebar_html|default:''}
+
+    <div class="t-project-page content not-blank" id="t-project-page">
+
+        <div class="article">
+            <div class="article-body">
+
+                <div class="hidden t-saved">
+                    <span class="alert success"><i class="fas fa-check-circle"></i> [`Settings successfully updated`]</span>
+                </div>
+
+                <div class="flexbox space-20 custom-mb-24">
+                    <h1 class="custom-mb-0 wide{if $project.archive_datetime} gray{/if}">
+                        {if !$project.id}[`New project`]{else}{$project.name|default:'[`(no name)`]'|escape}{/if}
+                    </h1>
+
+                    {if $project.id}
+                        <div class="flexbox space-12 custom-mt-4 small">
+                            <div>
+                                {if $project.archive_datetime}
+                                    <div class="custom-p-4 text-brown">
+                                        {if $project.archive_datetime}<i class="fas fa-archive" title="[`Archived`]"></i>{/if}
+                                        [`Archived`]: <strong>{$project.archive_datetime|wa_datetime}</strong>
+                                        <a href="javascript:void(0)" class="button nowrap outlined brown custom-ml-4" id="project-unarchive-link">[`Unarchive`]</a>
+                                    </div>
+                                {else}
+                                    <a href="javascript:void(0)" class="button nowrap outlined brown" id="project-archive-link"><i class="fas fa-archive"></i> [`Archive this project`]</a>
+                                {/if}
+                            </div>
+                            <div>
+                                <a href="javascript:void(0)" class="button nowrap nobutton red" id="project-delete-link"><i class="fas fa-trash-alt"></i> [`Delete`]</a>
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+
+                <form action="?module=projects&action=edit" method="post" id="project-editor-form">
+                    <div class="fields form">
+                        <input type="hidden" name="id" value="{ifempty($project.id, 'add')}">
+
+                        <div class="field-group blank custom-mb-24">
+                            <div class="field">
+                                <div class="name for-input">[`Project name`]</div>
+                                <div class="value">
+                                    <input type="text" name="project[name]" class="bold long large" value="{$project.name|escape}" placeholder="[`Project name`]">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="name custom-pt-12">
+                                    [`Color`]
+                                </div>
+                                <div class="value">
+                                    <div class="flexbox space-12 t-project-settings-colorbox">
+                                        {foreach $colors as $color}
+                                            <label class="{$color}">
+                                                <span class="wa-radio">
+                                                    <input type="radio" name="project[color]" value="{$color|escape}"{if ($project.color == $color)} checked{/if}>
+                                                    <span></span>
+                                                </span>
+                                            </label>
+                                        {/foreach}
+                                    </div>
+                                    <p class="hint">[`Highlight color for the main task list and the kanban board.`]</p>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="name for-input">
+                                    [`Logo`]
+                                </div>
+                                <div class="value">
+                                    {* Legacy: there used to be a selection of predetermined icons *}
+
+                                    <input type="file" name="icon_file" class="long">
+
+                                    {if $project.icon_url}
+                                        <p><img class="t-project-img-logo" src="{$project.icon_url|escape}" /></p>
+                                        <input type="hidden" name="project[icon]" value="tasks">
+                                        <input id="t-icon-url" type="hidden" value="{$project.icon_url|escape}" name="icon_url" />
+                                        <a class="t-project-delete-logo small">[`Delete logo`]</a>
+                                        <p class="t-project-delete-logo-msg small italic hidden">[`Save project to commit logo deletion.`]</p>
+                                    {/if}
+                                    <p class="hint">[`Image URL to be used as a tiny project icon all around.`]</p>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field-group blank">
+
+                            {foreach $workflows as $wf_id => $wf}
+                                <div class="field">
+                                    <div class="name custom-pt-12">{if $wf@iteration == 1}[`Workflow`]{/if}</div>
+                                    <div class="value t-project-workflow-box box">
+                                        <label class="flexbox">
+                                            <span class="wa-radio">
+                                                <input type="radio" name="workflow" value="{$wf_id}"{if $wf.selected} checked{/if}>
+                                                <span></span>
+                                            </span>
+                                            <div class="wide custom-ml-12">
+                                                {foreach $wf.statuses as $status}
+                                                    {tasksHelper::statusNameHTML($status.id)}
+                                                    {if $status.id >= 0}
+                                                        <i class="fas fa-arrow-right text-light-gray custom-mx-4"></i>
+                                                    {/if}
+                                                {/foreach}
+                                                {if $wf.project.id != $project.id}
+                                                    <p class="hint custom-ml-8">{sprintf('[`Similar to %s`]', $wf.project.name|escape)}</p>
+                                                {/if}
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            {/foreach}
+
+                            <div class="field">
+                                <div class="name"></div>
+                                <div class="value box custom-pt-4">
+                                    <label>
+                                        <span class="wa-radio">
+                                            <input type="radio" name="workflow" value="custom"{if !$workflows} checked{/if}>
+                                            <span></span>
+                                        </span>
+                                        [`Customize...`]
+                                    </label>
+
+                                    <div id="customize-project-workflow">
+                                        <ul class="menu">
+                                            {foreach $statuses as $s}
+                                            <li>
+                                                <label class="item">
+                                                    <span class="icon">
+                                                        <span class="wa-checkbox">
+                                                            <input type="checkbox" name="custom_workflow[{$s.id}]" value="1"{if !empty($project_statuses[$s.id])} checked{/if}{if $s.special} disabled{/if} class="custom-mr-8">
+                                                            <span>
+                                                                <span class="icon">
+                                                                    <i class="fas fa-check"></i>
+                                                                </span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                    <span>
+                                                        {tasksHelper::statusNameHTML($s.id)}
+                                                    </span>
+                                                </label>
+                                            </li>
+                                            {/foreach}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="custom-m-20">
+                            <button type="submit" class="button">
+                                <i class="fas fa-spinner wa-animation-spin speed-1000" style="display: none;"></i>
+                                <span>[`Save`]</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div id="archive-confirm-dialog" style="display: none;">
+        <h1>{$project.name|default:'[`(no name)`]'|escape}</h1>
+        <div class="confirm-dialog-content">
+            {sprintf_wp("All <strong>%s</strong> in this project will be archived and won't be listed anymore. Are you sure?",
+                _w('%d task', '%d tasks', $project_tasks_count)
+            )}
+        </div>
+        <div class="buttons-wrapper">
+            <input type="submit" class="button brown" value="[`Archive this project`]">
+            <a href="javascript:void(0)" class="cancel button light-gray">[`Cancel`]</a>
+        </div>
+    </div>
+
+    <script>( function($) { "use strict";
+
+        var $form = $('#project-editor-form');
+        var $submitButton = $form.find('button[type="submit"]');
+        var delete_confirm_msg = "[`DANGER: Deletion will be permanent with no ability to roll back. Are you sure?`]";
+
+        {if $project.id}
+            // Make sure the hash is correct after we saved a new project
+            $.tasks.forceHash('#/settings/project/{$project.id}/');
+        {/if}
+        {if !empty($saved)}
+            // Show 'saved' indicator briefly
+            var $hsaved = $('#content .t-saved').slideDown();
+            setTimeout(function() {
+                $hsaved.slideUp();
+            }, 3000);
+            $.tasks.reloadSidebar();
+
+        {elseif !empty($errors)}
+            // Show form validation errors
+            $.each({$errors|json_encode}, function(field_name, error) {
+                var $field = $form.find('[name="'+field_name+'"]:visible:first').addClass('error');
+                if (!$field.length) {
+                    $field = $form.find(':submit:first');
+                }
+                $field.after($('<em class="errormsg"></em>').text(error));
+            });
+        {/if}
+
+        // Submit form via ajax
+        $form.submit(function(e) {
+            e.preventDefault();
+            $form.showLoading();
+            $('#content .t-saved').slideUp();
+
+            $submitButton.attr('disabled', true);
+            $submitButton.find('.fa-spinner').fadeIn();
+
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'post',
+                data: new FormData($form[0]),
+                processData: false,
+                contentType: false,
+                success: function (html) {
+                    setTimeout(() => {
+                        $("#content").html(html);
+                    }, 1000);
+                }
+            });
+        });
+
+        // Deletion Logo
+        $('.t-project-delete-logo').on('click', function (event) {
+            event.preventDefault();
+            $('#t-icon-url').remove();
+            $('.t-project-img-logo').addClass('opacity-20');
+            $('.t-project-delete-logo-msg').removeClass('hidden');
+            $(this).hide();
+        });
+
+        // Deletion link
+        $('#project-delete-link').on('click', function(event) {
+            event.preventDefault();
+            if (confirm(delete_confirm_msg)) {
+                $.post('?module=projects&action=delete', { id: $form.find('[name="id"]').val() }, function() {
+                    $.wa.setHash('#/settings/');
+                }, 'json');
+            }
+        });
+
+        // Archive link
+        $('#project-archive-link').on('click', function(event) {
+            event.preventDefault();
+            var $wrapper = $('#archive-confirm-dialog');
+            var dialog = $.waDialog({
+                header: $("<h1 />").text($wrapper.find('h1').text()),
+                content: $wrapper.find('.confirm-dialog-content').html(),
+                footer: $wrapper.find('.buttons-wrapper').html(),
+                onOpen: function($dialog, dialog_instance) {
+
+                    // клик по submit
+                    $dialog.find(':submit').click(function(event) {
+                        event.preventDefault();
+                        $.post('?module=projects&action=archive', { id: $form.find('[name="id"]').val() }, function() {
+                            $.tasks.redispatch();
+                        }, 'json');
+                    });
+
+                    // клик по кнопке закрыть
+                    $dialog.on("click", ".cancel", function(event) {
+                        event.preventDefault();
+                        dialog_instance.close();
+                    });
+                }
+            });
+        });
+
+        // Unarchive link
+        $('#project-unarchive-link').on('click', function(event) {
+            event.preventDefault();
+            $.post('?module=projects&action=unarchive', { id: $form.find('[name="id"]').val() }, function() {
+                $.tasks.redispatch();
+            }, 'json');
+        });
+
+        // Show/hide custom workflow settings depending on radio selector
+        (function() {
+            var delay = 0;
+            $form.on('change', '[name="workflow"]', function() {
+                if ($form.find('[name="workflow"]:checked').val() == 'custom') {
+                    $('#customize-project-workflow').slideDown(delay);
+                } else {
+                    $('#customize-project-workflow').slideUp(delay);
+                }
+            }).find('[name="workflow"]:first').change();
+            delay = 300;
+        })();
+
+        // Change background when color selector changes
+        // LEGACY
+        // (function() {
+        //     var $wrapper = $("#t-project-page"),
+        //         $colorBox = $wrapper.find(".t-project-settings-colorbox"),
+        //         active_class = false;
+        //
+        //     // Event
+        //     $colorBox.on("click", "a", function() {
+        //         var color = $(this).find('input').attr('checked', true).val();
+        //         setColor( color );
+        //         return true;
+        //     });
+        //
+        //     // First Init
+        //     $colorBox.find("input:radio:checked").closest("a").click();
+        //
+        //     function setColor( color ) {
+        //         if (!active_class || color != active_class) {
+        //             if (active_class) {
+        //                 $wrapper.removeClass(active_class);
+        //             }
+        //             $wrapper.addClass(color);
+        //             active_class = color;
+        //         }
+        //     }
+        // })();
+
+        // Project icon selector
+        // LEGACY
+        // (function() {
+        //     var $wrapper = $('#project-icon-selector');
+        //     var $hidden_input = $wrapper.closest('.field').find('[name="project[icon]"]');
+        //     var $text_input = $wrapper.closest('.field').find('[name="icon_url"]');
+        //     $wrapper.on('click', 'a', function() {
+        //         var $i = $(this).find('i');
+        //         $i.closest('li').addClass('selected').siblings('.selected').removeClass('selected');
+        //         $hidden_input.val($i.attr('class').replace('icon16 ', ''));
+        //         $text_input.val('');
+        //     });
+        //
+        //     $text_input.on('keypress', function() {
+        //         $wrapper.children('.selected').removeClass('selected');
+        //         $hidden_input.val('');
+        //     });
+        // })();
+
+        $('#content input:visible:first').focus();
+
+        // sidebar
+        {if $project.id}
+            $('#t-settings-sidebar-wrapper').data('sidebar').selectItem('project', {$project.id});
+        {/if}
+
+    })(jQuery);</script>
+</div>

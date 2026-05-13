@@ -1,0 +1,36 @@
+<section class="cart-page">
+    <h1>Корзина</h1>
+
+    {if empty($cart.items)}
+        <p>Ваша корзина пуста.</p>
+    {else}
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Кол-во</th>
+                    <th>Цена</th>
+                    <th>Сумма</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $cart.items as $item}
+                    <tr>
+                        <td>{$item.name|escape}</td>
+                        <td>{$item.quantity}</td>
+                        <td>{$item.price|wa_format_amount_currency:$item.currency}</td>
+                        <td>{$item.total|wa_format_amount_currency:$item.currency}</td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+
+        <p class="cart-total">
+            Итого: {$cart.total|wa_format_amount_currency:$cart.currency}
+        </p>
+
+        <p>
+            <a href="{$wa_app_url}checkout/">Перейти к оформлению заказа</a>
+        </p>
+    {/if}
+</section>

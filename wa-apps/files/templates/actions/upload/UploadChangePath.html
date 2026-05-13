@@ -1,0 +1,69 @@
+{$dialog_id = uniqid('f-update-change-path-dialog-')}
+
+<div class="dialog f-update-change-path-dialog" id="{$dialog_id}">
+    <form>
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <h3 class="dialog-header">[`Change upload path`]</h3>
+            <div class="dialog-content">
+                <div class="f-choose-path-block">
+                    <i class="icon16 loading"></i>
+                </div>
+            </div>
+            <div class="dialog-footer dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    <input class="button" type="submit" value="[`Change`]" disabled="disabled">
+                    <i class="icon16 loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-update-change-path-dialog').not(dialog).remove();
+
+        var storage_id = 0;
+        var folder_id = 0;
+
+        dialog.filesDialog({
+            onFirstLoad: function() {
+                $.get('?module=browser&level={$level}')
+                    .success(function(html) {
+                        $('.f-choose-path-block', dialog).html(html);
+                        dialog.find('.f-browser').bind('select', function(event, type, id) {
+                            dialog.find('[type=submit]').attr('disabled', false);
+                            if (type === 'storage') {
+                                storage_id = id;
+                                folder_id = 0;
+                            } else {
+                                storage_id = 0;
+                                folder_id = id;
+                            }
+                        });
+                    })
+                    .error(function(r) {
+                        if (r.status == 403) {
+                            dialog.remove();
+                            $.files.alert403Error(r.responseText);
+                        }
+                        return false;
+                    });
+            },
+            onSubmit: function() {
+                dialog.trigger('change', [{
+                    storage_id: storage_id,
+                    folder_id: folder_id
+                }]);
+                dialog.trigger('close');
+                return false;
+            },
+            onCancel: function() {
+                dialog.trigger('close');
+            }
+        });
+    });
+</script>

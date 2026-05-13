@@ -1,0 +1,44 @@
+/*
+// .sa-color-checkbox
+*/
+@use '../custom-variables' as vs;
+
+.sa-color-checkbox {
+    --sa-color-checkbox--bg-color: #000;
+    --sa-color-checkbox--font-color: #fff;
+    --sa-color-checkbox--parent-bg-color: #{vs.$sa-card--bg-color};
+
+    width: 1em;
+    height: 1em;
+    position: relative;
+
+    input {
+        opacity: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    svg {
+        flex-shrink: 0;
+    }
+}
+.sa-color-checkbox__box {
+    width: inherit;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--sa-color-checkbox--parent-bg-color);
+    color: var(--sa-color-checkbox--parent-bg-color);
+    border: .125rem solid var(--sa-color-checkbox--bg-color);
+    border-radius: .125rem;
+    transition:
+        background-color .12s,
+        color .12s;
+}
+
+input:checked + .sa-color-checkbox__box {
+    background: var(--sa-color-checkbox--bg-color);
+    color: var(--sa-color-checkbox--font-color);
+}

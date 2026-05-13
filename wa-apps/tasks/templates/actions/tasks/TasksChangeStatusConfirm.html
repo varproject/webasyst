@@ -1,0 +1,38 @@
+{$class_id = 'tasks-done-confirm-dialog'}
+{$dialog_id = uniqid({$class_id})}
+
+<div class="dialog {$class_id}" id="{$dialog_id}">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <a href="#" class="dialog-close js-close-dialog"><i class="fas fa-times"></i></a>
+        <header class="dialog-header"><h1>[`Confirm the action`]</h1></header>
+        <div class="dialog-content">
+
+            <form method="post">
+
+                <p>
+                    [`The task is now assigned to:`]
+                </p>
+                <div class="profile flexbox space-8 middle">
+                    <img class="userpic userpic-32" src="{$contact.photo_url_32}" alt="" >
+                    <div class="details">
+                        <span class="semibold">{$contact.name|escape}</span>
+                    </div>
+                </div>
+
+                <div class="custom-mt-20">
+                    {$wa->csrf()}
+                    {if $status}
+                        {$status.view.button_html}
+                    {else}
+                        <input class="button red t-button t-confirm" type="submit" value="[`Confirm`]">
+                    {/if}
+                    <span class="t-cancel-link-wrapper">
+                        <i class="icon16 loading t-loading" style="display: none;"></i>
+                    </span>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

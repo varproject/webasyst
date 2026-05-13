@@ -1,0 +1,461 @@
+<form method="post" action="" id="js-statuses-form">
+    {$wa->csrf()}
+
+    <div class="article ">
+        <div class="article-body custom-p-0">
+
+            <div class="fields vertical custom-mt-16" id="js-statuses-groups">
+
+                {foreach $statuses as $group}
+
+                    <div class="flexbox fields-group space-20" data-group-id="{$group.id}" data-group-key="{$group.id}"
+                        style="align-items: center;">
+
+                        {* ЛЕВАЯ КОЛОНКА СО СТРЕЛКАМИ *}
+                        <div class="flexbox space-20" style="flex-direction: column; align-items: center; gap: 10px;">
+
+                            <button class="button small custom-m-0 white js-group-up" type="button">
+                                <i class="fas fa-long-arrow-alt-up"></i>
+                            </button>
+                            <button class="button small custom-m-0 white js-group-down" type="button">
+                                <i class="fas fa-long-arrow-alt-down"></i>
+                            </button>
+
+                        </div>
+
+                        {* ПРАВАЯ ЧАСТЬ — ГРУППА И ЕЁ СТАТУСЫ *}
+                        <div class="wide"
+                            style="border-left: dashed 1px #d2d5df; padding: 0 0 0 20px; box-sizing: content-box;">
+
+                            {* ШАПКА ГРУППЫ *}
+                            <div class="field" data-group-id="{$group.id}">
+                                <div class="value">
+                                    <div class="flexbox middle space-8" style="justify-content: space-between;">
+
+                                        <div class="flexbox middle space-8">
+                                            {* скрытые поля группы для формы *}
+                                            <input type="hidden" name="groups[{$group.id}][id]" value="{$group.id}">
+                                            <input type="hidden" name="groups[{$group.id}][sort]" class="js-group-sort"
+                                                value="{$group.sort|default:0}">
+
+                                            <input type="text" class="bold large long" name="groups[{$group.id}][name]"
+                                                value="{$group.name|escape}" placeholder="Название группы"
+                                                style="min-width: 220px; max-width: 320px;">
+                                        </div>
+
+                                        <div class="flexbox middle space-8">
+                                            <button class="button red small js-delete-group" type="button"
+                                                data-group-id="{$group.id}">
+                                                <i class="fas fa-trash-alt"></i>
+                                                <span>удалить (ID: {$group.id})</span>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {* СТРОКИ СТАТУСОВ *}
+                            {if !empty($group.statuses)}
+
+                                {foreach $group.statuses as $status}
+
+                                    <div class="field c-status-item" data-status-id="{$status.id}" data-status-key="{$status.id}"
+                                        data-group-key="{$group.id}">
+
+                                        <div class="value">
+                                            <div class="flexbox middle space-8">
+
+                                                <span class="js-handle-status"
+                                                    style="cursor: move; flex: 0 0 24px; text-align: center;">
+                                                    <i class="fas fa-bars"></i>
+                                                </span>
+
+                                                {* скрытые поля статуса *}
+                                                <input type="hidden" name="groups[{$group.id}][statuses][{$status.id}][id]"
+                                                    value="{$status.id}">
+                                                <input type="hidden" name="groups[{$group.id}][statuses][{$status.id}][sort]"
+                                                    class="js-status-sort" value="{$status.sort|default:0}">
+
+                                                <input type="text" class="short"
+                                                    name="groups[{$group.id}][statuses][{$status.id}][name]"
+                                                    value="{$status.name|escape}" placeholder="Название статуса"
+                                                    style="min-width: 220px;">
+
+                                                <span class="text-red js-delete-status" style="cursor: pointer;">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </span>
+
+                                                {* ЦВЕТ: hidden + красивый пикер + превью *}
+                                                <input type="hidden" class="js-status-color-input"
+                                                    name="groups[{$group.id}][statuses][{$status.id}][color]"
+                                                    value="{$status.color|default:'#8e8e8e'}">
+
+                                                <span class="js-status-color-picker js-status-color-preview"
+                                                    data-color="{$status.color|default:'#8e8e8e'}"
+                                                    style="display:inline-block; width:30px; height:18px; border-radius:3px; border:3px solid #fff; cursor:pointer; background: {$status.color|default:'#8e8e8e'};">
+                                                </span>
+
+                                                <span class="badge squared js-status-color-preview2"
+                                                    style="background-color: {$status.color|default:'#8e8e8e'}; color: #fff;">
+                                                    {$status.name|escape}
+                                                </span>
+
+                                                {if $status.is_system}
+                                                    <span class="badge gray small">системный</span>
+                                                {/if}
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                {/foreach}
+
+                                <div class="field">
+                                    <div class="value">
+                                        <button class="button small green js-add-status" type="button"
+                                            data-group-id="{$group.id}">
+                                            <i class="fas fa-plus"></i> <span>статус</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            {else}
+
+                                <div class="field">
+                                    <div class="value">
+                                        <em class="hint">
+                                            В этой группе пока нет статусов. Нажмите «Статус», чтобы добавить.
+                                        </em>
+                                    </div>
+                                </div>
+
+                            {/if}
+                        </div>
+                    </div>
+
+                {/foreach}
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="bottombar sticky custom-mt-20">
+        <div class="custom-px-20 custom-py-16 not-blank">
+            <div class="value submit js-footer-actions flexbox space-8 middle">
+                <button type="button" class="button js-add-group">
+                    <i class="fas fa-plus"></i> Добавить группу
+                </button>
+                <button type="submit" class="button green js-save-button">
+                    Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<link rel="stylesheet" href="{$wa_app_static_url}js/vendors/hex-color-picker/style.css">
+<script src="{$wa_app_static_url}js/vendors/hex-color-picker/CustomHexColorPicker.lib.js"></script>
+
+
+{literal}
+    <script>
+        (function($) {
+            'use strict';
+
+            var $form = $('#js-statuses-form');
+            var $groupsContainer = $('#js-statuses-groups');
+
+            var groupNewIndex = 0;
+            var statusNewIndex = 0;
+
+            // --- COLOR PICKER ---
+
+            var customHexColorPicker = new CustomHexColorPicker({
+                palette: true,
+                defaultColor: '#8e8e8e'
+            });
+
+            function initColorPickerForElement($picker) {
+                if (!$picker || !$picker.length) { return; }
+
+                var el = $picker[0];
+
+                // регистрируем элемент в библиотеке
+                customHexColorPicker.register(el);
+
+                // реагируем на выбор цвета
+                el.addEventListener('change', function() {
+                    var color = el.getAttribute('data-color') || '#8e8e8e';
+                    var $statusItem = $picker.closest('.c-status-item');
+                    var $hidden = $statusItem.find('.js-status-color-input').first();
+                    var $preview = $statusItem.find('.js-status-color-preview').first();
+                    var $preview2 = $statusItem.find('.js-status-color-preview2').first();
+
+                    if ($hidden.length) {
+                        $hidden.val(color);
+                    }
+                    if ($preview.length) {
+                        $preview.css('background-color', color);
+                        $preview2.css('background-color', color);
+                    }
+                });
+            }
+
+            function initAllColorPickers() {
+                $groupsContainer.find('.js-status-color-picker').each(function() {
+                    initColorPickerForElement($(this));
+                });
+            }
+
+            // --- УТИЛИТЫ ДЛЯ DRAG & SORT ---
+
+            function refreshDraggable() {
+                $groupsContainer.find('.c-status-item').attr('draggable', 'true');
+            }
+
+            function updateSortFields() {
+                $groupsContainer.find('.fields-group').each(function(groupIndex) {
+                    var $group = $(this);
+
+                    // sort группы
+                    $group.find('input.js-group-sort').val(groupIndex + 1);
+
+                    // sort статусов внутри группы
+                    var statusSort = 1;
+                    $group.find('.c-status-item').each(function() {
+                        $(this).find('input.js-status-sort').val(statusSort++);
+                    });
+                });
+            }
+
+            function buildGroupHtml(groupKey) {
+                var html = '';
+                html += '<div class="flexbox fields-group space-20" data-group-id="" data-group-key="' + groupKey +
+                    '" style="align-items: center;">';
+
+                html +=
+                    '  <div class="flexbox space-20" style="flex-direction: column; align-items: center; gap: 10px;">';
+                html += '    <button class="button small custom-m-0 white js-group-up" type="button">';
+                html += '      <i class="fas fa-long-arrow-alt-up"></i>';
+                html += '    </button>';
+                html += '    <button class="button small custom-m-0 white js-group-down" type="button">';
+                html += '      <i class="fas fa-long-arrow-alt-down"></i>';
+                html += '    </button>';
+                html += '  </div>';
+
+                html +=
+                    '  <div class="wide" style="border-left: dashed 1px #d2d5df; padding: 0 0 0 20px; box-sizing: content-box;">';
+
+                html += '    <div class="field" data-group-id="">';
+                html += '      <div class="value">';
+                html += '        <div class="flexbox middle space-8" style="justify-content: space-between;">';
+
+                html += '          <div class="flexbox middle space-8">';
+                html += '            <input type="hidden" name="groups[' + groupKey + '][id]" value="">';
+                html += '            <input type="hidden" name="groups[' + groupKey +
+                    '][sort]" class="js-group-sort" value="0">';
+                html += '            <input type="text" class="bold large long" name="groups[' + groupKey +
+                    '][name]" value="" placeholder="Название группы" style="min-width: 220px; max-width: 320px;">';
+                html += '          </div>';
+
+                html += '          <div class="flexbox middle space-8">';
+                html += '            <button class="button red small js-delete-group" type="button" data-group-id="">';
+                html += '              <i class="fas fa-trash-alt"></i>';
+                html += '              <span>удалить</span>';
+                html += '            </button>';
+                html += '          </div>';
+
+                html += '        </div>';
+                html += '      </div>';
+                html += '    </div>';
+
+                html += '    <div class="field">';
+                html += '      <div class="value">';
+                html += '        <button class="button small green js-add-status" type="button" data-group-id="' +
+                    groupKey + '">';
+                html += '          <i class="fas fa-plus"></i> <span>статус</span>';
+                html += '        </button>';
+                html += '      </div>';
+                html += '    </div>';
+
+                html += '  </div>';
+                html += '</div>';
+
+                return html;
+            }
+
+            function buildStatusHtml(groupKey, statusKey) {
+                var html = '';
+                html += '<div class="field c-status-item" data-status-id="" data-status-key="' + statusKey +
+                    '" data-group-key="' + groupKey + '">';
+                html += '  <div class="value">';
+                html += '    <div class="flexbox middle space-8">';
+                html +=
+                    '      <span class="js-handle-status" style="cursor: move; flex: 0 0 24px; text-align: center;">';
+                html += '        <i class="fas fa-bars"></i>';
+                html += '      </span>';
+                html += '      <input type="hidden" name="groups[' + groupKey + '][statuses][' + statusKey +
+                    '][id]" value="">';
+                html += '      <input type="hidden" name="groups[' + groupKey + '][statuses][' + statusKey +
+                    '][sort]" class="js-status-sort" value="0">';
+                html += '      <input type="text" class="short" name="groups[' + groupKey + '][statuses][' + statusKey +
+                    '][name]" value="" placeholder="Название статуса" style="min-width: 220px;">';
+                html += '      <span class="text-red js-delete-status" style="cursor: pointer;">';
+                html += '        <i class="fas fa-trash-alt"></i>';
+                html += '      </span>';
+                html += '      <input type="hidden" class="js-status-color-input" name="groups[' + groupKey +
+                    '][statuses][' + statusKey + '][color]" value="#8e8e8e">';
+                html +=
+                    '      <span class="js-status-color-picker" data-color="#8e8e8e" style="display:inline-block; width:26px; height:20px; border-radius:3px; border:1px solid #ccc; cursor:pointer; background:#8e8e8e;"></span>';
+                html +=
+                    '      <span class="badge squared js-status-color-preview" style="background-color: #8e8e8e; color: #fff;"></span>';
+                html += '    </div>';
+                html += '  </div>';
+                html += '</div>';
+                return html;
+            }
+
+            // --- ДОБАВИТЬ ГРУППУ ---
+
+            $(document).on('click', '.js-add-group', function(e) {
+                e.preventDefault();
+                groupNewIndex++;
+                var groupKey = 'new_' + groupNewIndex;
+                var html = buildGroupHtml(groupKey);
+                $groupsContainer.append(html);
+                refreshDraggable();
+            });
+
+            // --- ДОБАВИТЬ СТАТУС ---
+
+            $groupsContainer.on('click', '.js-add-status', function() {
+                var $btn = $(this);
+                var groupKey = $btn.data('group-id') || $btn.closest('.fields-group').data('group-key');
+
+                if (!groupKey) {
+                    return;
+                }
+
+                statusNewIndex++;
+                var statusKey = 'new_' + statusNewIndex;
+                var html = buildStatusHtml(groupKey, statusKey);
+
+                var $fieldAdd = $btn.closest('.field');
+                $fieldAdd.before(html);
+
+                refreshDraggable();
+
+                // инициализируем пикер цвета для нового статуса
+                var $newStatus = $fieldAdd.prev('.c-status-item');
+                if ($newStatus.length) {
+                    initColorPickerForElement($newStatus.find('.js-status-color-picker'));
+                }
+            });
+
+            // --- УДАЛИТЬ ГРУППУ ---
+
+            $groupsContainer.on('click', '.js-delete-group', function() {
+                var $group = $(this).closest('.fields-group');
+                $group.remove();
+            });
+
+            // --- УДАЛИТЬ СТАТУС ---
+
+            $groupsContainer.on('click', '.js-delete-status', function() {
+                $(this).closest('.c-status-item').remove();
+            });
+
+            // --- ПЕРЕМЕЩЕНИЕ ГРУПП (СТРЕЛКИ) ---
+
+            $groupsContainer.on('click', '.js-group-up', function() {
+                var $group = $(this).closest('.fields-group');
+                var $prev = $group.prev('.fields-group');
+                if ($prev.length) {
+                    $prev.before($group);
+                }
+            });
+
+            $groupsContainer.on('click', '.js-group-down', function() {
+                var $group = $(this).closest('.fields-group');
+                var $next = $group.next('.fields-group');
+                if ($next.length) {
+                    $next.after($group);
+                }
+            });
+
+            // --- DRAG&DROP ДЛЯ СТАТУСОВ ---
+
+            refreshDraggable();
+
+            $groupsContainer.on('dragstart', '.c-status-item', function(e) {
+                $(this).addClass('is-dragging');
+                if (e.originalEvent && e.originalEvent.dataTransfer) {
+                    e.originalEvent.dataTransfer.effectAllowed = 'move';
+                    e.originalEvent.dataTransfer.setData('text/plain', '');
+                }
+            });
+
+            $groupsContainer.on('dragend', '.c-status-item', function() {
+                $(this).removeClass('is-dragging');
+            });
+
+            // перетаскивание статусов только внутри своей .wide (контейнер группы)
+            $groupsContainer.on('dragover', '.fields-group .wide', function(e) {
+                e.preventDefault();
+
+                var $container = $(this);
+                var $dragging = $container.find('.c-status-item.is-dragging');
+                if (!$dragging.length) {
+                    return;
+                }
+
+                var clientY = (e.originalEvent ? e.originalEvent.clientY : e.clientY);
+                var $after = getDragAfterElement($container, clientY);
+
+                // поле с кнопкой "добавить статус" / текстом
+                var $nonStatusFields = $container.find('.field').not('.c-status-item');
+                var $bottomField = $nonStatusFields.last();
+
+                if ($after && $after.length) {
+                    $after.before($dragging);
+                } else if ($bottomField.length) {
+                    $bottomField.before($dragging);
+                } else {
+                    $container.append($dragging);
+                }
+            });
+
+            function getDragAfterElement($container, y) {
+                var closestOffset = Number.NEGATIVE_INFINITY;
+                var $closest = null;
+
+                $container.find('.c-status-item').not('.is-dragging').each(function() {
+                    var rect = this.getBoundingClientRect();
+                    var offset = y - (rect.top + rect.height / 2);
+
+                    if (offset < 0 && offset > closestOffset) {
+                        closestOffset = offset;
+                        $closest = $(this);
+                    }
+                });
+
+                return $closest;
+            }
+
+            // --- ПЕРЕД ОТПРАВКОЙ ФОРМЫ ---
+
+            $form.on('submit', function() {
+                updateSortFields();
+                // дальше обычный submit на текущий URL
+            });
+
+            // инициализация пикера для уже существующих статусов
+            initAllColorPickers();
+
+        })(jQuery);
+    </script>
+{/literal}

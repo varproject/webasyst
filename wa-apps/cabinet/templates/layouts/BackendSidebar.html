@@ -1,0 +1,120 @@
+{* sidebar-body *}
+<div class="sidebar-body c-sidebar-block" id="c-sidebar-block" style="--max-height-bricks: 144px;">
+    <div class="c-sidebar-sections box custom-pt-0 custom-mt-16 hide-scrollbar">
+        <ul class="menu large rounded custom-mt-8">
+
+            {foreach $cabinet_menu as $item}
+
+                {if isset($item.heading)}
+                    <h5 class="heading custom-mb-8">{$item.heading|escape}</h5>
+                {/if}
+
+                <li class="rounded {if $item.active}selected{/if}">
+                    <a href="{$item.full_url}" class="item custom-py-12-" style="-font-size: 0.9375rem;">
+
+                        {if $item.icon}
+                            <span class="s-icon-main icon">
+                                <i class="{$item.icon}"></i>
+                            </span>
+                        {/if}
+                        
+                        <span class="s-name">{$item.name|escape}</span>
+
+
+                        {* {if $menu.count}
+                            <span class="count">
+                                <span class="badge">5</span>
+                            </span>
+                        {/if} *}
+                    </a>
+                </li>
+
+            {/foreach}
+        </ul>
+    </div>
+</div>
+
+
+
+{* sidebar-footer *}
+<div class="sidebar-footer shadowed">
+    <div class="box custom-py-0">
+        <ul class="menu rounded">
+
+            <li class="rounded">
+                <a class="item" href="{$wa_app_url}plugins/">
+                    <span class="s-icon-main icon">
+                        <i class="fas fa-plug"></i>
+                    </span>
+                    <span class="s-name">Плагины</span>
+                </a>
+            </li>
+
+            <li class="rounded">
+                <a class="item" href="{$wa_app_url}#/design/themes/">
+                    <span class="s-icon-main icon">
+                        <i class="fas fa-palette"></i>
+                    </span>
+                    <span class="s-name">Шаблоны</span>
+                </a>
+            </li>
+
+            <li class="rounded {if strpos($wa->currentUrl(),'settings')} selected{/if}">
+                <a class="item" href="{$wa_app_url}settings/">
+                    <span class="s-icon-main icon">
+                        <i class="fas fa-cog"></i>
+                    </span>
+                    <span class="s-name">Настройки</span>
+                </a>
+            </li>
+
+            <li class="rounded {if strpos($wa->currentUrl(),'logs')} selected{/if}">
+                <a class="item" href="{$wa_app_url}logs/">
+                    <span class="s-icon-main icon">
+                        <i class="fas fa-history"></i>
+                    </span>
+                    <span class="s-name">Журналы</span>
+                </a>
+            </li>
+
+            <li class="rounded {if strpos($wa->currentUrl(),'devtools')} selected{/if}">
+                <a class="item" href="{$wa_app_url}devtools/">
+                    <span class="s-icon-main icon">
+                        <i class="fas fa-code"></i>
+                    </span>
+                    <span class="s-name">Разработчикам</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+
+
+<style>
+    #cabinet .bricks>a.accented,
+    #cabinet .bricks>.brick.accented {
+        background: #ffaf34;
+        color: var(--white);
+        box-shadow: 0 0.25em 1em -0.25em rgba(0, 0, 0, 0.25);
+    }
+
+    #cabinet .logo {
+        width: 90%;
+        height: 120px;
+        overflow: hidden;
+        padding: 10px;
+    }
+
+    #cabinet .logo img {
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        object-fit: cover;
+        /* масштабируем и обрезаем */
+        object-position: center;
+        /* центрируем */
+        display: block;
+    }
+</style>

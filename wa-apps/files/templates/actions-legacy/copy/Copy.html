@@ -1,0 +1,239 @@
+{$dialog_id = uniqid('f-copy-dialog-')}
+
+{function form_begin}
+    {if $allowed_files}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $allowed_files}</form>{/if}
+{/function}
+
+{function size}
+    {if $allowed_files}width650px height350px{else}width400px height200px{/if}
+{/function}
+
+<div class="dialog {size} f-copy-dialog" id="{$dialog_id}" style="display:none;">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+                    <h1>[`Copy files`]</h1>
+
+                    <div class="f-step-1">
+                        {if $allowed_files}
+                            {if $unallowed_files}
+                                <p class="errormsg">
+                                    [`No permissions to copy these files`]:
+                                    {foreach $unallowed_files as $file}
+                                        {$file.name|escape}&nbsp;
+                                    {/foreach}
+                                </p>
+                            {/if}
+                            <div class="f-choose-path-block">
+                                <i class="icon16 loading"></i>
+                            </div>
+                        {else}
+                            <p class="errormsg">
+                                [`No permissions to copy these files`]
+                            </p>
+                        {/if}
+                    </div>
+
+                    <div class="f-step-2" style="display: none;">
+                        <div class="f-progress-block" style="display: none; margin-top: 40px;">
+                            <div class="progressbar blue float-left" style="min-width: 300px; width: 70%;">
+                                <div class="progressbar-outer">
+                                    <div class="progressbar-inner" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <img style="float:left; margin-top:8px;" src="{$wa_url}wa-content/img/loading32.gif" />
+                            <p style="display: block; float: left;">
+                                [`Copy process may take several minutes.`]
+                            </p>
+                            <div class="f-ready-report" style="display: none;"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    <div class="f-step-1">
+                        {if $allowed_files}
+                            <input class="button green" type="submit" value="[`Copy`]" disabled="disabled">
+                            <i class="icon16 loading f-submit-loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                        {else}
+                            <input class="button gray cancel" type="button" value="[`Cancel`]">
+                        {/if}
+                    </div>
+                    <div class="f-step-2" style="display: none">
+                        <input class="button green f-continue" type="button" value="[`Continue in background`]"> [`or`]
+                        <a class="cancel" href="javascript:void(0)">[`cancel`]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {form_end}
+</div>
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-move-dialog').not(dialog).remove();
+        {if $allowed_files}
+
+            var storage_id = 0;
+            var folder_id = 0;
+
+            var runDialogCopyFiles = function (process_id) {
+                dialog.find('.f-step-1').hide();
+
+                var block = dialog.find('.f-step-2').show();
+                block.find('.f-progress-block').show();
+
+                var url = '?module=copy&action=process';
+
+                var pull_process = new LongActionProcess({
+                    url: url,
+                    post_data: { copytask_process_id: process_id },
+                    onProgress: function (r) {
+                        if (r.progress) {
+                            $('.progressbar .progressbar-inner', block).css('width', r.progress_str);
+                        }
+                    },
+                    onReady: function(r) {
+                        $('.progressbar .progressbar-inner', block).css('width', '100%');
+                        if (r.report) {
+                            $('.f-ready-report', container).html(r.report);
+                        }
+                    },
+                    onCleanup: function(r) {
+                        $.files.refreshSidebar();
+                        $.files.controller.reloadPage();
+                        dialog.trigger('close');
+                     },
+                    onError: function(r) {
+                        dialog.trigger('close');
+                        $.files.alertError((r && r.error) || 'Server error');
+                     }
+                });
+
+                pull_process.start();
+
+                var buttons_block = dialog.find('.dialog-buttons .f-step-2');
+                buttons_block.find('.cancel').click(function () {
+
+                    dialog.trigger('close');
+                    pull_process.stop();
+
+                    $.files.confirm('[`Cancel the copy process? All files that is not finished will be deleted`]',
+                        function () {
+                            pull_process.stop();
+                            dialog.trigger('close');
+                            $.files.jsonPost({
+                                url: url,
+                                data: {
+                                    copytask_process_id: process_id,
+                                    cancel_copytask: 1
+                                },
+                                onAlways: function () {
+                                    $.files.refreshSidebar();
+                                    $.files.controller.reloadPage();
+                                }
+                            });
+                        },
+                        function () {
+                            dialog.trigger('open');
+                            pull_process.start();
+                        }
+                    );
+                    return false;
+                });
+
+                buttons_block.find('.f-continue').click(function() {
+                    pull_process.stop();
+                    dialog.trigger('close');
+                    pull_process = null;
+                });
+            };
+
+            dialog.filesDialog({
+                disableButtonsOnSubmit: true,
+                onFirstLoad: function() {
+                    $('.f-choose-path-block', dialog).load('?module=browser&level={$level}', function() {
+                        dialog.find('.f-browser').bind('select', function(event, type, id) {
+                            dialog.find('[type=submit]').attr('disabled', false);
+                            if (type === 'storage') {
+                                storage_id = id;
+                                folder_id = 0;
+                            } else {
+                                storage_id = 0;
+                                folder_id = id;
+                            }
+                        });
+                    });
+                },
+                onSubmit: function() {
+                    var file_ids = {json_encode(array_keys($allowed_files))};
+                    dialog.find('.f-submit-loading').show();
+                    $.files.jsonPost({
+                        url: '?module=copy&action=files',
+                        data: { folder_id: folder_id, storage_id: storage_id, file_id: file_ids },
+                        onSuccess: function(r) {
+
+                            if (r.status !== 'ok' && typeof r.errors === 'string') {
+                                dialog.trigger('close');
+                                $.files.alertError(r.errors);
+                                return;
+                            }
+
+                            if (r.status === 'ok') {
+
+                                var reload_page = true;
+
+                                $.files.runCopyFiles();
+                                $.files.checkBackendChanges();
+                                // run dialog if process_id is present and not empty
+                                if (r.data.process_id > 0) {
+                                    runDialogCopyFiles(r.data.process_id);
+                                    reload_page = false;
+                                }
+
+                                if (r.data.count > 0) {
+                                    $.files.refreshSidebar();
+                                }
+
+                                if (reload_page) {
+                                    dialog.trigger('close');
+                                    $.files.controller.reloadPage();
+                                }
+
+                                // Uncheck All
+                                var $catalog = $("#f-catalog-wrapper");
+                                if ($catalog.length) {
+                                    $catalog.trigger("unSelectAll");
+                                }
+                            } else {
+                                $.files.alertError(r.errors[0][0]);
+                            }
+                        },
+                        onFailure: function(r) {
+                            dialog.trigger('close');
+                            $.files.alertError('[`Server error`]', r);
+                        },
+                        onAlways: function() {
+                            dialog.find('.f-submit-loading').hide();
+                        }
+                    });
+
+                    return false;
+                }
+            });
+        {else}
+            dialog.filesDialog({ });
+        {/if}
+    });
+</script>

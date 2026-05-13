@@ -1,0 +1,17 @@
+{if !empty($assets)}{$assets}{/if}
+<div id="lead-form-tochka" class="s-business-lead-form">
+    <div class="s-business-lead-form__header">
+        <h2>Точка</h2>
+        <p class="small">
+            Интернет-эквайринг для ИП и ООО. Быстрое подключение и никакой бумажной волокиты.
+        </p>
+    </div>
+
+    <div class="s-business-lead-form__content custom-mt-16">
+        <ul class="list s-business-lead-form__links">
+            {foreach $links as $product => $url}
+                <li><a href="{$url}" target="_blank" class="semibold">{$product} <i class="fas fa-external-link-alt fa-xs opacity-40 custom-ml-4"></i></a></li>
+            {/foreach}
+        </ul>
+    </div>
+</div>

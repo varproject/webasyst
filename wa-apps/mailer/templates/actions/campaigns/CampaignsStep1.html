@@ -1,0 +1,289 @@
+{$form_id = uniqid('form-campaign')}
+
+<div class="article">
+    <form id="{$form_id}" action="?module=campaigns&action=save" method="post">
+        <div class="article-body js-envelope">
+            <div class="js-core-header"></div>
+            <div class="flexbox middle custom-mb-32 step-tab">
+                {if !empty($campaign.id)}
+                    <ul class="tabs wide overflow-arrows">
+                        <li class="m-first-step selected">
+                            <a href="#/campaigns/letter/{$campaign.id}/">
+                                <span class="icon rounded bg-blue custom-p-8 custom-mr-4">
+                                    <i class="fas fa-pen-alt text-white" style="font-size: 87.5%;"></i>
+                                </span>
+                                <span class="text">[`Compose message`]</span>
+                            </a>
+                        </li>
+                        <li class="m-second-step">
+                            <i class="fas fa-arrow-right"></i>
+                            <a href="#/campaigns/recipients/{$campaign.id}/" class="text-gray">
+                                <span class="icon rounded bg-light-gray custom-p-8 custom-mr-4">
+                                    <i class="fas fa-users text-white" style="font-size: 87.5%;"></i>
+                                </span>
+                                <span class="text">[`Choose recipients`]</span>
+                            </a>
+                            <i class="fas fa-arrow-right"></i>
+                        </li>
+                        <li class="m-third-step">
+                            <a id="right-sidebar-send-link" href="#/campaigns/send/{$campaign.id}/" class="text-gray">
+                                <span class="icon rounded bg-light-gray custom-p-8 custom-mr-4">
+                                    <i class="fas fa-paper-plane text-white" style="font-size: 87.5%;"></i>
+                                </span>
+                                <span class="text">[`Check &amp; send`]</span>
+                            </a>
+                        </li>
+                    </ul>
+                {else}
+                    <ul class="tabs wide overflow-arrows">
+                        <li class="m-first-step selected">
+                            <a href="javascript:void(0)">
+                                <span class="icon rounded bg-blue custom-p-8 custom-mr-4">
+                                    <i class="fas fa-pen-alt text-white" style="font-size: 87.5%;"></i>
+                                </span>
+                                <span class="text">[`Compose message`]</span>
+                            </a>
+                        </li>
+                        <li class="m-second-step m-disabled">
+                            <a href="javascript:void(0)" class="text-gray">
+                                <span class="icon rounded bg-light-gray custom-p-8 custom-mr-4">
+                                    <i class="fas fa-users text-white" style="font-size: 87.5%;"></i>
+                                </span>
+                                <span class="text">[`Choose recipients`]</span>
+                            </a>
+                        </li>
+                        <li class="m-third-step m-disabled">
+                            <a href="javascript:void(0)" class="text-gray">
+                                <span class="icon rounded bg-light-gray custom-p-8 custom-mr-4">
+                                    <i class="fas fa-paper-plane text-white" style="font-size: 87.5%;"></i>
+                                </span>
+                                <span class="text">[`Check &amp; send`]</span>
+                            </a>
+                        </li>
+                    </ul>
+                {/if}
+                {include file="templates/actions/campaigns/includes/CampaignsActions.html" is_round_button=true has_button=true}
+            </div>
+
+            <div class="campaign-header">
+                <div class="fields m-subject">
+                    <input id="message-subject"
+                           class="full-width large custom-mr-0 custom-mb-8 bold"
+                           type="text"
+                           name="data[subject]"
+                           value="{$campaign.subject|escape}"
+                           placeholder="[`Subject`]">
+                    {if empty($campaign.id)}
+                        <p class="custom-mt-0">
+                            <span class="small gray">[`Enter a message subject and a text. Then proceed to selecting the recipients and to the message sending.`]
+                        </p>
+                    {/if}
+                </div>
+
+                <input type="hidden" name="id" value="{$campaign.id}">
+            </div>
+
+            <div class="js-editor-revolv">
+                {include file="../../../js/vendor/revolvapp/templates/index.html" assign="revolv_default"}
+                {if empty($campaign.id)}
+                    {* new draft *}
+                    {$revolv_default}
+                {else}
+                    {* existing campaign *}
+                    {if !empty($campaign.body)}
+                        {$campaign.rebody}
+                    {else}
+                        {$revolv_default}
+                    {/if}
+                {/if}
+            </div>
+            <textarea name="data[rebody]" class="hidden js-revolv-body">{if !empty($campaign.id)}{$campaign.rebody|escape}{else}{$revolv_default|escape}{/if}</textarea>
+            <div class="js-editor-redactor">
+                <textarea name="data[body]" class="hidden js-redactor-body">{if !empty($campaign.id)}{$campaign.body|escape}{/if}</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+<section class="bottombar sticky box js-actions-wrapper">
+    <div class="article width-100">
+        <div class="article-body custom-py-8 flexbox middle space-16">
+            <button form="{$form_id}" type="submit" class="button js-campaign-save custom-mr-8">[`Save`]</button>
+            <em class="hint custom-mr-20">[`Ctrl+S`]</em>
+            {if !empty($campaign.id)}
+                <a href="#/campaigns/recipients/{$campaign.id}/" class="button light-gray custom-ml-auto js-button-next">
+                    [`Next`]
+                    <i class="fas fa-arrow-right fa-xs"></i>
+                </a>
+            {/if}
+            <a href="javascript:void(0)" class="small js-about-revolvapp text-light-gray align-right wide"><i class="fas fa-info-circle"></i> <span class="desktop-and-tablet-only">[`About Revolvapp`]</span></a>
+            <a href="https://support.webasyst.ru/mailer/" target="_blank" class="small">[`Tips & lessons`]<i class="fas fa-external-link-alt custom-ml-4 small"></i></a>
+        </div>
+    </div>
+</section>
+
+<script>
+    var wa_url = window.wa_url = {$wa_url|json_encode};
+    var wa_app = window.wa_app = {$wa->app()|json_encode};
+
+    (function ($) {
+        $.wa.locale = $.extend($.wa.locale, {
+            'to_advanced_title': '[`Switch to HTML mode`]',
+            'to_advanced': '[`<strong>HTML editing mode is for experienced users only.</strong> If you switch to the HTML mode now, you will have to keep it for this particular email campaign until it is sent. Changes made directly to the HTML content may not be supported by the WYSIWYG editor!`]',
+            'to_base_title': '[`All custom HTML changes will be lost`]',
+            'to_base': '[`<strong>Stop here!</strong> If you switch to the visual editor now then all changes made to the HTML code in the advanced mode will be lost because they are not supported in the visual editing mode. <strong>Drop all HTML code changes?</strong>`]',
+            'cancel': '[`Cancel`]',
+            'change': '[`Switch`]'
+        });
+
+        // DOM
+        const $form = $('#{$form_id}');
+        const $actions_wrapper = $('.js-actions-wrapper');
+        const $subject = $form.find('#message-subject');
+        const $textarea = $form.find('.js-redactor-body');
+        const $submit_btn = $actions_wrapper.find('.js-campaign-save');
+        const $next_btn = $actions_wrapper.find('.js-button-next');
+
+        // VARS
+        var original_subject = $subject.val();
+
+        $(window).on('wa_mailer_editor_changes', function(event) {
+            if ($submit_btn) {
+                $submit_btn.addClass('yellow');
+            }
+        });
+
+        $(window).on('wa_loaded', function() {
+            $.wa.mailer.setEditor($form, {
+                revolvPath: '{$wa_app_static_url}js/vendor/revolvapp/',
+                uploadPath: '?module=files&action=uploadimage&r=x&absolute=1',
+                csrf: '{waRequest::cookie("_csrf", "")}',
+                oldStyle: {if !empty($campaign.id) && empty($campaign.rebody) && !empty($campaign.body)}true{else}false{/if},
+                defaultTemplate: `{include file="../../../js/vendor/revolvapp/templates/index.html"}`,
+                aboutRevolvapp: $('.js-about-revolvapp')
+            });
+        });
+
+        // Save button: save campaign without leaving the page
+        $form.on('submit', function (e) {
+            e && e.preventDefault();
+            if ($submit_btn.attr('disabled')) {
+                return;
+            }
+
+            if ($.trim($textarea.val()) && $subject.val()) {
+                $('#right-sidebar-letter-hint').hide();
+            } else {
+                $('#right-sidebar-letter-hint').show();
+            }
+
+            return $.wa.mailer.saveCampaign($form, $submit_btn, function (r) {
+                $submit_btn.removeClass('yellow');
+                {if empty($campaign.id)}
+                    var message_id = r.data;
+                    $.wa.mailer.collapseSidebarSection($('#m-sb-drafts-header'), 'uncollapse');
+                    $.wa.mailer.reloadSidebar();
+                    window.location.hash = '#/campaigns/letter/' + message_id + '/';
+                {else}
+                    var new_subject = $subject.val();
+                    if (original_subject != new_subject) {
+                        $.wa.mailer.reloadSidebar();
+                        original_subject = new_subject;
+                    }
+                {/if}
+            });
+        });
+
+        // Next button: save campaign in background and move to next step without asking for confirmation
+        $next_btn.on('click', function (e) {
+            e && e.preventDefault();
+            if ($submit_btn.is('.yellow:not([disabled])')) {
+                $.wa.mailer.saveCampaign($form, $submit_btn, function (r) {
+                    window.location.hash = $next_btn.attr('href');
+                });
+                $submit_btn.removeClass('yellow');
+            } else {
+                window.location.hash = $next_btn.attr('href');
+            }
+        });
+
+        var h;
+        $(document).on('keydown', h = function (event) {
+            // Change button color to yellow when something's typed into the editor
+            if (
+                (event.which < 33 || event.which > 40) &&
+                (event.which > 27 || event.which == 8 || event.which == 13) &&
+                (event.which < 112 || event.which > 124) &&
+                (!event.ctrlKey || event.which != 67)
+            ) {
+                $submit_btn.addClass('yellow');
+            }
+
+            if (!$.wa.mailer.isCtrlS(event)) {
+                return;
+            }
+            $form.submit();
+            event.preventDefault();
+            return false;
+        });
+
+        // Confirmation before user leaves page
+        var linksNotModeToggle = $('a:not(.wa-editor-core-wrapper a):not(.js-about-revolvapp):not(#message-delete)');
+        var askConfirmation = function (event, context) {
+            if ($submit_btn.hasClass('yellow') && $form.closest('html').length) {
+                event.preventDefault();
+                $.waDialog.confirm({
+                    text: "[`Unsaved changes will be lost if you leave this page now. Are you sure?`]",
+                    success_button_title: '[`OK`]',
+                    cancel_button_title: '[`Cancel`]',
+                    onSuccess(){
+                        $(context).unbind('click')
+                        event.currentTarget.click();
+                    }
+                })
+            }
+        };
+        linksNotModeToggle.on('click', function (e) {
+            askConfirmation(e, this);
+        });
+
+        {if empty($campaign.subject)}
+        $subject.focus();
+        {/if}
+
+        {if !empty($campaign.just_created)}
+        $.wa.mailer.collapseSidebarSection($('#m-sb-drafts-header'), 'uncollapse');
+        $.wa.mailer.reloadSidebar();
+        {/if}
+
+        {if !empty($campaign.id)}
+        if ($.wa.mailer.getHash() != '#/campaigns/letter/{$campaign.id}/') {
+            $.wa.mailer.stopDispatch(1);
+            window.location.hash = '#/campaigns/letter/{$campaign.id}/';
+        }
+        {/if}
+
+        // Upload files and images
+        $('#{$form_id}').on('click', '.js-ace-upload', function () {
+            $.get('?module=backend&action=files', {
+                template_id: {$t.id|default:0},
+                campaign_id: {$campaign.id|default:0}
+            }, html => $.waDialog({ html }))
+        })
+
+        // About Revolvapp
+        $('.js-about-revolvapp').on('click', () => {
+                $.waDialog.alert({
+                    text: {'[`<p class="h2">About the Revolvapp editor</p><p>Mailer app uses WYSIWYG editor <a href="https://imperavi.com/revolvapp/" rel="noopener" target="_blank">Revolvapp</a> to compose email messages. This editor has been developed by the <em>Imperavi</em> company.</p><p class="h3">How to work with the editor</p><p>Select a content area that you would like to edit. Once you do so, relevant buttons will be displayed for you to change the selected area.</p><p>Try out all available editing options until you get used to the way the editor responds to your actions. Experiment with every button to learn how it changes the content. After that you will be ready to launch your first email campaign!</p>`]'|json_encode},
+                    button_title: "[`Close`]"
+                })
+            })
+
+        $(".tabs").waTabs({
+            arrows_side: 'both'
+        });
+
+        $.wa.mailer.setTitle();
+
+    })(jQuery);
+</script>

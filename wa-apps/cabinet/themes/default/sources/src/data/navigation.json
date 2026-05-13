@@ -1,0 +1,190 @@
+[
+  {
+    "title": "Application",
+    "menu": [
+      {
+        "icon": "stroyka/dashboard-16",
+        "title": "Dashboard",
+        "link": "index.html"
+      },
+      {
+        "icon": "stroyka/database-16",
+        "title": "Catalog",
+        "menu": [
+          {"title": "Products List", "link": "app-products-list.html"},
+          {"title": "Product", "link": "app-product.html"},
+          {"title": "Categories List", "link": "app-categories-list.html"},
+          {"title": "Category", "link": "app-category.html"}
+        ]
+      },
+      {
+        "icon": "stroyka/person-16",
+        "title": "Customers",
+        "menu": [
+          {"title": "Customers List", "link": "app-customers-list.html"},
+          {"title": "Customer", "link": "app-customer.html"}
+        ]
+      },
+      {
+        "icon": "stroyka/cart-16",
+        "title": "Orders",
+        "menu": [
+          {"title": "Orders List", "link": "app-orders-list.html"},
+          {"title": "Order Details", "link": "app-order.html"}
+        ]
+      },
+      {
+        "icon": "stroyka/heart-16",
+        "title": "Marketing",
+        "menu": [
+          {"title": "Coupons List", "link": "app-coupons-list.html"},
+          {"title": "Coupon", "link": "app-coupon.html"}
+        ]
+      },
+      {
+        "icon": "fontawesome/fas fa-envelope",
+        "title": "Inbox",
+        "menu": [
+          {"title": "List", "link": "app-inbox-list.html"},
+          {"title": "Conversation", "link": "app-inbox-conversation.html"}
+        ]
+      },
+      {
+        "icon": "fontawesome/fas fa-comment",
+        "title": "Chat",
+        "link": "app-chat.html",
+        "badge": {
+          "content": 8,
+          "style": "sa-theme"
+        }
+      },
+      {
+        "icon": "fontawesome/fas fa-hdd",
+        "title": "File Manager",
+        "link": "app-file-manager.html"
+      },
+      {
+        "icon": "fontawesome/fas fa-calendar-alt",
+        "title": "Calendar",
+        "link": "app-calendar.html"
+      },
+      {
+        "icon": "stroyka/statistics-16",
+        "title": "Analytics",
+        "link": "app-analytics.html"
+      },
+      {
+        "icon": "stroyka/gear-16",
+        "title": "Settings",
+        "menu": [
+          {"title": "Table of Content", "link": "app-settings-toc.html"},
+          {"title": "Form", "link": "app-settings-form.html"}
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Pages",
+    "menu": [
+      {
+        "icon": "fontawesome/fas fa-lock",
+        "title": "Authentication",
+        "menu": [
+          {"title": "Sign In", "link": "auth-sign-in.html"},
+          {"title": "Sign Up", "link": "auth-sign-up.html"},
+          {"title": "Forgot Password", "link": "auth-forgot-password.html"},
+          {"title": "Reset Password", "link": "auth-reset-password.html"},
+          {"title": "Verify Account", "link": "auth-email-confirmation.html"}
+        ]
+      },
+      {"icon": "fontawesome/fas fa-file-alt", "title": "Invoice", "link": "page-invoice.html"},
+      {"icon": "fontawesome/fas fa-dollar-sign", "title": "Pricing Table", "link": "page-pricing-table.html"},
+      {"icon": "fontawesome/fas fa-info-circle", "title": "FAQ", "link": "page-faq.html"},
+      {"icon": "fontawesome/fas fa-check-square", "title": "Terms And Conditions", "link": "page-terms.html"},
+      {"icon": "fontawesome/fas fa-question-circle", "title": "Help Center", "link": "page-help-center.html"},
+      {"icon": "fontawesome/fas fa-bomb", "title": "Not Found", "link": "page-404.html"},
+      {
+        "icon": "fontawesome/fas fa-bars",
+        "title": "Menu Level 0",
+        "menu": [
+          {
+            "title": "Menu Level 1",
+            "menu": [
+              {
+                "title": "Menu Level 2",
+                "menu": [
+                  {"title": "Menu Level 3"}
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Framework",
+    "menu": [
+      {
+        "icon": "fontawesome/fas fa-compass",
+        "title": "Components",
+        "menu": [
+          {"title": "Accordion", "link": "components-accordion.html"},
+          {"title": "Alerts", "link": "components-alerts.html"},
+          {"title": "Badge", "link": "components-badge.html"},
+          {"title": "Breadcrumb", "link": "components-breadcrumb.html"},
+          {"title": "Buttons", "link": "components-buttons.html"},
+          {"title": "Button group", "link": "components-button-group.html"},
+          {"title": "Cards", "link": "components-cards.html"},
+          {"title": "Carousel", "link": "components-carousel.html"},
+          {"title": "Collapse", "link": "components-collapse.html"},
+          {"title": "Dropdowns", "link": "components-dropdowns.html"},
+          {"title": "List group", "link": "components-list-group.html"},
+          {"title": "Modal", "link": "components-modal.html"},
+          {"title": "Navs", "link": "components-navs.html"},
+          {"title": "NoUiSlider", "link": "components-nouislider.html"},
+          {"title": "Offcanvas", "link": "components-offcanvas.html"},
+          {"title": "Pagination", "link": "components-pagination.html"},
+          {"title": "Placeholders", "link": "components-placeholders.html"},
+          {"title": "Popovers", "link": "components-popovers.html"},
+          {"title": "Progress", "link": "components-progress.html"},
+          {"title": "Scrollspy", "link": "components-scrollspy.html"},
+          {"title": "Spinners", "link": "components-spinners.html"},
+          {"title": "Symbols", "link": "components-symbols.html"},
+          {"title": "Tabs", "link": "components-tabs.html"},
+          {"title": "Toasts", "link": "components-toasts.html"},
+          {"title": "Tooltips", "link": "components-tooltips.html"}
+        ]
+      },
+      {
+        "icon": "fontawesome/fas fa-toggle-on",
+        "title": "Forms",
+        "menu": [
+          {"title": "Text Box", "link": "forms-text-box.html"},
+          {"title": "Text Area", "link": "forms-text-area.html"},
+          {"title": "Select", "link": "forms-select.html"},
+          {"title": "Checks And Radios", "link": "forms-checks-and-radios.html"},
+          {"title": "File", "link": "forms-file.html"},
+          {"title": "Range", "link": "forms-range.html"},
+          {"title": "Input Group", "link": "forms-input-group.html"},
+          {"title": "Layout", "link": "forms-layout.html"},
+          {"title": "Help Text", "link": "forms-help-text.html"},
+          {"title": "Validation", "link": "forms-validation.html"},
+          {"title": "Quill", "link": "forms-quill.html"},
+          {"title": "Air Datepicker", "link": "forms-air-datepicker.html"},
+          {"title": "Select2", "link": "forms-select2.html"}
+        ]
+      },
+      {
+        "icon": "fontawesome/fas fa-table",
+        "title": "Tables",
+        "menu": [
+          {"title": "Basic Tables", "link": "tables-basic-tables.html"},
+          {"title": "DataTables", "link": "tables-datatables.html"}
+        ]
+      },
+      {"icon": "fontawesome/fas fa-tree", "title": "Icons", "link": "icons.html"},
+      {"icon": "fontawesome/fas fa-chart-pie", "title": "Charts", "link": "charts.html"}
+    ]
+  }
+]

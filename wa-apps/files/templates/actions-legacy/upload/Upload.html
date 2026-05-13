@@ -1,0 +1,243 @@
+<div class="dialog width550px height400px f-drop-files-here-zone f-uploader" id="f-uploader">
+    <form class="f-fileupload" action="?module=upload&action=files" method="POST" enctype="multipart/form-data">
+        {$wa->csrf()}
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+
+                        <!-- #1 -->
+                        <div class="align-center f-upload-step1">
+                            <a href="javascript:void(0);" class="button blue f-fileinput-button f-upload-step1-select-files">
+                                [`Select files`]
+                                <input type="file" name="files[]" multiple="">
+                            </a>
+                            <br><br><br>
+                            <span class="hint">[`or drag files here`]</span>
+                            <br><br>
+                            <img class="f-drag-files-here" src="{$wa_app_static_url}img/drag-files-here.png" alt="[`or drag files here`]">
+                            <br><br><br>
+                            <span class="hint">[`or`] <a href="javascript:void(0);" class="cancel f-upload-step1-cancel">[`cancel`]</a></span>
+                        </div>
+
+                        <!-- #2 -->
+                        <div class="f-upload-step2" style="display: none;">
+                            <h1 data-tmpl="[`Upload files (%d)`]">
+                                <span class="f-title"></span>
+                                <span class="hint"></span>
+                            </h1>
+                            <div class="f-upload-step-main-content"></div>
+                            <div class="f-upload-step-name-conflict-content"></div>
+                        </div>
+
+                        <!-- #3 -->
+                        <div class="f-upload-step3" style="display: none;">
+                            <div class="f-upload-filelist">
+                                <ul class="zebra files"></ul>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+
+                    <div class="f-upload-step2-buttons" style="display: none;">
+                        <input type="button" class="button blue start f-start-upload-button" value="[`Start upload`]">
+                        [`or`] <a href="#" class="cancel">[`cancel`]</a>
+                    </div>
+
+                    <div class="f-upload-step3-buttons" style="display: none;">
+                        <div class="block float-right" style="padding-top: 13px;">
+                            <a href="#" class="hint cancel">[`Stop upload`]</a>
+                        </div>
+                        <div class="block">
+                            <div class="progressbar blue small width300px float-left">
+                                <div class="progressbar-outer">
+                                    <div class="progressbar-inner f-fileupload-progressbar my-custom-progressbar-id"></div>
+                                </div>
+                            </div>
+                            <div class="float-left f-upload-filescount" style="margin-top: 5px;"></div>
+                            <div style="display:none" class="block half-padded errormsg f-upload-error">
+                                [`Files uploaded with errors`]
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/html" id="f-template-upload">
+{literal}
+    {% for (var i=0, files=o.files, l=files.length, file=files[0]; i<l; file=files[++i]) { %}
+    <li class="f-template-upload">
+        <div class="f-upload-onefile-progress">
+            <div class="f-filename">
+                {%=file.name%}
+                <span class="hint">{%=o.formatFileSize(file.size)%}</span>
+            </div>
+            <span class="start"></span><span class="cancel"></span>
+        </div>
+        &nbsp;
+    </li>
+    {% } %}
+{/literal}
+</script>
+
+<script type="text/html" id="f-template-download">
+{literal}
+    {% for (var i=0, files=o.files, l=files.length, file=files[0]; i<l; file=files[++i]) { %}
+    <li class="f-template-upload {% if (file.error) { %}error{% } %}">
+        {% if (file.error) { %}
+            <div class="f-upload-onefile-progress" style="width:100%">
+                <div class="f-filename">
+                    <b>{%=file.name%}</b>
+                    {% if (typeof file.error === 'object' && file.error instanceof SyntaxError) { %}
+                        {% if (file.responseText) { %}
+                            {%#file.responseText%}
+                        {% } else { %}
+                            {%=$_('Unidentified error')%}.
+                        {% } %}
+                    {% } else if (fileUploadErrors[file.error]) { %}
+                        {%=fileUploadErrors[file.error]%}
+                    {% } else { %}
+                        {%=file.error%}
+                    {% } %}
+                </div>
+            </div>
+        {% } else { %}
+            <div class="f-upload-onefile-progress" style="width:100%">
+                <div class="f-filename">
+                    {%=file.name%} <span class="hint">{%=o.formatFileSize(file.size)%}</span>
+                </div>
+            </div>
+        {% } %}
+        &nbsp;
+    </li>
+    {% } %}
+{/literal}
+</script>
+
+<script type="text/javascript">
+    var fileUploadErrors = {
+        maxFileSize: '[`File size exceeds the limit`]',
+        minFileSize: '',
+        acceptFileTypes: '[`Not allowed file type`]',
+        maxNumberOfFiles: '[`Max number of files exceeded`]',
+        uploadedBytes: '[`Uploaded bytes exceed file size`]',
+        emptyResult: '[`Unidentified error`]'
+    };
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var dialog = $('#f-uploader');
+        $('.f-fileupload').fileupload({
+            minFileSize: -1,
+            maxFileSize: {$max_file_size},
+            dialog: dialog
+        });
+        dialog.find('.cancel').click(function() {
+            dialog.trigger('close');
+        });
+        dialog.bind('openUploader', function() {
+            $(this).filesDialog({
+                onLoad: function() {
+                    var dialog = $(this);
+
+                    if ($('.f-upload-step2', dialog).find('.f-access-denied').length) {
+                        return;
+                    }
+
+                    dialog.filesDialog('height', 400);
+                    dialog.filesDialog('width', 550);
+                    dialog.trigger('resize');
+
+                    $('.f-upload-step1', dialog).show();
+                    $('.f-upload-step2', dialog).hide();
+                    $('.f-upload-step2 .f-upload-step-name-conflict-content', dialog).empty();
+                    $('.f-upload-step3', dialog).hide();
+                    $('.f-upload-filelist .files', dialog).empty();
+                    $('.f-upload-step2-buttons', dialog).hide();
+                    $('.f-upload-step3-buttons', dialog).hide();
+
+                    function loadPath(storage_id, folder_id)
+                    {
+                        var url = '?module=upload&action=path';
+                        if (folder_id) {
+                            url += '&folder_id=' + folder_id;
+                        } else {
+                            url += '&storage_id=' + storage_id;
+                        }
+                        var content = $('.f-upload-step2 .f-upload-step-main-content', dialog)
+                            .html('<i class="icon16 loading"></i>');
+                        var xhr = $.get(url, function(html) {
+                            content.html(html);
+                        });
+                        dialog.data('step2xhr', xhr);
+                    }
+
+                    loadPath(
+                        $.files.controller.getCurrentStorageId(),
+                        $.files.controller.getCurrentFolderId()
+                    );
+
+                    dialog.off('click', '.f-upload-path-change').on('click', '.f-upload-path-change',
+                        function() {
+                            var step2content = $('.f-upload-step2 .f-upload-step-main-content', dialog);
+                            var folder_id = step2content.find('[name=folder_id]').val() || '';
+                            var storage_id = step2content.find('[name=storage_id]').val() || '';
+                            $.files.loadDialog('?module=upload&action=changePath&folder_id=' + folder_id + '&storage_id=' + storage_id, {
+                                onLoad: function(browse_dialog) {
+                                    dialog.hide();
+                                    browse_dialog.bind('close', function() {
+                                        dialog.show();
+                                        browse_dialog.remove();
+                                    });
+                                    browse_dialog.bind('change', function(e, info) {
+                                        step2content.find('[name=folder_id]').val(info.folder_id);
+                                        step2content.find('[name=storage_id]').val(info.storage_id);
+                                        loadPath(info.storage_id, info.folder_id);
+                                    });
+                                }
+                            });
+                        });
+                }
+            });
+        });
+        dialog.bind('finishUploader', function(e, result) {
+            $.files.refreshSidebar();
+
+            if (!$.isEmptyObject(result)) {
+
+                $.files.controller.afterLoadOnce = function() {
+                    if (result.files_count) {
+                        var block = $('.f-message-block', $.files.config.getMainContainer()).show();
+                        block.html('<p><span class="highlighted"><i class="icon10 yes"></i> <em></em></span></p>');
+                        block.find('.highlighted em').text($.files.loc(result.files_count, 'Uploaded %d files'));
+                        setTimeout(function() {
+                            block.slideUp(function() {
+                                block.html('');
+                            });
+                        }, 5000);
+                    }
+                };
+
+                // go to proper page
+                if (result.folder_id) {
+                    $.files.controller.gotoFolderPage(result.folder_id);
+                } else if (result.storage_id) {
+                    $.files.controller.gotoStoragePage(result.storage_id);
+                } else {
+                    $.files.controller.reloadPage();
+                }
+
+            } else {
+                $.files.controller.reloadPage();
+            }
+            $(this).trigger('close');
+        });
+    });
+</script>

@@ -1,0 +1,77 @@
+/*
+// .sa-close
+*/
+@use '../functions' as func;
+
+.sa-close {
+    --sa-close--icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6 c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L6,4.6l3.4-3.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L7.4,6l3.4,3.4 C11.2,9.8,11.2,10.4,10.8,10.8z'%3E%3C/path%3E%3C/svg%3E");
+    --sa-close--icon-size: .75rem;
+
+    color: inherit;
+    background: transparent;
+    border-radius: .125rem;
+    border: none;
+    padding: .5rem;
+    position: relative;
+    z-index: 0;
+
+    &:before {
+        position: absolute;
+        content: '';
+        left: 0; // SKIP-RTL
+        right: 0; // SKIP-RTL
+        top: 0;
+        bottom: 0;
+        background: currentColor;
+        opacity: 0;
+        z-index: -1;
+        border-radius: inherit;
+    }
+    &:after {
+        content: '';
+        display: block;
+        width: var(--sa-close--icon-size);
+        height: var(--sa-close--icon-size);
+        background-repeat: no-repeat;
+
+        -webkit-mask-image: var(--sa-close--icon);
+        mask-image: var(--sa-close--icon);
+        background-color: currentColor;
+        opacity: .4;
+    }
+    &:before,
+    &:after {
+        transition: opacity .12s;
+    }
+
+    &:hover,
+    &:focus {
+        &:before {
+            opacity: .07;
+        }
+        &:after {
+            opacity: .65;
+        }
+    }
+
+    &:active {
+        &:before,
+        &:after {
+            transition-duration: 0s;
+        }
+
+        &:before {
+            opacity: .11;
+        }
+        &:after {
+            opacity: .8;
+        }
+    }
+}
+.sa-close--modal {
+    --sa-close--icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='%23000'%3E%3Cpath d='M13.7,13.7L13.7,13.7c-0.4,0.4-1,0.4-1.4,0L7,8.4l-5.3,5.3c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L5.6,7L0.3,1.7 c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L7,5.6l5.3-5.3c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L8.4,7l5.3,5.3 C14.1,12.7,14.1,13.3,13.7,13.7z'/%3E%3C/svg%3E");
+    --sa-close--icon-size: .875rem;
+
+    padding: (.625rem + func.rem(1));
+    border-radius: 100%;
+}

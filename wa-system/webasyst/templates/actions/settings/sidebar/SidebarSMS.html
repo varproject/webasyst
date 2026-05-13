@@ -1,0 +1,44 @@
+{$class = "s-sms-template-sidebar-wrapper"}
+{$id = uniqid($class)}
+{$is_ui_update = $wa->post('is_ui_update')}
+{if !$is_ui_update}
+<aside class="sidebar scrolls-with-content blank width-23rem {$class}" id="{$id}"{if $wa->isMobile()} style="position: relative; width: 100%; min-height: auto; top: 0"{/if}>
+{/if}
+        <div class="custom-m-12">
+            <a href="{$wa_app_url}webasyst/settings/sms/" class="button outlined light-gray full-width small"><i class="fas fa-arrow-left small"></i> [s`SMS providers`]</a>
+        </div>
+        <h5 class="heading custom-mt-20">
+            <span>[s`SMS templates`]</span>
+            <a href="#" class="js-new-templates count action"><i class="fas fa-plus-circle text-green"></i></a>
+        </h5>
+        <ul class="menu custom-mt-20">
+            {foreach $channels as $_id => $_channel}
+                {$_channel_url = "`$wa_backend_url`webasyst/settings/sms/template/`$_id|escape`/"}
+                <li class="{if $_channel@index === 0}top-padded{/if}{if $_id == $channel->getId()} selected bold{/if}">
+                    <a href="{$_channel_url}">
+                        <i class="fas fa-sms"></i>
+                        <span>{$_channel.name|escape}</span>
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+    {if !$is_ui_update}
+</aside>
+
+<script>
+    (function ($) {
+
+        // instance of dialog that create new sms templates
+        const dialog = new WaSettingsSMSNewTemplateDialog("wa-sms-new-template-dialog", {
+            path_to_template: "{"`$wa_backend_url`webasyst/settings/sms/template/"}"
+        });
+
+        // sidebar js
+        new WASettingsSMSTemplateSidebar({
+            $wrapper: $("#{$id}"),
+            dialog
+        });
+
+    })(jQuery);
+</script>
+{/if}

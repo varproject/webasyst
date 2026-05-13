@@ -1,0 +1,336 @@
+{if empty($disabled_waid)}
+
+{function name="label_required" is_permanent=false}{strip}
+    <span class="js-required-field{if $is_permanent} js-required-permanent{/if} s-business__field-required text-orange custom-ml-4">*</span>
+{/strip}{/function}
+
+{if !empty($assets)}{$assets}{/if}
+<div id="lead-form-yookassa" class="s-business-lead-form">
+<form>
+    <div class="s-business-lead-form__header">
+        {$is_plugin_setup = $is_closable || $is_collapsible}
+        <h2>{if $is_plugin_setup}Подключиться к {/if}ЮKassa</h2>
+        <a href="javascript:void(0)" class="js-hide-business-lead-form s-business-lead-form__close-btn"{if !$is_closable} style="display: none;"{/if}><i class="fas fa-times"></i></a>
+        <a href="javascript:void(0)" class="js-collapse-business-lead-form s-business-lead-form__close-btn"{if !$is_collapsible} style="display: none;"{/if}><i class="fas fa-chevron-up fa-xs"></i></a>
+    </div>
+    <div class="s-business-lead-form__content">
+        <p class="small">
+            Подключайте интернет-эквайринг от ЮКассы через Webasyst и получите <b>премиум-тариф от&nbsp;<mark>2,8%</mark></b> на 3&nbsp;месяца.
+        </p>
+        <p class="small">
+            Для подключения необходимо быть <a href="#/business/SberBank/">зарегистрированным как ИП/ООО</a>.
+        </p>
+        <div class="custom-my-32">
+            <div class="fields">
+                <div class="js-fields-container custom-mt-24">
+
+                    <div class="field">
+                        <div class="name for-input">ИНН организации{label_required is_permanent=true}</div>
+                        <div class="value">
+                            <input type="text" class="long" name="itn" data-app-field="business_inn" inputmode="numeric" maxlength="15" value="" {literal}data-mask="^\d{10}$|^\d{12}$|^\d{13}$|^\d{15}$"{/literal}>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="name for-input">Email</div>
+                        <div class="value">
+                            <input type="email" class="long" name="email" data-app-field="email" {literal}data-mask="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"{/literal}>
+                        </div>
+                    </div>
+
+                    {* counterpartyData block start *}
+                    <div class="js-collasible-container custom-mt-16">
+                        <a href="javascript:void(0)" class="js-toggle-collasible semibold small">
+                            Общие сведения о юридическом лице
+                            <span class="js-collapsable-toggle-caret icon">
+                                <i class="fas fa-caret-right"></i>
+                            </span>
+                        </a>
+                        <div class="js-collasible-content" style="display: none;">
+                            <div class="custom-mt-16">
+                                {* counterpartyData -> commonInformation block *}
+                                <div class="field">
+                                    <div class="name for-input">Сайт организации</div>
+                                    <div class="value">
+                                        <input type="text" class="long" data-app-field="business_url" name="counterpartyData[commonInformation][websiteUrl]" placeholder="https://www.example.com">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="name for-input">Основные виды деятельности</div>
+                                    <div class="value">
+                                        <textarea rows="2" data-app-field="business_description" name="counterpartyData[commonInformation][activitiesDescription]"></textarea>
+                                    </div>
+                                </div>
+
+                                {* counterpartyData -> registrationInformation block *}
+                                <div class="field">
+                                    <div class="name for-input">Адрес регистрации</div>
+                                    <div class="value">
+                                        <textarea rows="2" data-app-field="business_address" name="counterpartyData[registrationInformation][locationAddress]"></textarea>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="name for-input">Фактический адрес</div>
+                                    <div class="value">
+                                        <textarea rows="2" name="counterpartyData[registrationInformation][actualAddress]"></textarea>
+                                    </div>
+                                </div>
+
+                                {* counterpartyData -> bankAccountInformation block *}
+                                <div class="field">
+                                    <div class="name for-input">БИК банка</div>
+                                    <div class="value">
+                                        <input type="text" class="long" data-app-field="business_bik" name="counterpartyData[bankAccountInformation][bik]" maxlength="9" data-mask="^\d+$">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="name for-input">Номер расчетного счета организации</div>
+                                    <div class="value">
+                                        <input type="text" class="long" data-app-field="business_account" name="counterpartyData[settlementAccount][settlementAccount]" maxlength="20" data-mask="^\d+$">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {* counterpartyData -> contactInformation block *}
+                    <div class="js-collasible-container custom-mt-16">
+                        <a href="javascript:void(0)" class="js-toggle-collasible semibold small">
+                            Контактная информация
+                            <span class="js-collapsable-toggle-caret icon">
+                                <i class="fas fa-caret-right"></i>
+                            </span>
+                        </a>
+                        <div class="js-collasible-content" style="display: none;">
+                            <div class="custom-mt-16">
+                                <div class="hint">Контактное лицо по общим вопросам</div>
+                                <div class="field">
+                                    <div class="name for-input">ФИО</div>
+                                    <div class="value">
+                                        <input name="counterpartyData[contactInformation][generalContact][fullName]" data-app-field="business_name" type="text" class="long">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="name for-input">Должность</div>
+                                    <div class="value">
+                                        <input type="text" class="long" name="counterpartyData[contactInformation][generalContact][position]">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="name for-input">Телефон</div>
+                                    <div class="value">
+                                        <input name="counterpartyData[contactInformation][generalContact][phone]" data-app-field="phone" type="text" class="long" inputmode="numeric" maxlength="16" value="" {literal}data-mask="^\+[1-9]\d{1,14}$"{/literal}>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="name for-input">E-mail</div>
+                                    <div class="value">
+                                        <input name="counterpartyData[contactInformation][generalContact][email]" data-app-field="email" type="email" class="long" {literal}data-mask="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"{/literal}>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {* counterpartyData block end *}
+
+                </div>
+
+            </div>
+        </div>
+        <div class="s-business-lead-form__footer flexbox middle wrap space-4">
+            <button type="submit" class="s-business-lead-form__submit button blue large">Отправить заявку в ЮКассу</button>
+            <span class="js-loading hidden"><i class="fas fa-spinner fa-spin"></i></span>
+        </div>
+        <div class="place-for-errors custom-mt-12"></div>
+        <p class="hint">Заявка передается напрямую в ЮКассу, и ее обрабатывают менеджеры ЮКассы. Webasyst заявки не сохраняет и не обрабатывает.</p>
+    </div>
+</form>
+
+<script>
+    $(function () { "use strict";
+        const $wrapper = $('#lead-form-yookassa');
+        const $form = $wrapper.children();
+        const $submit = $form.find('[type=submit]');
+        const $place_for_errors = $form.find('.place-for-errors');
+
+        const required_fields = ['itn'];
+
+        // INIT
+        defineRequiredFields();
+
+        // EVENTS
+        $form.on('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!$form.find('.js-loading').hasClass('hidden')) {
+                return false;
+            }
+
+            if (isInvalidFormFields()) {
+                return;
+            }
+
+            $form.find('.js-loading').removeClass('hidden');
+            const _getFormData = () => {
+                const fields_map = $form.serializeArray().reduce(function(acc, field) {
+                    if (field.value && String(field.value).trim()) {
+                        acc[field.name] = field.value;
+                    }
+                    return acc;
+                }, {});
+
+                return fields_map;
+            };
+            $.post('?plugin=business&module=yookassaApi&action=createApplication', _getFormData())
+                .always(() => {
+                    $form.find('.js-loading').addClass('hidden');
+                })
+                .done((r) => {
+                    if (r.status === 'ok' && r.data) {
+                        if (r.data.message_html) {
+                            $form.find('.s-business-lead-form__content').hide();
+                            $form.append(r.data.message_html);
+                        }
+                        if (r.data.url) {
+                            const link_to_connect_html =
+                                `<div class="custom-mb-0 custom-mt-12 large">
+                                    <i class="fas fa-exclamation-circle text-gray"></i> Для подтверждения подключения перейдите по ссылке <a href="${ r.data.url }" target="_blank" class="bold">${ r.data.url } <i class="fas fa-external-link-alt fa-xs opacity-50"></i></a>
+                                </div>`;
+                            $form.append(link_to_connect_html);
+                        }
+
+                        {if $is_plugin_setup}
+                            $('.js-collapse-business-lead-form').hide();
+                            $('.js-hide-business-lead-form').show();
+                        {/if}
+                        $.shop.business.updateFormPrefills($form);
+                    }
+                    handleErrors(r);
+                });
+        });
+
+        function defineRequiredFields (product_type) {
+            $form.find('[name]:not(:disabled)').each(function () {
+                const $field = $(this);
+                const field_name = $field.attr('name');
+
+                let is_required = false;
+                for (const required_field_name of required_fields) {
+                    is_required = field_name === required_field_name;
+                    if (!is_required && required_field_name[0] === '[') {
+                        is_required = String(field_name).endsWith(required_field_name);
+                    }
+                    if (is_required) {
+                        break;
+                    }
+                }
+
+                let input_mask = $field.data('mask');
+                if (is_required && !input_mask) {
+                    input_mask = "^.+$";
+                }
+                if (input_mask) {
+                    const regExp = new RegExp(input_mask);
+
+                    $field.off('change.validation').on('change.validation', function () {
+                        const val = $(this).val();
+
+                        $field.siblings('.state-caution-hint').remove();
+                        $field.removeClass('state-caution');
+                        if (!is_required && !val) {
+                            return true;
+                        }
+
+                        const is_invalid = !regExp.test(val);
+                        if (is_invalid) {
+                            const msg = !!val ? '[`Invalid value`]' : '[`Field is empty`]';
+                            addFieldError($field, msg);
+                            return false;
+                        }
+                    });
+                }
+            });
+
+        }
+
+        function isInvalidFormFields() {
+            clearErrors();
+            $form.find('[name]:not(:disabled)').trigger('change.validation');
+
+            const is_invalid = $form.find('.state-caution').length > 0;
+            if (is_invalid) {
+                $place_for_errors.append('<span class="state-caution">[`Please fill required fields`]</span>');
+                const $field_with_error = $form.find('.field .state-caution,.field .state-caution-hint').closest('.value');
+                if ($field_with_error.length) {
+                    const elementPosition = $field_with_error.get(0).getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.scrollY - ($('#wa-nav').height() || 0);
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                }
+            }
+
+            return is_invalid;
+        }
+        function clearErrors () {
+            $form.find('span.state-caution,.state-caution-hint').remove();
+            $form.find('.state-caution').removeClass('state-caution');
+            $place_for_errors.empty();
+        }
+
+        function handleErrors(r) {
+            if (r.status !== 'fail' || !r.errors) {
+                return;
+            }
+            let error_html = '';
+            if (r.errors.error_html) {
+                error_html = r.errors.error_html;
+            } else {
+                error_html = '<span class="state-caution">'+r.errors.error_description+'</span>';
+                if (Array.isArray(r.errors.required_fields)) {
+                    let fields_text = '';
+                    r.errors.required_fields.forEach(f => {
+                        fields_text += addFieldError(f.field, f.message) + ', ';
+                    });
+                    fields_text = fields_text.slice(0, -2);
+
+                    if (fields_text) {
+                        error_html = '<span class="state-caution">'+r.errors.error_description+' ('+fields_text+')'+'</span>';
+                    }
+                } else if (r.errors.error === 'invalid_phone') {
+                    addFieldError('counterpartyData[contactInformation][generalContact][phone]');
+                } else if (r.errors.error === 'invalid_email') {
+                    addFieldError('email');
+                }
+            }
+            $place_for_errors.html(error_html);
+        }
+
+        function addFieldError(field, message) {
+            let $field;
+
+            if (typeof field === 'string') {
+                let field_selector = field;
+
+                if (/\w+\.\w+\./.test(field)) {
+                    const prop_path = field.split('.');
+                    field_selector = `${ prop_path[0] }[${ prop_path.slice(1).join('][') }]`;
+                }
+
+                $field = $form.find('[name="'+field_selector+'"]');
+            } else if (field instanceof $) {
+                $field = field;
+            }
+
+            if ($field.length) {
+                $field.addClass('state-caution');
+                if (message) {
+                    $field.closest('.value').append('<div class="state-caution-hint">'+message+'</div>');
+                }
+
+                return ($field.closest('.field').find('.name').text() || '').trim().replace(/\*$/, '');
+            }
+            return '';
+        }
+    });
+</script>
+</div>
+{/if}

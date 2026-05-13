@@ -1,0 +1,145 @@
+<script>
+    $(function () {
+        $.wa.loadSources( [
+            {
+                id: 'devapi-vue-js',
+                type: 'js',
+                uri: '{$wa_url}wa-apps/devapi/js/vendors/vue/vue.global.js'
+            },
+            {
+                id: 'devapi-wrlDates',
+                type: 'js',
+                uri: '{$wa_url}wa-apps/devapi/js/wrlDates.js'
+            },
+            {
+                id: 'devapi-css',
+                type: 'css',
+                uri: '{$wa_url}wa-apps/devapi/css/devapi.css'
+            }
+        ] ).done( function() {
+            let waUrl = "{$wa_backend_url}";
+            let extFields = $('div#ticket').find('.s-fields:last');
+            let devapiButton = '<div style="display: inline">' +
+                 {if $totalRequests}'<span class="small custom-ml-8"><a id="devapi-history" class="button outlined smallest" style="display: inline"><i class="fa fa-history"></i> [`Запросы`]</a></span>'{else}''{/if} +
+                '<span class="small custom-ml-8"><a id="devapi-check-licenses" class="button outlined smallest" style="display: inline"><i class="fas fa-balance-scale-right"></i> [`Проверить лицезии`]</a></span>' +
+                '<span class="small custom-ml-8"><a id="devapi-promocodes" class="button outlined smallest" style="display: inline"><i class="fas fa-tags"></i> [`Промокоды`]</a></span>' +
+                '</div>';
+            let h2 = $('div.profile').find('h2');
+//            $(h2).append(devapiButton);
+            $(h2).after('{$tags}').after(extFields).after(devapiButton);
+            $(h2).closest('div.article.wide').css('margin', 'unset').css('max-width', '1200px');
+            let devapiLoading = $.waLoading();
+            $.each($('.ticket-buttons').find('button'), function (idx, b) {
+                $(b).css('border-width', '2px').css('border-color', $(b).find('svg').css('color'));
+            });
+            $('div.request-header').on('click', '#devapi-check-licenses', function () {
+                devapiLoading.animate();
+                $.post(waUrl + 'devapi/?action=getOrderInfoDialog', r => {
+                    if (r.status === 'ok') {
+                        $.waDrawer({
+                            html: r.data,
+                            direction: "right",
+                            width: "750px",
+                            onOpen: function($drawer, drawer_instance) {
+
+                            },
+                            onClose: function(drawer_instance) {
+                                orderinfo.unmount();
+                                orderinfo = undefined;
+                            },
+                            onBgClick: function (event, $drawer, drawer_instance) {
+                                drawer_instance.close();
+                            }
+                        });
+                        devapiLoading.done();
+                    } else {
+                        $.waDialog.alert({
+                            title: "Ошибка",
+                            text: r.errors.join('; '),
+                            button_title: 'Закрыть',
+                            button_class: 'warning',
+                        });
+                        devapiLoading.abort();
+                    }
+                });
+            }).on('click', '#devapi-promocodes', r => {
+                devapiLoading.animate();
+                $.post(waUrl + 'devapi/?action=promocodesList', r => {
+                    if (r.status === 'ok') {
+                        $.waDrawer({
+                            html: r.data,
+                            direction: "right",
+                            onClose: function(drawer_instance) {
+                                promocodes.unmount();
+                                promocodes = undefined;
+                            },
+                            onBgClick: function (event, $drawer, drawer_instance) {
+                                drawer_instance.close();
+                            }
+                        });
+                        devapiLoading.done();
+                    } else {
+                        $.waDialog.alert({
+                            title: "Ошибка",
+                            text: r.errors.join('; '),
+                            button_title: 'Закрыть',
+                            button_class: 'warning',
+                        });
+                        devapiLoading.abort();
+                    }
+                });
+            }).on('click', '#utils-user-info', f => {
+                $.post('{$wa_backend_url}utils/?module=waid&action=getFullData&contact_id={$client_id}', r => {
+                    let drawer_html = '<div class="drawer"><div class="drawer-background"></div><div class="drawer-body small custom-p-12" style="overflow: auto;">';
+                    drawer_html += r;
+                    drawer_html += '</div></div>';
+                    drawer_html = drawer_html.replace('<form>', '').replace('</form>', '').replace('"fields"', '"fields vertical"');
+                    $.waDrawer({
+                        html: drawer_html,
+                        direction: "right",
+                        onBgClick: function (event, $drawer, drawer_instance) {
+                            drawer_instance.close();
+                        }
+                    });
+                });
+            }).on('click', '#devapi-history', f => {
+                devapiLoading.animate();
+                $.post('{$wa_backend_url}devapi/?action=getRequestHistory&contact_id={$client_id}', r => {
+                    if (r.status === 'ok') {
+                        let drawer_html = '<div class="drawer"><div class="drawer-background"></div><header class="drawer-body small" style="overflow: auto;">';
+                        drawer_html += r.data;
+                        drawer_html += '</div></div>';
+                        $.waDrawer({
+                            html: drawer_html,
+                            direction: "right",
+                            onBgClick: function (event, $drawer, drawer_instance) {
+                                drawer_instance.close();
+                            },
+                            onOpen: function ($drawer, drawer_instance) {
+                                $('#devapi-requests-history').on('click', 'a.request', function () {
+                                    let request_id = $(this).closest('li').attr('request-id');
+                                    if (request_id) $.wa.setHash('/request/' + request_id);
+                                    drawer_instance.close();
+                                });
+                            }
+                        });
+                        devapiLoading.done();
+                    } else {
+                        $.waDialog.alert({
+                            title: "Ошибка",
+                            text: r.errors.join('; '),
+                            button_title: 'Закрыть',
+                            button_class: 'warning',
+                        });
+                        devapiLoading.abort();
+                    }
+                });
+            });
+            {if $appUtils}
+            let utilsIcon = '<a id="utils-user-info" style="color: var(--dark-gray); margin: 0 5px;"><i class="fas fa-fingerprint"></i></a>';
+            $(h2).find('span.source-label:first').before(utilsIcon);
+            $('.h-tags-wrapper.custom-mt-12').remove();
+            {/if}
+        });
+    });
+</script>

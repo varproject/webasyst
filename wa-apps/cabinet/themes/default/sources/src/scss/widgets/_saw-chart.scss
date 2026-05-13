@@ -1,0 +1,33 @@
+/*
+// .saw-chart
+*/
+@use 'sass:math';
+@use '../custom-variables' as vs;
+
+.saw-chart {
+    display: flex;
+    flex-direction: column;
+}
+.saw-chart__header {
+    padding: 1.25rem 1.25rem 0;
+}
+.saw-chart__body {
+    flex-grow: 1;
+    padding-bottom: (math.div(1, 3) * 100%);
+    min-height: 16rem;
+    position: relative;
+}
+.saw-chart__container {
+    position: absolute;
+    left: 0; // SKIP-RTL
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1.25rem;
+}
+.saw-chart__table {
+    --sa-widget-table__body-cell--padding-y: .25rem;
+
+    border-bottom: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    margin-bottom: 1rem;
+}

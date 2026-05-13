@@ -1,0 +1,22 @@
+{strip}
+{*
+ * Template for $wa->authAdapters()
+ *}
+<div class="wa-auth-adapters">
+    <ul>
+        {foreach $adapters as $_adapter}
+            <li class="wa-auth-adapter-{$_adapter->getId()}">
+                <a href="{$_adapter->url()|escape}" data-id="{$_adapter->getId()}">
+                    <img alt="{$_adapter->getName()}" title="{$_adapter->getName()}" src="{$_adapter->getIcon()}"/>
+                    {if !empty($options.names)}
+                        {$_adapter->getName()}
+                    {/if}
+                </a>
+            </li>
+        {/foreach}
+    </ul>
+    <br>
+    <p>[s`Authorize either by entering your contact information, or through one of the websites listed above.`]</p>
+</div>
+
+{/strip}

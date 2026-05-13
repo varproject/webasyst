@@ -1,0 +1,117 @@
+{***
+ * HTML SNIPPET INCLUDE
+ * Filters in header of page
+**}
+
+{include file="./TasksHeaderFiltersHelpers.inc.html" inline}
+
+<!-- HASH FILTER -->
+
+<ul class="chips small sidebar-dropdown-container" style="position: relative;">
+{show_filter
+    class='t-tasks-hash-type-filter js-header-title-participant'
+    filter=[
+        'id' => 'hash_type',
+        'options' => [
+            [
+                'id' => '',
+                'name' => '[`All`]'
+            ],
+            [
+                'id' => 'inbox',
+                'name' => '[`Inbox`]'
+            ],
+            [
+                'id' => 'outbox',
+                'name' => '[`Outbox`]'
+            ],
+            [
+                'id' => 'favorites',
+                'name' => '[`Following`]'
+            ],
+            [
+                'id' => 'urgent',
+                'name' => '[`Urgent`]'
+            ]
+        ]
+    ]
+}
+
+
+<!-- OTHER SELECTOR FILTERS -->
+{foreach $filter_types as $id => $filter}
+    {$_data_keys = []}
+    {if $id === 'milestone_id'}
+        {$_data_keys = ['project_id','description']}
+    {/if}
+    {show_filter class='t-tasks-filter js-header-title-participant' filter=$filter data_keys=$_data_keys}
+{/foreach}
+
+<!-- TAG CLOUD WIDGET FILTER -->
+{showTagsCloud class='t-tasks-tag-cloud-filter js-header-title-participant' cloud=$tags_cloud}
+
+<!-- FILTER BY TYPE -->
+{$types[''].name = '[`Any type`]'}
+{include file="./TasksFilter.inc.html"
+    default_title = '[`Types`]'
+    filter_id = 'task.type'
+    items = $types
+inline}
+
+<script>
+    (function () {
+        var milestones = {$milestones|json_encode};
+
+        $(window).one('wa_loaded', function () {
+            var $header = $(".t-header-wrapper");
+            var $project = $header.find('.js-dropdown-menu[data-id="project_id"]');
+            var $milestone = $header.find('.js-dropdown-menu[data-id="milestone_id"]');
+
+            var updateMilestoneSelector = function (project_id) {
+                var milestone_menu = $milestone.data('dropDownMenu');
+                milestone_menu.eachOption(function (milestone_id, milestone) {
+                    var related_projects = milestones[milestone_id] ? (milestones[milestone_id].related_projects || []) : [];
+                    if (!project_id || !milestone.project_id || milestone.project_id == project_id ||
+                        related_projects.indexOf(project_id) >= 0) {
+                        milestone_menu.enableItem(milestone_id);
+                    } else {
+                        milestone_menu.disableItem(milestone_id);
+                    }
+                });
+            };
+
+            $project.data('dropDownMenu').onSelect(function (project_id) {
+                updateMilestoneSelector(project_id);
+            });
+            updateMilestoneSelector($project.data('dropDownMenu').getSelected('value'));
+        });
+    })();
+</script>
+
+<!-- plugin hook: 'backend_tasks.%plugin_id%.header.filters' -->
+{* @event backend_tasks.%plugin_id%.header.filters *}
+{foreach $_backend_header_hooks as $_}
+    {$_filters = $_.filters|default:[]}
+    {foreach $_filters as $_filter}
+        {$_filter|default:''}
+    {/foreach}
+{/foreach}
+
+<!-- RESET FILTERS BUTTON -->
+
+{if !empty($is_filter_set) && !empty($no_filters_hash)}
+    <a href="{$no_filters_hash}" class="t-remove-filters-link gray larger">
+        <i class="fas fa-times-circle" title="[`Clear filters`]"></i>
+    </a>
+    <style>
+        #t-filters-menu { display: block; }
+    </style>
+    <script>
+        (function ($) {
+            $('#t-my-lists-box').show();
+            $('#t-selection-menu').show();
+        })(jQuery);
+    </script>
+{/if}
+
+</ul>

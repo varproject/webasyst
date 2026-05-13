@@ -1,0 +1,24 @@
+{if $data && (!$all_selected_id || $has_check_all_contacts_rights)}
+    <ul id="recipients-categories" class="m-checkbox-menu zebra">
+        {foreach $data as $o}
+            <li class="flexbox middle full-width category{if !empty($o.checked)} checked{/if}">
+                {if empty($o.disabled) && !empty($o.list_id)}
+                    <input type="hidden" name="remove_ids[]" value="{$o.list_id}">
+                {/if}
+                <span class="count">{$o.num}</span>
+                <label>
+                    <span class="wa-checkbox">
+                        <input type="checkbox" name="add_values[]" value="/contacts/category/{$o.value|escape}"{if !empty($o.checked)} checked="checked" disabled="disabled"{/if}{if !empty($o.disabled)} disabled="disabled"{/if}>
+                        <span>
+                            <span class="icon">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        </span>
+                    </span>
+                    <span class="{if !empty($o.checked)} highlighted{/if}">{$o.label|escape}</span>
+                </label>
+            </li>
+        {/foreach}
+    </ul>
+{/if}
+

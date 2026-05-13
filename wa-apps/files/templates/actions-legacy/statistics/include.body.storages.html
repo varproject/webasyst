@@ -1,0 +1,53 @@
+{foreach $stat as $storage}
+    {$_is_personal = ( $storage.access_type === filesStorageModel::ACCESS_TYPE_PERSONAL )}
+    {$_is_limited = ( $storage.access_type === filesStorageModel::ACCESS_TYPE_LIMITED )}
+    {$_is_everyone = ( $storage.access_type === filesStorageModel::ACCESS_TYPE_EVERYONE )}
+    <tr class="f-statistics-item" data-id="{$storage.id|escape}">
+        <td>
+            <div class="f-name-wrapper">
+                    <span class="f-storage-image">
+                        {if $_is_personal}
+                            <i class="icon16 userpic20" style="background-image: url('{$storage.storage_contact.photo_url_20}')"></i>
+                        {else}
+                            {$storage.icon_str}
+                        {/if}
+                    </span>
+
+                    <span class="f-storage-name">
+                        {if $_is_personal}
+                            {$storage.storage_contact.name|escape}
+                        {else}
+                            {$storage.name|escape}
+                        {/if}
+                    </span>
+
+                {if $_is_personal}
+                    <span class="f-storage-access-type">
+                        <i class="icon10 lock-bw no-overhanging" title="[`Only you can access files in this storage`]"></i>
+                    </span>
+                {/if}
+            </div>
+        </td>
+        <td>{$storage.size_str}</td>
+        <td>{$storage.count}</td>
+        {if $clear_link}
+            <td>
+                <a href="javascript:void(0)" title="[`Clear trash`]" class="f-clear-storage-trash">
+                    <i class="icon10 delete"></i> [`clear`]
+                </a>
+            </td>
+        {/if}
+    </tr>
+{/foreach}
+<tr class="f-total-size">
+    <td class="">
+        <div class="f-name-wrapper">
+            [`Total`]
+        </div>
+    </td>
+    <td>{$total.size_str}</td>
+    <td>{$total.count}</td>
+    {if $clear_link}
+        <td></td>
+    {/if}
+</tr>

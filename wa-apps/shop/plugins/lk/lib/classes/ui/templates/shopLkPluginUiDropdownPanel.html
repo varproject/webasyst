@@ -1,0 +1,157 @@
+<div class="{$panel_class|escape}" role="group" aria-label="Группа кнопок с вложенным раскрывающимся списком"
+    {$panel_attrs_html nofilter}>
+
+    <div class="{$counter_wrap_class|escape}" role="group" {if !empty($disabled)}style="opacity: 0.5;" {/if}>
+        <span class="{$counter_class|escape}">{$counter|default:0}</span>
+    </div>
+
+    {foreach $groups as $group}
+        <div class="btn-group" role="group">
+            <button type="button" class="{$group.button_class|escape}" data-bs-toggle="dropdown" aria-expanded="false"
+                {if !empty($group.auto_close)}data-bs-auto-close="{$group.auto_close|escape}" {/if}
+                {if !empty($group.disabled)}disabled{/if}{$group.button_attrs_html nofilter}>
+                {if !empty($group.icon_html)}
+                    {$group.icon_html nofilter}
+                {elseif !empty($group.icon)}
+                    <i class="{$group.icon|escape}"></i>
+                {/if}
+                {$group.label|escape}
+            </button>
+
+            <ul class="{$group.menu_class|escape}" {if !empty($group.menu_style)}style="{$group.menu_style|escape}"
+                {/if}{$group.menu_attrs_html nofilter}>
+                {foreach $group.items as $item}
+                    {if $item.type === 'divider'}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                    {elseif $item.type === 'html'}
+                        <li{if !empty($item.item_class)} class="{$item.item_class|escape}" {/if}{$item.item_attrs_html nofilter}>
+                            {$item.html nofilter}
+                            </li>
+                        {elseif $item.type === 'checkbox'}
+                            <li class="dropdown-item">
+                                <div class="{$item.wrap_class|escape}">
+                                    <input class="{$item.input_class|escape}" type="checkbox" id="{$item.id|escape}"
+                                        name="{$item.name|escape}" value="{$item.value|escape}"
+                                        {if !empty($item.checked)}checked{/if}
+                                        {if !empty($item.disabled)}disabled{/if}{$item.input_attrs_html nofilter}>
+                                    <label class="{$item.label_class|escape}" for="{$item.id|escape}" style="cursor: pointer;">
+                                        {$item.label|escape}
+                                    </label>
+                                </div>
+                            </li>
+                        {else}
+                            <li>
+                                {if !empty($item.disabled)}
+                                    <span class="dropdown-item disabled{if !empty($item.class)} {$item.class|escape}{/if}"
+                                        {if !empty($item.title)}title="{$item.title|escape}" {/if}{$item.attrs_html nofilter}>
+                                        {if !empty($item.icon_html)}
+                                            {$item.icon_html nofilter}
+                                        {elseif !empty($item.icon)}
+                                            <i class="{$item.icon|escape}"></i>
+                                        {/if}
+                                        {$item.label|escape}
+                                    </span>
+                                {else}
+                                    <a class="dropdown-item{if !empty($item.class)} {$item.class|escape}{/if}" href="{$item.url|escape}"
+                                        {if !empty($item.target)}target="{$item.target|escape}" {/if}
+                                        {if !empty($item.title)}title="{$item.title|escape}" {/if}{$item.attrs_html nofilter}>
+                                        {if !empty($item.icon_html)}
+                                            {$item.icon_html nofilter}
+                                        {elseif !empty($item.icon)}
+                                            <i class="{$item.icon|escape}"></i>
+                                        {/if}
+                                        {$item.label|escape}
+                                    </a>
+                                {/if}
+                            </li>
+                        {/if}
+                    {/foreach}
+            </ul>
+        </div>
+    {/foreach}
+</div>
+
+{if !empty($config.items)}
+    <div class="btn-group config">
+        <button type="button" class="{$config.button_class|escape}" data-bs-toggle="dropdown" aria-expanded="false"
+            {if !empty($config.disabled)}disabled{/if}{$config.button_attrs_html nofilter}>
+            {if !empty($config.icon_html)}
+                {$config.icon_html nofilter}
+            {elseif !empty($config.icon)}
+                <i class="{$config.icon|escape}"></i>
+            {/if}
+        </button>
+
+        <ul class="{$config.menu_class|escape}" {if !empty($config.menu_style)}style="{$config.menu_style|escape}"
+            {/if}{$config.menu_attrs_html nofilter}>
+            {foreach $config.items as $item}
+                {if $item.type === 'divider'}
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                {elseif $item.type === 'html'}
+                    <li{if !empty($item.item_class)} class="{$item.item_class|escape}" {/if}{$item.item_attrs_html nofilter}>
+                        {$item.html nofilter}
+                        </li>
+                    {elseif $item.type === 'checkbox'}
+                        <li class="dropdown-item">
+                            <div class="{$item.wrap_class|escape}">
+                                <input class="{$item.input_class|escape}" type="checkbox" id="{$item.id|escape}"
+                                    name="{$item.name|escape}" value="{$item.value|escape}" {if !empty($item.checked)}checked{/if}
+                                    {if !empty($item.disabled)}disabled{/if}{$item.input_attrs_html nofilter}>
+                                <label class="{$item.label_class|escape}" for="{$item.id|escape}" style="cursor: pointer;">
+                                    {$item.label|escape}
+                                </label>
+                            </div>
+                        </li>
+                    {else}
+                        <li>
+                            {if !empty($item.disabled)}
+                                <span class="dropdown-item disabled{if !empty($item.class)} {$item.class|escape}{/if}"
+                                    {if !empty($item.title)}title="{$item.title|escape}" {/if}{$item.attrs_html nofilter}>
+                                    {if !empty($item.icon_html)}
+                                        {$item.icon_html nofilter}
+                                    {elseif !empty($item.icon)}
+                                        <i class="{$item.icon|escape}"></i>
+                                    {/if}
+                                    {$item.label|escape}
+                                </span>
+                            {else}
+                                <a class="dropdown-item{if !empty($item.class)} {$item.class|escape}{/if}" href="{$item.url|escape}"
+                                    {if !empty($item.target)}target="{$item.target|escape}" {/if}
+                                    {if !empty($item.title)}title="{$item.title|escape}" {/if}{$item.attrs_html nofilter}>
+                                    {if !empty($item.icon_html)}
+                                        {$item.icon_html nofilter}
+                                    {elseif !empty($item.icon)}
+                                        <i class="{$item.icon|escape}"></i>
+                                    {/if}
+                                    {$item.label|escape}
+                                </a>
+                            {/if}
+                        </li>
+                    {/if}
+                {/foreach}
+        </ul>
+    </div>
+{/if}
+
+{if !empty($render_style)}
+    <style>
+        .btn-group-counter {
+            width: 50px;
+            border: solid 1px #dee2e6;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border-radius: 0.25rem 0 0 0.25rem;
+        }
+
+        .config .dropdown-toggle::after {
+            display: none;
+        }
+    </style>
+{/if}

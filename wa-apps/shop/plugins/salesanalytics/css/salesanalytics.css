@@ -1,0 +1,95 @@
+.ssa-wrap {
+    padding: 24px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #111827;
+}
+
+.ssa-filters {
+    display: flex;
+    gap: 12px;
+    align-items: end;
+    flex-wrap: wrap;
+    margin: 16px 0 20px;
+}
+
+.ssa-filters label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.ssa-filters input,
+.ssa-filters button {
+    padding: 9px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.ssa-filters button {
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.ssa-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 18px 0;
+}
+
+.ssa-card,
+.ssa-chart,
+.ssa-table {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+}
+
+.ssa-card {
+    padding: 18px;
+}
+
+.ssa-card .label {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.ssa-card .value {
+    margin-top: 8px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.ssa-chart {
+    padding: 16px;
+    margin-bottom: 18px;
+}
+
+.ssa-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+.ssa-table th,
+.ssa-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eef2f7;
+    text-align: left;
+    font-size: 14px;
+}
+
+.ssa-table th {
+    background: #f9fafb;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .ssa-kpis {
+        grid-template-columns: 1fr;
+    }
+}

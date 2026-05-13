@@ -1,0 +1,31 @@
+{* sidebar-header  *}
+{* <div class="sidebar-header custom-mt-20 custom-p-10">
+</div> *}
+
+
+{* sidebar-body *}
+<div class="sidebar-body">
+    <div class="box custom-py-0">
+
+        <h5 class="heading custom-mr-8">
+            <span>{$title}</span>
+            <a href="{$backend_full_url}site/" target="_blank" class="count action">
+                <i class="fas fa-plus-circle" style="color: #6bb532;"></i>
+            </a>
+        </h5>
+        <ul class="menu rounded">
+            {foreach $contact_categories as $key => $value}
+                <li class="rounded{if $contact_category_id == $value.id} selected{/if}">
+                    <a class="item" href="{$wa_app_url}customers/?ccid={$value.id}">
+                        <span class="s-icon-main icon">
+                            <i class="fas fa-globe"
+                                {if $contact_category_id == $value.id}style="color: var(--text-color-link);" {/if}></i>
+                        </span>
+                        <span class="s-name">{$value.name}</span>
+                    </a>
+                </li>
+            {/foreach}
+
+        </ul>
+    </div>
+</div>

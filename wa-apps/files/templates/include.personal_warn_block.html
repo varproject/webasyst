@@ -1,0 +1,35 @@
+{$block_id = 'f-warn-info-block-storage-'|cat:$storage_id}
+<div class="f-warn-info-block alert small" id="{$block_id}" style="display: none;">
+    <a href="#" class="alert-close f-warn-info-block-close larger">×</a>
+    [`This is your personal folder. No one but you has access here.`] <br><br>
+    <i class="icon10 exclamation fas fa-exclamation-triangle text-blue"></i>&nbsp;
+    <em>[`If you need to share files with someone else use folders with common access.`]</em>
+</div>
+
+<script>
+    $(function () {
+
+        // items
+        const block_id = {$block_id|json_encode};
+        const block = $("#" + block_id);
+
+        // visibility helper
+        var applyVisibility = function (visibility) {
+            if (visibility) {
+                block.show();
+            } else {
+                block.hide();
+            }
+        };
+
+        // close handler
+        $('.f-warn-info-block-close', block).on('click', function (e) {
+            e.preventDefault();
+            $.files.config.getLocaleStorage().set('files/warn_block_hide/' + block_id, 1);
+            applyVisibility(0);
+        });
+
+        // apply current visibility
+        applyVisibility(!$.files.config.getLocaleStorage().get('files/warn_block_hide/' + block_id));
+    });
+</script>

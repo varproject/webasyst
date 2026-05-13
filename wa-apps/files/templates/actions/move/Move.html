@@ -1,0 +1,184 @@
+{$dialog_id = uniqid('f-move-dialog-')}
+
+{function form_begin}
+    {if $allowed_files}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $allowed_files}</form>{/if}
+{/function}
+
+{function title}
+    <h3 class="dialog-header">
+        {if $wa->get('restore')}
+            [`Restore files and folders`]
+        {else}
+            [`Move files and folders`]
+        {/if}
+    </h3>
+{/function}
+
+{function button_text}{strip}
+    {if $wa->get('restore')}
+        {if $unallowed_files}[`Restore the rest`]{else}[`Restore`]{/if}
+    {else}
+        {if $unallowed_files}[`Move the rest`]{else}[`Move`]{/if}
+    {/if}
+{/strip}{/function}
+
+<div class="dialog f-move-dialog" id="{$dialog_id}">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            {title}
+            <div class="dialog-content hide-scrollbar">
+                {if $allowed_files}
+                    {if $unallowed_files}
+                        <p class="state-error-hint">
+                            [`No permissions to move these files`]:
+                            {foreach $unallowed_files as $file}
+                                {$file.name|escape}&nbsp;
+                            {/foreach}
+                        </p>
+                    {/if}
+                    <div class="f-choose-path-block">
+                        <i class="fas fa-spin fa-spinner loading"></i>
+                    </div>
+                {else}
+                    <p class="state-error-hint">
+                        [`No permissions to move these files`]
+                    </p>
+                {/if}
+
+            </div>
+            <div class="dialog-footer">
+                {$wa->csrf()}
+                {if $allowed_files}
+                    <button type="submit" class="button" disabled><i class="fas fa-spinner fa-spin loading hidden custom-mr-4 f-submit-loading"></i> {button_text}</button>
+                    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+                {else}
+                    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+                {/if}
+            </div>
+        </div>
+    {form_end}
+    <script>
+        $(function() {
+            const dialog = $('#{$dialog_id}');
+
+            {if $allowed_files}
+                let storage_id = 0;
+                let folder_id = 0;
+
+                // load empty process dialog and hide
+                let empty_process_dialog = $('.f-move-process-empty-dialog');
+                if (!empty_process_dialog.length) {
+                    $.files.loadDialog('?module=move&action=processDialog', {
+                        onOpen: function ($dialog, dialog_instance) {
+                            empty_process_dialog = $dialog;
+                            dialog_instance.close();
+                        }
+                    });
+                }
+
+                dialog.filesDialog({
+                    onFirstLoad: function() {
+                        $('.f-choose-path-block', dialog).load('?module=browser&level={$level}', function() {
+                            dialog.find('.f-browser').bind('select', function(event, type, id) {
+                                dialog.find('[type=submit]').attr('disabled', false);
+                                if (type === 'storage') {
+                                    storage_id = id;
+                                    folder_id = 0;
+                                } else {
+                                    storage_id = 0;
+                                    folder_id = id;
+                                }
+                            });
+
+                            dialog.data('dialog').resize();
+                        });
+                    },
+                    onOpen: function($dialog) {
+                        $dialog.find('[type="submit"]').on('click', function(e) {
+                            e.preventDefault();
+
+                            $(this).find('.fa-spinner').removeClass('hidden');
+                            this.disabled = true;
+
+                            const file_ids = {json_encode(array_keys($allowed_files))};
+                            dialog.find('.f-submit-loading').show();
+
+                            $.files.moveFiles({
+                                file_ids: file_ids,
+                                storage_id: storage_id,
+                                folder_id: folder_id,
+                                is_restore: {json_encode($is_restore)},
+                                beforeMoveFiles: function () {
+                                    if (empty_process_dialog.length) {
+                                        $('.dialog:not(#f-uploader)').remove();
+                                        empty_process_dialog.show();
+                                    }
+                                },
+                                onSuccess: function (r) {
+                                    if (r.status === 'ok') {
+
+                                        let reload_page = true;
+
+                                        $.files.runCopyFiles();
+                                        $.files.checkBackendChanges();
+                                        // run dialog if process_id is present and not empty
+
+                                        if (r.data.process_id > 0) {
+                                            $.files.loadDialog('?module=move&action=processDialog&copytask_process_id=' + r.data.process_id, {
+                                                onOpen: function (d) {
+                                                    $('.dialog').not(d).remove();
+                                                }
+                                            });
+                                            reload_page = false;
+                                        }
+
+                                        if (r.data.count > 0) {
+                                            $.files.refreshSidebar();
+                                        }
+
+                                        if (reload_page) {
+                                            $('.dialog:not(#f-uploader)').remove();
+                                            $.files.controller.reloadPage();
+                                        }
+
+                                        // Uncheck All
+                                        const $catalog = $("#f-catalog-wrapper");
+                                        if ($catalog.length) {
+                                            $catalog.trigger("unSelectAll");
+                                        }
+                                    } else {
+                                        $('.dialog:not(#f-uploader)').remove();
+                                        $.files.alertError(r.errors[0][0]);
+                                    }
+                                },
+                                onError: function (r) {
+                                    $('.dialog:not(#f-uploader)').remove();
+                                    if ($.isPlainObject(r) && r.same_place) {
+                                        $.files.alertError($_("Files from the same place"));
+                                    } else if (typeof r === 'string') {
+                                        $.files.alertError(r);
+                                    } else if ($.isArray(r)) {
+                                        $.files.alertError(r[0] || '[`Server error`]', r);
+                                    } else {
+                                        $.files.alertError('[`Server error`]', r);
+                                    }
+                                },
+                                onAlways: function () {
+                                    dialog.find('.f-submit-loading').hide();
+                                }
+                            });
+                        })
+                    }
+                });
+            {else}
+                dialog.filesDialog();
+            {/if}
+        });
+    </script>
+</div>
+

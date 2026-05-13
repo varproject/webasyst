@@ -1,0 +1,180 @@
+<div id="{$browser_id}" class="f-browser">
+    <div class="f-browser-content">
+        <ul class="menu">
+            {foreach $storages as $storage}
+                <li data-id="{$storage.id}" data-type="storage">
+                    {include file='./include.item.html' type='storage' item=$storage}
+                    {if $location.storage.id == $storage.id}
+                        <ul class="menu">
+                            {include file="./include.folders.html" folders=$location.folders view_type='hierarchy' include_js=false inline}
+                        </ul>
+                    {else}
+                        <ul class="menu" style="display: none;"></ul>
+                    {/if}
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+
+    <ul class="f-item-tmpl" style="display: none;">
+        <li data-type="folder" data-id="0">
+            {include file='./include.item.html' type='tmpl-folder'}
+            <ul class="menu" style="display: none;"></ul>
+        </li>
+    </ul>
+</div>
+
+<script>
+    $(function() {
+
+        const browser = $('#{$browser_id}');
+
+        // data for accessing by side js
+        browser.data('storages', {$storages|json_encode});
+        browser.data('folders', {});
+
+        browser.find('.selected').removeClass('selected');
+        browser.find('li[data-type="{$selected.type}"][data-id="{$selected.id}"]').addClass('selected');
+
+        const appendInput = function(li) {
+            const ul = li.find('>ul').show();
+            const tmpl = $('.f-item-tmpl', browser).html();
+            ul.prepend(tmpl);
+            const input = ul.find(':input').focus();
+
+            // keyup, cause of preventing dialog event handler of escape
+            input.keyup(function(e) {
+                if (e.keyCode == 27) {
+                    input.closest('li[data-id=0]').remove();
+                    return false;
+                }
+            });
+
+            input.keydown(function(e) {
+
+                if (e.keyCode != 13) {
+                    return;
+                }
+
+                e.preventDefault();
+                const li = input.closest('li[data-id=0]');
+
+                const parent_li = li.closest('li[data-id!=0]');
+                const parent_type = parent_li.data('type');
+                const parent_id = parent_li.data('id');
+
+                const data = {
+                    name: input.val()
+                };
+                if (parent_type === 'storage') {
+                    data.storage_id = parent_id;
+                    data.folder_id = 0;
+                } else {
+                    data.storage_id = 0;
+                    data.folder_id = parent_id;
+                }
+
+                li.find('.loading').show();
+
+                $.files.clearValidateErrors(li);
+
+                $.files.jsonPost({
+                    url: '?module=folder&action=save',
+                    data: data,
+                    onSuccess: function(r) {
+                        li.find('.loading').hide();
+                        if (r.status === 'ok') {
+                            li.find('.add').show();
+                            li.attr('data-id', r.data.folder.id);
+                            input.parent().text(input.val());
+                            input.remove();
+                        } else {
+                            const errors = $.map(r.errors, function(el) {
+                                el.name = 'tmpl_' + el.name;
+                                return el;
+                            });
+                            $.files.showValidateErrors(errors, li);
+                        }
+                    }
+                });
+            });
+        };
+
+        const onLoad = function(type, id, add) {
+            if (add) {
+                appendInput($('li[data-type=' + type + '][data-id=' + id + ']', browser));
+            }
+        };
+
+        const expand = function(handler, add) {
+            const li = handler.closest('li');
+            const ul = li.find('>ul');
+
+            handler.removeClass('fa-caret-right').addClass('fa-caret-down');
+            ul.show();
+
+            if (!ul.data('loaded')) {
+
+                // abort prev ajax
+                li.data('xhr') && li.data('xhr').abort();
+
+                const type = li.data('type');
+                const id = li.data('id');
+                const loading = li.find('.loading:first').show();
+
+                const xhr = ul.load('?module=browser&action=' + type + '&id=' + id + '&browser_id={$browser_id}&level={$level}', function() {
+                        onLoad(type, id, add);
+                        browser.trigger('load', [type, id]);
+                        loading.hide();
+                        li.data('xhr', null);
+                        ul.data('loaded', 1);
+                    }
+                );
+                li.data('xhr', xhr);
+            }
+        };
+
+        const collapse = function(handler) {
+            handler
+                .removeClass('fa-caret-down')
+                .addClass('fa-caret-right')
+                .closest('li')
+                .find('>ul')
+                .hide();
+        };
+
+        const isExpanded = function(handler) {
+            return handler.hasClass('fa-caret-down');
+        };
+
+        browser.on('click', '.f-browser-storage .add, .f-browser-folder .add', function (e) {
+            e.preventDefault();
+
+            const li = $(this).closest('li');
+            const handler = li.find('.f-collapse-handler');
+
+            if (handler.length && !isExpanded(handler)) {
+                expand(handler, true);
+            } else {
+                appendInput(li);
+            }
+        });
+
+        browser.on('click', '.f-collapse-handler', function(e) {
+            e.preventDefault();
+
+            if (isExpanded($(this))) {
+                collapse($(this));
+            } else {
+                expand($(this));
+            }
+        });
+
+        browser.on('click', '.f-browser-storage,.f-browser-folder', function() {
+            browser.find('li.selected').removeClass('selected');
+            const li = $(this).closest('li').addClass('selected');
+            browser.trigger('select', [li.data('type'), li.data('id')]);
+        });
+
+    });
+</script>

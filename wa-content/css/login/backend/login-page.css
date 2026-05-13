@@ -1,0 +1,503 @@
+html body {
+  --accent-color: #4879da;
+/* core layout */
+  --background-color: #f3f5fa;
+  --background-color-blank: #fff;
+  --background-color-input: rgba(0,20,80,0.05);
+  --background-color-input-solid: rgba(0,20,80,0.05);
+  --background-color-checkbox-border: rgba(0,20,80,0.12);
+/* content */
+  --text-color: #444;
+  --text-color-strong: #333;
+  --text-color-stronger: #111;
+  --text-color-strongest: #000;
+  --text-color-hint: #aab;
+  --text-color-hint-strong: #89a;
+  --text-color-link: var(--accent-color);
+  --text-color-link-hover: #f20;
+  --text-color-input: #1f2d3d;
+  --text-color-button-disabled: rgba(255,255,255,0.65);
+  --text-color-heading: #9ab;
+  --border-color-input-hover: rgba(0,20,80,0.2);
+  --border-color-input-outlined: rgba(0,0,0,0.1);
+  --border-color-soft: rgba(0,20,80,0.1);
+  --border-color-hard: rgba(0,20,80,0.25);
+  --border-color-hr: rgba(0,20,80,0.1);
+}
+#wa-login.wa-backend-login-page {
+  min-height: inherit;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#wa-login.wa-backend-login-page .wa-backend-login-wrapper {
+  padding: 1.5rem 2rem;
+  margin: 0.5rem;
+  width: 550px;
+  height: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 0 100px #bbb;
+}
+#wa-login.wa-backend-login-page .wa-backend-login-wrapper .wa-backend-login {
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0 auto;
+}
+#wa-login.wa-backend-login-page .wa-backend-login-wrapper .wa-backend-login .dialog-content-indent {
+  padding-bottom: 0;
+}
+#wa-login.wa-backend-login-page .wa-backend-login-wrapper .wa-backend-login .dialog-buttons {
+  position: relative;
+}
+#wa-login.wa-backend-login-page .wa-backend-login-wrapper .wa-backend-login .dialog-buttons > *:first-child {
+  margin-top: 0;
+}
+#wa-login.wa-backend-login-page .wa-backend-login-wrapper .wa-poweredby {
+  text-align: center;
+  margin-top: 2rem;
+}
+#wa-login.wa-backend-login-page h1 {
+  max-height: none;
+}
+#wa-login.wa-backend-login-page p.i-error {
+  margin: 6px 0 10px;
+  color: var(--red);
+}
+#wa-login.wa-backend-login-page .wa-error-msg {
+  font-size: 0.85em;
+  color: var(--red);
+  display: block;
+  font-weight: 500;
+  line-height: 1.3;
+  font-style: normal;
+  margin-bottom: -8px;
+}
+#wa-login.wa-backend-login-page .wa-buttons .wa-error-msg {
+  margin: -12px 0 0 0;
+}
+#wa-login.wa-backend-login-page .wa-login-form-title {
+  font-size: 1.75rem;
+  margin: 0 0 2rem;
+  font-weight: 600;
+}
+#wa-login.wa-backend-login-page .wa-recaptcha {
+  min-height: 78px;
+}
+#wa-login.wa-backend-login-page .wa-info-messages {
+  margin: 2rem 0 0;
+}
+#wa-login.wa-backend-login-page .wa-info-messages .wa-info-text,
+#wa-login.wa-backend-login-page .wa-info-messages .wa-info-msg {
+  display: block;
+  margin: 1em 0;
+}
+#wa-login.wa-backend-login-page .wa-info-messages .wa-info-text:first-child,
+#wa-login.wa-backend-login-page .wa-info-messages .wa-info-msg:first-child {
+  margin-top: 0;
+}
+#wa-login.wa-backend-login-page .wa-captcha {
+  padding: 8px 0 10px;
+}
+#wa-login.wa-backend-login-page .wa-captcha p {
+  margin: 0;
+}
+#wa-login.wa-backend-login-page .wa-captcha p img {
+  float: left !important;
+  margin-right: 5px;
+  margin-top: -8px;
+}
+#wa-login.wa-backend-login-page .wa-captcha strong {
+  font-size: 1.3em;
+}
+#wa-login.wa-backend-login-page .wa-captcha .wa-captcha-refresh {
+  font-size: 0.9em;
+  text-decoration: underline;
+  color: #aaa;
+}
+#wa-login.wa-backend-login-page .wa-captcha .wa-captcha-input {
+  min-width: 100px !important;
+  width: 100px !important;
+  display: inline !important;
+  font-size: 1.3em;
+  box-sizing: border-box;
+}
+#wa-login.wa-backend-login-page .wa-captcha .errormsg {
+  display: inline-block;
+  margin-left: 10px;
+}
+#wa-login.wa-backend-login-page .field {
+  margin: 1rem 0 0;
+  padding: 0;
+}
+#wa-login.wa-backend-login-page .field:first-child {
+  margin-top: 0;
+}
+#wa-login.wa-backend-login-page .field .name:not(:empty) {
+  color: #777;
+  margin: 0 0 0.375rem 0.125rem;
+}
+#wa-login.wa-backend-login-page .field .value input {
+  box-sizing: border-box;
+}
+#wa-login.wa-backend-login-page .field .value input::placeholder {
+  color: #999;
+}
+#wa-login.wa-backend-login-page .field .value input[type=text],
+#wa-login.wa-backend-login-page .field .value input[type=password] {
+  width: 100%;
+}
+#wa-login.wa-backend-login-page .field .value .wa-error {
+  border: 2px solid var(--red);
+}
+#wa-login.wa-backend-login-page .field .wa-info-msg {
+  display: block;
+  margin-top: 12px;
+}
+#wa-login.wa-backend-login-page .field.wa-buttons {
+  margin: 2rem 0 0;
+}
+#wa-login.wa-backend-login-page .field .wa-info-messages {
+  margin-bottom: 20px;
+}
+#wa-login.wa-backend-login-page .field .wa-info-messages .wa-info-msg {
+  display: block;
+  margin-top: 4px;
+}
+@media screen and (max-width: 760px) {
+  #wa-login.wa-backend-login-page .wa-captcha-field {
+    margin-top: 20px;
+  }
+  #wa-login.wa-backend-login-page .wa-captcha-field .wa-captcha-input {
+    font-size: 1.3em;
+  }
+  #wa-login.wa-backend-login-page .field .name {
+    width: 100%;
+    margin-left: 0;
+    padding-top: 6px;
+  }
+  #wa-login.wa-backend-login-page .field .value {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+#wa-login.wa-backend-login-page .wa-login-form .wa-login-form-title {
+  text-align: center;
+  font-size: 2rem;
+}
+#wa-login.wa-backend-login-page .wa-login-form .is-template {
+  display: none;
+}
+#wa-login.wa-backend-login-page .wa-login-form .wa-uncaught-errors {
+  margin-bottom: 20px;
+}
+#wa-login.wa-backend-login-page .wa-login-form .wa-onetime-password-wrapper {
+  display: block;
+  margin: 10px 0;
+}
+#wa-login.wa-backend-login-page .wa-login-form .wa-change-login-link {
+  margin-top: 12px;
+  display: inline-block;
+}
+#wa-login.wa-backend-login-page .wa-login-form .wa-request-onetime-password-link {
+  margin-top: 12px;
+  display: inline-block;
+}
+#wa-login.wa-backend-login-page .wa-login-form input[readonly] {
+  pointer-events: none;
+  background-color: #eee;
+}
+#wa-login.wa-backend-login-page .wa-login-form .wa-login-and-bind-with-webasyst-id-button-wrapper {
+  margin-bottom: 20px;
+}
+#wa-login.wa-backend-login-page .wa-login-form .wa-h2-wrapper {
+  margin-top: 20px;
+}
+#wa-login.wa-backend-login-page .wa-login-form .wa-login-submit {
+  min-width: 15rem;
+}
+#wa-login.wa-backend-login-page .wa-set-password-form .wa-info-messages .wa-info-text {
+  display: block;
+  margin: 10px 0;
+}
+#wa-login.wa-backend-login-page .wa-set-password-form .wa-uncaught-errors {
+  margin-bottom: 20px;
+}
+#wa-login.wa-backend-login-page .wa-set-password-form .wa-is-hidden {
+  display: none;
+}
+#wa-login.wa-backend-login-page .wa-set-password-form .wa-onetime-password-wrapper {
+  display: block;
+  margin: 10px 0;
+}
+#wa-login.wa-backend-login-page .wa-set-password-form .wa-login-text-input {
+  width: 300px;
+  font-weight: bold;
+}
+@media screen and (min-width: 761px) {
+  #wa-login.wa-backend-login-page .wa-set-password-form .field .value input[type="text"],
+  #wa-login.wa-backend-login-page .wa-set-password-form .field .value input[type="password"] {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper .wa-login-form-title {
+  font-size: 1.75rem;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper .wa-field-submit .wa-submit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper .wa-edit-login-link-wrapper,
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper .wa-send-again-confirmation-code-link-wrapper {
+  margin-top: 10px;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper input[readonly] {
+  pointer-events: none;
+  background-color: #eee;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper:not(.wa-with-confirmation-code) .wa-field-submit .wa-submit .wa-confirm-button {
+  display: none;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper:not(.wa-with-confirmation-code) .wa-uncaught-errors {
+  margin-bottom: 20px;
+  flex: 0 0 100%;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper:not(.wa-with-confirmation-code) .wa-is-hidden {
+  display: none;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper:not(.wa-with-confirmation-code) .wa-onetime-password-wrapper {
+  display: block;
+  margin: 10px 0;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper:not(.wa-with-confirmation-code) .wa-back-to-login-page-link-wrapper {
+  margin: 40px 0 30px 0;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper:not(.wa-with-confirmation-code) .wa-field-confirmation-code {
+  display: none;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper:not(.wa-with-confirmation-code) .wa-edit-login-link-wrapper {
+  display: none;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper.wa-with-confirmation-code .wa-field-submit .wa-submit .wa-recovery-button {
+  display: none;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper.wa-with-confirmation-code .wa-field-submit .wa-remember-now-link {
+  display: none;
+}
+#wa-login.wa-backend-login-page .wa-forgotpassword-wrapper.wa-with-confirmation-code .wa-info-messages {
+  margin-left: 105px;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-input::-webkit-input-placeholder {
+  font-size: 16px;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-input:-moz-placeholder {
+  font-size: 16px;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-input::-moz-placeholder {
+  font-size: 16px;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-input:-ms-input-placeholder {
+  font-size: 16px;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-input:focus::-webkit-input-placeholder {
+  color: #fff;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-input:focus:-moz-placeholder {
+  color: #fff;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-input:focus::-moz-placeholder {
+  color: #fff;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-input:focus:-ms-input-placeholder {
+  color: #fff;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-code {
+  margin-top: 0.5em;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-code .wa-captcha-img-wrapper {
+  display: inline-block;
+  width: 120px;
+  height: 45px;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-code .wa-captcha-refresh-wrapper {
+  display: inline-block;
+  vertical-align: top;
+  margin: 3px 0 0 5px;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-code .wa-captcha-refresh-wrapper .wa-captcha-refresh {
+  color: #aaa;
+  font-size: 12px;
+  width: 65px;
+  line-height: 14px;
+  transition: all 200ms linear;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-code .wa-captcha-refresh-wrapper .wa-captcha-refresh:hover {
+  color: #555;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-code .wa-captcha-refresh-wrapper .wa-captcha-refresh .wa-captcha-refresh-icon {
+  display: table-cell;
+  background-image: url("../../../img/captcha-shape-gray.svg");
+  background-repeat: no-repeat;
+  width: 10.7px;
+  height: 9px;
+  padding-right: 6px;
+}
+#wa-login.wa-backend-login-page .wa-captcha-section .wa-captcha-code .wa-captcha-refresh-wrapper .wa-captcha-refresh .wa-captcha-refresh-text {
+  display: table-cell;
+  width: 65px;
+}
+#wa-login.wa-backend-login-page .waid-login {
+  text-align: center;
+  position: relative;
+  margin-top: 22px;
+  margin-bottom: 10px;
+}
+#wa-login.wa-backend-login-page .waid-login .separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #aaa;
+  line-height: 1;
+}
+#wa-login.wa-backend-login-page .waid-login .separator::before,
+#wa-login.wa-backend-login-page .waid-login .separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+  margin-top: 4px;
+}
+#wa-login.wa-backend-login-page .waid-login .separator::before {
+  margin-right: 0.35em;
+}
+#wa-login.wa-backend-login-page .waid-login .separator::after {
+  margin-left: 0.35em;
+}
+#wa-login.wa-backend-login-page .waid-login .waid-auth-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 20px;
+  color: #333;
+  user-select: none;
+  background-color: #fff;
+  border: 1px solid rgba(0,20,80,0.1);
+  padding: 0.5em 2em;
+  line-height: 1;
+  border-radius: 0.5rem;
+  outline: 0 none;
+  cursor: pointer;
+  box-sizing: border-box;
+  min-height: 2.5rem;
+  transition: all 0.2s;
+}
+#wa-login.wa-backend-login-page .waid-login .waid-auth-link:hover {
+  color: #000 !important;
+  border-color: rgba(0,20,80,0.2);
+}
+#wa-login.wa-backend-login-page .waid-login .waid-auth-link > .icon {
+  width: 1.125em;
+  height: 1.125em;
+  background-image: url("../../../../wa-content/img/webasyst-wand-bold-black.svg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  margin-right: 0.5em;
+}
+#wa-login.wa-backend-login-page .waid-login .hint {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  text-decoration: underline;
+  font-size: 14px;
+  color: #aaa;
+}
+@media (max-width: 599px) {
+  #wa-login.wa-backend-login-page .waid-login .hint {
+    position: relative;
+    display: block;
+    top: unset;
+    right: unset;
+    margin-top: 16px;
+  }
+}
+#wa-login.wa-backend-login-page .waid-login .error {
+  color: #f00;
+  font-size: 12px;
+  display: block;
+  margin-top: 10px;
+}
+#wa-login.wa-backend-login-page .icon.loading {
+  background-image: url("data:image/svg+xml,<svg fill='rgb(150,150,150)' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d='M304 48c0 26.5-21.5 48-48 48s-48-21.5-48-48 21.5-48 48-48 48 21.5 48 48zm-48 368c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48zm208-208c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48zM96 256c0-26.5-21.5-48-48-48S0 229.5 0 256s21.5 48 48 48 48-21.5 48-48zm12.9 99.1c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48c0-26.5-21.5-48-48-48zm294.2 0c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48c0-26.5-21.5-48-48-48zM108.9 60.9c-26.5 0-48 21.5-48 48s21.5 48 48 48 48-21.5 48-48-21.5-48-48-48z'/></svg>");
+  animation: rotation 1s linear infinite;
+}
+@media screen and (max-width: 500px) {
+  #wa-login.wa-backend-login-page .wa-backend-login-wrapper {
+    padding: 1.5rem;
+  }
+  #wa-login.wa-backend-login-page .wa-backend-login-wrapper .wa-backend-login {
+    width: 100%;
+  }
+}
+/* UI */
+[type=checkbox]:not(.not-styled) {
+  appearance: none;
+  width: 1em;
+  height: 1em;
+  margin-bottom: 0.125em;
+  vertical-align: text-bottom;
+  border-radius: 0.25em;
+  border: 1px solid var(--background-color-checkbox-border);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 0.75em;
+  background-color: var(--background-color-input);
+  cursor: pointer;
+}
+[type=checkbox]:checked:not(.not-styled) {
+  background-color: var(--accent-color);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23fff' d='M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z'%3E%3C/path%3E%3C/svg%3E");
+}
+[type=checkbox] + label {
+  cursor: pointer;
+}
+/* Keyframes */
+@-moz-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

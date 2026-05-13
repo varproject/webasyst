@@ -1,0 +1,47 @@
+<div class="dialog s-walog-explained" id="status-walog-dialog">
+    <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <header class="dialog-header">
+                <h3>{$date|wa_date:humandate} <span class="hint">{$user->getName()|escape}</span></h3>
+            </header>
+
+            <div class="dialog-content">
+                {$_i = 0}
+                {foreach $walogs as $walog}
+                    {if $walog->appId != 'webasyst'}
+                        <section class="custom-mb-32">
+                            <h4 class="flexbox middle space-8{if $_i > 0} s-walog-app-separator{/if}">
+                                <span>
+                                    <i class="icon size-32"
+                                        style="background-image: url('{$walog->appIcon}');"></i>
+                                </span>
+                                <span class="gray uppercase custom-m-0">{$walog->appName|escape}</span>
+                                {$_i = $_i + 1}
+                            </h4>
+                            {foreach $walog->logs as $logs}
+                                <div class="flexbox space-8 custom-mb-16 custom-ml-8">
+
+                                    <i class="icon userpic size-20 top"
+                                       style="background-image: url('{$logs['contact_photo_url']}'); min-width: 1.25rem;"></i>
+                                    <div class="small" style="padding-top: 2px;">
+                                        <span>{$logs['action_name']}</span>
+                                        {if !empty($logs['params_html'])}
+                                            <strong class="break-word">{$logs['params_html']}</strong>
+                                        {/if}
+
+                                        <span class="hint">{$logs['datetime']|wa_datetime:'humandatetime'}</span>
+                                    </div>
+
+                                </div>
+
+                            {/foreach}
+                        </section>
+                    {/if}
+                {/foreach}
+            </div>
+
+            <footer class="dialog-footer">
+                <button class="js-close-dialog button light-gray">[`Close`]</button>
+            </footer>
+        </div>
+</div>

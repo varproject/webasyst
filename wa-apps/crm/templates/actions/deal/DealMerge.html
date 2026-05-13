@@ -1,0 +1,198 @@
+{$_title = "[`Deals merge`]"}
+
+{if $iframe}
+{strip}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$_title} &mdash; {$wa->accountName()}</title>
+    {if $iframe == 1}
+        <base target="_parent" />
+    {/if}
+
+    {* CSS *}
+    {/strip}{$wa->css()}
+        <link href="{$wa_app_static_url}css/crm.css?v={$wa->version()}" rel="stylesheet">
+        <link href="{$wa_app_static_url}css/crm2.css?v={$wa->version()}" rel="stylesheet">
+
+    {wa_js}
+        {$wa_url}wa-content/js/jquery/jquery-3.6.0.min.js
+        {$wa_url}wa-content/js/jquery/jquery-migrate-1.2.1.min.js
+        {$wa_url}wa-content/js/jquery-plugins/jquery.store.js
+    {/wa_js}{strip}
+
+    {/strip}
+    {wa_js}
+        {$wa_app_static_url}js/crmDialog/crmDialog.js
+        {$wa_app_static_url}js/crm.js
+        {$wa_app_static_url}js/deal.js
+        {$wa_app_static_url}js/deals.js
+    {/wa_js}{strip}
+
+    <script>
+        (function ($) {
+            $.crm.app_url = {$wa_app_url|json_encode};
+            $.crm.iframe = {$iframe|json_encode};
+        })(jQuery);
+    </script>
+</head>
+<body>
+<div class="content blank" style="min-height: 100%;">
+<div class="article">
+<div class="article-body">
+{/strip}
+{/if}
+
+<div class="c-deals-merge-page shadowed" id="c-deals-merge-page">
+    <div class="blank">
+        <form>
+            <h1 class="c-page-header">{$_title}</h1>
+
+            {if $dropped_ids_count > 0}
+            <span class="alert outlined">
+                <i class="fas fa-exclamation-triangle text-yellow"></i>
+                <span class="custom-pl-4">{_w('%d deal will not be affected by the action due to insufficient access rights', '%d deals will not be affected by the action due to insufficient access rights', $dropped_ids_count)}</span>
+            </span>
+            {/if}
+
+            <p>
+                [`Choose a master deal that will be retained after merging.`]
+                [`Other deals will be deleted during this merging operation.`]
+            </p>
+
+            <ul class="c-deals-list">
+                {foreach $deals as $_deal}
+                    {$_contact = ifset($contacts[$_deal.contact_id], false)}
+
+                    <li class="c-deal js-deal">
+                        <div class="c-layout">
+                            <div class="c-column c-column-field custom-mt-16">
+                                <input class="c-field js-field" style="margin-top: 1px;" type="radio" name="master_id" value="{$_deal.id}">
+                            </div>
+                            <div class="c-column middle">
+                                <div class="line break-words">
+                                    <span class="bold">{$_deal.name|escape}</span>
+                                    <span class="c-active-text semibold lowercase">—&nbsp;[`Selected as the main deal`]</span>
+                                </div>
+                                <div class="line flexbox middle space-4 wrap">
+                                    <span class="c-state-badge text-ellipsis small" title="{$_deal.funnel.name|escape}">
+                                        <i class="fas fa-circle" style="color: {$_deal.funnel.color}"></i>
+                                        {$_deal.funnel.name|escape}
+                                    </span>
+                                    <span class="icon">
+                                        <i class="fas fa-angle-right"></i>
+                                    </span>
+                                    <span class="c-state-badge text-ellipsis small" title="{$_deal.funnel.name|escape}">
+                                        {if $_deal.status_id == "WON"}
+                                            <i class="fas fa-flag-checkered" style="color: {$_deal.stage.color}"></i>
+                                            [`WON`]
+                                            {if !empty($_deal.closed_datetime)}<span class="hint">{$_deal.closed_datetime|wa_datetime}</span>{/if}
+                                        {elseif $_deal.status_id == "LOST"}
+                                            <i class="fas fa-ban" style="color: {$_deal.stage.color}"></i>
+                                            [`LOST`]
+                                            {if !empty($_deal.closed_datetime)}<span class="hint">{$_deal.closed_datetime|wa_datetime}</span>{/if}
+                                        {else}
+                                            <i class="fas fa-circle" style="color: {$_deal.stage.color}"></i>
+                                            {$_deal.stage.name|escape}
+                                        {/if}
+                                    </span>
+                                </div>
+                                <div class="line">
+                                    {if !empty($_contact)}
+                                        <div class="c-contact">
+                                            <div class="c-layout fixed">
+                                                <div class="c-column c-image-column">
+                                                    <div class="c-image">
+                                                        <i class="icon32" style="background-image: url({$_contact->getPhoto(32)})"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="c-column middle">
+                                                    <ul class="list compact">
+                                                        <li style="line-height: 16px;">
+                                                            {* name *}
+                                                            <span class="c-name" style="display: inline; padding: 0; margin: 0;">
+                                                                {$wa->crm->contactName($_contact.name)}
+                                                                {if $_contact.id == $wa->userId()}([`me`]){/if}
+                                                            </span>
+
+                                                            {* role *}
+                                                            {if !empty($_contact.label)}<span class="c-role-tag">{$_contact.label|escape}</span>{/if}
+
+                                                            {* jobtitle *}
+                                                            {if !empty($_contact.jobtitle)}
+                                                                <div>
+                                                                    <span class="c-jobtitle hint">{$_contact.jobtitle|escape}</span>
+                                                                </div>
+                                                            {/if}
+
+                                                            {$_event = $_contact->getEvent()}
+                                                            {if !empty($_event)}
+                                                                {$_styles = []}
+                                                                {if !empty($_event.bg_color)}
+                                                                    {$_styles[] = "background: `$_event.bg_color`;"}
+                                                                {/if}
+                                                                {if !empty($_event.font_color)}
+                                                                    {$_styles[] = "color: `$_event.font_color`;"}
+                                                                {/if}
+
+                                                                <div class="line">
+                                                                    <span class="c-status" {if !empty($_styles)}style="{$_styles|join:""}"{/if} title="">{$_event.summary}</span>
+                                                                </div>
+                                                            {/if}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <input name="slave_ids[]" value="{$_deal.id}" type="hidden">
+                    </li>
+                {/foreach}
+            </ul>
+
+            <footer class="c-footer-actions">
+                <input class="button green js-submit-button" type="submit" value="[`Merge`]" disabled>
+                <a href="{$wa_app_url}deal/" class="button light-gray js-cancel-button">[`Cancel`]</a>
+            </footer>
+        </form>
+    </div>
+
+    <script>
+        ( function($) {
+            var $wrapper = $("#c-deals-merge-page");
+
+            $.crm.title.set("{$_title}");
+            $.crm.renderSVG($wrapper);
+
+            new CRMDealsMergePage({
+                $wrapper: $wrapper
+            });
+        })(jQuery);
+    </script>
+    {if $iframe == 1}
+    <script>
+        ( function($) {
+            $('.js-cancel-button').one('click', function (e) {
+                if (!parent.history.state) return true
+
+                if (new RegExp('^/deal/\.+').test(parent.history.state.back)) {
+                    e.preventDefault()
+                    parent.history.back()
+                }
+            })
+        })(jQuery)
+    </script>
+    {/if}
+</div>
+
+{if $iframe}
+</div>
+</div>
+</div>
+</body>
+</html>
+{/if}

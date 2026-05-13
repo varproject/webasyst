@@ -1,0 +1,67 @@
+<div class="dialog width350px height150px f-unmount-confirm-dialog" id="{$container_id}-unmount-confirm-dialog" style="display:none;">
+    <div class="dialog-background"></div>
+    <div class="dialog-window">
+        <div class="dialog-content">
+            <div class="dialog-content-indent">
+                <h1>[`Unmount source`]</h1>
+                [`This will remove source and related folder from application. All files inside your source will remain unchanged.`]
+            </div>
+        </div>
+        <div class="dialog-buttons">
+            <div class="dialog-buttons-gradient">
+                <input type="button" class="button red" value="[`Unmount`]">
+                <i class="icon16 loading" style="margin-top: 7px; display: none;"></i>
+                [`or`]
+                <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var container = $('#{$container_id}');
+
+        var confirm_dialog = $('#{$container_id}-unmount-confirm-dialog');
+        $('.f-unmount-confirm-dialog').not(confirm_dialog).remove();
+        confirm_dialog.appendTo('.f-dialogs-section');
+
+        $('.f-unmount', container).click(function() {
+
+            var link = $(this);
+            if (link.data('loading')) {
+                return;
+            }
+
+            var unmount = function() {
+                var loading = link.parent().find('.loading').show();
+                link.data('loading', true);
+                return $.files.deleteSource('{$source_id}').always(function() {
+                    link.data('loading', false);
+                    loading.hide();
+                });
+            };
+
+            if (link.data('confirm') && confirm_dialog.length) {
+                confirm_dialog.filesDialog({
+                    onLoad: function() {
+                        confirm_dialog.find(':button').click(function () {
+                            var dialog_icon = confirm_dialog
+                                .find(':button')
+                                .closest('.dialog-buttons')
+                                .find('.loading').show();
+                            unmount().done(function() {
+                                dialog_icon.hide();
+                                confirm_dialog.trigger('close');
+                            });
+                        });
+                        return false;
+                    }
+                });
+            } else {
+                unmount();
+            }
+        });
+
+    });
+</script>

@@ -1,0 +1,204 @@
+{strip}
+
+{$_backend_tasks_hooks = $backend_tasks_hooks|default:[]}
+{$_backend_header_hooks = $backend_tasks_hooks.header|default:[]}
+
+<!-- plugin hook: 'backend_tasks.%plugin_id%.header.top' -->
+{* @event backend_tasks.%plugin_id%.header.top *}
+{foreach $_backend_header_hooks as $_}{$_.top|default:''}{/foreach}
+
+<div class="t-general-menu">
+
+    <div class="flexbox space-12">
+        <div class="wide">
+            <h5 class="t-preview-name custom-mb-0">
+                {if $is_in_my_list}
+                    {$list.name|escape}
+                {/if}
+            </h5>
+            <div class="dropdown t-order-selector js-dropdown-menu" data-id="order" id="t-menu-dropdown-order">
+
+                {$sort_options = [
+                    'priority' => "[`Priority`]",
+                    'due' => "[`Due`]",
+                    'newest' => "[`Newest`]",
+                    'oldest' => "[`Oldest`]"
+                ]}
+
+                <a class="dropdown-toggle t-selected-item js-dropdown-menu-title hint bold" href="javascript:void(0);" style="text-decoration: none !important;"></a>
+                <div class="dropdown-body">
+                    <ul class="menu">
+                        {foreach $sort_options as $o_id => $o_name}
+                            <li class="t-nav-item js-dropdown-menu-item {if $o_id == $current_sort}js-dropdown-menu-item-selected{/if}" data-value="{$o_id}">
+                                <a href="javascript:void(0);">
+                                    {$o_name|escape}
+                                </a>
+                            </li>
+                        {/foreach}
+
+                        <!-- plugin hook: 'backend_tasks.%plugin_id%.header.order_items' -->
+                        {* @event backend_tasks.%plugin_id%.header.order_items *}
+                        {foreach $_backend_header_hooks as $_}
+                            {$_order_items = $_.order_items|default:[]}
+                            {foreach $_order_items as $_item}
+                                <li class="t-nav-item js-dropdown-menu-item" data-value="{$_item.id}">
+                                    <a href="javascript:void(0);">
+                                        {$_item.name|escape}
+                                    </a>
+                                </li>
+                            {/foreach}
+                        {/foreach}
+
+                    </ul>
+                </div>
+
+                <script>
+                    ( function($) {
+                        $("#t-menu-dropdown-order").waDropdown({
+                            hover: false
+                        });
+                    })(jQuery);
+                </script>
+
+            </div>
+
+            <a class="hint bold" href="javascript:void(0);" title="[`Filter tasks`]" id="t-filters-toggle" style="text-decoration: none !important;">[`Filter`] <i class="fas fa-caret-down custom-mx-4"></i></a>
+
+        </div>
+        <div class="flexbox">
+            <!-- plugin hook: 'backend_tasks.%plugin_id%.header.toolbar' -->
+            {* @event backend_tasks.%plugin_id%.header.toolbar *}
+            {foreach $_backend_header_hooks as $_}<div>{$_.toolbar|default:''}</div>{/foreach}
+
+            {if $show_settings}
+            {$hint = ''}
+            {$is_premium = $wa->tasks->isPremium()}
+            {if $hash_type == 'project' && $project}
+                {$hint = '[`Get a public link for tracking entire project status and updates with no access to Webasyst backend.`]'}
+                {$public_links = $project->getPublicLinks()}
+            {elseif $hash_type == 'scope' && $milestone}
+                {$hint = '[`Get a public link for tracking entire milestone status and updates with no access to Webasyst backend.`]'}
+                {$public_links = $milestone->getPublicLinks()}
+            {/if}
+            {$is_public_link_exists = !!count($public_links)}
+            <div class="dropdown custom-mr-8 js-public-link-scope" style="position: static;">
+                <button class="dropdown-toggle without-arrow nowrap button light-gray rounded{if $is_public_link_exists} text-blue{else} text-light-gray{/if}"><i class="fas fa-external-link-alt"></i></button>
+                <div class="dropdown-body custom-p-8 custom-mx-12" style="width: auto;min-width: 300px; left:0; right: 0;">
+                    {if $is_premium}
+                        <div class="t-public-link-block{if $is_public_link_exists} hidden{/if}">
+                            <p class="hint align-center custom-mb-0">
+                                {$hint}
+                            </p>
+                            <div class="align-center box">
+                                <button href="#" class="js-public-link-button-create smaller light-gray text-blue">[`Enable public link`]</button>
+                            </div>
+                        </div>
+                        <div class="t-public-link-block{if !$is_public_link_exists} hidden{/if}">
+                            <ul class="menu custom-m-0">
+                                {foreach $public_links as $link}
+                                <li class="custom-mb-4">
+                                    <div class="flexbox middle space-4">
+                                        <div class="wide">
+                                            <a href="{$link}" class="small bold" target="_blank">{$link}</a>
+                                        </div>
+                                        <button class="copy-to-clipboard button small nobutton"><i class="fas fa-copy"></i></button>
+                                    </div>
+                                </li>
+                                {/foreach}
+                            </ul>
+                            <div class="align-center box">
+                                <button href="#" class="t-public-link-button-del smaller light-gray text-red">[`Disable public link`]</button>
+                            </div>
+                        </div>
+                    {else}
+                        <div class="box align-center">
+                            <h6>[`Private link is a premium feature`]</h6>
+                            <p class="hint">
+                              <i class="fas fa-star text-yellow"></i> [`Upgrade to premium to have the feature enabled and this message to disappear permanently.`]
+                            </p>
+                            <a href="{$wa_app_url}#/upgrade/" class="button yellow smaller">[`See what’s there in premium`]</a>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+            <div>
+                <a class="circle button light-gray custom-mr-8" href="#/settings/{if $hash_type == 'project'}project/{$entity_id}/{elseif $hash_type == 'scope'}scope/{$entity_id}/{/if}">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+            {/if}
+            <div>
+                <a id="show-selection-checkboxes" class="circle button light-gray" href="javascript:void(0);" title="[`Select tasks`]">
+                    <i class="far fa-check-square"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="t-preview-description small"></div>
+
+    <!-- plugin hook: 'backend_tasks.%plugin_id%.header.preview' -->
+    {* @event backend_tasks.%plugin_id%.header.preview *}
+    {foreach $_backend_header_hooks as $_}{$_.preview|default:''}{/foreach}
+
+    <div class="t-filters-wrapper" id="t-filters-menu">
+        {if !empty($filter_types)}
+            {include file="./includes/TasksHeaderFilters.inc.html" inline}
+        {/if}
+    </div>
+
+    <div class="align-center t-my-lists-wrapper" id="t-my-lists-box">
+        {function star_link id='' title=''}
+            <a href="javascript:void(0);" class="t-my-list-toggle button {if $id > 0}light-gray{/if} smaller outlined"
+               title="{$title|default:''|escape}"
+               data-hash="{$hash}"
+               data-order="{$current_sort}"
+               data-id="{$id|default:''}">
+               <div class="flexbox" style="display: inline-block;">
+                    <div style="display:{if $id > 0}block{else}none{/if}">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+                &nbsp;
+                <span>{$title|default:''|escape}</span>
+                <!-- <i class="icon16 loading t-loading-icon" style="display: none;"></i> -->
+            </a>
+        {/function}
+
+        {if $list && $list.is_own}
+            {star_link id=$list.id title='[`Remove from my filters`]'}
+        {else}
+            {star_link title='[`Save to my custom filters`]'}
+        {/if}
+
+    </div>
+
+</div>
+
+<script>
+    ( function($) {
+        $('#t-filters-toggle').click(function() {
+            if ($('#t-my-lists-box').is(":hidden")) {
+                $('#t-filters-menu').slideDown(100);
+                $('#t-selection-menu').slideDown(100);
+                $('#t-my-lists-box').slideDown(100);
+                $('.t-preview-description-content').slideUp(100);
+            }
+            else {
+                $('#t-filters-menu').slideUp(100);
+                $('#t-selection-menu').slideUp(100);
+                $('#t-my-lists-box').slideUp(100);
+                $('.t-preview-description-content').slideDown(100);
+            }
+            $('#t-tasks-wrapper').toggleClass('t-selection-checkboxes-visible');
+            $(this).toggleClass('upsidedown');
+            return false;
+        });
+
+    })(jQuery);
+</script>
+
+<!-- plugin hook: 'backend_tasks.%plugin_id%.header.bottom' -->
+{* @event backend_tasks.%plugin_id%.header.bottom *}
+{foreach $_backend_header_hooks as $_}{$_.bottom|default:''}{/foreach}
+
+{/strip}

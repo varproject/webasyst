@@ -1,0 +1,200 @@
+{strip}
+
+{$app_url = $app_url|default:''}
+
+{function backend_link_begin file=[]}
+    {if $file.backend_url !== null && !$file.in_copy_process}
+        <a class="f-file-link f-show-file-page drag-handle" href="{$app_url}{$file.backend_url|default:'javascript:void(0)'}" title="{$file.name|escape}">
+    {else}
+        <span class="f-file-link f-show-file-page drag-handle">
+    {/if}
+{/function}
+
+{function backend_link_end file=[]}
+    {if $file.backend_url !== null && !$file.in_copy_process}
+        </a>
+    {else}
+        </span>
+    {/if}
+{/function}
+
+{$hidden_cols_map = array_fill_keys($hidden_cols|default:[], true)}
+
+{foreach $files as $file}
+    <div class="f-row-wrapper f-catalog-item"
+         {if $file.is_new}data-is-new="1"{/if}
+         data-id="{$file.id}"
+         data-update-time="{strtotime($file.update_datetime)}"
+         data-type="{$file.type}">
+
+        {if $total_count > 0 && !$hidden_cols_map.checkbox|default:''}
+            <div class="f-column-item f-checkbox-column">
+                <input class="f-select-file" type="checkbox" value="{$file.id}" {if $file.in_copy_process || $file.locked}disabled="disabled"{/if}>
+            </div>
+        {/if}
+
+        <div class="f-column-item f-image-column">
+            {backend_link_begin file=$file}
+                <img class="f-file-image" src="{$file.photo_url.file_list_small}" alt="">
+                {if $file.source_icon_url}
+                    <i class="icon" style="background-image: url({$file.source_icon_url});font-size:initial;position:absolute;bottom:-2px;right:-8px;"></i>
+                {/if}
+            {backend_link_end file=$file}
+        </div>
+
+        <div class="f-column-item f-name-column">
+            <div class="f-name-wrapper">
+                {backend_link_begin file=$file}
+
+                    {$classes = ['f-file-name semibold']}
+
+                    {if $file.type === filesFileModel::TYPE_FOLDER}
+                        {$classes[] = 'f-file-type-folder'}
+                    {else}
+                        {if $file.file_type}
+                            {$classes[] = "f-file-type-`$file.file_type`"}
+                        {/if}
+                    {/if}
+
+                    {if $file.type === filesFileModel::TYPE_FOLDER && empty($file.count) && !$file.source_is_on_demand}
+                        {$classes[] = 'f-empty'}
+                    {/if}
+
+                    {if $file.mark}
+                        {$classes[] = 'highlighted'}
+
+                        {if $file.in_copy_process}
+                            {$classes[] = 'gray'}
+                        {else}
+                            {if $file.locked}
+                                {$classes[] = 'dark-gray'}
+                            {else}
+                                {$classes[] = $file.mark}
+                            {/if}
+                        {/if}
+                    {/if}
+
+                    <span class="{' '|join:$classes}">
+                        {$file.name|escape}
+                    </span>
+
+                    {if $file.is_personal}
+                        {if $file.type === filesFileModel::TYPE_FOLDER}
+                            <i class="fas fa-lock smaller custom-ml-4 text-gray" title="[`Only you can access files in this folder`]"></i>
+                        {else}
+                            <i class="fas fa-lock smaller custom-ml-4 text-gray" title="[`Only you can access this file`]"></i>
+                        {/if}
+                    {/if}
+                {backend_link_end file=$file}
+
+                {if $file.can_download && empty($is_trash)}
+                    <a class="f-download-file-link" title="[`download`]" href="{$app_url}{$file.download_url|default:'javascript:void(0)'}"><i class="fas fa-cloud-download-alt custom-ml-4"></i></a>
+                {/if}
+            </div>
+        </div>
+
+        {if !$hidden_cols_map.share|default:''}
+            <div class="f-column-item f-link-column">
+                <a class="show-public-link-dialog {if $file.hash}f-always-visible{/if}" title="[`public link`]" href="javascript:void(0);"><i class="fas fa-globe"></i></a>
+            </div>
+        {/if}
+
+        <div class="f-column-item f-update-column" title="{$file.update_datetime|wa_datetime}">
+            {$file.update_datetime_str}
+        </div>
+        <div class="f-column-item f-size-column nowrap">
+            {if $file.type === filesFileModel::TYPE_FILE && ($file.source_id == 0 || $file.size > 0)}
+                {$file.size_str}
+            {else}
+                &mdash;
+            {/if}
+        </div>
+        <div class="f-column-item f-meta-column">
+            <div class="flexbox middle wrap-mobile space-8">
+                {if !empty($file.copy_process_info)}
+                    {$_copy_process_info = $file.copy_process_info}
+                    <div class="js-copytask-info-wrapper">
+                        <a href="javascript:void(0);" class="js-show-copyprocess-info" title="[`in copying/moving process`]"><i class="fas fa-info-circle"></i></a>
+                        <p style="display: none !important;" class="js-copytask-info">
+                            {foreach $_copy_process_info as $_file_as_type => $_file_copy_process_info}
+                                {foreach $_file_copy_process_info as $_copytask}
+
+                                    {if $_file_as_type == 'as_source'}
+                                        {$_file_as_type_txt = 'source'}
+                                    {elseif $_file_as_type == 'as_target'}
+                                        {$_file_as_type_txt = 'target'}
+                                    {else}
+                                        {$_file_as_type_txt = 'unknown'}
+                                    {/if}
+
+                                    {$_process_type = 'copy'}
+                                    {if $_copytask.is_move}
+                                        {$_process_type = 'move'}
+                                    {/if}
+
+                                    {sprintf('This file in %s process as %s file', $_process_type, $_file_as_type_txt)} <br>
+                                    {sprintf('Progress of process is <strong>%0.2f%%</strong>', $_copytask.progress)} <br>
+
+                                    {if $_file_as_type === 'as_source' && !empty($_copytask.target_source_info)}
+                                        {sprintf('Target file id = %d', $_copytask.target_id)} <br>
+
+                                        {sprintf('Target file\'s <strong>source</strong> id = %d', $_copytask.target_source_info.id)}
+                                        <i class='icon16 plugins' style='background: url({$_copytask.target_source_info.icon_url}) no-repeat; background-size: contain;'></i>
+                                        {$_copytask.target_source_info.name}<br>
+                                    {/if}
+
+                                    {if $_file_as_type === 'as_target' && !empty($_copytask.source_source_info)}
+                                        {sprintf('Source file id = %d', $_copytask.source_id)}<br>
+
+                                        {sprintf('Source file\'s <strong>source</strong> id = %d', $_copytask.source_source_info.id)}
+                                        <i class='icon16 plugins' style='background: url({$_copytask.source_source_info.icon_url}) no-repeat; background-size: contain;'></i>
+                                        {$_copytask.source_source_info.name}<br>
+                                    {/if}
+
+                                    <br> To explore updated info refresh page
+
+                                {/foreach}
+                            {/foreach}
+                        </p>
+                    </div>
+                {/if}
+                {if $file.comment_count > 0}
+                    <span class="comments-wrapper flexbox">
+                    <a href="{$app_url}#/file/{$file.id}/" title="{_w('%d comment', '%d comments', $file.comment_count)}"><i class="fas fa-comments"></i></a>
+                    <span class="comments-count">{$file.comment_count}</span>
+                </span>
+                {/if}
+                {if $file.tags}
+                    <div class="tags-wrapper">
+                        <ul class="chips tags tags-list custom-m-0 smaller">{strip}
+                                {foreach $file.tags as $tag}
+                                    <li><a href="{$app_url}#/tag/{$tag.name|urlencode}/" title="{$tag.name|escape}"><i class="fas fa-hashtag"></i>{$tag.name|escape|truncate:20}</a></li>
+                                {/foreach}
+                            {/strip}</ul>
+                    </div>
+                {/if}
+            </div>
+        </div>
+
+        {if !$hidden_cols_map.contact|default:''}
+            <div class="f-column-item f-contact-column">
+                {if $file.contact_id != $contact_id && !empty($file.contact.photo_url_20)}
+                    <a href="javascript:void(0);" title="{if $file.type==filesFileModel::TYPE_FOLDER}{sprintf('[`Created by %s`]', $file.contact.name)|escape}{else}{sprintf('[`Uploaded by %s`]', $file.contact.name)|escape}{/if}">
+                        <i class="icon userpic f-userpick" style="background-image: url({$file.contact.photo_url_20});"></i>
+                    </a>
+                {/if}
+            </div>
+        {/if}
+
+        {if !$hidden_cols_map.favorite|default:''}
+            <div class="f-column-item f-favorites-column">
+                <a class="f-set-favorite-link" title="[`favorites`]" href="javascript:void(0);">
+                    <i class="fas fa-star text-{if $file.favorite}yellow{else}light-gray{/if}"></i>
+                </a>
+            </div>
+        {/if}
+
+    </div>
+{/foreach}
+
+{/strip}

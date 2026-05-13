@@ -1,0 +1,125 @@
+{$dialog_id = uniqid('f-mark-dialog-')}
+
+{function form_begin}
+    {if $allowed_files}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $allowed_files}</form>{/if}
+{/function}
+
+{function button_text}{strip}
+    {if $unallowed_files}[`Mark the rest`]{else}[`Mark`]{/if}
+{/strip}{/function}
+
+<div class="dialog f-mark-dialog" id="{$dialog_id}">
+    {form_begin}
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <h3 class="dialog-header">[`Mark files`]</h3>
+        <div class="dialog-content">
+
+            {if $allowed_files}
+                {if $unallowed_files}
+                    <p class="state-error-hint">
+                        [`No permissions to mark this files`]:
+                        {foreach $unallowed_files as $file}
+                            {$file.name|escape}&nbsp;
+                        {/foreach}
+                    </p>
+                {/if}
+                <ul class="flexbox middle f-settings-colorbox custom-p-0">
+                    {foreach $marks as $mark}
+                        {strip}
+                            <li class="f-settings-item{if $mark} {$mark}{/if}" data-mark="{$mark}">
+                                <i class="fas fa-{if $mark}check{else}ban{/if} text-white hidden"></i>
+                            </li>
+                        {/strip}
+                    {/foreach}
+                </ul>
+            {else}
+                <p class="state-error-hint">
+                    [`No permissions to mark this files`]
+                </p>
+            {/if}
+
+        </div>
+        <div class="dialog-footer dialog-buttons">
+            <div class="dialog-buttons-gradient">
+                {$wa->csrf()}
+                <button type="submit" class="button"><i class="fas fa-spinner fa-spin loading hidden custom-mr-4"></i> {button_text}</button>
+                 <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+            </div>
+        </div>
+    </div>
+    {form_end}
+    <script>( function($) {
+            const dialog = $('#{$dialog_id}');
+
+            $('.f-mark-dialog').not(dialog).remove();
+
+            dialog.filesDialog({
+                onOpen: function($dialog, dialog_instance) {
+                    let mark;
+                    const $settings_items = $dialog.find('.f-settings-colorbox .f-settings-item');
+                    $settings_items.on('click', function() {
+                        const $btn = $(this);
+                        mark = $btn.data('mark');
+
+                        $dialog.find('.f-settings-colorbox [data-icon]').addClass('hidden');
+                        $btn.addClass('selected').find('[data-icon]').removeClass('hidden');
+                    });
+
+                    $dialog.find('[type="submit"]').on('click', function(e) {
+                        e.preventDefault();
+
+                        $(this).find('.fa-spinner').removeClass('hidden');
+                        this.disabled = true;
+
+                        const file_ids = {json_encode($allowed_files|array_keys)},
+                            file_ids_str = $.map(file_ids, function(f_id) {
+                                return 'file_id[]=' + f_id;
+                            }).join('&');
+
+                        $.files.jsonPost({
+                            url: '?module=mark&action=save',
+                            data: '&' + file_ids_str + '&mark=' + mark,
+                            onSuccess: function(r) {
+
+                                if (r.status === 'ok') {
+                                    const file_id = r.data.file_id;
+                                    const mark = r.data.mark ? (r.data.mark) : '';
+                                    const marks = $.map(
+                                            {json_encode($marks|default:[])},
+                                        function(m) {
+                                            return m ? m : '';
+                                        }
+                                    ).join(' ').trim();
+
+                                    const main_container = $.files.config.getMainContainer();
+
+                                    $.each(file_id, function(i, fid) {
+                                        const item = main_container.find('.f-catalog-item[data-id="' + fid + '"] .f-file-name');
+                                        item.removeClass('highlighted ' + marks);
+                                        if (mark) {
+                                            item.addClass('highlighted ' + mark);
+                                        }
+                                    });
+
+                                    // Uncheck All
+                                    const $catalog = $("#f-catalog-wrapper");
+                                    if ($catalog.length) {
+                                        $catalog.trigger("unSelectAll");
+                                    }
+                                }
+                            },
+                            onAlways: function() {
+                                dialog_instance.close();
+                            }
+                        });
+                    });
+                }
+            });
+        })(jQuery);</script>
+</div>
+

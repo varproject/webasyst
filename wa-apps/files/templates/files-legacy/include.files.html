@@ -1,0 +1,417 @@
+{strip}
+
+{function order_url info=[] text=''}
+    <a href="{if !$hash_url}#{else}#/{$hash_url}{/if}/{$info.link|default:''}">{$text}{if $info.order} <i class="icon10 {if $info.order === 'asc'}uarr{elseif $info.order === 'desc'}darr{/if}"></i>{/if}</a>
+{/function}
+
+{if !isset($operations)}
+    {$operations = ['move', 'move_to_trash', 'rename', 'mark', 'copy', 'tags', 'send']}
+{/if}
+
+{$hidden_cols_map = array_fill_keys($hidden_cols|default:[], true)}
+{$operations_map = array_fill_keys($operations, true)}
+
+{function lazy_load_block offset=0 count=0 total_count=0}
+    <div class="block half-padded">
+        <br>
+        <div class="f-lazyloading-progress-string">{_w('%d item','%d items', min($offset + $count, $total_count))}&nbsp;{sprintf(_w('of %d'), $total_count)}</div><br>
+        <a href="javascript:void(0);" class="f-lazyloading-link" {if $count >= $total_count}style="display:none;"{/if}>[`Show more files`]</a>
+        <span class="f-lazyloading-progress" style="display:none">
+            <i class="icon16 loading"></i> [`Loading`] <span class="f-lazyloading-chunk">{_w('%d item','%d items', min($total_count - $offset - $count, $count))}...</span>
+        </span>
+    </div>
+{/function}
+
+{* TEMPLATE HELPERS END *}
+
+{if !$in_lazy_process}
+
+    <h1 class="f-main-header-wrapper">
+        <a id="f-back-to-list" class="f-back-to-list" href="javascript:void(0);">←&nbsp;[`Back`]</a>
+        <span class="f-header-name">{$title|escape}</span>
+        {if $source.icon_html}
+            <span class="f-header-icon">
+                {if $source.access}
+                    <a href="#/source/{$source.id}/" title="{sprintf('[`via %s (%s)`]', $source.provider_name|escape, $source.name|escape)}">{$source.icon_html}</a>
+                {else}
+                    {$source.icon_html}
+                {/if}
+                {if !$source.has_valid_token}
+                    {if $source.access}
+                        <a href="#/source/{$source.id}/" title="[`Source authorization code is canceled or expired`]"><i class="icon16 exclamation"></i></a>
+                    {else}
+                        <i class="icon16 exclamation" title="[`Source authorization code is canceled or expired`]"></i>
+                    {/if}
+                {/if}
+            </span>
+        {/if}
+
+        {if !empty($is_trash) && $files}
+            <a class="f-trash-clear" id="f-trash-clear" href="javascript:void(0);" data-confirm-text="[`Do you really want to clean the trash and delete all files?`]">
+                <i class="icon16 delete"></i>[`Clear trash`]
+            </a>
+        {/if}
+
+        <i class="icon16 loading f-loading" style="margin-left: 4px; margin-top: 8px; display: none;"></i>
+
+        {$before_links_block|default:''}
+
+        {if $can_share_folder|default:''}
+            {if $has_full_access_to_folder}
+                <a id="f-share-link" class="f-share-link" href="javascript:void(0);">
+                    <i class="icon16 sharing"></i>
+                    {* if $is_folder_shared}
+                        [`Sharing settings`]
+                    {else}
+                        [`Share this folder`]
+                    {/if *}
+                    [`Sharing settings`]
+                </a>
+                <a id="f-public-link" class="f-public-link" href="javascript:void(0)">
+                    <i class="icon16 globe"></i>
+                    [`Public link`]
+                </a>
+            {/if}
+        {/if}
+        {if $can_create_folder|default:''}
+            <a id="f-create-folder-link" class="f-create-folder-link {if !empty($in_sync)}f-in-sync{/if}" href="javascript:void(0);">
+                <i class="icon16 folder"></i>[`Create subfolder`]
+            </a>
+        {/if}
+
+        {$after_links_block|default:''}
+
+    </h1>
+
+    <div class="f-message-block" style="display:none;"></div>
+
+    <div class="f-main-settings-block" style="display:none;"></div>
+
+    {if !empty($breadcrumbs) && count($breadcrumbs)>1}
+        <ul class="f-breadcrumbs-wrapper menu-h">
+            {foreach $breadcrumbs as $breadcrumb}
+                {if !$breadcrumb@last}
+                    <li class="f-breadcrumb-item">
+                        <a href="{$breadcrumb.backend_url}" title="{$breadcrumb.name|escape}">{$breadcrumb.name|escape|truncate:64}</a>
+                    </li>
+                {/if}
+            {/foreach}
+        </ul>
+    {/if}
+
+    {$after_breadcrumbs_block|default:''}
+
+    <div id="f-lazyloading-files-container">
+        <div class="f-catalog-content">
+            {if !empty($operations)}
+                <div class="f-operations-wrapper" id="f-operations-menu">
+                    <div class="f-checkbox-wrapper">
+                        <input class="f-checkbox" type="checkbox" name="">
+                    </div>
+                    <ul class="f-operations-list menu-h">
+                        {if $operations_map.rename|default:''}
+                            <li>
+                                <a class="f-operation-link is-rename {if !empty($in_sync)}f-in-sync{/if}" id="f-rename-link" href="javascript:void(0);">
+                                    <i class="icon16 edit"></i>[`Rename`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.send|default:''}
+                            <li>
+                                <a class="f-operation-link is-send" id="f-send-link" href="javascript:void(0);">
+                                    <i class="icon16 email"></i>[`Send as attachment`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.copy|default:''}
+                            <li>
+                                <a class="f-operation-link is-copy {if !empty($in_sync)}f-in-sync{/if}" id="f-copy-link" href="javascript:void(0);">
+                                    <i class="icon16 split"></i>[`Duplicate`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.move|default:''}
+                            <li>
+                                <a class="f-operation-link is-move {if !empty($in_sync)}f-in-sync{/if}" id="f-move-link" href="javascript:void(0);">
+                                    <i class="icon16 move"></i>
+                                    [`Move`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.mark|default:''}
+                            <li>
+                                <a class="f-operation-link is-mark" id="f-mark-link" href="javascript:void(0);">
+                                    <i class="icon16 multicolor"></i>
+                                    [`Mark`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.tags|default:''}
+                            <li>
+                                <a class="f-operation-link is-tags" id="f-tags-link" href="javascript:void(0);">
+                                    <i class="icon16 tags"></i>
+                                    [`Tags`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.move_to_trash|default:''}
+                            <li>
+                                <a class="f-operation-link is-trash {if !empty($in_sync)}f-in-sync{/if}" id="f-move-to-trash-link" href="javascript:void(0);">
+                                    <i class="icon16 trash"></i>
+                                    [`Delete`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.restore|default:''}
+                            <li>
+                                <a class="f-operation-link is-restore {if !empty($in_sync)}f-in-sync{/if}" id="f-restore-link" href="javascript:void(0);">
+                                    <i class="icon16 status-green"></i>
+                                    [`Restore`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.delete|default:''}
+                            <li>
+                                <a class="f-operation-link is-delete {if !empty($in_sync)}f-in-sync{/if}" id="f-delete-link" href="javascript:void(0);">
+                                    <i class="icon16 delete"></i>
+                                    [`Delete permanently`]<span class="f-count"></span>
+                                </a>
+                            </li>
+                        {/if}
+
+
+                        <!-- plugin hook: 'backend_file.operations_menu' -->
+                        {* @event backend_file.%plugin_id%.operations_menu *}
+                        {foreach $backend_file_list as $plugin_id => $item}
+                            {if !empty($item.operations_menu)}
+                                {$item.operations_menu}
+                            {/if}
+                        {/foreach}
+
+                    </ul>
+
+                </div>
+            {/if}
+
+            <div class="f-catalog-wrapper" id="f-catalog-wrapper">
+
+                {* HEADER *}
+                <div class="f-row-wrapper f-catalog-header">
+
+                    {if $total_count > 0}
+                        <div class="f-column-item f-column-header f-checkbox-column">
+                            <input class="f-checkbox check-all-files" type="checkbox" name="">
+                        </div>
+                    {/if}
+
+                    <div class="f-column-item f-column-header f-image-column"></div>
+
+                    <div class="f-column-item f-column-header f-name-column">
+                        {order_url info=$order_info.name text="[`Name`]"}
+                    </div>
+
+                    {if !$hidden_cols_map.share|default:''}
+                        <div class="f-column-item f-column-header f-link-column"></div>
+                    {/if}
+
+                    <div class="f-column-item f-column-header f-update-column">
+                        {order_url info=$order_info.update_datetime text="[`Updated`]"}
+                    </div>
+
+                    <div class="f-column-item f-column-header f-size-column">
+                        {order_url info=$order_info.size text="[`Size`]"}
+                    </div>
+
+                    <div class="f-column-item f-column-header f-meta-column"></div>
+
+                    {if !$hidden_cols_map.contact|default:''}
+                        <div class="f-column-item f-column-header f-contact-column"></div>
+                    {/if}
+
+                    {if !$hidden_cols_map.favorite|default:''}
+                        <div class="f-column-item f-column-header f-favorites-column"></div>
+                    {/if}
+                </div>
+
+                {* CATALOG *}
+                {include file="./include.files.content.html" inline}
+            </div>
+            {lazy_load_block count=$count offset=$offset total_count=$total_count}
+        </div>
+    </div>
+
+    <script>( function($) {
+
+        {* Init Files Catalog Page *}
+        new FilesCatalog({
+            $catalog: $("#f-catalog-wrapper"),
+            $operationMenu: $("#f-operations-menu"),
+            storage_id: {if isset($storage_id)}{$storage_id}{else}false{/if},
+            folder_id: {if isset($folder_id)}{$folder_id}{else}false{/if},
+        });
+
+        $.files.config.setPageInfo($.files.controller.getCurrentHash(2), {$page_info|json_encode});
+
+        {if $source && $source.id > 0}
+            $.files.config.setSourceId({$source.id});
+        {else}
+            $.files.config.setSourceId(0);
+        {/if}
+
+        $( function() {
+
+            var files_list_wrapper = $('#f-catalog-wrapper').favorite('.f-set-favorite-link', {
+                url: '?module=favorite&action=save',
+                serialize: function(el) {
+                    return 'id=' + el.closest('.f-catalog-item').data('id');
+                },
+                onSuccess: function(r) {
+                    if (r && r.status === 'ok') {
+                        $.files.refreshSidebar();
+                        if (r.data.favorite) {
+                            return 'favorite';
+                        } else {
+                            return '';
+                        }
+                    }
+                }
+            });
+
+            $.files.initLazyLoad({
+                url: '{$url|default:''}',
+                container: '#f-lazyloading-files-container',
+                total_count: {$total_count},
+                count: {$count},
+                onLoad: function() {
+                    files_list_wrapper.favorite('.f-set-favorite-link', 'init');
+                }
+            });
+
+            $.files.setBrowserTitle('{$title|escape:"javascript"}');
+
+            {if $operations_map.move|default:'' || $operations_map.move_to_trash|default:''}
+                var sidebar = $.files.config.getSidebar();
+                var file_list = $.files.config.getFileList();
+                $.files.dragndrop.init({
+                    file_list: file_list,
+                    sidebar: sidebar
+                });
+
+                {if $operations_map.move|default:''}
+
+                    var empty_process_dialog = $('.f-move-process-empty-dialog');
+                    if (!empty_process_dialog.length) {
+                        $.files.loadDialog('?module=move&action=processDialog', {
+                            onLoad: function (d) {
+                                empty_process_dialog = d;
+                                d.hide();
+                            }
+                        });
+                    }
+
+                    file_list.bind('move_files', function(e, options) {
+                        var file_ids = options.file_ids || [];
+                        var folder_id = options.folder_id || 0;
+                        var storage_id = options.storage_id || 0;
+                        if (!file_ids.length) {
+                            return;
+                        }
+                        if (!folder_id && !storage_id) {
+                            return;
+                        }
+
+                        $.files.moveFiles({
+                            file_ids: file_ids,
+                            folder_id: folder_id,
+                            storage_id: storage_id,
+                            beforeMoveFiles: function () {
+                                if (empty_process_dialog.length) {
+                                    $.wa.dialogHide();
+                                    empty_process_dialog.show();
+                                }
+                            },
+                            onSuccess: function (r) {
+                                if (r.status === 'ok') {
+
+                                    $.files.runCopyFiles();
+                                    $.files.checkBackendChanges();
+
+                                    var $catalog = $("#f-catalog-wrapper");
+                                    if ($catalog.length) {
+                                        $catalog.trigger("unSelectAll");
+                                    }
+
+                                    if (r.data.process_id > 0) {
+                                        $.files.loadDialog('?module=move&action=processDialog&copytask_process_id=' + r.data.process_id, {
+                                            onLoad: function (d) {
+                                                $.wa.dialogHide();
+                                                d.show();
+                                            }
+                                        });
+                                        $.files.refreshSidebar();
+                                        return;
+                                    }
+
+                                    $.files.refreshSidebar();
+                                    $.files.controller.reloadPage();
+                                    $.wa.dialogHide();
+
+                                } else {
+                                    $.wa.dialogHide();
+                                    $.files.alertError(r.errors[0][0]);
+                                }
+                            }
+                        });
+                    });
+                {/if}
+
+                {if $operations_map.move_to_trash|default:''}
+                    file_list.bind('move_files_to_trash', function(e, options) {
+                        var q = $.map(options.file_ids || [], function(file_id) {
+                            return 'file_id[]=' + file_id;
+                        }).join('&');
+                        $.files.loadDialog('?module=delete&' + q);
+                    });
+                {/if}
+
+            {/if}
+
+            $.files.config.getFileList().on('click', '.show-public-link-dialog', function() {
+                var file_id = $(this).closest('.f-catalog-item').data('id');
+                $.files.loadDialog('?module=share&public_link=1&file_id=' + file_id);
+            });
+
+            $.files.config.getFileList().bind('make_filter', function(e, options) {
+                var file_ids = options.file_ids;
+                if (!$.isEmptyObject(file_ids)) {
+                    if (file_ids.length === 1) {
+                        $.files.jsonPost({
+                            url: '?module=filter&action=save',
+                            data: { file_id: file_ids, acting_type: '{filesFilterModel::ACTING_TYPE_LIST}' },
+                            onSuccess: function(r) {
+                                if (r.status === 'ok' && r.data.filter) {
+                                    $.files.refreshSidebar();
+                                }
+                            }
+                        });
+                    } else {
+                        var q = $.map(options.file_ids || [], function(file_id) {
+                            return 'file_id[]=' + file_id;
+                        }).join('&');
+                        $.files.loadDialog('?module=filter&action=create&acting_type={filesFilterModel::ACTING_TYPE_LIST}&' + q);
+                    }
+                }
+            });
+
+        });
+
+    })(jQuery);</script>
+
+{else}
+    <div class="f-lazyloading-files-container">
+        {include file="./include.files.content.html" inline}
+        {lazy_load_block count=$count offset=$offset total_count=$total_count}
+    </div>
+{/if}
+
+{/strip}

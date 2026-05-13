@@ -1,0 +1,833 @@
+{*
+ * This script should be above everything else so that TaskEdit initialization happens before any plugin code.
+ * (Note that DOM is ready anyway since everything is loaded via XHR and executed by jQuery.)
+ *}
+
+{$is_page = !$wa->get("is_dialog")}
+
+{$task_uuid = $task.uuid|default:tasksUuid4::generate()}
+
+{$loc = explode('_', $wa->locale())}
+
+<script>
+    window.taskLinks = {$links_data|json_encode};
+</script>
+
+<script>(function($) { "use strict";
+    {if $task.id}
+        $.tasks.setTitle({$task.name|json_encode});
+    {/if}
+
+    {$_files_hash = md5(uniqid($task.name, true))}
+
+    window.taskEdit = new TaskEdit({
+        $task: $(".t-task-page-wrapper"),
+        task_id: {$task.id|default:'null'},
+        task_uuid: '{$task_uuid}',
+        is_page: {if $is_page}true{else}false{/if},
+        priority: "{$task.priority}",
+        project_color: "{$project.color}",
+        project_id: "{$task.project_id}",
+        projects_users: {json_encode($projects_users)},
+        projects_priority_users: {json_encode($projects_priority_users)},
+        files_hash: {$_files_hash|json_encode},
+        milestones: {$milestones|json_encode},
+        messages: {
+            date_invalid: {_w('Invalid date.')|json_encode}
+        }
+    });
+
+    $.wa.locale = $.extend($.wa.locale || {}, {
+        "unsaved_data": "[`You are about to abandon task editor without saving the task. All unsaved data will be lost. Are you sure?`]",
+        "saved_data_draft": "[`You are about to leave the page without saving the task. Are you sure?`]",
+        "unsaved_task": "[`There are unsaved task draft.`]",
+        "continue_editing": "[`Do you want to continue editing?`]",
+        "attach_pl_checklist": "[`To attach a Pocket Lists checklist, save the task first.`]",
+    });
+})(jQuery);</script>
+
+{strip}
+
+<div class="t-main-wrapper">
+    {if $is_page}
+        <div class="t-background-wrapper is-shown"></div>
+    {/if}
+
+    {* TASK EDIT CONTENT *}
+    <div class="t-task-page-wrapper {if $is_page}is-single-page{else}is-dialog-content{/if}">
+        <form id="t-edit-task-form" action="?module=tasks&action=save&id={$task.id}" method="post" data-n="{$task.project_id}.{$task.number}">
+
+            <input type="hidden" name="data[uuid]" value="{$task_uuid}" />
+
+            <!-- plugin hook: 'backend_task_edit.%plugin_id.before_header' -->
+            {* @event backend_task_edit.%plugin_id%.before_header *}
+            {foreach $backend_task_edit as $_}{ifset($_.before_header)}{/foreach}
+
+            {* HEADER *}
+            <header class="t-header-wrapper">
+                <div class="t-general-menu is-shown">
+                    <div class="t-menu-wrapper flexbox space-20 wrap-mobile">
+
+                        {* PROJECT SELECTOR *}
+                        <div class="t-menu-item">
+                            <div class="dropdown t-custom-select t-project-select" id="projectSelect">
+                                <button class="dropdown-toggle button light-gray t-selected-item selected-custom-item js-selected-project">
+                                    {$project.icon_html}
+                                    <span>{$project.name|escape|truncate:32}</span>
+                                </button>
+                                <div class="dropdown-body">
+                                    <ul class="menu js-project-list">
+                                        {foreach $projects as $p}
+                                            <li class="t-nav-item">
+                                                <a class="set-custom-select js-project-select" href="javascript:void(0);" data-value="{$p.id}" {if !empty($p.color)}data-project_color_class="{$p.color}"{/if}>
+                                                    {$p.icon_html}
+                                                    <span>{$p.name|escape|truncate:32}</span>
+                                                </a>
+                                            </li>
+                                        {/foreach}
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="data[project_id]" value="{$task.project_id}">
+                            </div>
+                            <script>
+                                ( function($) {
+                                    var $dropdown = $("#projectSelect"),
+                                        $currentProject = $dropdown.find("li:first a"),
+                                        savedProjectId = {$task.project_id};
+
+                                    if (!savedProjectId) {
+                                        $dropdown.find('.dropdown-toggle').html($currentProject.html());
+                                        $dropdown.find('[name="data[project_id]"]').val($currentProject.data('value'));
+                                    }
+
+                                    $dropdown.waDropdown({
+                                        hover: true,
+                                        items: ".menu > li > a",
+                                        change: async function(event, target, dropdown) {
+                                            $("[name=\"data[project_id]\"]").val( $(target).data("value") );
+                                            taskEdit.onProjectChange();
+
+                                            const teamList = await $.tasks.teamList({
+                                                container: $('#t-edit-task-form .t-team-list-wrapper'),
+                                                targetField: $('#t-edit-task-form [name="data[assigned_contact_id]"]'),
+                                                inviteField: $('#t-edit-task-form .t-team-invite'),
+                                                projectId: $(target).data("value"),
+                                                assignedContactId: {if !empty($task.id)}{$task.assigned_contact_id|default:"\"\""}{else}""{/if},
+                                                updateMode: {if !empty($task.id)}true{else}false{/if}
+                                            });
+
+                                            $(document).trigger('tasks:projectUsersChanged', [teamList]);
+                                        }
+                                    });
+                                })(jQuery);
+                            </script>
+                        </div>
+
+                        {include file="./includes/TasksTaskMilestoneSelector.inc.html" inline}
+                    </div>
+                </div>
+                <!-- plugin hook: 'backend_task_edit.%plugin_id.header' -->
+                {* @event backend_task_edit.%plugin_id%.header *}
+                {foreach $backend_task_edit as $_}{ifset($_.header)}{/foreach}
+
+            </header>
+
+            <!-- plugin hook: 'backend_task_edit.%plugin_id.after_header' -->
+            {* @event backend_task_edit.%plugin_id%.after_header *}
+            {foreach $backend_task_edit as $_}{ifset($_.after_header)}{/foreach}
+
+            {* EDIT CONTENT *}
+            <div class="t-task-page-block">
+
+              {* ASSIGN *}
+              <div class="t-form-line">
+                  <h5 class="heading custom-mb-12 custom-mt-4 custom-ml-8">[`Assign to`]</h5>
+                  <div>
+                      <input type="hidden" name="data[assigned_contact_id]" value="{$task.assigned_contact_id}">
+                      <div class="t-team-list-wrapper"></div>
+                      {if !empty($user_roles) && count($user_roles) > 0 && $wa->tasks->isPremium()}
+                        <div class="t-team-roles-list-wrapper flexbox space-8">
+                            <ul class="chips small custom-mt-0 t-user-roles">
+                                {foreach $task.role_users as $role_user}
+                                    {if empty($role_user.role)}{continue}{/if}
+                                    <li data-role-id="{$role_user.role.role_id}" data-user-id="{$role_user.id}" style="--chips-outline-border-color: #{$role_user.role.color}; --menu-link-color: #fff; --menu-link-color-hover: #fff; --chips-background-color: #{$role_user.role.color}; --chips-background-color-hover: #{$role_user.role.color};">
+                                        <a href="javascript:void(0);">
+                                            <img src="{$role_user.photo_url}" alt="{$role_user.name|escape}" class="userpic">
+                                            <strong>{$role_user.name|escape}</strong> <span class="custom-ml-4 small">{_w($role_user.role.name|escape)}</span>
+                                            <i class="fas fa-times custom-ml-16 custom-mr-4 text-white js-remove-user"></i>
+                                        </a>
+                                    </li>
+                                {/foreach}
+                                {foreach $user_roles as $role}
+                                    <li class="dropdown js-role-dropdown" data-role-id="{$role.id}" data-role-name="{_w($role.name|escape)}" data-role-color="#{$role.color}" style="--chips-background-color: var(--background-color-blank); --chips-background-color-hover: var(--background-color-blank);">
+                                        <a href="javascript:void(0);" class="dropdown-toggle">
+                                            <i class="fas fa-user-plus custom-mr-4" style="color: #{$role.color};"></i>{_w($role.name|escape)}
+                                        </a>
+                                        <div class="dropdown-body">
+                                            <ul class="menu"></ul>
+                                        </div>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                      {/if}
+
+                      {include file="./includes/TasksEditInviteForm.inc.html" inline}
+
+                      <script>
+                          ( async function ($) {
+                            var initialProjectID = $("#projectSelect").find("li:first a").data('value');
+                            const teamList = await $.tasks.teamList({
+                                container: $('#t-edit-task-form .t-team-list-wrapper'),
+                                targetField: $('#t-edit-task-form [name="data[assigned_contact_id]"]'),
+                                inviteField: $('#t-edit-task-form .t-team-invite'),
+                                projectId: {if !empty($task.id)}{$task.project_id}{else}initialProjectID{/if},
+                                assignedContactId: {if !empty($task.id)}{$task.assigned_contact_id|default:"\"\""}{else}""{/if},
+                                updateMode: {if !empty($task.id)}true{else}false{/if}
+                            });
+
+                            if (teamList.length) {
+                                const RoleManager = {
+                                    $chipsWrapper: $(".t-team-roles-list-wrapper .chips"),
+                                    isTaskUpdate: {if !empty($task.id)}true{else}false{/if},
+
+                                    /**
+                                     * Экранирует HTML
+                                     */
+                                    escapeHtml: function(text) {
+                                        const div = document.createElement('div');
+                                        div.textContent = text;
+                                        return div.innerHTML;
+                                    },
+
+                                    /**
+                                     * Проверяет, добавлен ли пользователь к роли
+                                     */
+                                    isUserInRole: function(roleId, userId) {
+                                        return this.$chipsWrapper.find(`li[data-role-id="${ roleId }"][data-user-id="${ userId }"]`).length > 0;
+                                    },
+
+                                    /**
+                                     * Создает HTML для chip элемента пользователя с ролью
+                                     */
+                                    createUserChip: function(roleId, roleColor, userId, userPhotoUrl, userName, roleName) {
+                                        const safeUserName = this.escapeHtml(userName);
+                                        const safeRoleName = this.escapeHtml(roleName);
+                                        const safePhotoUrl = this.escapeHtml(userPhotoUrl);
+
+                                        const $li = $('<li>', {
+                                            'data-role-id': roleId,
+                                            'data-user-id': userId,
+                                            'style': `
+                                                --menu-link-color: ${ roleColor };
+                                                --menu-link-color-hover: ${ roleColor };
+                                                --chips-background-color: var(--background-color-blank);
+                                                --chips-background-color-hover: var(--background-color-blank);
+                                            `
+                                        });
+
+                                        const $link = $('<a>', { href: 'javascript:void(0);' });
+                                        $link.append($('<img>', { src: userPhotoUrl, alt: safeUserName, class: 'userpic' }));
+                                        $link.append($('<strong>', { text: safeUserName }));
+                                        $link.append($('<span>', { class: 'custom-ml-4 hint', text: safeRoleName }));
+                                        $link.append($('<i>', { class: 'fas fa-times custom-ml-16 custom-mr-4 js-remove-user' }));
+
+                                        const $input = $('<input>', {
+                                            type: 'hidden',
+                                            name: `data[roles_user][add][${ roleId }][]`,
+                                            value: userId
+                                        });
+
+                                        $li.append($link).append($input);
+                                        return $li;
+                                    },
+
+                                    /**
+                                     * Добавляет пользователя к роли
+                                     */
+                                    addUserToRole: function(roleId, roleColor, userId, userPhotoUrl, userName, roleName) {
+                                        if (this.isUserInRole(roleId, userId)) {
+                                            return false;
+                                        }
+
+                                        const $chip = this.createUserChip(roleId, roleColor, userId, userPhotoUrl, userName, roleName);
+                                        this.$chipsWrapper.prepend($chip);
+                                        return true;
+                                    },
+
+                                    /**
+                                     * снимает роль с пользователя
+                                     */
+                                    removeUserFromRole: function($chip) {
+                                        const roleId = $chip.data('role-id');
+                                        const userId = $chip.data('user-id');
+
+                                        $chip.remove();
+
+                                        if (this.isTaskUpdate) {
+                                            const $removeInput = $('<input>', {
+                                                type: 'hidden',
+                                                name: `data[roles_user][remove][${ roleId }][]`,
+                                                value: userId
+                                            });
+                                            this.$chipsWrapper.prepend($removeInput);
+                                        }
+                                    },
+
+                                    init: function() {
+                                        const self = this;
+
+                                        this.$chipsWrapper.on('click', '.js-remove-user', function (event) {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                            const $chip = $(this).closest('li');
+                                            self.removeUserFromRole($chip);
+                                        });
+                                    }
+                                };
+
+                                RoleManager.init();
+
+                                const $roleDropdowns = RoleManager.$chipsWrapper.find('.js-role-dropdown');
+                                $roleDropdowns.waDropdown({
+                                    hover: true,
+                                    items: '.menu > li > span',
+                                    update_title: false
+                                });
+
+                                function updateUserListFragment(users) {
+                                    const userListFragment = document.createDocumentFragment();
+                                    $roleDropdowns.find('.menu').empty();
+
+                                    users.forEach(user => {
+                                        const $li = $('<li>', {
+                                            'data-user-id': user.id,
+                                            'data-user-photo-url': user.photo_url,
+                                            'data-user-name': user.name
+                                        });
+
+                                        const $span = $('<span>', { class: 'item' });
+                                        $span.append($('<span>', {
+                                            class: 'icon userpic userpic20',
+                                            css: { 'background-image': `url('${ user.photo_url }')` }
+                                        }));
+                                        $span.append($('<span>', { text: user.name }));
+
+                                        $li.append($span);
+                                        userListFragment.appendChild($li[0]);
+                                    });
+
+                                    $roleDropdowns.find('.menu').append(userListFragment);
+                                }
+
+                                $(document).on('tasks:projectUsersChanged', function(event, users) {
+                                    updateUserListFragment(users);
+                                });
+
+                                updateUserListFragment(teamList);
+
+                                $roleDropdowns.on('click', '.menu li', function (event) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+
+                                    const $this = $(this);
+                                    const $dropdown = $this.closest('.js-role-dropdown');
+
+                                    RoleManager.addUserToRole(
+                                        $dropdown.data('role-id'),
+                                        $dropdown.data('role-color'),
+                                        $this.data('user-id'),
+                                        $this.data('user-photo-url'),
+                                        $this.data('user-name'),
+                                        $dropdown.data('role-name')
+                                    );
+                                });
+                            }
+                          })(jQuery);
+                      </script>
+                  </div>
+              </div>
+
+                <!-- plugin hook: 'backend_task_edit.%plugin_id.before_name' -->
+                {* @event backend_task_edit.%plugin_id%.before_name *}
+                {foreach $backend_task_edit as $_}{ifset($_.before_name)}{/foreach}
+
+                <div class="t-big-editor-wrapper editor-wrapper-{$task_uuid}">
+
+
+                    {* NAME && PRIORITY *}
+                    <div class="t-form-line t-table-layout">
+                        <div class="t-column">
+                            <div class="t-task-name-wrapper flexbox wrap-mobile space-4">
+                                {$type_selector_html}
+                                <input type="text" name="data[name]" class="t-task-name-input bold" value="{$task.name|escape}" placeholder="[`Task title`]" tabindex="1">
+
+                                <!-- plugin hook: 'backend_task_edit.%plugin_id.name' -->
+                                {* @event backend_task_edit.%plugin_id%.name *}
+                                {foreach $backend_task_edit as $_}{ifset($_.name)}{/foreach}
+
+                            </div>
+                        </div>
+                        <div class="t-column t-column-3">
+
+                            <div class="t-priority-changer">
+                                <div class="t-slider-wrapper">
+                                    <div class="t-priority-slider"></div>
+                                    <input class="t-input" type="hidden" name="data[priority]" value="{$task.priority}">
+                                </div>
+                                <div class="t-priority-text"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- plugin hook: 'backend_task_edit.%plugin_id.after_name' -->
+                    {* @event backend_task_edit.%plugin_id%.after_name *}
+                    {foreach $backend_task_edit as $_}{ifset($_.after_name)}{/foreach}
+
+
+                    {* EDITOR / DESCRIPTION *}
+
+                    <!-- plugin hook: 'backend_task_edit.%plugin_id.before_description' -->
+                    {* @event backend_task_edit.%plugin_id%.before_description *}
+                    {foreach $backend_task_edit as $_}{ifset($_.before_description)}{/foreach}
+
+                    <div class="t-form-line t-description-wrapper">
+                        <hr>
+
+                        <textarea id="redactor-task-{$task_uuid}" class="t-redactor-task-edit" name="data[text]" placeholder="[`Task summary`]">{$task.text|escape}</textarea>
+
+                        <!-- plugin hook: 'backend_task_edit.%plugin_id.description' -->
+                        {* @event backend_task_edit.%plugin_id%.description *}
+                        {foreach $backend_task_edit as $_}{ifset($_.description)}{/foreach}
+
+                    </div>
+
+                    <!-- plugin hook: 'backend_task_edit.%plugin_id.after_description' -->
+                    {* @event backend_task_edit.%plugin_id%.after_description *}
+                    {foreach $backend_task_edit as $_}{ifset($_.after_description)}{/foreach}
+
+
+                    {* CUSTOM FIELDS *}
+
+                    <!-- plugin hook: 'backend_task_edit.%plugin_id.before_fields' -->
+                    {* @event backend_task_edit.%plugin_id%.before_fields *}
+                    {foreach $backend_task_edit as $_}{ifset($_.before_fields)}{/foreach}
+
+                    <div class="t-form-line t-attach-wrapper">
+                      <div class="t-attach-droparea" id="t-attach-droparea">
+                        <div class="t-chips">
+
+                            <div class="t-chip">
+                                <a href="javascript:void(0);" class="t-form-line-write-ai-chip">
+                                    <span class="icon webasyst-magic-wand-ai custom-mr-4"></span>
+                                    [`Write with AI`]
+                                </a>
+                            </div>
+
+                            <div class="t-chip t-due-date-wrapper">
+                                <i class="fas fa-flag-checkered"></i>
+                                <span>
+                                  <input type="text" class="t-datepicker-due-date" value="{$task.due_date|escape|default:'[`Due date`]'}" placeholder="[`Due date`]" style="max-width: 120px;">
+                                  <input type="hidden" name="data[due_date]" value="{$task.due_date|escape}">
+                                </span>
+                            </div>
+
+                            <div class="t-chip">
+                                <a>
+                                    <i class="fas fa-paperclip"></i>
+                                    [`Attach files`]
+                                    <input type="file" name="files[]" multiple="true" />
+                                </a>
+                            </div>
+
+                            {if $wa->pocketlists}
+                            <div class="t-chip">
+                                <a class="t-form-line-checklist-chip">
+                                    <i style="background-image: url('{$wa_url}wa-apps/pocketlists/img/pl2webasyst48.png') !important; background-size: 16px 16px !important; display: inline-block; width: 16px; height: 16px; position: relative; top: 2px; margin-right: 4px;"></i>
+                                    [`Checklist`]
+                                </a>
+                            </div>
+                            {/if}
+
+                            <div class="t-chip t-form-line-autocomplete-chip" data-type="hashtag">
+                                <a href="javascript:void(0);" title="[`Tags and links`]">
+                                    <i class="fas fa-hashtag custom-pl-2 custom-mr-0"></i>
+                                </a>
+                            </div>
+
+                            <div class="t-chip t-form-line-autocomplete-chip" data-type="at">
+                                <a href="javascript:void(0);" title="[`Mention`]">
+                                    <i class="fas fa-at custom-pl-2 custom-mr-0"></i>
+                                </a>
+                            </div>
+
+                            <div class="t-chip" style="display: none;">
+                                <a class="t-form-line-spellcheck-chip">
+                                    <span class="icon webasyst-magic-wand-ai custom-mr-4"></span>
+                                    [`Check spelling`]
+                                </a>
+                            </div>
+
+                            <div class="fields t-fields-block">
+                            {include file = "./includes/TasksFieldEdit.inc.html" inline}
+                            </div>
+
+                            <!-- plugin hook: 'backend_task_edit.%plugin_id.more' -->
+                            {* @event backend_task_edit.%plugin_id%.more *}
+                            {foreach $backend_task_edit as $_}{ifset($_.more)}{/foreach}
+
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- plugin hook: 'backend_task_edit.%plugin_id.after_fields' -->
+                    {* @event backend_task_edit.%plugin_id%.after_fields *}
+                    {foreach $backend_task_edit as $_}{ifset($_.after_fields)}{/foreach}
+
+                </div>
+
+
+
+                {* ATTACHMENTS *}
+
+                <!-- plugin hook: 'backend_task_edit.%plugin_id.before_attachments' -->
+                {* @event backend_task_edit.%plugin_id%.before_attachments *}
+                {foreach $backend_task_edit as $_}{ifset($_.before_attachments)}{/foreach}
+
+                <div class="t-form-line t-attach-wrapper">
+
+                    {* Container For Attached Files*}
+                    <div class="t-attached-files-wrapper {if !empty($task.attachments)}is-shown{/if}" id="t-attached-files-wrapper">
+                        <div class="t-images-list">
+
+                            {foreach $task.images as $image}
+                                <div class="t-image-item" data-file-ident="{$image.id}">
+                                    <a class="t-image-link" href="?module=attachments&action=download&id={$image.id}" title="{$image.name|escape}">
+                                        <img src="?module=attachments&action=download&id={$image.id}" alt="{$image.name|escape}">
+                                    </a>
+                                    <div class="t-file-name">{$image.name|escape}</div>
+                                    <div class="t-file-size">{$image.size|wa_format_file_size}</div>
+                                    <a class="t-file-delete" href="javascript:void(0);"></a>
+                                </div>
+                            {/foreach}
+
+                            <div class="t-image-item is-template">
+                                <div class="t-image-link">
+                                    <img src="" alt="">
+                                </div>
+                                <div class="t-file-name"></div>
+                                <div class="t-file-size"></div>
+                                <a class="t-file-delete" href="javascript:void(0);"></a>
+                                <div class="t-file-error"></div>
+                            </div>
+                        </div>
+                        <div class="t-files-list">
+                            {foreach $task.files as $file}
+                                <div class="t-file-item" data-file-ident="{$file.id}">
+                                    <a class="t-file-link" href="?module=attachments&action=download&id={$file.id}" title="{$file.name|escape}">
+                                        <i class="fas fa-paperclip custom-mr-4"></i>
+                                        <span class="t-file-name">{$file.name|escape}</span>
+                                        <span class="t-file-size nowrap">{$file.size|wa_format_file_size}</span>
+                                    </a>
+                                    <a class="t-file-delete" href="javascript:void(0);"></a>
+                                </div>
+                            {/foreach}
+
+                            <div class="t-file-item is-template">
+                                <div class="t-file-link">
+                                    <i class="fas fa-paperclip custom-mr-4"></i>
+                                    <span class="t-file-name"></span>
+                                    <span class="t-file-size nowrap"></span>
+                                </div>
+                                <a class="t-file-delete" href="javascript:void(0);"></a>
+                                <div class="t-file-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- plugin hook: 'backend_task_edit.%plugin_id.attachments' -->
+                    {* @event backend_task_edit.%plugin_id%.attachments *}
+                    {foreach $backend_task_edit as $_}{ifset($_.attachments)}{/foreach}
+
+                </div>
+
+                <!-- plugin hook: 'backend_task_edit.%plugin_id.after_attachments' -->
+                {* @event backend_task_edit.%plugin_id%.after_attachments *}
+                {foreach $backend_task_edit as $_}{ifset($_.after_attachments)}{/foreach}
+
+
+                {* BUTTONS *}
+
+                <!-- plugin hook: 'backend_task_edit.%plugin_id.before_buttons' -->
+                {* @event backend_task_edit.%plugin_id%.before_buttons *}
+                {foreach $backend_task_edit as $_}{ifset($_.before_buttons)}{/foreach}
+
+                <p class="t-errors-block js-errors-block small"></p>
+                <div class="t-form-line t-buttons-block flexbox middle space-8">
+                    <button class="button green large t-save-task-link" type="submit">{if !empty($task.id)}[`Save task`]{else}[`Create task`]{/if}</button>
+                    <a class="t-close-link button large light-gray" href="javascript:void(0);">[`Cancel`]</a>
+
+                    {* // always display custom fields. consider re-activacting this button to do otherwise
+                    <a class="inline-link js-more-options t-task-edit-block-more-options-link flexbox space-8 float-right gray small">
+                        [`More options`]
+                        <div class="darr custom-ml-4">
+                            <i class="fas fa-chevron-down fa-xs"></i>
+                        </div>
+                        <div class="uarr custom-ml-4">
+                            <i class="fas fa-chevron-up fa-xs"></i>
+                        </div>
+                    </a>
+                    *}
+
+                    <!-- plugin hook: 'backend_task_edit.%plugin_id.buttons' -->
+                    {* @event backend_task_edit.%plugin_id%.buttons *}
+                    {foreach $backend_task_edit as $_}{ifset($_.buttons)}{/foreach}
+
+                </div>
+
+                <!-- plugin hook: 'backend_task_edit.%plugin_id.after_buttons' -->
+                {* @event backend_task_edit.%plugin_id%.after_buttons *}
+                {foreach $backend_task_edit as $_}{ifset($_.after_buttons)}{/foreach}
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function () {
+    if (!lexicalEditor) return;
+
+    const $el = $('#redactor-task-{$task_uuid}');
+    const $spellcheckBtn = $('.t-form-line-spellcheck-chip');
+    const $writeAiBtn = $('.t-form-line-write-ai-chip');
+    const $spellcheckBtnParent = $spellcheckBtn.parent();
+    let spellcheckInProcess = false;
+
+    window.waRedactorTaskInit = () => {
+        $el.parent().find('.lexical-editor').remove();
+
+        lexicalEditor.createLexicalInstance({
+            el: $el[0],
+            isRichMode: TasksController ? TasksController.options.text_editor === 'wysiwyg' : false,
+            taskId: '{$task.id}',
+            storage: taskEdit ? (taskEdit.is_new ? (TasksController ? TasksController.getDraftKeyTaskText() : '') : '') : '',
+            placeholder: '[`Task summary`]',
+            imageUploadUrl: '?module=attachments&action=imageUpload',
+            imageUploadTaskUuid: '{$task_uuid}',
+            controls: document.querySelector('.editor-wrapper-{$task_uuid}'),
+            mentions: window.taskLinks || {},
+            mentionsFetchUrlWA: true,
+            lang: '{$loc[0]}'
+        });
+
+        TasksController.storageDataInMdMode($el[0], 'getDraftKeyTaskText');
+    };
+
+    function runSpellCheck () {
+        if (!window.spellCheck || spellcheckInProcess) return;
+        const text = $el.val();
+
+        spellcheckInProcess = true;
+        $spellcheckBtn.find('.icon').addClass('shimmer');
+        window.spellCheck(text).then((correctedText) => {
+            const { restored, formated } = correctedText;
+            textReplaceConfirm({
+                title: "[`AI response`]",
+                text: formated,
+                success_button_title: '[`Get the entire text`]',
+                success_button_class: 'blue',
+                cancel_button_title: '[`Close`]',
+                cancel_button_class: 'light-gray',
+                onSuccess: () => {
+                    $el.val(restored).trigger('input').trigger('change');
+                    waRedactorTaskInit();
+                }
+            });
+        })
+        .catch(() => {})
+        .finally(() => {
+            spellcheckInProcess = false;
+            $spellcheckBtn.find('.icon').removeClass('shimmer');
+        })
+    }
+
+    function checkLength () {
+        const charCount = $el.val().length;
+        $spellcheckBtnParent.hide();
+        if (charCount > 10) {
+            $spellcheckBtnParent.show();
+        }
+    }
+
+    waRedactorTaskInit();
+    checkLength();
+
+    $spellcheckBtn.on('click', function (e) {
+        e.preventDefault();
+        runSpellCheck();
+    });
+
+    $writeAiBtn.on('click', function (e) {
+        e.preventDefault();
+
+        const $form = $(this).closest('form');
+        const task_title = $form.find('[name="data[name]"]').val();
+        const task_content = $form.find('[name="data[text]"]').val();
+
+        $.get('?module=tasks&action=ai&type=taskfields&html=1', function (response) {
+
+            $.waDialog({
+                html: response.data?.html,
+                onOpen: function ($wrapper, dialog) {
+                    let try_free = !$wrapper.find('.js-premium-wrapper').length;
+
+                    if (!try_free) {
+                        $wrapper.find('.js-premium-wrapper').show();
+                        $wrapper.find('.dialog-ai-fields-container-wrapper').addClass('hidden');
+                        $wrapper.find('.dialog-footer').addClass('hidden');
+                        $wrapper.find('.dialog-header').addClass('hidden');
+                        dialog.resize();
+                    }
+
+                    $wrapper.find('[name="objective"]').val(task_title + '\n' + task_content);
+
+                    $wrapper.find('.js-try-free-ai').on('click', function() {
+                        const $self = $(this);
+
+                         $.post('?module=tasks&action=ai&type=tryFree', (r) => {
+                            if (r.status === 'ok') {
+                                if (r.data.is_max_count) {
+                                    $wrapper.find('.js-after-try-free-ai').show();
+                                    $self.remove();
+                                }
+
+                                $wrapper.find('.js-premium-wrapper').hide();
+                                $wrapper.find('.dialog-ai-fields-container-wrapper').removeClass('hidden');
+                                $wrapper.find('.dialog-footer').removeClass('hidden');
+                                $wrapper.find('.dialog-header').removeClass('hidden');
+                                try_free = true;
+                                dialog.resize();
+                            }
+                        });
+                    });
+
+                    $('.js-write-ai-action').on('click', function (e) {
+
+                        if (!try_free) {
+                            return false;
+                        }
+
+                        const $error_block = $('.js-errors-block');
+                        $error_block.empty();
+
+                        const $btn = $wrapper.find('.js-write-ai-action');
+                        $btn.prop('disabled', true);
+                        $btn.find('.fa-spinner').show();
+
+                        $.post('?module=tasks&action=ai&type=writetask', $wrapper.find(':input').serializeArray(), function (response) {
+                            $wrapper.find('.js-write-ai-action').prop('disabled', false);
+                            if (response?.status === 'ok' && response.data?.format_content) {
+                                $wrapper.find('.dialog-ai-answer .js-ai-answer-result').html(response.data.format_content);
+                                $wrapper.find('.dialog-ai-answer').removeClass('hidden');
+                                $wrapper.find('.js-paste-ai-answer-result').on('click', function(e) {
+                                    e.preventDefault();
+                                    window.lexicalEditor.updateContent('redactor-task-{$task_uuid}', response.data.content, { 
+                                        isMarkdown: true,
+                                    });
+                                    dialog.close();
+                                });
+                                dialog.resize();
+                                if (!$wrapper.find('.js-premium-wrapper').length) {
+                                    $wrapper.find('.js-write-ai-action').prop('disabled', false);
+                                    try_free = false;
+                                }
+                            }
+
+                            if(response?.status === 'fail') {
+
+                                if(response?.errors?.error_description) {
+                                    $error_block.append($('<span style="color: red;"></span>').text(response.errors.error_description));
+                                    $error_block[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }
+
+                                if(response?.errors?.length){
+                                    $.each(response.errors, function (i, error) {
+                                        const $error = $('<span style="color: red;"></span>').text(error[0] || error);
+                                        $error_block.append($error);
+                                    });
+                                    $error_block[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }
+
+                                dialog.close();
+                            }
+                        }).error(function(error) {
+                            $error_block.append($('<span style="color: red;"></span>').text(error.responseText || error.statusText || 'Error'));
+                            $error_block[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            dialog.close();
+                        }).always(function() {
+                            $btn.prop('disabled', false);
+                            $btn.find('.fa-spinner').hide();
+                        });
+                    });
+                }
+            });
+        });
+    });
+
+    $el.on('input', checkLength);
+
+    function textReplaceConfirm(options) {
+        {literal}
+        var deferred = $.Deferred();
+
+        var header = ( options.title ? '<h3>' + options.title + '</h3>' : null );
+        var text = ( options.text ? options.text : "" );
+        var success_button_title = ( options.success_button_title ? options.success_button_title : $.wa.translate("Confirm") );
+        var success_button_class = ( options.success_button_class ? options.success_button_class : "blue" );
+        var cancel_button_title = ( options.cancel_button_title ? options.cancel_button_title : $.wa.translate("Cancel") );
+        var cancel_button_class = ( options.cancel_button_class ? options.cancel_button_class : "light-gray" );
+
+        var success_button = `<button class="js-success-action button ${success_button_class}">${success_button_title}</button>`,
+            cancel_button = `<button class="js-dialog-close button ${cancel_button_class}">${cancel_button_title}</button>`;
+
+        var footer = success_button + cancel_button;
+
+        var is_success = false;
+
+        $.waDialog({
+            header: header,
+            content: text,
+            footer: footer,
+            onOpen: function($wrapper, dialog) {
+                $wrapper.on("click", ".js-success-action", function(event) {
+                    event.preventDefault();
+                    is_success = true;
+                    dialog.close();
+                });
+            },
+            onClose: function($wrapper) {
+                if (is_success) {
+                    if (typeof options.onSuccess === "function") {
+                        options.onSuccess($wrapper);
+                    }
+                    deferred.resolve();
+                } else {
+                    if (typeof options.onCancel === "function") {
+                        options.onCancel($wrapper);
+                    }
+                    deferred.reject();
+                }
+            }
+        });
+
+        return deferred.promise();
+        {/literal}
+    }
+
+})();
+</script>
+
+{/strip}

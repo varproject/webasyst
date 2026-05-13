@@ -1,0 +1,2099 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pocketlists\n"
+"POT-Creation-Date: 2015-12-28 22:51+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: pocketlists\n"
+"Language-Team: pocketlists\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.3.2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+msgid "To archive an active list, tap on it’s checkmark."
+msgstr "Чтобы добавить список в архив, щелкните по большой галочке слева от названия списка."
+
+msgid "Archive is empty"
+msgstr "Архив пуст"
+
+msgid "Archiving is a handy way to hide a to-do list instead of deleting it permanently. To archive a list, tap on it’s big checkmark or click <em>Archive list</em> in the list action menu."
+msgstr "Архив — это удобный способ для скрытия ненужных списков вместо их удаления. Чтобы добавить список в архив, щелкните по большой галочке слева от названия списка или выберите <em>В архив</em> в меню действий со списком."
+
+msgid "Archive"
+msgstr "Архив"
+
+msgid "Completed by %s"
+msgstr "Выполнен %s"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Assigned to %s"
+msgstr "Ответственный: %s"
+
+msgid "Title"
+msgstr "Заголовок"
+
+msgid "Note"
+msgstr "Заметка"
+
+msgid "Optional text note"
+msgstr "Необязательное текстовое описание"
+
+msgid "Attachment"
+msgstr "Вложение"
+
+msgid "Priority"
+msgstr "Приоритет"
+
+msgid "Due"
+msgstr "Срок"
+
+msgid "Set time"
+msgstr "Указать время"
+
+msgid "Clear time"
+msgstr "Только дата"
+
+msgid "This item is <strong>marked as completed</strong>. Setting priority and due date won’t be visible within the to-do list."
+msgstr "Эта задача уже <strong>отмечена как выполненная</strong>. Установка приоритета и срока не повлияют на отображение задачи в списках."
+
+msgid "Repeat"
+msgstr "Повторять"
+
+msgid "None"
+msgstr "Нет"
+
+msgid "Every Day"
+msgstr "Каждый день"
+
+msgid "Every Week"
+msgstr "Каждую неделю"
+
+msgid "Every 2 Weeks"
+msgstr "Каждые 2 недели"
+
+msgid "Every Month"
+msgstr "Каждый месяц"
+
+msgid "Every Year"
+msgstr "Каждый год"
+
+msgid "Custom..."
+msgstr "По-другому…"
+
+msgid "Location"
+msgstr "Место"
+
+msgid "Assigned to"
+msgstr "Ответственный"
+
+msgid "Nobody"
+msgstr "Нет"
+
+msgid "Created"
+msgstr "Создано"
+
+msgid "Completed"
+msgstr "Выполнено"
+
+msgid "Delete to-do"
+msgstr "Удалить задачу"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "or"
+msgstr "или"
+
+msgid "cancel"
+msgstr "отменить"
+
+msgid "error"
+msgstr "ошибка"
+
+msgid "saved"
+msgstr "сохранено"
+
+msgid "More"
+msgstr "Еще"
+
+msgid "Get public link"
+msgstr "Получить ссылку"
+
+msgid "Sort"
+msgstr "Сортировка"
+
+msgid "Email list"
+msgstr "Отправить по почте"
+
+msgid "Print list"
+msgstr "Распечатать"
+
+msgid "Archive list"
+msgstr "Поместить в архив"
+
+msgid "Edit list"
+msgstr "Редактировать список"
+
+msgid "Delete list"
+msgstr "Удалить список"
+
+msgid "New to-do"
+msgstr "Новая задача"
+
+msgid "Unarchive list"
+msgstr "Восстановить из архива"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "New list"
+msgstr "Новый список"
+
+msgid "Logbook"
+msgstr "Журнал"
+
+msgid "Show all %d completed to-do"
+msgid_plural "Show all %d completed to-dos"
+msgstr[0] "Показать все %d выполненную задачу"
+msgstr[1] "Показать все %d выполненные задачи"
+msgstr[2] "Показать все %d выполненных задач"
+
+msgid "Icon"
+msgstr "Иконка"
+
+msgid "Change"
+msgstr "Изменить"
+
+msgid "Color"
+msgstr "Цвет"
+
+msgid "Choose list icon"
+msgstr "Выберите иконку для списка"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "To-do stream is empty"
+msgstr "Список задач пуст"
+
+msgid "Logbook is empty"
+msgstr "Журнал пуст"
+
+msgid "Logbook will automatically collect all to-do items completed by you and your teammates."
+msgstr "В журнал автоматически добавляются задания, выполненные вами и вашей командой."
+
+msgid "This pocket is empty. Start by creating a to-do list."
+msgstr "Проект пока не содержит списков. Создайте первый список!"
+
+msgid "(unnamed pocket)"
+msgstr "(проект без названия)"
+
+msgid "New pocket"
+msgstr "Новый проект"
+
+msgid "Pocket name"
+msgstr "Название проекта"
+
+msgid "Access rights"
+msgstr "Права доступа"
+
+msgid "Use Contacts app to customize access rights for pockets."
+msgstr "Используйте приложение «Контакты» для разделения прав доступа по проектам."
+
+msgid "Everyone"
+msgstr "Все"
+
+msgid "Every user who can access Pocket Lists app will see lists and to-dos in this pocket."
+msgstr "Каждый пользователь Pocket Lists будет иметь доступ к этому проекту."
+
+msgid "Limited"
+msgstr "Ограниченный"
+
+msgid "Selected users"
+msgstr "Выбрать пользователей"
+
+msgid "Start typing name..."
+msgstr "Начните вводить имя…"
+
+msgid "My personal settings"
+msgstr "Мои личные настройки"
+
+msgid "Reds"
+msgstr "Красные"
+
+msgid "Reds + Yellows"
+msgstr "Красные + Желтые"
+
+msgid "Reds + Yellows + Greens"
+msgstr "Красные + Желтые + Зеленые"
+
+msgid "Only unassigned to-dos and to-dos assigned to you will be counted in the app icon counter."
+msgstr "В счетчике учитываются задачи, которые либо не назначены ни на кого, либо назначены на вас."
+
+msgid "To-do stream inbox"
+msgstr "Входящий список"
+
+msgid "When you add to-dos to your To-do stream directly, they will be added into the specified to-do list."
+msgstr "Когда вы добавляете задачу в общий поток, она будет автоматически добавлена в выбранный список."
+
+msgid "Email me"
+msgstr "Email-уведомления"
+
+msgid "Daily recap on what’s up next"
+msgstr "Ежедневная сводка о следующих задачах"
+
+msgid "for today"
+msgstr "на сегодня"
+
+msgid "for today and tomorrow"
+msgstr "на сегодня и завтра"
+
+msgid "for next 7 days"
+msgstr "на следующие 7 дней"
+
+msgid "Daily recap notifications require CRON to be configured, which is not the case for your Pocket Lists app. Cron the following command to run daily:"
+msgstr "Для отправки ежедневных напоминаний необходимо настроить CRON. Добавьте следующую команду к запуску каждый день:"
+
+msgid "When someone assigns me a to-do"
+msgstr "О назначении на меня новых задач"
+
+msgid "When someone marks a to-do item as complete"
+msgstr "О выполнении задач"
+
+msgid "only items I created"
+msgstr "только задач, которые я создал"
+
+msgid "only items I marked as favorite"
+msgstr "только задач, которые я выделил как избранные"
+
+msgid "only items on to-do lists I previously marked as favorite"
+msgstr "которые находятся в моих избранных списках дел"
+
+msgid "any item on any list"
+msgstr "любых задач в общих списках"
+
+msgid "When someone adds a to-do item"
+msgstr "О создании новых задач"
+
+msgid "to any list I previously marked as favorite"
+msgstr "которые я выделил как избранные"
+
+msgid "to just any list"
+msgstr "любых задач"
+
+msgid "When someone comments a to-do item"
+msgstr "О комментариях к задачам"
+
+msgid "which I’ve created"
+msgstr "которые я создал"
+
+msgid "which I previously marked as favorite"
+msgstr "которые я выделил как избранные"
+
+msgid "in just any list"
+msgstr "любым задачам"
+
+msgid "When someone creates a new to-do list"
+msgstr "О создании новых списков"
+
+msgid "Pockets"
+msgstr "Проекты"
+
+msgid "Invite your teammates!"
+msgstr "Соберите команду!"
+
+msgid "Use <strong>Contacts app</strong> to add your teammates to Pocket Lists and to start collaborating on to-do lists together."
+msgstr "Используйте <strong>приложение «Контакты»</strong> для предоставления вашей команде доступа к Pocket Lists."
+
+msgid "No to-dos were assigned to %s yet"
+msgstr "Нет назначенных задач"
+
+msgid "%s’s to-do list is empty"
+msgstr "%s: нет назначенных задач"
+
+msgid "To assign a to-do to a user, either select him in to-do item details or add a to-do item above."
+msgstr "Выберите ответственного за задачу в ее свойствах или просто добавьте задачу с помощью ссылки выше."
+
+msgid "To-do stream"
+msgstr "Задачи"
+
+msgid "Show stream"
+msgstr "Поток задач"
+
+msgid "To-do stream automatically collects all important to-dos created by you and your teammates, and shows you what to do next."
+msgstr "Поток задач — это динамический список самых важных задач из всех списков и проектов, созданных вами и вашей командой."
+
+msgid "List completed"
+msgstr "Список выполнен"
+
+msgid "You can either automatically complete all to-do items on this list and continue adding new items, or archive this list to hide it until you need it some day in the future."
+msgstr "Отметьте все задачи этого списка как выполненные или отправьте список в архив, чтобы спрятать его до лучших времен."
+
+msgid "Mark all to-dos as completed"
+msgstr "Список выполнен"
+
+msgid "Delete item?"
+msgstr "Удалить задачу?"
+
+msgid "Item will be deleted permanently without the ability to restore. Are you sure?"
+msgstr "Задача будет удалена без возможности восстановления. Вы уверены?"
+
+msgid "Delete item"
+msgstr "Удалить задачу"
+
+msgid "List will be deleted permanently without the ability to restore. Are you sure?"
+msgstr "Список будет удален без возможности восстановления. Вы уверены?"
+
+msgid "Lists"
+msgstr "Списки"
+
+msgid "To-do"
+msgstr "Задачи"
+
+msgid "Favorites"
+msgstr "Избранные"
+
+msgid "Map"
+msgstr "Карта"
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "Notes"
+msgstr "Заметки"
+
+msgid "Team"
+msgstr "Команда"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "UNDONE"
+msgstr "ВОЗВРАТ"
+
+msgid "DONE"
+msgstr "ГОТОВО"
+
+msgid "New to-do on your favorite list!"
+msgstr "Новая задача в избранном списке!"
+
+msgid "NEW: You’ve been assigned to a to-do"
+msgstr "НОВОЕ: Вам назначена задача"
+
+msgid "Daily recap for %s"
+msgstr "Список задач на %s"
+
+msgid "New list!"
+msgstr "Новый список!"
+
+msgid "%s created new list %s"
+msgstr "%s создал новый список «%s»"
+
+msgid "%s deleted a list"
+msgstr "%s удалил список"
+
+msgid "%s archived %s"
+msgstr "%s отправил в архив список «%s»"
+
+msgid "%s added new items to %s"
+msgstr "%s добавил новые задачи в список «%s»"
+
+msgid "No access"
+msgstr "Нет доступа"
+
+msgid "Full access"
+msgstr "Полный доступ"
+
+msgid "Just %d more items left on <a href=\"%s\">%s</a>"
+msgstr "Осталось %d задач в списке «<a href=\"%s\">%s</a>»"
+
+msgid "Woohoo, <a href=\"%s\">%s</a> to-do list has been completed :)"
+msgstr "Ура, список «<a href=\"%s\">%s</a>» полностью выполнен :)"
+
+msgid "Here is your <a href=\"%s\">daily recap</a> for %s:"
+msgstr "Ваш <a href=\"%s\">список задач</a> на %s:"
+
+msgid "You’ve been assigned a new to-do"
+msgstr "Вас назначили ответственным по заданию"
+
+msgid "There are new items on your favorite <strong>%s</strong> to-do list:"
+msgstr "В вашем избранном списке <strong>%s</strong> появились новые задачи:"
+
+msgid "There are new items on <strong>%s</strong> to-do list:"
+msgstr "В списке <strong>%s</strong> появились новые задачи:"
+
+msgid "Hi %s,"
+msgstr "Привет, %s!"
+
+msgid "<strong>%s</strong> on %s"
+msgstr "<strong>%s</strong> %s"
+
+msgid "<strong>%s</strong> by %s"
+msgstr "<strong>%s</strong> %s"
+
+msgid "%s have just completed a to-do <strong>%s</strong>"
+msgstr "%s выполнил задачу <strong>%s</strong>"
+
+msgid "Favorite"
+msgstr "В избранные"
+
+msgid "Comment"
+msgstr "Комментировать"
+
+msgid "Only you can see this item"
+msgstr "Только вы видите эту задачу"
+
+msgid "Add comment"
+msgstr "Добавить комментарий"
+
+msgid "Attachments"
+msgstr "Прикрепленные файлы"
+
+msgid "List"
+msgstr "Список"
+
+msgid "Removing to-do item from a list makes it <strong>your private to-do item</strong> hidden from your teammates, and available on your To-do Stream only."
+msgstr "Удаление задачи из всех списков сделает его <strong>видимым только вам</strong> в потоке задачи. Другие пользователи не увидят такую задачу."
+
+msgid "Print"
+msgstr "Распечатать"
+
+msgid "To"
+msgstr "Кому"
+
+msgid "Subject"
+msgstr "Тема"
+
+msgid "Message"
+msgstr "Сообщение"
+
+msgid "Send"
+msgstr "Отправить"
+
+msgid "Delete pocket"
+msgstr "Удалить проект"
+
+msgid "To-do Stream inbox"
+msgstr "Список для входящих"
+
+msgid "When you add to-dos to your To-do Stream directly, they will be added into the specified to-do list and thus will be available to your teammates who can access this list. If you want such to-dos be your private to-dos by default, select None."
+msgstr "Когда вы добавляете задачу в поток задач напрямую, она будет сохранена в выбранном списке дел и станет видимой всем сотрудникам, у которых есть доступ к этому списку. Если вы хотите, чтобы все задачи, добавленные в поток, были видны только вам, выберите «Нет»."
+
+msgid "Natural input"
+msgstr "Умный ввод"
+
+msgid "Set due date and time according to to-do name"
+msgstr "Устанавливать срок выполнения по названию задачи"
+
+msgid "When enabled, Pocket Lists will automatically parse to-do name and set due date and time if it was typed.<br> E.g. “meeting tomorrow morning”, “call James next friday 5pm”."
+msgstr "Приложение автоматически установит дату и время выполнения задачи по введенному названию.<br> Например, «встреча завтра утром», «позвонить Кириллу в пятницу в 17:00» — Pocket Lists понимает по-русски и по-английски."
+
+msgid "Daily recap and the Cron are configured properly! You will get email notifications when Cron is executed but not more often than daily (every 24 hours). And when there is nothing planned for the upcoming period, no emails will be sent."
+msgstr "Уведомления и команда Cron настроены верно! Вы будете получать сообщения со списком предстоящих дел при каждом следующем запуске Cron, но не чаще чем раз в 24 часа (ведь сводка — ежедневная). Когда ничего не запланировано на предстоящий период, уведомления отправляться не будут."
+
+msgid "Last Cron execution time: %s"
+msgstr "Последний запуск: %s"
+
+msgid "ALL TO-DO LISTS AND ITEMS FROM THIS PROJECT WILL BE DELETED PERMANENTLY. ARE YOU SURE?"
+msgstr "ВСЕ СПИСКИ И ЗАДАЧИ ЭТОГО ПРОЕКТА БУДУТ УДАЛЕНЫ БЕЗ ВОЗМОЖНОСТИ ВОССТАНОВЛЕНИЯ. ВЫ УВЕРЕНЫ?"
+
+msgid "This is <strong>To-do Stream</strong> — your personal dynamic to-do list that automatically collects all important to-dos from all of your lists and presents them in the priority &amp; due order. Most important to-dos are on top. Since this is your personal list, to-do items assigned to your teammates won’t be listed on this list."
+msgstr "Это <strong>Поток задач</strong> — ваш список дел, в котором автоматически собираются задачи из всех списков и сортируются в порядке приоритета и срока выполнения. Самые важные задачи наверху. Это ваш персонифицированный список, и поэтому задачи, назначенные на других пользователей, в нем показаны не будут."
+
+msgid "To-dos added to this list directly will be automatically added to <strong>%s</strong> list and thus will be available to your teammates who can access this list. <a href=\"%s\">Configure</a>"
+msgstr "Задачи, добавленные напрямую в поток, будут сохранены в списке <strong>%s</strong> и станут доступными всем пользователям, которые имеют доступ к этому списку. <a href=\"%s\">Выбрать входящий список</a>"
+
+msgid "To-dos added to the stream directly will be <em>your private to-dos</em> unless you manually assign them to any to-do list or <a href=\"%s\">select the default stream inbox list</a> in the app settings."
+msgstr "Задачи, добавленные напрямую в поток, будут <strong>видны только вам</strong> до тех пор, пока вы не переместите их в один из общих списков дел или не <a href=\"%s\">выберите список для входящих</a> в настройках, прежде чем добавлять новые задачи в поток."
+
+msgid "All to-do items (either completed or not) will be deleted permanently."
+msgstr "Все задачи (как выполненные, так и нет) будут удалены без возможности восстановления."
+
+msgid "%s have just completed <strong>&#10004; %s</strong>"
+msgstr "%s выполнил задачу <strong>&#10004; %s</strong>"
+
+msgid "To-do has been uncompleted: <strong>&#10006; %s</strong>"
+msgstr "Задача возвращена: <strong>&#10006; %s</strong>"
+
+msgid "%s assigned you to a to-do on <a href=\"%s\">%s</a>"
+msgstr "%s назначил вас на задачу <a href=\"%s\">%s</a>"
+
+msgid "%s commented on <a href=\"%s\">%s</a>"
+msgstr "%s добавил комментарий к <a href=\"%s\">%s</a>"
+
+msgid "There are new items on <a href=\"%s\">%s</a> to-do list:"
+msgstr "В списке <a href=\"%s\">%s</a> новые задачи:"
+
+msgid "%s have just created a new to-do list <strong><a href=\"%s\">%s</a></strong>"
+msgstr "%s создал новый список задач <strong><a href=\"%s\">%s</a></strong>"
+
+msgid "This to-do is assigned to another person. Are you sure you want to mark this item as complete?"
+msgstr "Эта задача назначена на другого пользователя. Вы уверены, что хотите отметить его как выполненное?"
+
+msgid "Close?"
+msgstr "Закрыть?"
+
+msgid "Failed to upload file %s."
+msgstr "При загрузке файла %s произошла ошибка."
+
+msgid "New comment on %s"
+msgstr "Новый комментарий к задаче %s"
+
+msgid "created new list"
+msgstr "создал список"
+
+msgid "deleted a list"
+msgstr "удалил список"
+
+msgid "archived"
+msgstr "отправил в архив"
+
+msgid "added new items to"
+msgstr "добавил новые задачи в"
+
+msgid "Your favorites list is empty"
+msgstr "Избранных задач нет"
+
+msgid "Click on a tiny star icon next to to-do name to add it to your personal favorties list."
+msgstr "Щелкните по маленькой звездочке, чтобы добавить задачу в ваш личный список избранных."
+
+msgid "Only selected users will be able to access lists and to-dos in this pocket."
+msgstr "Только выбранные пользователи будут иметь доступ к спискам этого проекта."
+
+msgid "completed"
+msgstr "выполнил задачу"
+
+msgid "My to-dos"
+msgstr "Мои задачи"
+
+msgid "Comments"
+msgstr "Комментарии"
+
+msgid "Due %s"
+msgstr "Срок: %s"
+
+msgid "Create a to-do list and share it with your teammates."
+msgstr "Создавайте списки дел и работайте над ними совместно с командой."
+
+msgid "Online"
+msgstr "Онлайн"
+
+msgid "Use <a href=\"%s\">Team app</a> to invite teammates and to collaborate using the Pocket Lists app: select a user or a group of users &gt; Access tab &gt; Pocket Lists app &gt; apply the proper access level."
+msgstr "Работайте совместно! Используйте приложение «<a href=\"%s\">Команда</a>», чтобы предоставить доступ коллегам: выберите пользователя или группу пользователей &gt; вкладка «Доступ» &gt; Pocket Lists &gt; настройте подходящий уровень доступа."
+
+msgid "Reply"
+msgstr "Ответить"
+
+msgid "on"
+msgstr "к задаче"
+
+msgid "Loading..."
+msgstr "Загрузка…"
+
+msgid "You are about to permanently delete this comment. Delete?"
+msgstr "Комментарий будет удален без возможности восстановления. Удалить?"
+
+msgid "Next"
+msgstr "Вперед"
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "My favorites"
+msgstr "Мои избранные"
+
+msgid "<strong>Your Favorites list is empty.</strong> To add a to-do to your personal favorites list, either click on a tiny little star icon next to a to-do name (in just any to-do list) or add a to-do directly using the form below."
+msgstr "<strong>Ваш список избранных задач пуст.</strong> Добавляйте задачи в свой персональный список избранных с помощью маленькой звездочки справа от названия задачи (в каком бы списке задача не находилась) или добавляя новые задачи в избранные ниже."
+
+msgid "All favorites"
+msgstr "Все избранные"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "me"
+msgstr "я"
+
+msgid "When due is set, it may automatically increase the manually set priority color."
+msgstr "При приближении срока приоритет (цвет) задачи автоматически возрастает и может стать выше выставленного вручную."
+
+msgid "Re-sort list"
+msgstr "Обновить сортировку"
+
+msgid "Edit list details"
+msgstr "Настройки списка"
+
+msgid "Access"
+msgstr "Доступ"
+
+msgid "author"
+msgstr "автор"
+
+msgid "Use <a href=\"%s\">Team app</a> to configure access: select a user or a group of users &gt; Access tab &gt; Pocket Lists app &gt; apply the proper access level."
+msgstr "Для настройки доступа используйте приложение «<a href=\"%s\">Команда</a>»: выберите пользователя или группу пользователей &gt; вкладка «Доступ» &gt; Pocket Lists &gt; настройте подходящий уровень доступа."
+
+msgid "Understand “Meeting tomorrow at 10” input (recommended)"
+msgstr "Умный ввод «Встреча завтра в 10» (рекомендуется)"
+
+msgid "When enabled, the app will automatically parse to-do name and set due date and time if it was typed.<br> Examples: “Meeting tomorrow morning”, “Call James next friday 5pm”, “Pay electricity bill in a week”, “Update working schedule April 25”."
+msgstr "Приложение автоматически установит дату и время выполнения задачи по введенному тексту задачи.<br> Например, «Встреча завтра утром», «Позвонить Кириллу в пятницу в 17:00», «Оплатить аренду через неделю», «Рассылка клиентам 25 апреля»."
+
+msgid "My to-dos to self"
+msgstr "Мои задачи себе"
+
+msgid "To-dos assigned to me by other users"
+msgstr "Задачи, назначенные на меня другими пользователями"
+
+msgid "To-dos created by me in shared lists"
+msgstr "Задачи, добавленные в общие списки мной"
+
+msgid "only in lists which I marked as favorite"
+msgstr "только в списки, которые я добавил в избранные"
+
+msgid "To-dos created by other users in shared lists"
+msgstr "Задачи, добавленные в общие списки другими пользователями"
+
+msgid "all Green, Yellow, and Red to-dos from all lists"
+msgstr "все Зеленые + Желтые + Красные задачи"
+
+msgid "My to-dos is your personal dynamic to-do list that automatically collects all to-dos which you are about to do up next. To-dos to self and to-dos assigned to you by your teammates are included in this list automatically. Most important and urgent to-dos are on top."
+msgstr "Мои задачи — это ваш персональный фильтр предстоящих задач. В фильтр автоматически попадают все задачи, которые вы назначили на себя и которые вам отправили другие пользователи. Самые важные и срочные задачи показываются наверху."
+
+msgid "Additionally, you can include other users’s to-dos to be shown on your My to-dos list , which is handy if you want to be sure not to miss any important to-do item, either it is an urgent to-do or a to-do list you follow."
+msgstr "Дополнительно вы можете включить в фильтр задачи, созданные другими пользователями. Это удобно, если вы следите за выполнением важных запланированных задач или задач из отдельных избранных списков."
+
+msgid "To-dos assigned to other users will be automatically hidden from your My to-dos list."
+msgstr "Задачи, созданные вами и назначенные на других пользователей, будут скрыты из списка предстоящих задач."
+
+msgid "The counter will count to-dos of the specified colors on your My to-dos list."
+msgstr "Приложение автоматически подсчитает количество задач выбранных цветов в фильтре «Мои задачи» и покажет это число на иконке приложения."
+
+msgid "When someone sends me a to-do"
+msgstr "О назначении задач на меня"
+
+msgid "%s’s to-dos (%d)"
+msgstr "Задачи %s (%d)"
+
+msgid "Shared lists"
+msgstr "Общие списки"
+
+msgid "Use Team app to <a href=\"%s\">configure %s’s access</a> to shared lists: select a user or a group of users &gt; Access tab &gt; Pocket Lists app &gt; apply the proper access level."
+msgstr "Настройте <a href=\"%s\">доступ к спискам для %s</a> в приложении «Команда»: выберите пользователя или группу пользователей &gt; вкладка «Доступ» &gt; Pocket Lists &gt; настройте подходящий уровень доступа."
+
+msgid "You have no lists that you would share with %s in common."
+msgstr "У вас нет общих списков дел с %s."
+
+msgid "Welcome to Pocket Lists app!"
+msgstr "Добро пожаловать!"
+
+msgid "Use Pocket Lists app to keep track on what you need to do up next, to assign to-dos to your teammates, and to collaborate on shared to-do lists."
+msgstr "Pocket Lists позволит вашей команде эффективно работать совместно: вести общие списки дел, планировать работу, назначать задачи друг другу и не пропустить ни одного важного запланированного события."
+
+msgid "Meeting tomorrow at 10"
+msgstr "Встреча завтра в 10"
+
+msgid "%s has just completed <strong>%s</strong>"
+msgstr "%s выполнил задачу <strong>%s</strong>"
+
+msgid "The following to-do has just been uncompleted and rolled back to active status: <strong>%s</strong>"
+msgstr "Задача возвращена в статус невыполненной: <strong>%s</strong>"
+
+msgid "Manage my subscription"
+msgstr "Настройки подписки"
+
+msgid "%s sent you <a href=\"%s\">a new to-do</a>"
+msgstr "%s отправил вам <a href=\"%s\">новую задачу</a>"
+
+msgid "Are you sure you want to delete this file?"
+msgstr "Удалить файл?"
+
+msgid "Archiving the list will temporarily make this list and all it's items invisible. When you need this list in the future, simply unarchive it and continue from just where you stopped. Archive the list?"
+msgstr "Список и все невыполненные задачи этого списка будут временно скрыты в архиве. Восстановить список из архива вы сможете в разделе «Архив». Продолжить?"
+
+msgid "You are about to leave this page without saving your input. Are you sure?"
+msgstr "Уйти со страницы без сохранения введенной информации?"
+
+msgid "No item with such ID"
+msgstr "Нет задач с указанным ID"
+
+msgid "unarchived"
+msgstr "восстановлен из архива"
+
+msgid "added new to-dos to"
+msgstr "добавил новые задачи в список"
+
+msgid "commented"
+msgstr "добавил комментарий"
+
+msgid "assigned a to-do to"
+msgstr "поставил задачу"
+
+msgid "To-dos"
+msgstr "Задачи"
+
+msgid "Can create to-dos to self"
+msgstr "Работа с персональным списком дел «Мои задачи»"
+
+msgid "Can access shared lists & create to-dos to self"
+msgstr "Работа с общими списками и создание задач себе"
+
+msgid "Can create shared to-do lists"
+msgstr "Создание новых общих списков дел"
+
+msgid "Can see other users personal to-dos and assign to-dos to teammates"
+msgstr "Просмотр персональных задач других пользователей, назначение задач другим пользователям"
+
+msgid "in any to-do list"
+msgstr "в любые списки"
+
+msgid "%d to-do"
+msgid_plural "%d to-dos"
+msgstr[0] "%d задача"
+msgstr[1] "%d задачи"
+msgstr[2] "%d задач"
+
+msgid "<strong>No comments yet.</strong> This page will display a plain list of all to-do item comments posted by you and your teammates. Keep track on this page to make sure not to miss a single discussion."
+msgstr "<strong>Пока комментариев нет.</strong> На этой странице будут отображаться все комментарии, добавленные к задачам вами и вашими коллегами."
+
+msgid "Sorry. You are not allowed to see anything on this page."
+msgstr "Извините, но у вас нет доступа к данным на этой странице."
+
+msgid "Access denied"
+msgstr "Доступ запрещен"
+
+msgid "archive"
+msgstr "архив"
+
+msgid "Access to lists"
+msgstr "Доступ ко спискам"
+
+msgid "No to-dos :)"
+msgstr "Совсем нет задач :)"
+
+msgid "to"
+msgstr "к"
+
+msgid "added a to-do to self"
+msgstr "поставил себе новую задачу"
+
+msgid "sent a new to-do"
+msgstr "поставил новую задачу"
+
+msgid "in"
+msgstr "в"
+
+msgid "to user"
+msgstr "пользователю"
+
+msgid "in list"
+msgstr "в списке"
+
+msgid "List #%d"
+msgstr "Список №%d"
+
+msgid "New to-do (e.g. “meeting tomorrow at 10”)"
+msgstr "Новая задача (например, «встреча завтра в 10»)"
+
+msgid "Show all %d completed to-dos"
+msgstr "Показать все %d выполненные задачи"
+
+msgid "DELETED LIST"
+msgstr "СПИСОК УДАЛЕН"
+
+msgid "Show everyone"
+msgstr "Показать всех"
+
+msgid "Files with extension .%s are not allowed to security considerations."
+msgstr "Загрузка файлов с расширением .%s не разрешена из соображений безопасности."
+
+msgid "Unknown state"
+msgstr "Неизвестный статус"
+
+msgid "Better order processing"
+msgstr "Обработка заказов — под контролем!"
+
+msgid "Pocket Lists integrates with Shop-Script and allows you to process orders even better: quickly set reminders linked to Shop-Script orders, assign tasks to sales managers, schedule follow-ups for the future. Pocket Lists will gather all such to-dos in one place and ensure you have your sales under complete control. Learn more about <a href=\"%s\" target=\"_blank\">integration with Shop-Script</a>."
+msgstr "Pocket Lists сделает обработку заказов удобнее и поможет лучше контролировать процесс продаж. Создавайте напоминания и задачи, связанные с заказами Shop-Script, назначайте ответственных, следите за выполнением. Подробнее <a href=\"%s\" target=\"_blank\">об интеграции с Shop-Script</a>."
+
+msgid "https://www.webasyst.com/store/app/pocketlists/shop-script/"
+msgstr "https://www.webasyst.ru/store/app/pocketlists/shop-script/"
+
+msgid "To return a to-do back to work, simply unclick its checkmark."
+msgstr "Чтобы вернуть задачу в работу, просто кликните по галочке."
+
+msgid "Store"
+msgstr "Магазин"
+
+msgid "Discussions"
+msgstr "Обсуждения"
+
+msgid "Your daily routine"
+msgstr "Ваши планы на день"
+
+msgid "<a href=\"%s\">Use Settings</a> page to configure your custom “My To-dos” filter behaviour."
+msgstr "<a href=\"%s\">Настройте</a>, какие именно задачи должны попадать в ваш персональный список задач."
+
+msgid "List created"
+msgstr "Список создан"
+
+msgid "Limited access"
+msgstr "Ограниченный доступ"
+
+msgid "Pocket Lists"
+msgstr "Pocket Lists"
+
+msgid "Find order or task by ID"
+msgstr "Введите номер заказа или задачи"
+
+msgid "Pocket settings"
+msgstr "Настройки проекта"
+
+msgid "Can see Shop-Script to-dos, other users personal to-dos, and assign to-dos to teammates"
+msgstr "Просмотр задач, связанных с заказами Shop-Script, персональных задач других пользователей, назначение задач другим пользователям"
+
+msgid "DANGER! Pocket will be deleted with all its content including lists and to-dos. There will be no way to restore this data. Are you sure?"
+msgstr "СТОП, СТОП, СТОП! Проект будет удален вместе со всеми содержимым — списками и задачами. Возможности восстановить эти данные не будет. Вы уверены?"
+
+msgid "Order"
+msgstr "Заказ"
+
+msgid "Add note"
+msgstr "Добавить заметку"
+
+msgid "Can create and see to-dos linked with Shop-Script orders"
+msgstr "Просмотр и работа с задачами, связанными с заказами Shop-Script"
+
+msgid "Not found"
+msgstr "Не найдено"
+
+msgid "Work & Office"
+msgstr "Работа и офис"
+
+msgid "Shopping"
+msgstr "Шопинг"
+
+msgid "Home & Family"
+msgstr "Дом и семья"
+
+msgid "Travel & Vacations"
+msgstr "Отдых и путешествия"
+
+msgid "Nature & Outdoors"
+msgstr "Природа"
+
+msgid "Holidays & Events"
+msgstr "Праздники и события"
+
+msgid "School & Education"
+msgstr "Школа и образование"
+
+msgid "Hobbies & Games"
+msgstr "Хобби и игры"
+
+msgid "Food & Drink"
+msgstr "Еда и напитки"
+
+msgid "Health & Medical"
+msgstr "Здоровье"
+
+msgid "Sports & Activities"
+msgstr "Спорт"
+
+msgid "Toys & Babies"
+msgstr "Дети"
+
+msgid "Pets & Animals"
+msgstr "Животные"
+
+msgid "Tech & Gadgets"
+msgstr "Технологии и гаджеты"
+
+msgid "Signs & Symbols"
+msgstr "Символы и знаки"
+
+msgid "Flags"
+msgstr "Флаги"
+
+msgid "Stream"
+msgstr "Поток"
+
+msgid "%d s"
+msgstr "%d с"
+
+msgid "%d min"
+msgstr "%d мин"
+
+msgid "%d h"
+msgstr "%d ч"
+
+msgid "%d d"
+msgstr "%d д"
+
+msgid "%d mo"
+msgstr "%d мес"
+
+msgid "%d y"
+msgstr "%d г"
+
+msgid "Details"
+msgstr "Параметры"
+
+msgid "You don’t have access to any list in the pocket. Please contact your admin to request access setup."
+msgstr "У вас нет доступа к спискам этого проекта. Попросите своего администратора открыть доступ."
+
+msgid "Updated"
+msgstr "Обновлено"
+
+msgid "No pocket/id and list/id params specified"
+msgstr "Не указаны ID проекта и списка"
+
+msgid "Pocket and list not found"
+msgstr "Проект и список не найдены"
+
+msgid "List move error"
+msgstr "Не получилось переместить список"
+
+msgid "To setup access rights by pocket, set Limited access for at least one pocket"
+msgstr "Для настройки доступа к спискам дел включите доступ хотя бы к одному проекту"
+
+msgid "Use @ or # symbols to link this to-do with a Shop-Script order or a task from the Tasks app."
+msgstr "Используйте символы @, # или № для связи с заказами Shop-Script или задачами из «Задач»."
+
+msgid "Webasyst Cloud"
+msgstr "В облаке Webasyst"
+
+msgid "launch the <a href=\"%s\">Cloud app</a>"
+msgstr "запустите приложение «<a href=\"%s\">Облако</a>»"
+
+msgid "Add Cron job"
+msgstr "Добавить задание cron"
+
+msgid "Own server"
+msgstr "На своем сервере"
+
+msgid "Only you can see this to-do"
+msgstr "Только вы видите эту задачу"
+
+msgid "About"
+msgstr "О приложении"
+
+msgid "Rate"
+msgstr "Оценить"
+
+msgid "https://www.webasyst.com/store/app/pocketlists/reviews/"
+msgstr "https://www.webasyst.ru/store/app/pocketlists/reviews/"
+
+msgid "Rate on Webasyst Installer"
+msgstr "Оценить в приложении «Инсталлер»"
+
+msgid "<strong>Your feedback is very important!</strong> Please rate Pocket Lists and write a short review about your experience of using the app. Reviews (both positive and negative) really help us to see what is most useful in the app so we can continue delivering new features the right way."
+msgstr "<strong>Ваши отзывы очень важны!</strong> Пожалуйста, поставьте оценку приложению Pocket Lists и расскажите о своем опыте его использования. Отзывы (и положительные, и отрицательные) помогают нам правильно выбирать направление развития приложения и в первую очередь разрабатывать те функции, которые наиболее востребованы."
+
+msgid "https://www.webasyst.com/store/app/pocketlists/"
+msgstr "https://www.webasyst.ru/store/app/pocketlists/"
+
+msgid "Support"
+msgstr "Поддержка"
+
+msgid "We speak English and Russian."
+msgstr "Мы говорим по-русски и по-английски."
+
+msgid "GitHub"
+msgstr "GitHub"
+
+msgid "Pocket Lists for Webasyst is an important part of the bigger <a href=\"https://pocketlists.com\" target=\"_blank\"><strong>PocketLists.com project</strong></a> — a suite of apps that are aimed to provide the friendliest to-do list making & collaboration experience."
+msgstr "Pocket Lists для Webasyst является важной частью большого проекта <a href=\"https://pocketlists.com\" target=\"_blank\"><strong>PocketLists.com</strong></a> — сервиса для работы со списками дел и совместной работы."
+
+msgid "Pocket Lists is <strong>mostly known for its iOS app</strong> (iPhone, iPad, Apple Watch) designed for personal list making. Get Pocket Lists on the App Store for free."
+msgstr "Pocket Lists <strong>наиболее известен как таск-менеджер для iPhone, iPad и Apple Watch</strong>, предназначенный для персональной работы с списками дел и напоминаниями."
+
+msgid "http://itunes.apple.com/us/app/pocket-lists-2/id1272049520?mt=8"
+msgstr "http://itunes.apple.com/ru/app/pocket-lists-2/id1272049520?mt=8"
+
+msgid "With Pocket Lists for Webasyst, our goal is to deliver the best of the Pocket Lists world to the Webasyst collaborative environment and to make the teamwork and collaboration on tasks expectionally easy and friendly."
+msgstr "Pocket Lists для Webasyst — это большой шаг проекта Pocket Lists в мир командной работы. В рамках Webasyst мы планируем организовать удобнейшую среду для командной работы и связать ее со всеми возможностями, которые предоставляет мобильное приложение Pocket Lists."
+
+msgid "Roadmap"
+msgstr "План развития"
+
+msgid "We have big plans for both iOS and Webasyst apps, and here is the summary of what we are keen to be integrating into Pocket Lists for Webasyst anytime soon (a draft plan):"
+msgstr "План ближайшего развития приложения включает в себя интеграцию Pocket Lists для iOS и Webasyst, а также много полезных прикладных возможностей (план примерный, возможны изменения):"
+
+msgid "Bring the shared to-do list functionality into Webasyst"
+msgstr "Совместная работа со списками дел в экосистеме Webasyst"
+
+msgid "Natural input ('... tomorrow 10am') parser"
+msgstr "Парсер умного ввода даты и времени («сделать завтра в 10»)"
+
+msgid "Integrate with Shop-Script"
+msgstr "Интеграция с Shop-Script"
+
+msgid "The ability to create to-dos linked with orders"
+msgstr "Связь задач Pocket Lists с заказами Shop-Script"
+
+msgid "Multiple pockets and sophisticated access rights management"
+msgstr "Проекты и гибкая настройка доступа для сотрудников"
+
+msgid "To-do search"
+msgstr "Поиск задач"
+
+msgid "“My To-dos” widget for the dashboard and Webasyst TV"
+msgstr "Виджет «Мои задачи» для дешборда и Webasyst TV"
+
+msgid "Integration with Webasyst CRM, Tasks, and other apps"
+msgstr "Интеграция CRM, «Задачами» и другими приложениями Webasyst"
+
+msgid "Repeating to-dos"
+msgstr "Повторяющиеся задачи"
+
+msgid "Rest API"
+msgstr "Rest API"
+
+msgid "Mid 2019"
+msgstr "Середина 2019"
+
+msgid "Integrate Pocket Lists for Webasyst and iOS"
+msgstr "Интеграция Pocket Lists для Webasyst и iOS"
+
+msgid "Advanced Shop-Script integration"
+msgstr "Продвинутая интеграция с Shop-Script"
+
+msgid "Automated to-do creation based on order statuses"
+msgstr "Автоматическая постановка задач ответственным сотрудникам при выполнении действий с заказами в Shop-Script"
+
+msgid "Subtasks"
+msgstr "Подзадачи"
+
+msgid "Headings / dividers (sublists)"
+msgstr "Разделители / заголовки внутри списков"
+
+msgid "Pocket Lists for Android"
+msgstr "Pocket Lists для Android"
+
+msgid "Someday. The real ETA depends on the availability of development resources which are now focused mostly on iOS."
+msgstr "Пока не знаем когда. Но планируем заняться приложением для Android сразу после того, как основные планы по разработке для iOS будут выполнены."
+
+msgid "Profit!"
+msgstr "Профит!"
+
+msgid "Copyright"
+msgstr "Copyright"
+
+msgid "We wish we could implement new features that easy :)"
+msgstr "Эх, если бы все было так просто :)"
+
+msgid "Respect The Send!"
+msgstr ""
+
+msgid "Go!"
+msgstr ""
+
+msgid "Generate"
+msgstr ""
+
+msgid "Contact not found"
+msgstr ""
+
+msgid "Not implemented for now"
+msgstr ""
+
+msgid "When someone adds a to-do item in any shared list"
+msgstr "О создании новых задач в любых общих списках"
+
+msgid "When someone creates a new shared to-do list"
+msgstr "О создании новых общих списков"
+
+msgid "any item on any shared list"
+msgstr "любых задач в общих списках"
+
+msgid "When someone comments on a to-do item"
+msgstr "О комментариях к задачам"
+
+msgid "Send It!"
+msgstr ""
+
+msgid "When"
+msgstr "Когда"
+
+msgid "Set date"
+msgstr "Дата"
+
+msgid "close details"
+msgstr "скрыть подробности"
+
+msgid "Add to-do"
+msgstr "Создать задачу"
+
+msgid "Unlink"
+msgstr "Удалить ссылку"
+
+msgid "Show details and use the detailed add mode by default"
+msgstr "Показывать все параметры задачи по умолчанию"
+
+msgid "Go ahead! Create a list."
+msgstr "Создайте список дел"
+
+msgid "Pockets and lists help you organize to-dos, ideas, and notes, and flexibly configure access rights for your team."
+msgstr "Проекты и списки помогают организовывать задачи, идеи, заметки и гибко настраивать права доступа к ним для сотрудников."
+
+msgid "All my to-dos"
+msgstr "Все мои задачи"
+
+msgid "Only On Fire + Black + Red"
+msgstr "Только Горит + Черные + Красные"
+
+msgid "Only On Fire + Black + Red + Yellow"
+msgstr "Только Горит + Черные + Красные + Желтые"
+
+msgid "Only On Fire + Black + Red + Yellow + Green"
+msgstr "Только Горит + Черные + Красные + Желтые + Зеленые"
+
+msgid "only items created by me or assigned to me"
+msgstr "только задачи, которые я создал или которые назначили на меня"
+
+msgid "Calendar"
+msgstr ""
+
+msgid "Places"
+msgstr ""
+
+msgid "Board"
+msgstr "Доска"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "%s lists found"
+msgstr "Найдено %s списков"
+
+msgid "No lists found"
+msgstr "Не найдено ни одного списка"
+
+msgid "%s to-dos found"
+msgstr "Найдено %s задач"
+
+msgid "Hide details and use the compact add mode by default"
+msgstr "Скрывать параметры задачи по умолчанию"
+
+msgid "Ok, I got it."
+msgstr "Ок, понял."
+
+msgid "The to-do item will be saved in the <span class=\"nowrap\"><a href=\"%s\" class=\"gray\" target=\"_blank\">Pocket Lists</a> app</span> and will be visible only to authorized Webasyst users. The customer will not see this to-do."
+msgstr "Задача будет сохранена в приложении <a href=\"%s\" class=\"gray\" target=\"_blank\">Pocket Lists</a> и видна только пользователям бекенда. Покупатель никогда не увидит эту задачу."
+
+msgid "Only your teammates can see this checklist and add to-dos. The customer will not see this."
+msgstr "Чек-лист видят только ваши коллеги. Покупатель никогда не увидит эти задачи."
+
+msgid "The user will see this to-do in his Pocket Lists to-do stream and will be notified about this assignment by email."
+msgstr "Ответственный пользователь увидит эту задачу в своем потоке задач в приложении Pocket Lists и получит уведомление о назначении по email."
+
+msgid "Reset everything"
+msgstr ""
+
+msgid "added new to-do"
+msgstr "добавил задачу"
+
+msgid "Integration with the Team app"
+msgstr "Интеграция с приложением «Команда»"
+
+msgid "Timelines: detailed activity log of who did what"
+msgstr "История действий: подробный список всего, что делала ваша команда"
+
+msgid "By pocket, by list, by user"
+msgstr "По проектам, по спискам, по пользователям"
+
+msgid "Custom to-do statuses"
+msgstr "Статусы задач"
+
+msgid "Agile board"
+msgstr "Agile: просмотр задач в виде колонок по статусам"
+
+msgid "Bullets highlighted with a %s label will be available as a part of the paid Pocket Lists PRO plugin."
+msgstr "Пункты, отмеченные значком %s, планируются к выпуску в виде отдельного платного плагина Pocket Lists PRO."
+
+msgid "Plugins"
+msgstr "Плагины"
+
+msgid "To-do status labels"
+msgstr "Маркировка задач"
+
+msgid "Kanban board"
+msgstr "Канбан-доска"
+
+msgid "To-do shortcuts"
+msgstr "Шаблоны быстрого ввода"
+
+msgid "The list is in the pocket already"
+msgstr "Список уже находится в этом проекте"
+
+msgid "https://www.webasyst.com/store/plugin/pocketlists/pro/"
+msgstr "https://www.webasyst.ru/store/plugin/pocketlists/pro/"
+
+msgid "Bullets highlighted with a %s label are available as a part of the paid <a href=\"%s\"><b>Pocket Lists PRO</b></a> plugin."
+msgstr "Возможности, отмеченные значком %s, доступны в виде отдельного платного плагина <a href=\"%s\"><b>Pocket Lists PRO</b></a>."
+
+msgid "No %s entity object in log context"
+msgstr ""
+
+msgid "There should be %s entity in log context"
+msgstr ""
+
+msgid "No log mapping for %s"
+msgstr ""
+
+msgid "<strong>%s</strong> on <em>%s</em>"
+msgstr "<strong>%s</strong> <em>%s</em>"
+
+msgid "Upgrade to PRO"
+msgstr "Апгрейд до PRO"
+
+msgid "Upgrade"
+msgstr "Апгрейд"
+
+msgid "New app by 1312 Inc."
+msgstr "Новое приложение от команды 1312"
+
+msgid "Ad"
+msgstr "Реклама"
+
+msgid "<a href=\"%s\" target=\"_blank\">Status app</a> tracks working time and shows whom have been working on what (and whom have been doing nothing too!)"
+msgstr ""
+
+msgid "Upgrade to %s"
+msgstr "Апгрейд до %s"
+
+msgid "Upgrade to Pocket Lists PRO"
+msgstr "Апгрейд до Pocket Lists PRO"
+
+msgid "Boost your efficiency with the Pocket Lists PRO plugin that instantly enables a robust set of amazing advanced features: <b>Shop-Script automation (auto create to-dos based on actions with orders), kanban board, status labels, quick entry templates,</b> and more."
+msgstr "Работать станет проще, когда рутинные операции будут автоматизированы. Плагин Pocket Lists PRO добавляет несколько полезнейших продвинутых функций: <b>автоматизацию связки Shop-Script с Pocket Lists (автоматическое создание задач на основе действий с заказами), канбан-доску, маркеры (статусы), шаблоны быстрого создания задач</b>."
+
+msgid "See details"
+msgstr "Подробнее"
+
+msgid "Pocket Lists PRO plugin"
+msgstr "Плагин Pocket Lists PRO"
+
+msgid "Shop-Script automation (auto create to-dos based on actions with orders), kanban board, status labels, quick entry templates, and other advanced features."
+msgstr "Автоматизация связки Shop-Script с Pocket Lists (задачи на основе действий с заказами), канбан-доска, маркеры (статусы), шаблоны быстрого создания задач и другие продвинутые возможности."
+
+msgid "Buy the plugin"
+msgstr "Купить плагин"
+
+msgid "Great to see a PRO user here!"
+msgstr "Так держать!"
+
+msgid "<a href=\"%s\">Pocket Lists PRO</a> plugin is installed and running at full speed. Thank you for being a PRO user and for supporting the project."
+msgstr "Плагин <a href=\"%s\">Pocket Lists PRO</a> установлен и работает в полную силу. Спасибо за покупку плагина и поддержку проекта Pocket Lists!"
+
+msgid "See Cron command"
+msgstr "Посмотреть команду Cron"
+
+msgid "Path %s is not writable"
+msgstr "Нет прав на запись в папку %s"
+
+msgid "https://www.webasyst.com/buy/store/5045/"
+msgstr "https://www.webasyst.ru/buy/store/5045/"
+
+msgid "https://www.webasyst.com/buy/store/1811/"
+msgstr "https://www.webasyst.ru/buy/store/1811/"
+
+msgid "https://www.webasyst.com/buy/store/5136/"
+msgstr "https://www.webasyst.ru/buy/store/5136/"
+
+msgid "https://www.webasyst.com/buy/store/4943/"
+msgstr "https://www.webasyst.ru/buy/store/4943/"
+
+msgid "Failed to upload file %s. Check permissions."
+msgstr "Не удалось загрузить файл %s.  Что-то не так с правами доступа."
+
+msgid "Integration with Webasyst Tasks"
+msgstr "Интеграция с Webasyst Задачи"
+
+msgid "New UI"
+msgstr "Новый интерфейс"
+
+msgid "Private to-dos"
+msgstr "Приватные задачи, которые не видят коллеги"
+
+msgid "Integration with Webasyst CRM and other apps"
+msgstr "Интеграция с Webasyst CRM и другими приложениями"
+
+msgid "More apps by 1312 Inc."
+msgstr "Еще от 1312 Inc."
+
+msgid "Check out these thoroughly crafted apps on Webasyst Installer today:"
+msgstr "Посмотрите другие приложения нашей команды в Инсталлере Webasyst:"
+
+msgid "https://www.webasyst.com/store/app/tasks/"
+msgstr "https://www.webasyst.ru/store/app/tasks/"
+
+msgid "Teamwork"
+msgstr "Задачи"
+
+msgid "Keeps track on all tasks and brings order to chaos"
+msgstr "Организует работу команды, наводит порядок в задачах и обсуждениях."
+
+msgid "https://www.webasyst.com/store/app/status/"
+msgstr "https://www.webasyst.ru/store/app/status/"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Tracks your team time & work status remotely on WFH"
+msgstr "Считает рабочее время, показывает, у кого какие успехи на удаленке."
+
+msgid "https://www.webasyst.com/store/app/cash/"
+msgstr "https://www.webasyst.ru/store/app/cash/"
+
+msgid "Cash Flow"
+msgstr "Деньги"
+
+msgid "Forecasts business cash flow & saves your money"
+msgstr "Прогнозирует расходы, помогает правильно вести финансовый учет."
+
+msgid "Task"
+msgstr "Задача"
+
+msgid "Checklist"
+msgstr "Чек-лист"
+
+msgid "%d to-do is pending"
+msgid_plural "%d to-dos are pending"
+msgstr[0] "%d подзадача"
+msgstr[1] "%d подзадачи"
+msgstr[2] "%d подзадач"
+
+msgid "Free"
+msgstr "Бесплатно"
+
+msgid "Installed"
+msgstr "Установлено"
+
+msgid "Buy now with promocode"
+msgstr "Купить с промокодом"
+
+msgid "Use this promocode until it expires:"
+msgstr "Используйте промокод, пока он не истек:"
+
+msgid "Promocode"
+msgstr "Промокод"
+
+msgid "Buy now"
+msgstr "Купить сейчас"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "We wish everyone could enjoy the power the Pocket Lists PRO plugin has to offer. This promocode will help you the get the plugin up and running at the best price possible."
+msgstr "Мы хотим, чтобы продвинутые возможности Pocket Lists PRO максимально помогали нашим пользователям. Промокод позволить получить скидку, и у всех останется хорошее настроение."
+
+msgid "Show all completed to-dos"
+msgstr "Показать выполненные задачи"
+
+msgid "Unarchive"
+msgstr "Восстановить"
+
+msgid "Menu"
+msgstr "Меню"
+
+msgid "Show promocode"
+msgstr "Показать промокод"
+
+msgid "About the app"
+msgstr "О приложении"
+
+msgid "About the plugin"
+msgstr "О плагине"
+
+msgid "Promocode:"
+msgstr "Промокод:"
+
+msgid "Our flagship app."
+msgstr "Наше главное и лучшее приложение."
+
+msgid "Amazing companion/upgrade for Pocket Lists when it’s time for real collaboration on <em>bigger and more complex tasks</em>. Assignments, task statuses, deadlines, kanban board, more — the app help bringing the order to any complex teamwork."
+msgstr "Когда задач становится слишком много, и в списки и напоминания Pocket Lists они не помещаются, помогут «Webasyst Задачи» — мощный трекер задач (таск-менеджер), разработанный для команд от 2 до 100 человек. Реально помогает навести порядок в работе команды. Показывает дедлайны и текущий статус работ. Ни одна задача не потеряется."
+
+msgid "Forecasts and saves your money."
+msgstr "Считает расходы, прогнозирует прибыль."
+
+msgid "Shows exact cash on hand balance for any date in the future. This app could have been a <em>life saver</em> for most businesses which did not survive a cash gap because of not knowing it’s coming."
+msgstr "Показывает точный баланс в кассе на любой день в будущем. Приложение могло бы реально спасти жизни многих компанией, которые не пережили кассового разрыва из-за незнания, когда он наступит и почему."
+
+msgid "Remote team leader’s best friend."
+msgstr "Лучший друг руководителя на удаленке."
+
+msgid "Visualizes how you and your teammates work. Tracks working hours. Amazingly useful for WFH and any <em>we-don't-see-each-other-in-the-office</em> working patterns."
+msgstr "Красиво показывает, как работаете вы и ваша команда. Считает рабочие часы. Крайне полезный инструмент для работы на удаленке, когда вы не видите друг друга в офисе лично."
+
+msgid "List name"
+msgstr "Название списка"
+
+msgid "Type in new list name and hit Enter."
+msgstr "Введите название нового списка и нажмите Энтер."
+
+msgid "When tasks become bigger and more complex."
+msgstr "Наводит порядок в работе компании."
+
+msgid "Promocode for our flagship Webasyst app."
+msgstr "Промокод на наше главное приложение для Webasyst."
+
+msgid "Forecasts and saves your business money."
+msgstr "Считает расходы. Прогнозирует прибыль."
+
+msgid "Promocode for managing money the smarter way."
+msgstr "Промокод для тех, кто хочет легко вести учет финансов и зарабатывать больше."
+
+msgid "%s to-dos linked with the order"
+msgstr "%s задач связаны с этим заказом"
+
+msgid "No status"
+msgstr "Без маркера"
+
+msgid "Status labels"
+msgstr "Маркеры задач"
+
+msgid "Shortcuts"
+msgstr "Шаблоны"
+
+msgid "Shop-Script"
+msgstr "Shop-Script"
+
+msgid "Activity log"
+msgstr "История действий"
+
+msgid "Shortcuts help you create to-dos even faster. When creating a new to-do item, shortcuts will be offered as suggestions depending on your current input. Grouping enables the priority of each shortcut."
+msgstr "Шаблоны позволяют создавать задачи, выбирая предзаполненные варианты вместо ввода текста задачи вручную. Группы шаблонов позволяют задать порядок появления каждого следующего набора шаблонов."
+
+msgid "For even faster to-do creation, use <code>Alt + N</code> keyboard combination to quickly select the suggested shortcut shown under the to-do name input."
+msgstr "Для еще большего ускорения ввода используйте комбинацию клавиш <code>Alt + N</code>, где N соответствует порядковому номеру шаблона в текущей группе."
+
+msgid "Add group"
+msgstr "Добавить группу"
+
+msgid "Group"
+msgstr "Группа"
+
+msgid "Set up the automation rules to make Pocket Lists automatically create and assign to-dos based on actions performed with Shop-Script orders."
+msgstr "Автоматизируйте рабочий процесс Pocket Lists в связке с Shop-Script с помощью правил автоматического создания задач на основе действий с заказами."
+
+msgid "New order"
+msgstr "Новый заказ"
+
+msgid "IF"
+msgstr "ЕСЛИ"
+
+msgid "ALL"
+msgstr "ВСЕ"
+
+msgid "Normal"
+msgstr "Средний"
+
+msgid "Amount"
+msgstr "Сумма"
+
+msgid "Urgent"
+msgstr "Срочный"
+
+msgid "Now"
+msgstr "Сейчас"
+
+msgid "Add rule"
+msgstr "Добавить правило"
+
+msgid "No automation rules are defined for the ‘%s’ order action"
+msgstr "Для действия «%s» не задано ни одного правила"
+
+msgid "Shipping"
+msgstr "Доставка"
+
+msgid "AND"
+msgstr "И"
+
+msgid "Payment"
+msgstr "Оплата"
+
+msgid "Order action performer"
+msgstr "Автор действия с заказом"
+
+msgid "‘Order > To-do’ automation rule"
+msgstr "Автоматическое правило «Заказ > Задача»"
+
+msgid "Pocket Lists will create a new to-do upon an action performed with any order in Shop-Script if the specified conditions are met."
+msgstr "Pocket Lists автоматически создаст задачу в случае выполнения действия с любым заказом Shop-Script, если выполнены указанные условия."
+
+msgid "Action"
+msgstr "Действие"
+
+msgid "Storefront"
+msgstr "Витрина"
+
+msgid "Customer group"
+msgstr "Группа покупателей"
+
+msgid "THEN"
+msgstr "ТОГДА"
+
+msgid "Create a to-do"
+msgstr "Создать задачу"
+
+msgid "Random user from the “%s” group"
+msgstr "Случайный пользователь из группа «%s»"
+
+msgid "minutes"
+msgstr "минут"
+
+msgid "hours"
+msgstr "часов"
+
+msgid "day"
+msgstr "дней"
+
+msgid "from the moment the action was performed"
+msgstr "с момента выполнения действия с заказом"
+
+msgid "Delete rule"
+msgstr "Удалить правило"
+
+msgid "Statuses enables you to mark to-dos with color labels for better and a more sophisticated organization."
+msgstr "Маркеры расширяют возможности по типизации задач в списках и фильтрах и позволяют добиться лучшей организации дел в команде."
+
+msgid "The list of available custom labels is system-wide and applicable for all to-dos no matter of a pocket or a list."
+msgstr "Маркеры могут быть назначены к любым задачам, в каких бы проектах или списках они ни находились."
+
+msgid "Done"
+msgstr "Выполнено"
+
+msgid "Add status"
+msgstr "Добавить маркер"
+
+msgid "close"
+msgstr "закрыть"
+
+msgid "All pockets"
+msgstr "Все проекты"
+
+msgid "Filter by pocket"
+msgstr "Фильтр по проекту"
+
+msgid "Activity"
+msgstr "История"
+
+msgid "No activity logged."
+msgstr "Пока здесь пусто."
+
+msgid "Show more"
+msgstr "Показать еще"
+
+msgid "Delete status"
+msgstr "Удалить статус"
+
+msgid "The status label will be permanently deleted leaving all <strong>%d&nbsp;to-dos</strong> currently marked with this status unlabelled. Delete the status label?"
+msgstr "Все <strong>%d&nbsp;задач</strong>, отмеченные в данный момент статусом, который вы собираетесь удалить, останутся в приложении без статуса. Удалить статус?"
+
+msgid "The status label will be permanently deleted. Are you sure?"
+msgstr "Статус задач будет удален. Вы уверены?"
+
+msgid "In progress"
+msgstr "Делается"
+
+msgid "To do"
+msgstr "План"
+
+msgid "Backlog"
+msgstr "Бэклог"
+
+msgid "Testing"
+msgstr "Проверяется"
+
+msgid "Call"
+msgstr "Звонок"
+
+msgid "Remind"
+msgstr "Напомнить"
+
+msgid "Pay"
+msgstr "Оплатить"
+
+msgid "Ship"
+msgstr "Доставить"
+
+msgid "Check"
+msgstr "Проверить"
+
+msgid "Meet"
+msgstr "Встретить"
+
+msgid "today"
+msgstr "сегодня"
+
+msgid "tomorrow"
+msgstr "завтра"
+
+msgid "in 2 days"
+msgstr "через 2 дня"
+
+msgid "in a week"
+msgstr "через неделю"
+
+msgid "in 2 weeks"
+msgstr "через 2 недели"
+
+msgid "in a month"
+msgstr "через месяц"
+
+msgid "Kanban"
+msgstr "Канбан"
+
+msgid "Kanban view"
+msgstr "Канбан"
+
+msgid "Pocket activity log"
+msgstr "История действий в проекте"
+
+msgid "Reminder"
+msgstr "Напоминание"
+
+msgid "Bill"
+msgstr "Счет"
+
+msgid "Shipment"
+msgstr "Доставка"
+
+msgid "Docs"
+msgstr "Доки"
+
+msgid "Meeting"
+msgstr "Встреча"
+
+msgid "Reach out"
+msgstr "Связаться"
+
+msgid "Prepare"
+msgstr "Подготовить"
+
+msgid "Return"
+msgstr "Вернуть"
+
+msgid "in 3 days"
+msgstr "через 3 дня"
+
+msgid "%s updated the pocket"
+msgstr "%s обновил проект"
+
+msgid "%s commented"
+msgstr "%s добавил комментарий"
+
+msgid "%s deleted the comment"
+msgstr "%s удалил комментарий"
+
+msgid "%s updated the comment"
+msgstr "%s обновил комментарий"
+
+msgid "%s created the list"
+msgstr "%s создал список"
+
+msgid "%s deleted the list"
+msgstr "%s удалил список"
+
+msgid "%s updated list details"
+msgstr "%s обновил список"
+
+msgid "%s updated the list"
+msgstr "%s обновил список"
+
+msgid "%s added an attachment"
+msgstr "%s прикрепил файл"
+
+msgid "%s deleted the attachment"
+msgstr "%s удалил прикрепленный файл"
+
+msgid "%s updated the attachment"
+msgstr "%s обновил прикрепленный файл"
+
+msgid "Unknown log method %s"
+msgstr "Неопознанная запись в логе — %s"
+
+msgid "%s created the to-do"
+msgstr "%s создал задачу"
+
+msgid "%s completed the to-do"
+msgstr "%s выполнил задачу"
+
+msgid "%s deleted the to-do"
+msgstr "%s удалил задачу"
+
+msgid "%s assign to-do to %s"
+msgstr "%s назначил задачу"
+
+msgid "%s edited the to-do"
+msgstr "%s обновил задачу"
+
+msgid "%s updated the to-do"
+msgstr "%s обновил задачу"
+
+msgid "%s assigned to-do to %s"
+msgstr "%s назначил задачу пользователю %s"
+
+msgid "%s updated the label to <span class=\"pl-label\" style=\"background: #%s\">%s</span>"
+msgstr "%s обновил маркер задачи на <span class=\"pl-label\" style=\"background: #%s\">%s</span>"
+
+msgid "Executions"
+msgstr "Запусков"
+
+msgid "Last execution"
+msgstr "Последний запуск"
+
+msgid "In"
+msgstr "Через"
+
+msgid "No shipping method with the ID = %s is defined. Please check if settings need to be updated!"
+msgstr "Способа доставки с идентификатором %s не существует. Пожалуйста, проверьте настройки!"
+
+msgid "No payment option with the ID = %s is defined. Please check if settings need to be updated!"
+msgstr "Способа оплаты с идентификатором %s не существует. Пожалуйста, проверьте настройки!"
+
+msgid "Minutes"
+msgstr "Минут"
+
+msgid "Hours"
+msgstr "Часов"
+
+msgid "Days"
+msgstr "Дней"
+
+msgid "No tracking number"
+msgstr "Нет номера отправления"
+
+msgid "%d %s"
+msgstr "%d %s"
+
+msgid "Shop-Script app is not installed"
+msgstr "Shop-Script не установлен"
+
+msgid "Following variables can be used in the to-do title and note fields:"
+msgstr "В заголовке и заметке задачи можно использовать переменные:"
+
+msgid "customer name"
+msgstr "имя покупателя"
+
+msgid "shipment tracking number"
+msgstr "номер отправления"
+
+msgid "any"
+msgstr "не важно"
+
+msgid "order ID"
+msgstr "номер заказа"
+
+msgid "customer email"
+msgstr "email покупателя"
+
+msgid "customer phone number"
+msgstr "телефон покупателя"
+
+msgid "shipping address"
+msgstr "адрес доставки заказа"
+
+msgid "list of ordered items"
+msgstr "список заказанных товаров"
+
+msgid "customer comment on the order"
+msgstr "комментарий к заказу"
+
+msgid "latest text comment from the order log"
+msgstr "последний текстовый комментарий из истории действий с заказом"
+
+msgid "Leave zero for no due date and time."
+msgstr "Оставьте 0 (ноль), чтобы не ставить срок для задачи."
+
+msgid "Label"
+msgstr "Маркер"
+
+msgid "DELETED CATEGORY"
+msgstr "УДАЛЕННАЯ КАТЕГОРИЯ"
+
+msgid "DISABLED"
+msgstr "ВЫКЛЮЧЕНО"
+
+msgid "Enabled"
+msgstr "Включено"
+
+msgid "Create immediately"
+msgstr "Сразу же"
+
+msgid "Create with a delay in"
+msgstr "С задержкой через"
+
+msgid "from the moment the to-do was created"
+msgstr "с момента создания задачи"
+
+msgid "Delayed check (this check will be performed at the moment to-do is created rather than order action is performed; recommended only for to-dos created with a delay)"
+msgstr "Отложенная проверка (проверка будет выполнено на момент выполнения этого правила, а не действия с заказом; рекомендуется для действий, выполняемых с задержкой)"
+
+msgid "(delayed check)"
+msgstr "(отложенная проверка)"
+
+msgid "For Windows: Hold down the control (ctrl) button to select multiple options.<br> For Mac: Hold down the command button to select multiple options."
+msgstr "Windows: зажмите Ctrl и выделите нужные пункты.<br> macOS: зажмите Cmd и выделите нужные пункты."
+
+msgid "Delayed actions require CRON to be configured for the Pocket Lists PRO plugin, which is not the case for your installation. Cron the following command every 10 minutes:"
+msgstr "Для работы правил, выполняемых с задержкой, необходимо настроить CRON для плагина Pocket Lists PRO. Добавьте следующую команду к запуску каждые 10 минут:"
+
+msgid "Webasyst Cloud: launch the Cloud app &gt; Add Cron job &gt;"
+msgstr "Облако Webasyst: приложение «Облако» &gt; Добавить задание cron &gt;"
+
+msgid "Own server:"
+msgstr "Свой сервер:"
+
+msgid "order amount"
+msgstr "сумма заказа"
+
+msgid "shipping cost"
+msgstr "стоимость доставки"
+
+msgid "Debug"
+msgstr "Отладка"
+
+msgid "Record runs to the Shop-Script order history"
+msgstr "Фиксировать факты автоматического создания задач в истории обработки заказов в Shop-Script"
+
+msgid "Deprecated! Switch to the new 2.0 UI for the latest features."
+msgstr "На этом всё! Скорее переключайтесь на новый интерфейс и устанавливайте мобильные приложения Pocket Lists на свой телефон."
+
+msgid "All-new Pocket Lists"
+msgstr "Новый Pocket Lists"
+
+msgid "Switch to the new UI mode to get started."
+msgstr "Просто переключитесь на новый интерфейс."
+
+msgid "Launch new Pocket Lists"
+msgstr "Запустить новый Pocket Lists"
+
+msgid "All-new Pocket Lists is here"
+msgstr "Новый Pocket Lists"
+
+msgid "Apps"
+msgstr "Приложения"
+
+msgid "Premium"
+msgstr "Премиум"
+
+msgid "Beta"
+msgstr "Бета"
+
+msgid "Premium only"
+msgstr "Только в премиум"
+
+msgid "Upgrade now to have the feature enabled and this message to disappear permanently."
+msgstr "Апгрейд сразу откроет все функции, а эта надпись исчезнет."
+
+msgid "See what’s included"
+msgstr "Что еще есть в премиум"
+
+msgid "Get premium now"
+msgstr "Подключить премиум"
+
+msgid "lifetime"
+msgstr "навсегда"
+
+msgid "%s first buyers limited offer"
+msgstr "%s первым покупателям"
+
+msgid "early launch only!"
+msgstr "спецпредложение!"
+
+msgid "You are all set!"
+msgstr "Все включено!"
+
+msgid "Thank you for being a premium user and for supporting the project."
+msgstr "Спасибо за покупку премиум-версии и поддержку проекта!"
+
+msgid "With premium, you are among the first to have access to all features."
+msgstr "У вас приоритетный доступ ко всем новым функциям и обновлениям."
+
+msgid "All-new Pocket Lists is here.<br> Try and upgrade today!"
+msgstr "Новый Pocket Lists и планы ближайших обновлений"
+
+msgid "This is a <b>free update</b>, and it is installed already. Use the navigation on the left to get started with checklists."
+msgstr "<b>Это бесплатное обновление!</b> Оно уже установлено и работает. Используйте меню слева для начала работы."
+
+msgid "Early launch offer gets you the best premium upgrade conditions possible."
+msgstr "Премиум-версия открывает ранний доступ ко всем новым функциям и обновлениям."
+
+msgid "Android app"
+msgstr "Приложение для Android"
+
+msgid "Summer 2025"
+msgstr "Лето 2025"
+
+msgid "Soon"
+msgstr "Скоро"
+
+msgid "All-new native Android app that syncs directly to your Webasyst account and Pocket Lists."
+msgstr "Мобильное приложение для Android напрямую синхронизируется с Pocket Lists в вашем Webasyst."
+
+msgid "New iOS app"
+msgstr "Приложение для iOS (новое!)"
+
+msgid "Coming later in 2025"
+msgstr "Позже в 2025"
+
+msgid "Re-written from scratch. To be merged with the <a href=\"%s\" target=\"_blank\">old version</a> later on free."
+msgstr "Переписываем с нуля. Объединим с <a href=\"%s\" target=\"_blank\">предыдущей версией</a> и синхронизируем с Webasyst."
+
+msgid "Schedule activity to a map: add locations, assign to-dos."
+msgstr "Прикрепляйте задачи к местам на карте, ставьте уведомления."
+
+msgid "May 2025"
+msgstr "Май 2025"
+
+msgid "Re-occuring to-dos: daily, weekly, monthly, yearly."
+msgstr "Простая настройка правил повтора задач: каждый день, неделю, месяц, год."
+
+msgid "Repeating checklists"
+msgstr "Повторяющиеся чек-листы"
+
+msgid "June 2025"
+msgstr "Июнь 2025"
+
+msgid "Set the whole checklist to re-create itself according to the setup: daily, weekly, monthly."
+msgstr "Автоматическое возобновление целых списков: каждый день, неделю, месяц, год."
+
+msgid "AI checklist generation"
+msgstr "ИИ для чек-листов"
+
+msgid "Create checklists via Webasyst AI service."
+msgstr "Создавайте списки дел еще быстрее с помощью ИИ Webasyst."
+
+msgid "Team performance reports"
+msgstr "Отчеты о работе команды"
+
+msgid "Later in 2025"
+msgstr "Позже в 2025"
+
+msgid "Visualize how you and your team perform on checklists. Dynamics, KPIs."
+msgstr "Красивые графики об успехах — ваши личные и всей команды. Общая производительность, KPI."
+
+msgid "A note-like quick lists of subtasks attached to any to-do item."
+msgstr "Добавляйте небольшие чек-лист (подзадачи) внутри каждой задачи."
+
+msgid "Lock lists with a passcode"
+msgstr "Код-пароль на списки"
+
+msgid "Protect personal secure individual lists with a 4-digit passcode."
+msgstr "Закрывайте отдельные списки с помощью 4-символьного кода-пароля."
+
+msgid "Custom list branding"
+msgstr "Брендирование списков"
+
+msgid "Personalize lists with a custom background image and style."
+msgstr "Устанавливайте спискам кастомный фон, стиль и цвет."
+
+msgid "Unlimited history"
+msgstr "Безлимит история"
+
+msgid "In basic version, lists are limited by 500 to-do items. With premium, all limits are off."
+msgstr "В базовой версии в списке может быть до 500 задач. В премиум ограничения снимаются."
+
+msgid "%d features available now, +%d more to come shortly."
+msgstr "%d премиум-функций доступно сейчас, еще %s на подходе."
+
+msgid "Available now"
+msgstr "Уже здесь"
+
+msgid "All scheduled features will be delivered as free updates via Installer."
+msgstr "Все обновления будут доступны в Инсталлере бесплатно."
+
+msgid "Archived lists"
+msgstr "В архиве"
+
+msgid "Work with assigned lists, add personal lists & to-dos"
+msgstr "Работа с назначенными списками, создания приватных списков и задач"
+
+msgid "Create new shared lists, assign lists to teammates"
+msgstr "Создание общих списков, назначение списков и задач коллегам"
+
+msgid "See to-do lists on Shop-Script orders"
+msgstr "Работа со списками задач в связке с заказами Shop-Script"
+
+msgid "Socket connection status"
+msgstr "Подключение к онлайн-сокету"
+
+msgid "Desktop-class super fast sleek UI for checklist making."
+msgstr "Удобный быстрый интерфейс для работы с чек-листами."
+
+msgid "REST APIs"
+msgstr "REST API"
+
+msgid "Lots of handy tools for developers with sophisticated OpenAPI specs."
+msgstr "Множество полезных методов для разработчиков для работы с данными."
+
+msgid "All screen monthly view for you scheduled and completed to-dos."
+msgstr "Удобный календарь со всем запланированными и выполненными задачами."
+
+msgid "Assign checklists"
+msgstr "Назначение списков"
+
+msgid "Quickly send whole checklists to your teammates."
+msgstr "Быстро назначайте ответственных сразу на весь список."
+
+msgid "Private checklists"
+msgstr "Приватные списки"
+
+msgid "Hide certain checklists so no one but you can see them."
+msgstr "Скрывайте отдельные списки от коллег и даже админов."
+
+msgid "To-do streams"
+msgstr "Потоки задач"
+
+msgid "Your personal and your teammates’ to-do streams with what’s important here and now."
+msgstr "Динамический фильтр важных и срочных задач — ваш личный и у каждого сотрудника."
+
+msgid "Dashboard alerts"
+msgstr "Уведомления на дашборде"
+
+msgid "Get notifications on to-dos right on your Webasyst dashboard."
+msgstr "Получайте напоминания о задачам на дашборде Webasyst."
+
+msgid "Tags & mentions"
+msgstr "Теги и упоминания"
+
+msgid "Handy teamwork and organizational features."
+msgstr "Множество полезных инструментов для командной работы."
+
+msgid "Installed and available now free"
+msgstr "Установлено и уже работает"
+
+msgid "New!"
+msgstr "Новое!"
+
+msgid "See the details:"
+msgstr "Подробно:"
+
+msgid "https://www.webasyst.com/my/buy/upgrade-to-premium/pocketlists/"
+msgstr "https://www.webasyst.ru/my/buy/upgrade-to-premium/pocketlists/"
+
+msgid "%s limited offer for upgrading existing app license to the premium version"
+msgstr "%s спецпредложение на апгрейд базовой лицензии до премиум-версии"
+
+msgid "Per-server license for the entire company. Unlimited users, all premium features, free updates forever."
+msgstr "Лицензия на один сервер и всю компанию. Сколько угодно пользователей, все функции, бесплатные обновления."
+
+msgid "Checklists 80 lvl"
+msgstr "Чек-листы 80 уровня"
+
+msgid "All inclusive in the cloud"
+msgstr "В облаке все включено"
+
+msgid "In Webasyst Cloud, simply upgrade to the <b>Premium</b> plan and get all premium features at once with no extra purchase required."
+msgstr "Просто смените тариф на <b>Премиум</b> и пользуйтесь всеми премиум-функциями без покупки лицензий и апгрейдов."

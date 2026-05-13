@@ -1,0 +1,327 @@
+<div class="dialog" id="js-massef-dialog" data-products-count="{$products_count}"
+    data-features-total="{$features|@count}" data-products-hash="{$products_hash}">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+
+        {** Заголовок и поиск **}
+        <header class="dialog-header">
+            <h2>Массовое редактирование характеристик</h2>
+            <p class="custom-mt-0">
+                Только затронутые поля ниже, будут применены к выбранным товарам.
+                Переключатель "Удалить значения", полностью очистит все значения у характеристики.
+            </p>
+
+            <div class="flexbox actions">
+
+                {** Поиск **}
+                <div class="search width-100">
+                    <input id="js-massef-search" type="text" class="width-100 smaller"
+                        placeholder="Поиск по названию или коду">
+                    <span id="js-massef-search-clear">&times;</span>
+                </div>
+
+                {** Фильтр **}
+                <div class="flexbox middle space-12" id="js-filter-group">
+                    <label class="flexbox middle space-4">
+                        <span class="wa-radio">
+                            <input type="radio" name="show-filter" value="all" checked>
+                            <span></span>
+                        </span>
+                        Все <span class="hint" data-filter-count="all"></span>
+                    </label>
+                    <label class="flexbox middle space-4">
+                        <span class="wa-radio">
+                            <input type="radio" name="show-filter" value="changed">
+                            <span></span>
+                        </span>
+                        Будут обновлены <span class="hint" data-filter-count="changed"></span>
+                    </label>
+                    <label class="flexbox middle space-4">
+                        <span class="wa-radio">
+                            <input type="radio" name="show-filter" value="unchanged">
+                            <span></span>
+                        </span>
+                        Не затронуто <span class="hint" data-filter-count="unchanged"></span>
+                    </label>
+                </div>
+
+                {** Обновить страницу после завершения **}
+                <label class="massef-redirect-toggle">
+                    <span class="wa-checkbox">
+                        <input type="checkbox" name="redirect_active" id="redirect_active" checked>
+                        <span><span class="icon"><i class="fas fa-check"></i></span></span>
+                    </span>
+                    Редирект по завершению
+                </label>
+
+            </div>
+
+            <div id="js-massef-search-counter" class="custom-search-counter"></div>
+        </header>
+
+        {** Контент диалога **}
+        <div class="dialog-content">
+            <form id="js-massef-dialog-form" method="post" action="?plugin=massef&module=save">
+                {$wa->csrf()}
+                <input type="hidden" name="products_hash" value="{$products_hash|escape}">
+
+                <div class="fields">
+                    {foreach $features as $f}
+
+                        {** ГРУППОВЫЕ (2D/3D) **}
+                        {if $f.format == 'group'}
+                            <div class="field custom-my-4 custom-py-4">
+                                <div class="lef-part">
+                                    <div class="name for-input" data-field-name="{$f.name|escape}">
+                                        {$f.name|escape}
+                                        <p class="hint" data-field-code="{$f.code|escape}">{$f.code}</p>
+                                    </div>
+                                    <div class="value inlinebox middle">
+                                        <div class="flexbox space-8">
+                                            {foreach $f.fields as $i => $field}
+                                                <input type="text" class="smaller width-20 custom-mr-0"
+                                                    name="features[{$field.code|escape}][value]"
+                                                    placeholder="{$field.label|escape}">
+                                                {if $i+1 < count($f.fields)}
+                                                    <span class="inlinebox middle text-gray">&times;</span>
+                                                {/if}
+                                            {/foreach}
+                                            {if $f.units|@count}
+                                                <div class="wa-select smaller width-20 custom-ml-10">
+                                                    <select class="unit" name="features[{$f.code|escape}.0][unit]">
+                                                        {foreach $f.units as $u}
+                                                            <option value="{$u.value|escape}" {if $u.value == $f.unit}selected{/if}>
+                                                                {$u.label|escape}
+                                                            </option>
+                                                        {/foreach}
+                                                    </select>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="massef-switch">
+                                    <label class="wa-switch">
+                                        <input type="checkbox" class="js-field-clear-switch">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="hint text">удалить значения</span>
+                                </div>
+                            </div>
+
+                            {** ДИАПАЗОН (range.*) **}
+                        {elseif $f.format == 'range'}
+                            <div class="field custom-my-4 custom-py-4">
+                                <div class="lef-part">
+                                    <div class="name for-input" data-field-name="{$f.name|escape}">
+                                        {$f.name|escape}
+                                        <p class="hint" data-field-code="{$f.code|escape}">{$f.code}</p>
+                                    </div>
+                                    <div class="value inlinebox middle">
+                                        <div class="flexbox space-8">
+                                            <input type="text" class="smaller width-20 custom-mr-0"
+                                                name="features[{$f.code|escape}][value][begin]" placeholder="От">
+                                            <span class="inlinebox middle text-gray">&ndash;</span>
+                                            <input type="text" class="smaller width-20 custom-mr-0"
+                                                name="features[{$f.code|escape}][value][end]" placeholder="До">
+                                            {if $f.units|@count}
+                                                <div class="wa-select smaller width-20 custom-ml-10">
+                                                    <select class="unit" name="features[{$f.code|escape}][unit]">
+                                                        {foreach $f.units as $u}
+                                                            <option value="{$u.value|escape}" {if $u.value == $f.unit}selected{/if}>
+                                                                {$u.label|escape}
+                                                            </option>
+                                                        {/foreach}
+                                                    </select>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="massef-switch">
+                                    <label class="wa-switch">
+                                        <input type="checkbox" class="js-field-clear-switch">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="hint text">удалить значение</span>
+                                </div>
+                            </div>
+
+                            {** БУЛЕВО **}
+                        {elseif $f.format == 'checkbox'}
+                            <div class="field custom-my-4 custom-py-4">
+                                <div class="lef-part">
+                                    <div class="name for-input" data-field-name="{$f.name|escape}">
+                                        {$f.name|escape}
+                                        <p class="hint" data-field-code="{$f.code|escape}">{$f.code}</p>
+                                    </div>
+                                    <div class="value inlinebox middle">
+                                        <label class="custom-mr-10">
+                                            <span class="wa-radio">
+                                                <input type="radio" name="features[{$f.code|escape}]" value="" checked>
+                                                <span></span>
+                                            </span>
+                                            Не задано
+                                        </label>
+                                        <label class="custom-mr-10">
+                                            <span class="wa-radio">
+                                                <input type="radio" name="features[{$f.code|escape}]" value="1">
+                                                <span></span>
+                                            </span>
+                                            Да
+                                        </label>
+                                        <label class="custom-mr-10">
+                                            <span class="wa-radio">
+                                                <input type="radio" name="features[{$f.code|escape}]" value="0">
+                                                <span></span>
+                                            </span>
+                                            Нет
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="massef-switch">
+                                    <label class="wa-switch">
+                                        <input type="checkbox" class="js-field-clear-switch">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="hint text">удалить значение</span>
+                                </div>
+                            </div>
+
+                            {** ТЕКСТ **}
+                        {elseif $f.format == 'text'}
+                            <div class="field custom-my-4 custom-py-4">
+                                <div class="lef-part">
+                                    <div class="name for-input" data-field-name="{$f.name|escape}">
+                                        {$f.name|escape}
+                                        <p class="hint" data-field-code="{$f.code|escape}">{$f.code}</p>
+                                    </div>
+                                    <div class="value inlinebox middle width-60">
+                                        {if $f.type == 'text'}
+                                            <textarea class="textarea smaller width-100" placeholder="{$f.name|escape}"
+                                                name="features[{$f.code|escape}]"></textarea>
+                                        {else}
+                                            <input type="text" class="smaller long" name="features[{$f.code|escape}]"
+                                                placeholder="{$f.name|escape}">
+                                        {/if}
+                                    </div>
+                                </div>
+                                <div class="massef-switch">
+                                    <label class="wa-switch">
+                                        <input type="checkbox" class="js-field-clear-switch">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="hint text">удалить значение</span>
+                                </div>
+                            </div>
+
+                            {** ЧИСЛО / DIMENSION **}
+                        {elseif $f.format == 'number'}
+                            <div class="field custom-my-4 custom-py-4">
+                                <div class="lef-part">
+                                    <div class="name for-input" data-field-name="{$f.name|escape}">
+                                        {$f.name|escape}
+                                        <p class="hint" data-field-code="{$f.code|escape}">{$f.code}</p>
+                                    </div>
+                                    <div class="value inlinebox middle">
+                                        <div class="flexbox space-8">
+                                            <input type="text" class="smaller" name="features[{$f.code|escape}][value]"
+                                                placeholder="{$f.name|escape}">
+                                            {if $f.units|@count}
+                                                <div class="wa-select smaller custom-ml-6">
+                                                    <select class="unit" name="features[{$f.code|escape}][unit]">
+                                                        {foreach $f.units as $u}
+                                                            <option value="{$u.value|escape}" {if $u.value == $f.unit}selected{/if}>
+                                                                {$u.label|escape}
+                                                            </option>
+                                                        {/foreach}
+                                                    </select>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="massef-switch">
+                                    <label class="wa-switch">
+                                        <input type="checkbox" class="js-field-clear-switch">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="hint text">удалить значение</span>
+                                </div>
+                            </div>
+
+                            {** СПИСКИ (ОДИН / МНОГО) **}
+                        {elseif $f.format == 'select'}
+                            <div class="field custom-my-4 custom-py-4">
+                                <div class="lef-part">
+                                    <div class="name for-input" data-field-name="{$f.name|escape}">
+                                        {$f.name|escape}
+                                        <p class="hint" data-field-code="{$f.code|escape}">{$f.code}</p>
+                                    </div>
+                                    <div class="value flexbox middle">
+                                        {if !$f.multiple}
+                                            <div class="wa-select smaller">
+                                                <select name="features[{$f.code|escape}]">
+                                                    <option value="" selected></option>
+                                                    {foreach $f.options as $opt}
+                                                        <option value="{$opt.value|escape}">{$opt.label|escape}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        {else}
+                                            <div class="flexbox vertical wrap">
+                                                {foreach $f.options as $opt}
+                                                    <label class="custom-mb-6">
+                                                        <span class="wa-checkbox">
+                                                            <input type="checkbox" name="features[{$f.code|escape}][]"
+                                                                value="{$opt.value|escape}">
+                                                            <span><span class="icon"><i class="fas fa-check"></i></span></span>
+                                                        </span>
+                                                        {$opt.label|escape}
+                                                    </label>
+                                                {/foreach}
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </div>
+
+                                <div class="massef-switch">
+                                    <label class="wa-switch">
+                                        <input type="checkbox" class="js-field-clear-switch">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span class="hint text">удалить значение</span>
+                                </div>
+                            </div>
+                        {/if}
+                    {foreachelse}
+                        <p>Для выбранных товаров не настроены характеристики.</p>
+                    {/foreach}
+                </div>
+            </form>
+        </div>
+
+        {** Футер с кнопками **}
+        <footer class="dialog-footer">
+
+            {** Прогресс (батчи) **}
+            <div id="js-massef-progress" class="massef-progress" style="display:none;">
+                <div class="massef-progress-row">
+                    <div class="massef-progress-track">
+                        <div id="js-massef-progress-bar" class="massef-progress-bar"></div>
+                    </div>
+                    <div id="js-massef-progress-text" class="massef-progress-text">0%</div>
+                </div>
+                <p id="js-massef-status" class="hint massef-progress-status">Подготовка...</p>
+            </div>
+
+            <button type="submit" form="js-massef-dialog-form" class="button green" id="js-massef-save-btn">
+                <span class="js-button-text">Сохранить</span>
+                <i class="fas fa-spinner wa-animation-spin speed-1000 js-save-spinner massef-spinner"></i>
+            </button>
+            <button type="button" class="js-close-dialog button light-gray">Закрыть</button>
+            <span id="changed-counter" class="custom-counter"></span>
+        </footer>
+
+    </div>
+</div>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+    </head>
+    <body style="padding: 0; margin: 0; background-color: #f5f5f5;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 0 10px 0;">
+                    <table style="max-width: 600px; width: 100%; margin: 10px auto 50px;">
+                        <tr>
+                            <td style="padding-bottom: 10px;">
+                                <table style="border: none; width: 100%;">
+                                    <tr>
+                                        <td style="text-align: left;">
+                                            <table style="border: none; display: inline-table;">
+                                                <tr>
+                                                    <td style="vertical-align: middle;">
+                                                        {if $domain_url}
+                                                            <img src="{$domain_url|rtrim:'/'}{$wa->appIconUrl('logs')}" alt="[`Logs`]" style="height: 24px;">
+                                                        {/if}
+                                                    </td>
+                                                    <td style="vertical-align: middle; color: #888; font-size: 18px;">
+                                                        [`Logs`]
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <strong>{$wa->setting('name', 'Webasyst', 'webasyst')}<strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 20px; background-color: #ffffff; border-radius: 6px; text-align: left; border: 1px silver solid;">
+                                <p style="margin-top: 0;">{sprintf_wp('Dear %s,', $user_name)}</p>
+
+                                <p>[`Below is the list of tracked log files in your Webasyst account updated since the last time you viewed them:`]</p>
+
+                                <ul style="padding-left: 1em;">
+                                    {foreach $files as $file}
+                                        <li>
+                                            {if $file.url}
+                                                <a href="{$file.url}">{$file.path}</a>
+                                            {else}
+                                                <strong>{$file.path}</strong>
+                                            {/if}
+
+                                            {if strlen($file.text|default:'')}
+                                                <blockquote style="background: #eee; padding: 1em; word-break: break-all; margin: 1em auto; border-radius: 5px;">{$file.text}</blockquote>
+                                            {/if}
+                                        </li>
+                                    {/foreach}
+                                </ul>
+
+                                <p style="margin-bottom: 0;">
+                                    --
+                                    <br>
+                                    {$wa->setting('name', '', 'webasyst')}
+                                </p>
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

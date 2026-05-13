@@ -1,0 +1,23 @@
+/*
+// toasts
+*/
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.toast-header {
+    border-bottom: 1px solid vs.$sa-toast--divider-color; // SKIP-PIXELS
+}
+
+@each $type, $variables in vs.$sa-toast--styles {
+    .toast-#{$type} {
+        background: map_get($variables, bg-color);
+        color: map_get($variables, font-color);
+        box-shadow: vs.$sa-toast--styled-shadow;
+
+        .toast-header {
+            color: inherit;
+            border-color: rgba(map_get($variables, font-color), .12); // SKIP-COLOR
+        }
+    }
+}

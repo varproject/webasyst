@@ -1,0 +1,123 @@
+{if !empty($can_edit)}
+    <section class="s-sidebar-section">
+        <div class="heading custom-ml-12">[`Editing`]</div>
+        <ul class="menu">
+            <li>
+                <a href="{$wa_app_url}products/{$id|escape}/general/" data-tab-id="general">
+                    <span>[`Basic data`]</span>
+                </a>
+            </li>
+            <li>
+                <a href="{$wa_app_url}products/{$id|escape}/sku/" data-tab-id="sku">
+                    <span>[`Prices & features`]</span>
+                </a>
+            </li>
+            <li>
+                <a href="{$wa_app_url}products/{$id|escape}/media/" data-tab-id="media">
+                    <span>[`Images & videos`]</span>
+                </a>
+            </li>
+            <li>
+                <a href="{$wa_app_url}products/{$id|escape}/seo/" data-tab-id="seo">
+                    <span>[`SEO`]</span>
+                </a>
+            </li>
+            <li>
+                <a href="{$wa_app_url}products/{$id|escape}/services/" data-tab-id="services">
+                    <span>[`Services`]</span>
+                </a>
+            </li>
+            <li>
+                <a href="{$wa_app_url}products/{$id|escape}/related/" data-tab-id="related">
+                    <span>[`Related products`]</span>
+                </a>
+            </li>
+            <li>
+                <a href="{$wa_app_url}products/{$id|escape}/pages/" data-tab-id="pages">
+                    <span>[`Subpages`]</span>
+                </a>
+            </li>
+
+            <!-- plugin hook: 'backend_prod.sidebar_item' -->
+            {* @event backend_prod.%plugin_id%.sidebar_item *}
+            {if !empty($backend_prod_event)}{foreach $backend_prod_event as $_}{strip}
+                {ifset($_.sidebar_item)}
+                {if isset($_.sidebar_item_tooltip_id)}
+                    {$_tooltips[$_.sidebar_item_tooltip_id] = [
+                        "id" => $_.sidebar_item_tooltip_id,
+                        "html" => $_.sidebar_item_tooltip_html,
+                        "start_time" => 500
+                    ]}
+                {/if}
+            {/strip}{/foreach}{/if}
+
+        </ul>
+    </section>
+{/if}
+
+<section class="s-sidebar-section">
+    <div class="heading custom-ml-12">[`Reports`]</div>
+    <ul class="menu">
+        {if !empty($prices_available)}
+            <li>
+                <a href="{$wa_app_url}products/{$id|escape}/prices/" data-tab-id="prices">
+                    <span>[`Prices, quantity & availability`]</span>
+                </a>
+            </li>
+        {/if}
+        {*
+        <li class="disabled">
+            <a class="flexbox" href="javascript:void(0);">
+                <div class="wa-tooltip custom top wide">
+                    <div>[`Recent orders`]</div>
+                </div>
+            </a>
+        </li>
+        *}
+        <li>
+            <a href="{$wa_app_url}products/{$id|escape}/reviews/" data-tab-id="reviews">
+                <span>[`Reviews`]</span>
+            </a>
+        </li>
+    </ul>
+</section>
+{*
+<section class="s-sidebar-section">
+    <div class="heading custom-ml-12">[`Change log`]</div>
+    <ul class="menu">
+        <li class="disabled">
+            <a class="flexbox" href="javascript:void(0);">
+                <div class="wa-tooltip custom top wide">
+                    <div>[`Stock quantity changes`]</div>
+                </div>
+            </a>
+        </li>
+        <li class="disabled">
+            <a class="flexbox" href="javascript:void(0);">
+                <div class="wa-tooltip custom top wide">
+                    <div>[`Prices changes`]</div>
+                </div>
+            </a>
+        </li>
+        <li class="disabled">
+            <a class="flexbox" href="javascript:void(0);">
+                <div class="wa-tooltip custom top wide">
+                    <div>[`Product changes`]</div>
+                </div>
+            </a>
+        </li>
+    </ul>
+</section>
+*}
+
+<script>
+    ( function($) {
+        var tooltips = {$_tooltips|default:[]|json_encode};
+
+        $.each(tooltips, function(i, tooltip) { $.wa.new.Tooltip(tooltip); });
+
+        {if !empty($not_found)}
+            $.wa_shop_products.showDeletedProductDialog();
+        {/if}
+    })(jQuery);
+</script>

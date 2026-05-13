@@ -1,0 +1,301 @@
+{strip}
+
+{if $wa->installer && method_exists($wa->installer, 'reviewWidget')}
+    {$wa->installer->reviewWidget('app/tasks')}
+{/if}
+
+<div class="t-main-wrapper t-log-page">
+    <header class="t-header-wrapper">
+        <div class="t-general-menu is-shown flexbox space-20">
+            {*
+             * Filters by project, milestone and user
+             *}
+            <div class="wide small t-menu-wrapper flexbox wrap middle space-12">
+                {foreach $filter_types as $ft_id => $options}
+                    <div class="dropdown t-menu-item" id="{$ft_id}" data-filter-id="{$ft_id}">
+                        <button class="dropdown-toggle button t-selected-item light-gray"></button>
+                        <div class="dropdown-body">
+                            <ul class="menu">
+                                {foreach $options as $o}
+                                    <li class="t-nav-item" data-value="{$o.id}"><a href="javascript:void(0);">
+                                        {if !empty($o.icon_html) && ifempty($o.icon) != 'unknown'}
+                                            {$o.icon_html}
+                                        {/if}
+
+                                        {if !empty($o.id) && array_key_exists('photo', $o)}
+                                            {$_userpic = "{$wa_url}wa-content/img/userpic.svg"}
+                                            {if !empty($o.photo)}
+                                                {$_userpic = waContact::getPhotoUrl($o.id, $o.photo, 40, 40, 'person', 0)}
+                                            {/if}
+                                            <i class="userpic" style="background-image: url({$_userpic|escape}); position: relative; left: -0.125em; top: 0; margin: 0 0.125em -0.25em 0;"></i>
+                                        {/if}
+
+                                        <span class="{if $o@index > 0}is-bold{/if}">{$o.name|escape}</span>
+                                    </a></li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                        <script>
+                            ( function($) {
+                                $("#{$ft_id}").waDropdown({
+                                    hover: true
+                                });
+                            })(jQuery);
+                        </script>
+                    </div>
+                {/foreach}
+                {if !empty($is_filter_set)}
+                    <div class="t-menu-item">
+                        <span class="t-menu-name">
+                            <a href="#/log/" class="t-remove-filters-link">
+                                <i class="fas fa-times-circle gray large" title="[`Clear filters`]"></i>
+                            </a>
+                        </span>
+                    </div>
+                {/if}
+            </div>
+
+            {*
+             * Chart period selector
+             *}
+            <div class="t-right-column small flexbox middle space-16">
+
+                <div class="t-custom-timeframe flexbox middle space-8 wrap">
+                    <span>[`from`]</span>
+                    <input type="text" name="from" style="max-width: 120px;">
+                    <span>[`to`]</span>
+                    <input type="text" name="to" style="max-width: 120px;">
+                    <div class="wa-select">
+                        <select name="groupby">
+                            <option value="days">[`by day`]</option>
+                            <option value="months">[`by month`]</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="dropdown t-menu-item" id="timeframe">
+                    <button class="dropdown-toggle button t-selected-item light-gray"></button>
+                    <div class="dropdown-body right t-logs-timeframe">
+                        <ul class="menu t-logs-timeframe-dropdown">
+                            <li data-timeframe="30" data-groupby="days"><a href="javascript:void(0)" class="nowrap">{_w('Last %d day', 'Last %d days', 30)}</a></li>
+                            <li data-timeframe="90" data-groupby="days" data-default-choice="1"><a href="javascript:void(0)" class="nowrap">{_w('Last %d day', 'Last %d days', 90)}</a></li>
+                            <li data-timeframe="365" data-groupby="months"><a href="javascript:void(0)" class="nowrap">{_w('Last %d day', 'Last %d days', 365)}</a></li>
+                            <li data-timeframe="all" data-groupby="months"><a href="javascript:void(0)" class="nowrap">[`All time`]</a></li>
+                            <li data-timeframe="custom"><a href="javascript:void(0)" class="nowrap">[`Select dates...`]</a></li>
+                        </ul>
+                    </div>
+                    <script>
+                        ( function($) {
+                            $("#timeframe").waDropdown({
+                                hover: true,
+                                items: ".menu > li > a",
+                                change: function(event, target, dropdown) {
+                                    return false;
+                                }
+                            });
+                        })(jQuery);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {if $chart_html}
+        <div id="t-logs-chart-wrapper">
+            <div id="logs-chart-wrapper" style="height: 300px;font-size: .8rem;"></div>
+            {$chart_html}
+        </div>
+    {/if}
+
+    {if $logs}
+    <div class="article">
+        <div class="article-body custom-pt-16">
+        <div class="t-logs-wrapper" id="t-logs-wrapper">
+            {$_logGroupIteration = 0}
+            {foreach $groupedLogs as $groupDate => $logGroup}
+            {if count($logGroup.items)}
+
+            {if !$isLazy || ($isLazy && $_logGroupIteration > 0)}
+            <h3>{$logGroup.group|escape}</h3>
+            {/if}
+
+            {$_logGroupIteration=$_logGroupIteration+1}
+            {** @var tasksApiLogDto $l **}
+            {foreach $logGroup.items as $l}{strip}
+            <div class="t-comment-item-wrapper {if $l.contact_id == $wa->user()->getId()}t-comment-item-wrapper--right{/if}" data-id="{$l.id}">
+                <div class="t-comment-item flexbox space-12{if !empty($l.text)} t-comment-with-custom-text{/if}" data-log-id="{$l.id|escape}">
+                    <div class="image{if ($l.action == 'return' || $l.action == 'forward' || $l.action == 'add') && $l.assigned_contact_id} t-userpic-stack{/if}">
+                        <a href="#/tasks/assigned/{$l.contact_id}/" title="{$l.contact.name|escape}">
+                            <img class="userpic userpic-48" src="{$l.contact.photo_url}" alt="{$l.contact.name|escape}">
+                        </a>
+                        {if ($l.action == 'return' || $l.action == 'forward' || $l.action == 'add') && $l.assigned_contact_id}
+                            <a href="#/tasks/assigned/{$l.assigned_contact.id}/" title="{$l.assigned_contact.name|escape}" class="t-userpic-stacked">
+                                <img class="userpic userpic-48" src="{$l.assigned_contact.photo_url}" alt="{$l.assigned_contact.name|escape}">
+                            </a>
+                        {/if}
+                    </div>
+                    <div class="details">
+
+                        <header class="t-comment-header small">
+
+                            {* ACTION AUTHOR *}
+                            <a href="#/tasks/assigned/{$l.contact_id}/" title="{$l.contact.name|escape}" class="custom-mr-4 semibold">
+                                {$l.contact.name|escape}
+                            </a>
+
+                            {if $l.action == 'edit' || $l.action == 'comment' || $l.action == 'forward' || $l.action == 'return' || $l.action == 'add' || ($l.action == '' && $l.after_status_id == -1)}
+                                <span class="t-comment-action">{$l.action_name}</span>
+                            {/if}
+
+                            {if $l.action == 'return' || $l.action == 'forward' || $l.action == 'add'}
+                                {if $l.assigned_contact_id}
+                                    <a href="#/tasks/assigned/{$l.assigned_contact.id}/" title="{$l.assigned_contact.name|escape}" class="bold custom-mr-4">
+                                        {$l.assigned_contact.name|escape}
+                                    </a>
+                                {else}
+                                    <span class="t-comment-assignment-change text-light-gray">
+                                        [`Unassigned`]
+                                    </span>
+                                {/if}
+                            {/if}
+
+                            <span class="t-comment-date hint nowrap">{$l.create_datetime|wa_datetime:"humandatetime"}</span>
+
+                        </header>
+
+                        {* TASK TITLE & STATUS *}
+                        {if 1 || $l.status_changed}
+                            <span class="t-comment-status-change small gray custom-mr-4">
+                                {if isset($l.before_status_id) && $l.before_status_id != $l.after_status_id}
+                                    {tasksHelper::statusNameHTML($l.before_status_id)}
+                                    &nbsp;→&nbsp;
+                                {/if}
+                                {tasksHelper::statusNameHTML($l.after_status_id)}
+                            </span>
+                        {/if}
+                        {$_task = $l.task|default:null}
+                        {if $_task}
+                            {$_project = $_task.project|default:null}
+                            {if $_project}
+                                {$_task_str_id = $_task.project_id|cat:'.':$_task.number}
+                            {else}
+                                {$_task_str_id = $_task.number}
+                            {/if}
+                            <span class="t-log-item-project-task-names small" data-task-id="{$l.task.id}">
+                                <span class="t-log-item-task-name"><a href="#/task/{$l.task_id}/"><b>{$_task_str_id}</b>{if !empty($_task.name)}:&nbsp;{$_task.name|escape}{/if}</a></span>
+                            </span>
+                        {else}
+                            <!-- TASK NOT FOUND (ID={$l.task_id}) -->
+                        {/if}
+
+                        {* LOG ITEM CORE *}
+                        {if !empty($l.text)}
+                            <div class="t-comment-content">{tasksTask::formatText($l.text)}</div>
+                        {/if}
+
+                        {* ATTACHMENTS *}
+                        {$log_attachments = ['files' => [], 'images' => []]} {* !!! *}
+                        {if $log_attachments.files || $log_attachments.images}
+                            <div class="t-attach-wrapper">
+                                <div class="t-attached-files-wrapper">
+                                    {if $log_attachments.images}
+                                        <div class="t-images-list">
+                                            {foreach $log_attachments.images as $image}
+                                                <div class="t-image-item">
+                                                    <a class="t-image-link wa-gallery-image" href="?module=attachments&action=download&id={$image.id}" title="{$image.name|escape}">
+                                                        <img src="{tasksHelper::getAttachPreviewUrl($image)}" alt="{$image.name|escape}">
+                                                    </a>
+                                                    <div class="t-file-name">{$image.name|escape}</div>
+                                                </div>
+                                            {/foreach}
+                                        </div>
+                                    {/if}
+                                    {if $log_attachments.files}
+                                        <div class="t-files-list">
+                                            {foreach $log_attachments.files as $file}
+                                                <div class="t-file-item" data-file-ident="{$file.id}">
+                                                    <a class="t-file-link" href="?module=attachments&action=download&id={$file.id}" title="{$file.name|escape}">
+                                                        <i class="fas fa-paperclip"></i>
+                                                        <span class="t-file-name">{$file.name|escape}</span>
+                                                        <span class="t-file-size">{$file.size|wa_format_file_size}</span>
+                                                    </a>
+                                                </div>
+                                            {/foreach}
+                                        </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        {/if}
+
+                    </div>
+                    {if !empty($l.task.project.icon_html)}
+                        {$_task_number = '#/task/'|cat:$l.task.project_id|cat:'.'|cat:$l.task.number}
+                        <a href="{$_task_number}" class="image t-log-project-icon">
+                            {$l.task.project.icon_html}
+                        </a>
+                    {/if}
+                </div>
+            </div>
+            {/strip}{/foreach}
+            {/if}
+            {/foreach}
+
+            <div id="end-of-logs" class="box align-center custom-my-16">
+
+                {if $click_to_load_more && $next_page_url}
+                    <span class="js-logs-list-counter semibold">{sprintf("[`%s of %d`]", _w('%d record','%d records', $offset + $count), $total_count)}</span>
+                    <p class="box align-center custom-mt-8">
+                        <span class="button light-gray small click-to-load-more"><a href="javascript:void(0)" class="text-gray">[`Load more...`]</a></span>
+                    </p>
+                {/if}
+                <!-- <span class="hidden loading-indicator"><i class="icon16 loading"></i></span> -->
+
+                <script>(function() { "use strict";
+                    {* Note that this script has to be inside #t-logs-wrapper for lazy loading to work correctly. *}
+                    $.tasks.initLazyloader({
+                        lazyloading_wrapper: $('#end-of-logs'),
+                        next_page_url: {$next_page_url|json_encode},
+                        is_lazy: {if $click_to_load_more}false{else}true{/if},
+                        list_selector: '#t-logs-wrapper',
+                        item_id_data_attr: 'log-id'
+                    });
+
+                })();</script>
+            </div>
+        </div>
+    </div>
+    </div>
+    {else}
+        <div class="box align-center opacity-40" style="margin-top: 14vh;">
+            <span style="font-size: 13rem; line-height: normal;" class="text-light-gray"><i class="fas fa-comments"></i></span>
+            <h3>[`No activity yet`]</h3>
+            <div style="max-width: 460px; margin: 0 auto;">[`This screen will collect and present everything you and your team are doing with tasks.`]</div>
+        </div>
+    {/if}
+
+</div>
+
+{/strip}
+
+<script>(function() { "use strict";
+
+    var $main_menu = $('.t-header-wrapper');
+    var list_hash = $.tasks.cleanHash(window.location.hash) || '#/log/';
+    var list_params = list_hash.substr(6).split('/')[0];
+
+    $.tasks.initLogsTimeframeSelector($('#timeframe'));
+
+    // Set <a href=...> on filters
+    $main_menu.find(".t-nav-item[data-value]").each(function() {
+        var $nav_item = $(this),
+            filter_id = $nav_item.closest(".t-menu-item").data("filter-id"),
+            params = $.tasks.replaceParam(list_params, filter_id, $nav_item.data('value')),
+            item_hash = '#/log/'+params+(params ? '/' : '');
+        $nav_item.find("a").attr('href', item_hash);
+        if (item_hash == list_hash) {
+            $nav_item.closest(".t-menu-item").find(".t-selected-item").html($nav_item.find('a').html());
+        }
+    });
+
+
+})();</script>

@@ -1,0 +1,87 @@
+<div id="massda-wrapper-container">
+
+    <div class="dialog-content" style="height: auto; min-height: 180px;">
+        <div class="dialog-content-indent">
+
+            <h1>Удалить артикулы</h1>
+
+            <div class="massda-state-box massda-process">
+                <div>
+                    Выбрано:
+                    <strong>{$products_selected_count|number_format:0:",":" "|massda_end:'товар, товара, товаров'}</strong>
+                </div>
+
+                <div>
+                    На удаление:
+                    <strong class="red">
+                        {$products_to_process_count|number_format:0:",":" "|massda_end:'товар, товара, товаров'}
+                    </strong>
+                    <span class="hint">с режимом нескольких артикулов</span>
+                </div>
+            </div>
+
+            <form id="massda-process-form" method="post" action="?plugin=massda&module=dialog&action=process"
+                data-is-finished="{if $is_finished}1{else}0{/if}">
+
+                {$wa->csrf()}
+                <input type="hidden" name="products_hash" value="{$products_hash}">
+                <input type="hidden" name="article_name" value="{$article_name|default:0}">
+
+                {if $start}
+                    <p><strong>Подготовка к запуску...</strong></p>
+
+                    <div>
+                        <div class="progressbar small green">
+                            <div class="progressbar-outer">
+                                <div class="progressbar-inner" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <p class="hint massda-progress-text">0%</p>
+                    </div>
+
+                {else}
+                    {if $is_finished}
+                        <p>
+                            <strong class="green">Готово!</strong>
+                            Удалены артикулы у
+                            <strong>{$processed|number_format:0:",":" "|massda_end:'товара, товаров, товаров'}</strong>
+                        </p>
+                    {else}
+                        <p>
+                            Обработка:
+                            <strong>{$processed|number_format:0:",":" "}</strong>
+                            из
+                            <strong>{$total|number_format:0:",":" "|massda_end:'товар, товара, товаров'}</strong>
+                        </p>
+                    {/if}
+
+                    <div>
+                        <div class="progressbar small green">
+                            <div class="progressbar-outer">
+                                <div class="progressbar-inner" style="width: {$percent}%;"></div>
+                            </div>
+                        </div>
+
+                        <p class="hint massda-progress-text">{$percent}%</p>
+                    </div>
+                {/if}
+            </form>
+
+        </div>
+    </div>
+
+    <div class="dialog-buttons">
+        <div class="dialog-buttons-gradient">
+            {if !$is_finished}
+                <input type="button" class="button red" value="Удаление..." disabled>
+                <i class="icon16 loading"></i>
+                или
+                <a href="javascript:void(0);" class="cancel">Закрыть</a>
+            {else}
+                <input type="button" class="button green js-massda-reload" value="Обновить страницу">
+            {/if}
+        </div>
+    </div>
+
+</div>

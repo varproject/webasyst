@@ -1,0 +1,117 @@
+{$dialog_id = uniqid('f-mark-dialog-')}
+
+{function form_begin}
+    {if $allowed_files}<form>{/if}
+{/function}
+
+{function form_end}
+    {if $allowed_files}</form>{/if}
+{/function}
+
+{function button_text}{strip}
+    {if $unallowed_files}[`Mark the rest`]{else}[`Mark`]{/if}
+{/strip}{/function}
+
+<div class="dialog width400px height200px f-mark-dialog" id="{$dialog_id}" style="display:none;">
+    {form_begin}
+    <div class="dialog-background"></div>
+    <div class="dialog-window">
+        <div class="dialog-content">
+            <div class="dialog-content-indent">
+                <h1>[`Mark files`]</h1>
+
+                {if $allowed_files}
+                    {if $unallowed_files}
+                        <p class="errormsg">
+                            [`No permissions to mark this files`]:
+                            {foreach $unallowed_files as $file}
+                                {$file.name|escape}&nbsp;
+                            {/foreach}
+                        </p>
+                    {/if}
+                    <ul class="menu-h f-settings-colorbox">
+                        {foreach $marks as $mark}
+                            <li class="f-settings-item ">
+                                <label class="{if $mark}f-color-item is-{$mark}{/if}">
+                                    <input type="radio" name="mark" value="{$mark}" {if $mark === 'white'}checked="checked"{/if}>
+                                    {if !$mark}[`None`]{/if}
+                                </label>
+                            </li>
+                        {/foreach}
+                    </ul>
+                {else}
+                    <p class="errormsg">
+                        [`No permissions to mark this files`]
+                    </p>
+                {/if}
+
+            </div>
+        </div>
+        <div class="dialog-buttons">
+            <div class="dialog-buttons-gradient">
+                {$wa->csrf()}
+                <input class="button green" type="submit" value="{button_text}">
+                <i class="icon16 loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+            </div>
+        </div>
+    </div>
+    {form_end}
+</div>
+
+<script>( function($) {
+    var dialog = $('#{$dialog_id}');
+
+    $('.f-mark-dialog').not(dialog).remove();
+
+    dialog.filesDialog({
+        onSubmit: function() {
+            var form = $(this),
+                file_ids = {json_encode($allowed_files|array_keys)},
+                data = form.serialize(),
+                file_ids_str = $.map(file_ids, function(f_id) {
+                    return 'file_id[]=' + f_id;
+                }).join('&');
+
+            $.files.jsonPost({
+                url: '?module=mark&action=save',
+                data: data + '&' + file_ids_str,
+                onSuccess: function(r) {
+
+                    if (r.status === 'ok') {
+                        var file_id = r.data.file_id;
+                        var mark = r.data.mark ? ('f-mark-' + r.data.mark) : '';
+                        var marks = $.map(
+                            {json_encode($marks|default:[])},
+                            function(m) {
+                                return m ? ('f-mark-' + m) : '';
+                            }
+                        ).join(' ').trim();
+
+                        var main_container = $.files.config.getMainContainer();
+
+                        $.each(file_id, function(i, fid) {
+                            var item = main_container.find('.f-catalog-item[data-id="' + fid + '"]');
+                            item.removeClass(marks);
+                            if (mark) {
+                                item.addClass(mark);
+                            }
+                        });
+
+                        // Uncheck All
+                        var $catalog = $("#f-catalog-wrapper");
+                        if ($catalog.length) {
+                            $catalog.trigger("unSelectAll");
+                        }
+                    }
+                },
+                onAlways: function() {
+                    dialog.trigger('close').remove();
+                }
+            });
+            return false;
+        },
+        onCancel: function() {
+            dialog.remove();
+        }
+    });
+})(jQuery);</script>

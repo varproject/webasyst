@@ -1,0 +1,159 @@
+<div class="article">
+        <div class="article-body">
+            <div class="flexbox middle custom-mb-16">
+                <h1 class="h2 custom-m-0">[`Templates`]</h1>
+                <ul class="inlinebox custom-ml-auto">
+                    <li>
+                        <a href="#/templates/{if $wa->get('tab') === 'shop'}shop/{/if}add/" class="button light-gray smaller">
+                            <i class="fas fa-plus-circle text-blue"></i>
+                            <span>[`New template`]</span>
+                        </a>
+                    </li>
+                    <li class="custom-ml-12">
+                        <a id="import-template-link" href="#/templates/import/" class="button light-gray smaller">
+                            <i class="fas fa-upload text-green"></i>
+                            <span>[`Import template`]</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            {if $shop}
+                <ul class="tabs small bordered-bottom js-tabs-description">
+                    <li{if $wa->get('tab') === null} class="selected"{/if}>
+                        <a href="#/templates/" data-lm="general">[`Basic`]</a>
+                    </li>
+                    <li{if $wa->get('tab') === 'shop'} class="selected"{/if}>
+                        <a href="#/templates/shop/">[`Store`]</a>
+                    </li>
+                </ul>
+                {if $wa->get('tab') === 'shop'}
+                <p class="text-gray small">
+                    {sprintf_wp('These templates will allow you to embed products data from the Store app in a message. To use these templates, open the %sProducts%s section in the Store app, select the desired products, and execute the “%s” action on them.',
+                        "<a href=\"{$shop}\">",
+                        '</a>',
+                        _w('Email campaign')
+                    )}
+                </p>
+                {/if}
+            {/if}
+            {if $templates && count($templates) >= 2}
+                <p class="text-gray small">[`Drag and drop templates to change their sort order in this list.`]</p>
+            {/if}
+            {if $templates}
+                <ul id="template-list" class="templates-tiles thumbs li250px">
+                    {foreach from=$templates item=t}
+                        <li rel="{$t.id}">
+                            <div class="wrapper">
+                                <div class="preview">
+                                    {if $t.image}
+                                        <img src="{$t.image}" alt="">
+                                    {else}
+                                        <div class="hidden iframe-preview-content">{$t.preview_content|escape}</div>
+                                        <div class="no-image">
+                                            <iframe scrolling="no"></iframe>
+                                            <div class="catch-clicks"></div>
+                                        </div>
+                                    {/if}
+                                </div>
+                                <h6 class="custom-mt-12 custom-mb-0">{$t.subject|escape}{if empty($t.rebody)} (HTML){/if}</h6>
+                                {if $t.description}
+                                    <p class="hint custom-mt-4">
+                                        {$t.description|escape}
+                                    </p>
+                                {/if}
+                            </div>
+                        </li>
+                    {/foreach}
+                </ul>
+            {else}
+                {if $shop}
+                    {if $wa->locale() == 'ru_RU'}
+                        {$loc = 'ru_RU'}
+                    {else}
+                        {$loc = 'en_US'}
+                    {/if}
+                    <p class="text-gray small align-center">[`You do not have any templates so far.`]</p>
+                    <br>
+                    <p class="text-gray small">[`To show products from the Store app in an email message, add green blocks to your template. Special variables contained in those blocks are automatically replaced with selected products’ information when you create a new email campaign.`]</p>
+                    <p class="align-center">
+                        <img src="{$wa_app_static_url}img/description_product_block.{$loc}.jpg" alt="">
+                    </p>
+                    <p class="align-center custom-pb-16">
+                        <a href="#/templates/shop/add/" class="button light-gray smaller">
+                            <i class="fas fa-plus-circle text-blue"></i>
+                            <span>[`Create new template`]</span>
+                        </a>
+                    </p>
+                {else}
+                    <p>[`You do not have any templates so far.`]</p>
+                {/if}
+            {/if}
+        </div>
+    </div>
+
+<script>
+    (function () {
+        "use strict";
+
+        const template_list = $('#template-list');
+
+        // Set up preview iframes
+        const loadIframeContent = (iframe, content) => {
+            iframe = (iframe.contentWindow) ? iframe.contentWindow : (iframe.contentDocument.document) ? iframe.contentDocument.document : iframe.contentDocument;
+            iframe.document.open();
+            iframe.document.write(content);
+            iframe.document.close();
+        };
+
+        template_list.find('.iframe-preview-content').each(function () {
+            const content = $(this);
+            const iframe = content.parent().find('iframe');
+            loadIframeContent(iframe[0], content.text());
+        });
+
+        // Click on a template opens editor
+        template_list.on('click', 'li', function () {
+            let hash = '#/template/'{if $wa->get('tab') === 'shop'}+'shop/'{/if};
+            window.location.hash = hash + $(this).attr('rel') + '/';
+        });
+
+        // Import dialog
+        $('#import-template-link').on('click', function (event) {
+            event.preventDefault();
+            $.get('?module=templates&action=import1', html => $.waDialog({ html }))
+        });
+
+        // Make templates draggable
+        template_list.sortable({
+            delay: 200,
+            delayOnTouchOnly: true,
+            forceFallback: false,
+            animation: 150,
+            dragClass: 'bordered-none',
+            onUpdate: function () {
+                let data = [], i = 1;
+                template_list.find('> li').each(function () {
+                    data.push('values[' + $(this).attr('rel') + ']=' + i);
+                    i++;
+                });
+                $.post('?module=templates&action=sort', data.join('&'));
+            },
+            onEnd: function (event) {
+                // Iframes cannot be moved across DOM without losing their content.
+                // So we have to fill the content in again after every update.
+                const iframe = event.item.querySelector('iframe');
+                if (iframe) {
+                    loadIframeContent(iframe, event.item.querySelector('.iframe-preview-content').textContent);
+                }
+            }
+        });
+
+        // Number of templates in sidebar
+        $('#templates-list-item .count').text({count($templates)});
+
+        $.wa.mailer.setTitle();
+
+        $('.tabs').waTabs();
+    })();
+</script>

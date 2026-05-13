@@ -1,0 +1,6 @@
+
+{if !isset($form.id) || ifset($form.params._version) == '2'}
+    {include file="./SubscribersFormeditor.current.html"}
+{else}
+    {include file="./SubscribersFormeditor.previous.html"}
+{/if}

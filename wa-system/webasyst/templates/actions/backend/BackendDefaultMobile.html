@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html class="mobile">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>{$wa->accountName()}</title>
+    <link rel="stylesheet" href="{$wa_url}wa-content/css/wa/wa-2.0.css?v={$wa->version(true)}" />
+    <script>backend_url = {$wa_backend_url|json_encode};</script>
+    <script src="{$wa_url}wa-content/js/jquery-wa/wa.switch-mode.js?v{$wa->version(true)}"></script>
+    <link rel="stylesheet" href="{$wa_url}wa-content/css/dashboard/mobile.css?v={$wa->version()}">
+    <script defer src="{$wa_url}wa-content/js/fontawesome/fontawesome-all.min.js?v={$wa->version()}"></script>
+    <script src="{$wa_url}wa-content/js/jquery/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="{$wa_url}wa-content/js/jquery/jquery-migrate-3.3.2.min.js" type="text/javascript"></script>
+    <script src="{$wa_url}wa-content/js/jquery-wa/wa.js?v={$wa->version()}"></script>
+
+    <script src="{$wa_url}wa-content/js/d3/d3.min.js"></script>
+    <script src="{$wa_url}wa-content/js/jquery-wa/dashboard-mobile.js?v={$wa->version()}"></script>
+
+    <script>
+        {if $wa->whichUI() == '2.0'}
+            if (typeof wa_url === "undefined") {
+                wa_url = '{$wa_url}';
+            }
+        {/if}
+    ( function($) {
+
+        {if $wa->isMobile() == 'iphone'}
+            $(document).on("click", "a", function(e) {
+                e.preventDefault();
+                location.href = $(this).attr("href");
+            });
+        {/if}
+
+        var pixelRatio = !!window.devicePixelRatio ? window.devicePixelRatio : 1;
+        if (pixelRatio > 1) {
+            $(window).on("load", function() {
+                $('#apps .wa-mobile-list-thumb img').each(function() {
+                    if ($(this).data('src2')) {
+                        $(this).attr('src', $(this).data('src2'));
+                    }
+                });
+            });
+        }
+    })(jQuery);
+    </script>
+</head>
+<body>
+    {$has_dasboard = ($current_app === 'webasyst' && isset($activity))}
+    <div id="wa">
+        <div id="wa-nav">
+            <div id="wa-header" class="blank flexbox space-16">
+                {include file="./BackendHeaderAccount.inc.html" inline}
+                <div class="wa-header-sitename">
+                    <span class="h3">{$wa->accountName()|truncate:42}</span>
+                </div>
+                {if !$has_dasboard}
+                    <div class="dropdown dashboard-main-page" id="wa-notifications-dropdown">
+                        <button class="icon large wa-notifications-bell dropdown-toggle without-arrow js-notifications-bell" title="[s`Notifications`]"><i class="fas fa-bell"></i>{if !empty($notifications)}<span class="badge">{$notifications|count}</span>{/if}</button>
+                        {include file="../dashboard/DashboardAnnouncement.html" inline}
+                    </div>
+                {/if}
+                {*
+                    TEASING WEBASYST GLOBAL SEARCH
+                    <button class="button rounded small outlined js-header-search"><span><i class="fas fa-search"></i></span></button>
+                *}
+                <div class="wa-corner">
+                {strip}
+                    {*
+                        TEASING WEBASYST GLOBAL SEARCH
+                        <form class="wa-header-search-form input-with-inner-icon right">
+                            <input type="search" placeholder="[`Search`]" class="short">
+                            <button class="icon"><i class="fas fa-search"></i></button>
+                        </form>
+                    *}
+                    {* Current user *}
+                    {include file="./BackendHeaderCurrentUser.inc.html" inline}
+                {/strip}
+                </div>
+            </div>
+        </div>
+
+        <div id="wa-app" class="with-bottombar">
+
+            <!-- YOUR APP HERE -->
+            <div class="flexbox">
+                <div class="content blank">
+                    <section class="dashboard-apps js-dashboard-apps" data-nav="apps">
+                        {if !empty($show_connection_banner)}
+                            <div class="box rounded highlighted green custom-p-16 custom-pb-4 custom-m-16 js-waid-alert">
+                                <div class="flexbox">
+                                    <div class="js-webasyst-id-announcement js-webasyst-id-auth-announcement js-webasyst-id-connect-announcement w-webasyst-id-banner">
+                                        <p class="small">
+                                            <i class="icon webasyst-magic-wand"></i>
+                                            [s`<strong>Enable sign-in with Webasyst ID</strong>, a universal authorization option that unites Webasyst Customer Center and backend sign-in on your custom domains. Webasyst ID allows you to use all Webasyst apps, sites, and services, and to avoid the use of different passwords on various domains.`]&nbsp;
+                                            <a href="javascript:void(0)"
+                                               class="button large green width-100 bold custom-mt-12 js-webasyst-id-connect">{sprintf('[s`Enable&nbsp;Webasyst&nbsp;ID on %s — it’s free and secure!`]', $current_domain|escape|mb_strtoupper)}</a>
+                                        </p>
+                                        <div class="custom-mb-12 align-center">
+                                            <a href="javascript:void(0);" class="small js-webasyst-id-helplink">[s`How does it work?`]</a>
+                                        </div>
+                                    </div>
+                                    <a href="javascript:void(0);" class="alert-close" title="[s`Close`]">
+                                        <i class="fas fa-times custom-ml-16 black opacity-30"></i>
+                                    </a>
+                                </div>
+                                <script>
+                                    const $waid_alert = $('.js-waid-alert');
+
+                                    $waid_alert.on('click', '.js-webasyst-id-connect', function (e) {
+                                        e.preventDefault();
+                                        location.href = '{$webasyst_id_settings_url}';
+                                    });
+
+                                    $waid_alert.on('click', '.js-webasyst-id-helplink', function (e) {
+                                        e.preventDefault();
+                                        const url = "{$wa_backend_url}?module=backend&action=webasystIDHelp";
+                                        $.get(url, html => $('body').append(html));
+                                    });
+
+                                    $waid_alert.on("click", ".alert-close", function(e) {
+                                        e.preventDefault();
+                                        const url = "{$wa_backend_url}?module=settings&action=save";
+                                        $.post(url, {
+                                            app_id: 'webasyst',
+                                            name: 'webasyst_id_announcement_close',
+                                            value: 'now()'
+                                        }, function () {
+                                            $waid_alert.hide()
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        {elseif !empty($webasyst_id_auth_banner)}
+                            <div class="box rounded highlighted green custom-p-16 custom-pb-4 custom-m-16 js-link-phone-alert">
+                                <div class="flexbox">
+                                    <p class="custom-mb-16 small">
+                                        <i class="icon webasyst-magic-wand"></i>
+                                        [s`<strong>Enable secure sign-in with 2-factor authentication (2FA).</strong> Your account will be connected to Webasyst ID, and any sign-in attempts from new devices will be protected with an SMS confirmation code.`]
+                                    </p>
+                                    <a href="javascript:void(0);" class="alert-close" title="[s`Close`]">
+                                        <i class="fas fa-times custom-ml-16 black opacity-30"></i>
+                                    </a>
+                                </div>
+                                <form class="">
+                                    <input type="tel" placeholder="[s`+1`]" class="width-100 custom-mb-12 solid bold" value="{$webasyst_id_auth_banner.phone|default:'[s`+1`]'}" style="background-color: var(--background-color-blank);">
+                                    <button type="submit" class="button gradient green width-100">[s`Connect`]</button>
+                                    <div class="custom-m-12 align-center">
+                                        <a href="javascript:void(0);" class="js-webasyst-id-helplink small">[s`How does it work?`]</a>
+                                    </div>
+                                    <script>
+                                        const $link_phone_alert = $('.js-link-phone-alert');
+                                        const $link_phone_form = $link_phone_alert.find('form');
+                                        {if !empty($webasyst_id_auth_banner)}
+                                            $link_phone_form.on('submit', function (e) {
+                                                e.preventDefault();
+                                                const phone_number = $(this).find('input').val();
+                                                let phone_param = '';
+
+                                                if (phone_number) {
+                                                    phone_param = '&phone=' + phone_number.replace(/[^-0-9\s.():+]/g,'')
+                                                }
+
+                                                const referrer_url = window.location.href;
+                                                window.location.replace('{$webasyst_id_auth_banner.url}&referrer_url=' + encodeURIComponent(referrer_url) + phone_param)
+                                            });
+                                        {/if}
+                                        $link_phone_form.on('click', '.js-webasyst-id-helplink', function (e) {
+                                            e.preventDefault();
+                                            const url = {$wa_backend_url} + "?module=backend&action=webasystIDHelp";
+                                            $.get(url, html => $('body').append(html));
+                                        });
+
+                                        $link_phone_alert.on("click", ".alert-close", function(e) {
+                                            e.preventDefault();
+                                            const url = {$wa_backend_url} + "?module=settings&action=save";
+                                            $.post(url, {
+                                                app_id: 'webasyst',
+                                                name: 'webasyst_id_announcement_close',
+                                                value: 'now()'
+                                            }, function () {
+                                                $link_phone_alert.hide()
+                                            });
+                                        });
+                                    </script>
+                                </form>
+                            </div>
+                        {/if}
+                        {* Announcements *}
+                        {if $has_dasboard}
+                            <div class="wa-announcement-section custom-mt-24">
+                                {if $wa->user()->getRights('team', 'edit_announcements')}
+                                    <div class="align-center">
+                                        <a href="javascript:void(0)" class="js-new-announcement wa-announcement-button-new larger button rounded light-gray small custom-mx-16 custom-mx-auto-mobile">
+                                            <i class="icon webasyst-magic-wand-ai-black text-gray custom-mr-4"></i>
+                                            [s`Post`]
+                                        </a>
+                                    </div>
+                                {/if}
+                                {include file="./BackendDashboardHeaderAnnouncements.inc.html" inline}
+                            </div>
+                        {/if}
+                        {* APPS *}
+                        <ul>
+                            {foreach $header_items as $app_id => $app}
+
+                                {* Build item url *}
+
+                                {* pseudo-app *}
+                                {if !empty($app.app_id) && !empty($app.link)}
+                                    {$_item_url = "`$backend_url``$app.app_id`/`$app.link`/"}
+                                {* real app *}
+                                {else}
+                                    {$_item_url = "`$backend_url``$app_id`/"}
+                                {/if}
+
+                                {* Build app icon count *}
+                                {$_count = null}
+                                {if $counts && isset($counts[$app_id])}
+                                    {if is_array($counts[$app_id])}
+                                        {$_item_url = $counts[$app_id]['url']}
+                                        {$_count = $counts[$app_id]['count']}
+                                    {else}
+                                        {$_count = $counts[$app_id]}
+                                    {/if}
+                                {/if}
+
+                                <li data-app="{$app_id}">
+                                    <a href="{$_item_url}" rel="external">
+                                        {if $app.img}<img {if !empty($app.icon.96)}data-src2="{$wa_url}{$app.icon.96}"{/if} src="{$wa_url}{if !empty($app.icon.96)}{$app.icon.96}{else}{$app.img}{/if}" />{/if}
+                                        <span class="nowrap">{$app.name}</span>
+                                        {if $_count}
+                                            <span class="badge{* wa-1.3-legacy-class *} indicator{* /wa-1.3-legacy-class *}">{$_count}</span>
+                                        {/if}
+                                    </a></li>
+                            {/foreach}
+                        </ul>
+                    </section>
+                    <section id="wa_activity" class="dashboard-activity js-dashboard-activity box" data-nav="activity" style="display: none">
+                        <div class="dashboard-activity-wrapper">
+                            {include file="../dashboard/DashboardActivityFilter.inc.html" inline}
+
+                            {if !empty($today_users)}
+                            <div class="activity-list-block">
+                                <div class="activity-divider h3 today">[`Today`]</div>
+
+                                <div class="users-groups flexbox space-24 wrap custom-mt-8">
+                                {foreach $today_users as $group_id => $today_group}
+                                    <div class="users-group">
+                                        {* Birthday users group (include other) *}
+                                        {if stristr($group_id, 'birthday') !== false }
+                                            {$user_count = count($today_group)}
+                                            {$_is_calendar_group = isset($today_group.calendar)}
+                                            {foreach $today_group.contacts as $birthday_user}
+                                            <div>
+                                                <a href="{$wa_backend_url}team/id/{$birthday_user.id}" class="userpic userpic48 outlined" style="z-index:{$user_count - $birthday_user@index}">
+                                                    <img src="{$birthday_user.photo_url_48}" alt="{$birthday_user.formatted_name|escape}">
+
+                                                    {if $birthday_user@last && $birthday_user@iteration < 5}
+                                                        <span class="userstatus birthday"><i class="fas fa-birthday-cake"></i></span>
+                                                        {if $_is_calendar_group}
+                                                            <span class="userstatus"><i class="{$today_group.calendar.icon}"></i></span>
+                                                        {/if}
+                                                    {/if}
+                                                </a>
+                                                <div class="hint semibold">[`Birthday`]</div>
+                                            </div>
+                                            {/foreach}
+                                            {if $today_group.rest_count > 0}
+                                                <span class="userpic userpic48 rest-count">
+                                                    <span>&plus;{$today_group.rest_count}</span>
+                                                    <span class="userstatus birthday">
+                                                        <i class="fas fa-birthday-cake"></i>
+                                                    </span>
+                                                </span>
+                                            {/if}
+                                        {* Other users *}
+                                        {else}
+                                            {$contact_count = count($today_group.contacts)}
+                                            {foreach $today_group.contacts as $contact}
+                                            <div>
+                                                <a href="{$wa_backend_url}team/id/{$contact.id}" class="userpic userpic48 outlined" style="z-index:{$contact_count - $contact@index}">
+                                                    <img src="{$contact.photo_url_48}" alt="{$contact.formatted_name|escape}">
+                                                    {if $contact@last && $contact@iteration < 5}
+                                                        <span class="userstatus" style="background-color:{$today_group.bg_color|escape};color:{$today_group.font_color|escape}">
+                                                            <i class="{$today_group.icon|escape|default:'fas fa-calendar-alt'}"></i>
+                                                        </span>
+                                                    {/if}
+                                                </a>
+                                                {$_hint = $today_group.name|escape}
+                                                {if !empty($contact.summary)}
+                                                    {$_hint = $contact.summary|escape}
+                                                {/if}
+                                                <div class="hint semibold break-word text-ellipsis" data-wa-tooltip-content="{$_hint}" data-wa-tooltip-placement="bottom" style="max-width: 110px;">{$_hint}</div>
+                                            </div>
+                                            {/foreach}
+                                            {if $today_group.rest_count > 0}
+                                                <span class="userpic userpic48 rest-count">
+                                                    <span>&plus;{$today_group.rest_count}</span>
+                                                    <span class="userstatus" style="background-color:{$today_group.bg_color|escape};color:{$today_group.font_color|escape}">
+                                                        <i class="{$today_group.icon|escape|default:'fas fa-calendar-alt'}"></i>
+                                                    </span>
+                                                </span>
+                                            {/if}
+                                        {/if}
+                                    </div>
+                                {/foreach}
+                                </div>
+                            </div>
+                            {/if}
+
+                            {if $no_today_activity}
+                                <div class="activity-list-block activity-empty-today">
+                                    {if !$today_users}
+                                        <div class="activity-divider today h3 2">[`Today`]</div>
+                                    {/if}
+                                    <div class="activity-item activity-empty-today custom-mb-24">
+                                        <div class="item-content-wrapper">
+                                            <div class="inline-content">
+                                                [`No activity today yet.`]
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {/if}
+
+                            <div class="activity-list-block js-activity-list-block" data-empty-text="[`No events in the live stream yet.`]" data-empty-today-text="[`No activity today yet.`]" data-today-text="[`Today`]">
+                                {if !empty($activity)}
+                                    {include file="../dashboard/DashboardActivity.html" inline}
+                                {/if}
+                            </div>
+                        </div>
+                    </section>
+                    <section class="dashboard-widgets js-dashboard-widgets" data-nav="widgets" style="display: none">
+                        {if !empty($public_dashboards)}
+                        <div class="dashboard-tabs">
+                            <ul class="tabs">
+                                <li class="selected">
+                                    <a href="javascript:void(0);" class="js-dashboard-widgets-page" data-dashboard="0">
+                                        <i class="fas fa-home"></i>
+                                    </a>
+                                </li>
+                                {foreach $public_dashboards as $d}
+                                    <li>
+                                        <a href="javascript:void(0);" class="js-dashboard-widgets-page" data-dashboard="{$d.id}">
+                                            {$d.name|escape}
+                                        </a>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                        {/if}
+                        <div class="js-dashboard-widgets-wrapper">
+                            {include file="../dashboard/DashboardWidgets.html" inline}
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="bottombar js-bottombar">
+                <ul>
+                    <li class="selected">
+                        <a href="#" data-nav="apps">
+                            <i class="fas fa-th"></i>
+                            <span>[`Apps`]</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-nav="activity">
+                            <i class="fas fa-bolt"></i>
+                            <span>[`Activity`]</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-nav="widgets">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>[`Dashboards`]</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            new Page();
+
+            new WaMobileDashboard({
+                $wrapper: $('.content'),
+                $header: $('#wa-nav')
+            });
+
+            $(".js-activity-filter-toggler").on("click", function(event) {
+                event.preventDefault();
+                $('#activity-filter').slideToggle();
+            });
+
+            $("#wa-userprofile").waDropdown({
+                hover: false
+            });
+
+            $('.hint.text-ellipsis').waTooltip();
+        });
+    </script>
+</body>
+</html>

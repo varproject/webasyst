@@ -1,0 +1,38 @@
+{$dialog_class = 'w-waid-disconnect-dialog'}
+{$dialog_id = uniqid($dialog_class)}
+<div class="dialog {$dialog_class}" id="{$dialog_id}">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <h3 class="dialog-header js-title"><i class="fas fa-exclamation-triangle text-red custom-mr-4"></i> [s`Disable Webasyst ID & services`]</h3>
+        <div class="dialog-content">
+            <h4 class="state-error"><b>[s`All Webasyst services including Webasyst Email, SMS, and Webasyst ID authentication will be permanently disabled.`]</b></h4>
+            <h4 class="state-error custom-mt-0"><i class="fas fa-exclamation-triangle text-red custom-mr-4"></i> <b>[s`Webasyst Pay will be disabled. This may make your site not being able to process any online payments.`]</b></h4>
+            <h6 class="state-error custom-mt-0"><b>[s`Pre-paid account credit may be permanently lost!`]</b></h6>
+            <p class="state-error-hint">
+                [s`If you disable sign-in with Webasyst ID, all configured user associations with Webasyst ID accounts will be deleted. Users will not be able to sign into the backend with Webasyst ID.`]</p>
+            <div class="js-success-block state-success" style="display: none">
+                <p><i class="fas fa-check-circle text-green"></i> [s`Webasyst services disabled`]</p>
+            </div>
+            <div class="js-fail-block" style="display: none">
+                <p class="errormsg state-error">[s`Failed to disable sign-in with Webasyst ID.`] <i class="fas fa-times-circle"></i></p>
+            </div>
+
+        </div>
+        <footer class="dialog-footer js-disconnect-dialog-footer">
+            <input type="button" class="button red js-disconnect custom-mr-8" value="[s`Disable all Webasyst services`]">
+            <a href="javascript:void(0)" class="button light-gray js-close-dialog">[s`Cancel`]</a> <i class="fas fa-spinner fa-spin js-loading text-light-gray" style="display: none"></i>
+        </footer>
+        <footer class="dialog-footer js-success-dialog-footer" style="display: none;">
+            <input type="button" class="button js-close-dialog" value="[s`Close`]">
+        </footer>
+    </div>
+
+    <script>
+        $(function () {
+            new WASettingsWaIDDisconnectConfirm({
+                $dialog: $('#{$dialog_id}'),
+                connect_url: {$connect_url|default:''|json_encode}
+            });
+        })
+    </script>
+</div>

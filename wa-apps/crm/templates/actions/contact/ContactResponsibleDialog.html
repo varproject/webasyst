@@ -1,0 +1,87 @@
+<div class="dialog c-contact-responsible-dialog" id="c-contact-responsible-dialog">
+    <div class="dialog-background"></div>
+    <div class="dialog-body">
+        <form>
+            <header class="dialog-header">
+                <h1>{if isset($responsible.id)}[`Change the owner`]{else}[`Set the owner`]{/if}</h1>
+            </header>
+            <div class="dialog-content" style="min-height:100px;max-width:500px;">
+                <p>
+                    {if isset($responsible.id)}
+                        [`The customer owner`]
+                    {else}
+                        [`Set the owner for the customer`]
+                    {/if} <b>{$contact.name|escape}</b>:
+                </p>
+
+                <div class="c-option-content">
+                    <div class="c-responsible-list js-responsible-list menu">
+
+                        {function name="_renderResponsible"}
+                            {if empty($_responsible_user)}
+                                {$_responsible_user = [
+                                "id" => "%id%",
+                                "name" => "%name%",
+                                "photo_url" => "%photo_url%"
+                                ]}
+                            {/if}
+
+                            <div class="c-responsible" data-id="{$_responsible_user.id}">
+                                <span>
+                                    <i class="icon userpic size-20" style="background-image: url({$_responsible_user.photo_url});"></i>
+                                    <span class="c-name">{$_responsible_user.name|escape}</span>
+                                </span>
+                                <i class="icon fas fa-trash-alt delete c-delete js-delete-responsible" title="[`remove`]"></i>
+                            </div>
+                        {/function}
+
+                        {capture assign="_responsibleTemplate"}{_renderResponsible _responsible_user=[]}{/capture}
+
+                        <div class="js-input" {if isset($responsible.id)}style="display:none"{/if}>
+                            <input type="text" class="js-autocomplete" autofocus="autofocus" placeholder="[`Start typing user name...`]" style="width: 300px;">
+                        </div>
+
+                        {if isset($responsible.id)}
+                            {_renderResponsible _responsible_user=$responsible}
+                        {/if}
+                    </div>
+                    <div class="no-access-error" style="color: red;margin-top: 20px;"></div>
+                </div>
+            </div>
+            <footer class="dialog-footer">
+                <div class="js-errors-place"></div>
+
+                <div class="c-layout">
+                    <div class="c-column">
+                        <input class="button js-save" type="submit" value="[`Save`]">
+                        <a class="button light-gray js-close-dialog" href="javascript:void(0);">[`Cancel`]</a>
+                    </div>
+                    {if isset($responsible.id)}
+                        <div class="c-column middle right">
+                            <a href="javascript:void(0);" class="button red js-clear-responsible">[`Clear ownership`]</a>
+                        </div>
+                    {/if}
+                </div>
+            </footer>
+
+            <input name="contact_id" id="contact_id" type="hidden" value="{$contact.id|default:""}">
+            <input name="responsible_id" id="responsible_id" type="hidden" value="{$responsible.id|default:""}">
+        </form>
+    </div>
+
+    <script>
+        ( function($) {
+            new CRMContactResponsibleDialog({
+                $wrapper: $("#c-contact-responsible-dialog"),
+                locales: {
+                    clear_responsible_title: "[`Clear ownership`]",
+                    clear_responsible_text: {$ask|json_encode},
+                    clear_responsible_button: "[`Clear`]"
+                },
+                contact_id: {$contact.id|json_encode},
+                responsible: {if !empty($responsible)}{$responsible|array_values|json_encode}{else}[]{/if},
+                responsible_template_html: {$_responsibleTemplate|json_encode|strip}
+            });
+        })(jQuery);
+    </script>
+</div>

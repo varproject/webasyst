@@ -1,0 +1,107 @@
+{$dialog_id = 'f-name-conflict-dialog-'}
+
+<div class="dialog f-name-conflict-dialog" id="{$dialog_id}">
+    <form>
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <h3 class="dialog-header">[`Move`]</h3>
+            <div class="dialog-content">
+                <p>[`Files with the following names already exist in the specified folder`]</p>
+                <ul class="menu">
+                    {foreach $conflict_files as $file}
+                        <li><span class="item"><img class="f-file-image" src="{$file.photo_url.file_list_small}" alt="">&nbsp;<span class="f-file-name">{$file.name|escape}</span></span></li>
+                    {/foreach}
+                </ul>
+            </div>
+            <div class="dialog-footer">
+                    {$wa->csrf()}
+
+                    {if $can_replace}
+                        <input class="button yellow" type="button" value="[`Replace`]" data-solve="replace">
+                    {/if}
+                    <input class="button blue" type="button" value="[`Rename`]" data-solve="rename">
+                    <input class="button green" type="button" value="[`Skip`]" data-solve="exclude">
+                    <input type="hidden" name="solve" value="exclude">
+
+                    <i class="f-submit-loading loading custom-mx-4" style="display:none;"></i> <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+            </div>
+        </div>
+    </form>
+    <script>
+        $(function() {
+            $('#{$dialog_id}').filesDialog({
+                onOpen: function ($dialog, dialog_instance) {
+
+                    $dialog.find('[type="button"]').on('click', function (e) {
+                        e.preventDefault();
+                        const solve = $(this).data('solve');
+                        $dialog.find('[type=button]').attr('disabled', true);
+
+                        var is_restore = {$is_restore|default:''|json_encode};
+                        $dialog.find('.f-submit-loading').show();
+                        $.files.jsonPost({
+                            url: '?module=move&action=files',
+                            data: {
+                                folder_id: {$folder_id},
+                                storage_id: {$storage_id},
+                                file_id: {json_encode(array_keys($files))},
+                                solve: solve,
+                                restore: is_restore
+                            },
+                            onSuccess: function(r) {
+                                if (r.status === 'ok') {
+
+                                    var reload_page = true;
+
+                                    $.files.runCopyFiles();
+                                    $.files.checkBackendChanges();
+                                    // run dialog if process_id is present and not empty
+
+                                    if (r.data.process_id > 0) {
+                                        $.files.loadDialog('?module=move&action=processDialog&copytask_process_id=' + r.data.process_id, {
+                                            onOpen: function () {
+                                                dialog_instance.close();
+                                            }
+                                        });
+                                        reload_page = false;
+                                    }
+
+                                    if (r.data.count > 0) {
+                                        $.files.refreshSidebar();
+                                    }
+
+                                    if (reload_page) {
+                                        $('.dialog:not(#f-uploader)').remove();
+                                        $.files.controller.reloadPage();
+                                    }
+
+                                    // Uncheck All
+                                    var $catalog = $("#f-catalog-wrapper");
+                                    if ($catalog.length) {
+                                        $catalog.trigger("unSelectAll");
+                                    }
+                                } else {
+                                    $('.dialog:not(#f-uploader)').remove();
+                                    $.files.alertError(r.errors[0][0]);
+                                }
+                            },
+                            onFailure: function(r) {
+                                $('.dialog:not(#f-uploader)').remove();
+                                if ($.isPlainObject(r) && r.same_place) {
+                                    $.files.alertError($_("Files from the same place"));
+                                } else {
+                                    $.files.alertError('[`Server error`]', r);
+                                }
+                            },
+                            onAlways: function() {
+                                $dialog.find('.f-submit-loading').hide();
+                                $dialog.find('[type=button]').attr('disabled', false);
+                            }
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+</div>
+

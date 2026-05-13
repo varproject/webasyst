@@ -1,0 +1,267 @@
+<script src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.core.min.js"></script>
+<script src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.widget.min.js"></script>
+<script src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.mouse.min.js"></script>
+<script src="{$wa_url}wa-content/js/jquery-ui/jquery.ui.sortable.min.js"></script>
+
+<div class="sidebar flexbox width-adaptive-wider hide-scrollbar mobile-friendly b-app-sidebar">
+
+    <nav class="sidebar-mobile-toggle">
+        <div class="box align-center">
+            <a href="javascript:void(0);"><i class="fas fa-bars custom-mr-4"></i> [s`Menu`]</a>
+        </div>
+    </nav>
+    {if $writable_blogs}
+    <div class="sidebar-header box custom-pt-20">
+        <a href="?module=post&amp;action=edit&amp;id=" class="button full-width align-center">
+            <i class="fas fa-pencil-alt fa-w-20 custom-mr-4 small"></i>
+            <span class="small">[`New post`]</span>
+        </a>
+    </div>
+    {/if}
+    <div class="sidebar-body">
+        <!-- core navigation -->
+        <div class="box custom-py-0">
+        <ul class="menu">
+            <li class="rounded{if isset($view_all_posts) && $view_all_posts == true} selected{/if}">
+                <a href="{$wa_app_url}">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>[`All posts`]</span>
+                    <span class="count">
+                        {if isset($new_post_count) && $new_post_count > 0}
+                            <strong class="small highlighted">+{$new_post_count}</strong>
+                        {/if}
+                        {$post_count}
+                    </span>
+                </a>
+            </li>
+            <li class="rounded{if $module == 'comments'} selected{/if}">
+                <a href="?module=comments">
+                    <i class="fas fa-comments"></i>
+                    <span>[`Comments`]</span>
+                    <span class="count comment-count">
+                        {if $comment_new_count > 0}
+                            <strong class="small highlighted">+{$comment_new_count}</strong>
+                        {/if}
+                        {$comment_count}
+                    </span>
+                </a>
+            </li>
+            <li class="rounded{if $action == 'calendar'} selected{/if}">
+                <a href="?action=calendar">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>[`Calendar`]</span>
+                    {if $count_draft_overdue > 0}
+                        <strong class="count badge text-white">{$count_draft_overdue}</strong>
+                    {/if}
+                </a>
+            </li>
+            {* @event backend_sidebar.%plugin_id%.menu *}
+            <!-- plugin hook: "backend_sidebar.menu" -->
+            {foreach $backend_sidebar as $plugin => $output}
+                {if is_array($output) && isset($output.menu)}
+                    <!-- begin {$plugin} -->{$output.menu}<!-- end {$plugin} -->
+                {/if}
+            {/foreach}
+
+            <!-- end plugin hook: "backend_sidebar.menu" -->
+        </ul>
+        </div>
+
+        <!-- blog list -->
+        <details data-id="blogs">
+            <summary class="heading">
+                <span class="cursor-pointer">
+                    <span class="caret">
+                        <i class="fas fa-caret-right"></i>
+                    </span>
+                    [`Blogs`]
+                </span>
+                {if $can_see_blog_settings}
+                <a href="?module=blog&amp;blog=&amp;action=settings&blog={$blog_id_full_access}" class="count action">
+                    <i class="fas fa-cog"></i>
+                </a>
+                {/if}
+            </summary>
+
+            {if $blogs}
+                <div class="box custom-py-0">
+                    <ul class="menu collapsible category-menu" id="blogs">
+                        {foreach $blogs as $id => $blog} <!-- blog list item {$id}  -->
+                            <li class="rounded{if isset($blog_id) && $blog_id==$id && $action!='settings'} selected{/if}" id="blog_li_item_{$id}">
+                                <a href="?blog={$id}">
+                                    {if $blog.color == 'b-white' && strpos($blog.icon_html, 'background-image') !== false}
+                                        <span class="icon">
+                                            {$blog.icon_html}
+                                        </span>
+                                    {/if}
+                                    {if $blog.color != 'b-white'}
+                                        {$_color = $blog.color|replace:'b-':'icon16 text-'}
+                                        <span class="icon">
+                                            {$blog.icon_html|replace:'icon16':$_color}
+                                        </span>
+                                    {/if}
+                                    <span>
+                                        {$blog.name|escape}
+                                    </span>
+                                    <span class="count">
+                                        {if $blog.status == blogBLogModel::STATUS_PRIVATE}
+                                            <span class="small custom-mr-4">
+                                                <i class="fas fa-lock" title="[`Private blog`]"></i>
+                                            </span>
+                                        {/if}
+                                        {if isset($blog.new_post)}
+                                            <strong class="small highlighted">+{$blog.new_post}</strong>
+                                        {/if}
+                                        {$blog.qty}
+                                    </span>
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            {else}
+                <p class="align-center hint box custom-mt-16">
+                    {"?module=blog&amp;blog=&amp;action=settings&amp;blog="|string_format:'[`To add posts, you must first <a href="%s"> create a new blog</a>.`]'}
+                </p>
+            {/if}
+        </details>
+
+        {* @event backend_sidebar.%plugin_id%.section *}
+        <!-- plugin hook: "backend_sidebar.section" -->
+        {foreach $backend_sidebar as $plugin => $output}
+            {if is_array($output) && isset($output.section)}
+                <!-- begin {$plugin} -->{$output.section}<!-- end {$plugin} -->
+            {/if}
+        {/foreach}
+
+        <!-- end plugin hook: "backend_sidebar.section" -->
+
+        {if $writable_blogs && (!empty($drafts_count.all) || !empty($drafts_count.my))}
+            <!-- drafts -->
+        <details data-id="drafts">
+            <summary class="heading">
+                <span class="cursor-pointer">
+                    <span class="caret">
+                        <i class="fas fa-caret-right"></i>
+                    </span>
+                    {strip}
+                        <span class="title b-all-drafts" style="display:none;">[`Drafts`]</span>
+                        {if !empty($drafts_count.my)}
+                            <span class="title b-my-drafts" style="display:none;">[`My drafts`]</span>
+                        {/if}
+                    {/strip}
+                </span>
+                <span id="b-all-drafts" class="count b-drafts-toggle small" style="display:none;">
+                    <a href="javascript:void(0);" class="text-light-gray">[`all drafts`]</a>
+                </span>
+                {if !empty($drafts_count.my)}
+                    <span id="b-my-drafts" class="count b-drafts-toggle small" style="display:none;">
+                        <a href="javascript:void(0);" class="text-light-gray" data-contact-id="{$wa->user('id')}">[`my drafts`]</a>
+                    </span>
+                {/if}
+                <span class="count b-all-drafts counter" style="display: none;">
+                    {if !empty($drafts_count.all)}{$drafts_count.all}{/if}
+                </span>
+                {if !empty($drafts_count.my)}
+                    <span class="count b-my-drafts counter" style="display: none;">{$drafts_count.my}</span>
+                {/if}
+            </summary>
+            <div class="box custom-py-0">
+            <ul id="blog-drafts" class="menu b-drafts">
+                {foreach $drafts as $post}
+                    <li class="rounded{if $post.id == $post_id} selected{/if}" data-contact-id="{$post.contact_id}">
+                        <a class="{if $post.status eq blogPostModel::STATUS_SCHEDULED}italic{/if}" href="?module=post&amp;action=edit&amp;id={$post.id}">
+                            <i class="icon userpic userpic-20" style="background-image: url('{$post.user.photo_url_20}')"></i>
+                            <span>
+                                <span class="{if isset($post.overdue)}bold b-draft-overdue text-red{/if}">
+                                    {$post.title|escape|truncate:80}
+                                </span>
+                                {if $post.blog_status == blogBlogModel::STATUS_PRIVATE}
+                                    <span class="small">
+                                        <i class="fas fa-lock" title="[`Belong to private blog`]"></i>
+                                    </span>
+                                {/if}
+                                {if $post.datetime}
+                                    <span class="nowrap hint{if isset($post.overdue)} b-draft-overdue{/if}">{$post.datetime|wa_datetime:'humandate'}</span>
+                                {/if}
+                            </span>
+                            <span class="count">
+                                {if $post.status == blogPostModel::STATUS_SCHEDULED}
+                                    <i class="fas fa-clock"></i>
+                                {elseif $post.status == blogPostModel::STATUS_DEADLINE}
+                                    <i class="fas fa-exclamation-triangle{if isset($post.overdue)} text-red{/if}"></i>
+                                {/if}
+                                {if $post.color == 'b-white' && strpos($post.icon, 'background-image') !== false}
+                                    <span class="icon">
+                                        {$post.icon}
+                                    </span>
+                                {/if}
+                                {if $post.color != 'b-white'}
+                                    {$_color = $post.color|replace:'b-':'icon16 text-'}
+                                    <span class="icon">
+                                        {$post.icon|replace:'icon16':$_color}
+                                    </span>
+                                {/if}
+                            </span>
+                        </a>
+                    </li>
+                {/foreach}
+            </ul>
+            </div>
+        </details>
+        {/if}
+    </div>
+    <div class="sidebar-footer shadowed">
+        <div class="box custom-py-0">
+        <ul class="menu">
+            {if $wa->user()->getRights($wa->app(), 'pages')}
+                <li class="rounded{if $module == 'pages'} selected{/if}">
+                    <a href="?module=pages">
+                        <i class="fas fa-pen"></i>
+                        <span>[s`Pages`]</span>
+                    </a>
+                </li>
+            {/if}
+            {if $wa->user()->getRights($wa->app(), 'design')}
+                <li class="rounded{if $module == 'design' || $module == 'themes'} selected{/if}">
+                    <a href="?module=design#/design/themes/">
+                        <i class="fas fa-palette"></i>
+                        <span>[s`Design`]</span>
+                    </a>
+                </li>
+            {/if}
+            <li class="rounded{if $module == 'settings'} selected{/if}">
+                <a href="?module=settings">
+                    <i class="fas fa-cog"></i>
+                    <span>[`Settings`]</span>
+                </a>
+            </li>
+
+            {if $wa->user()->isAdmin($wa->app())}
+                <li class="rounded{if $action == 'plugins'} selected{/if}">
+                    <a href="?module=plugins">
+                        <i class="fas fa-plug"></i>
+                        <span>[`Plugins`]</span>
+                    </a>
+                </li>
+            {/if}
+
+            {* @event backend_sidebar.%plugin_id%.system *}
+            <!-- plugin hook: "backend_sidebar.system" -->
+            {foreach $backend_sidebar as $plugin => $output}
+                {if is_array($output) && isset($output.system)}
+                        <!-- begin {$plugin} -->{$output.system}<!-- end {$plugin} -->
+                {/if}
+            {/foreach}
+            <!-- end plugin hook: "backend_sidebar.system" -->
+        </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+( function($) {
+    $('.b-app-sidebar').waShowSidebar();
+    $.wa_blog.sidebar.lockPosition();
+})(jQuery);
+</script>

@@ -1,0 +1,344 @@
+{if empty($channel.id)}
+<p class="small">
+    [`Set up a new point of sale to link Shop-Script mobile POS app to a specific stock location & payment flow, and to enable in-store pickup express checkout option on your site.`]
+</p>
+{/if}
+
+<div class="fields form">
+    <form action="{$wa_app_url}?module=channels&action=save" id="js-sales-channel-form">
+        <div class="fields-group custom-mt-16">
+            {if !empty($channel.id)}
+            <input type="hidden" name="id" value="{$channel.id|escape}">
+            {else}
+            <input type="hidden" name="is_new" value="1">
+            {/if}
+            <input type="hidden" name="data[type]" value="{$channel.type|escape}">
+
+            <div class="field">
+                <div class="name">
+                    [`Enabled`]
+                </div>
+                <div class="value">
+                    <label>
+                        <input type="checkbox" name="data[status]" value="1"{if !empty($channel.status)} checked{/if}>
+                    </label>
+                </div>
+            </div>
+
+            {foreach $form_fields as $name => $control_html}
+            <div class="field">
+                {$control_html}
+            </div>
+            {/foreach}
+
+            <div class="field">
+                <div class="name">
+                    [`Address`]
+                </div>
+                <div class="value">
+                    <input type="text" name="data[params][address]" class="longer input" title="[`Address`]" value="{$channel.params.address|default:''|escape}">
+                    {if !empty($channel.params.map_adapter_disabled)}
+                    <button class="js-search-address"><i class="fas fa-search"></i></button>
+                    {/if}
+                    <p class="hint">[`Human readable physical address of the point of sale. Displayed publicly in the list of available in-store pickup locations.`]</p>
+                    {if empty($channel.params.map_adapter_disabled)}
+                        <p class="state-caution-hint">[`Configure an online map engine in the <em>Settings</em> app to be able to set a location on a map.`]</p>
+                    {/if}
+                    <div class="js-map-point">{ifempty($channel, 'params', 'map_html', '')}</div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
+                    [`Location`]
+                </div>
+                <div class="value">
+                    <input type="text" name="data[params][latitude]" class="js-input-latitude number shorter" placeholder="[`Latitude`]" title="[`Latitude`]" value="{$channel.params.latitude|default:''|escape}">N
+                    &nbsp;
+                    <input type="text" name="data[params][longitude]" class="js-input-longitude number shorter" placeholder="[`Longitude`]" title="[`Longitude`]" value="{$channel.params.longitude|default:''|escape}">E
+                    <div class="hint">[`Location latitude & longitude for precise display on a map.`] <br>[`For S & W hemispheres, use negative values.`]</div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
+                    [`Description`]
+                </div>
+                <div class="value">
+                    <textarea name="data[params][point_info]" class="textarea" title="[`Description`]">{$channel.params.point_info|default:''|escape}</textarea>
+                    <p class="hint">[`Additional public information about this point of sale such as working hours or hints on how to get there. Any text that will be useful to your customers.`]</p>
+                </div>
+            </div>
+
+            <div class="field">
+                {$payment_id = ifempty($channel.params, 'payment_id', 'all')}
+                <div class="name">
+                    [`Mobile POS`]
+                </div>
+                <div class="value">
+                    <p class="small">
+                        <i class="fas fa-cash-register text-gray custom-mr-4"></i>
+                        [`Payment options offered for in-person offline checkout on a mobile POS linked with this location:`]
+                    </p>
+                    <label>
+                        <span class="wa-radio">
+                            <input type="radio" name="data[params][payment_id]" value="all"{if $payment_id === 'all'} checked="checked"{/if}>
+                            <span></span>
+                        </span>
+                        [`All available payment options`]
+                    </label><br>
+                    <label>
+                        <span class="wa-radio">
+                            <input type="radio" name="data[params][payment_id]" value="id"{if $payment_id === 'id'} checked="checked"{/if}>
+                            <span></span>
+                        </span>
+                        [`Selected only`]
+                    </label>
+
+                    {if $payment_methods}
+                    <div class="small custom-mt-4">
+                        {$payment_methods}
+                    </div>
+                    {else}
+                    <p class="hint">[`No payment options are defined.`]</p>
+                    {/if}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
+                    [`In-store pickup`]
+                </div>
+                <div class="value">
+                    {$pickup_checked = ifempty($channel, 'params', 'pickup', '0')}
+                    <span class="switch smaller js-switch-pickup">
+                        <input type="checkbox" name="data[params][pickup]" value="1"{if $pickup_checked} checked{/if}>
+                    </span>
+                    {if $storefronts}
+                    {$pickup_storefront = ifempty($channel, 'params', 'pickup_storefront', 'all')}
+                    <p class="small custom-my-8">[`Enable the pickup option for the selected storefronts only:`]</p>
+                    <label>
+                        <span class="wa-radio">
+                            <input type="radio" name="data[params][pickup_storefront]" value="all"{if $pickup_storefront === 'all'} checked="checked"{/if}{if !$pickup_checked} disabled{/if}>
+                            <span></span>
+                        </span>
+                        [`All storefronts`]
+                    </label><br>
+                    <label>
+                        <span class="wa-radio">
+                            <input type="radio" name="data[params][pickup_storefront]" value="id"{if $pickup_storefront === 'id'} checked="checked"{/if}{if !$pickup_checked} disabled{/if}>
+                            <span></span>
+                        </span>
+                        [`Selected only`]
+                    </label>
+                    <div class="small custom-mt-4">
+                        {$storefronts}
+                    </div>
+                    {else}
+                    <p class="hint">[`No public storefronts are available.`]</p>
+                    {/if}
+
+                    <p class="small">
+                        <i class="fas fa-exclamation-triangle text-blue"></i> [`Your design theme must support the order pickup button display in products listings:`]
+                        <code class="nowrap">{literal}{$wa->shop->getPickupButton($product)}){/literal}</code>
+                        <a href="https://developers.webasyst.ru/forum/48434/shop-script-12-in-store-pickup/" target="_blank" class="nowrap">[`See the documentation ›`]</a>
+                        <br>
+                        <span class="gray">[`Consult your theme developer in case of any questions.`]</span>
+                    </p>
+                    <p class="small">
+                        <label>
+                            <input type="checkbox" name="data[params][checkout]" value="1"{if ifempty($channel, 'params', 'checkout', '0') || empty($channel.id)} checked{/if}>
+                            [`Express checkout & online reservation`]
+                            <br>
+                            <span class="gray">[`Allows your customers to quickly place an online pickup order via the pickup order dialog on your site to reserve a purchase in this location. For better conversion, the checkout contact field list in this case is minimized to the very basic contact details.`]</span>
+                            <br>
+                            <span class="gray">[`When off, this point of sale option is displayed in the pickup dialog with a simple disclaimer that online checkout is not necessary.`]</span>
+                        </label>
+                    </p>
+                    <p class="small">
+                        <label>
+                            <input type="checkbox" name="data[params][payment]" value="1"{if ifempty($channel, 'params', 'payment', '0') || empty($channel.id)} checked{/if}>
+                            [`Instant payment online`]
+                            <br>
+                            <span class="gray">[`When an express pickup order is placed, a customer can instantly make payment online.`] [`Payment options available for in-store pickup online orders fully match the online storefront’s payment options.`]</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name"></div>
+                <div class="value">
+                    <div class="flexbox middle">
+                        <div class="wide">
+                            <input type="submit" class="button green" value="[`Save`]">
+                        </div>
+                        {if !empty($channel.id)}
+                        <div class="nowrap">
+                            <button class="button red outlined js-delete-button" type="button">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                        {/if}
+                    </div>
+                    <div class="js-place-for-errors custom-mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
+<script>
+    $(function () {
+        "use strict";
+        const delete_url = {$wa_app_url|json_encode} + '?module=channels&action=delete';
+        const spinner_html = '<span class="spinner" />';
+        const $form = $('#js-sales-channel-form');
+        const $place_for_errors = $form.find('.js-place-for-errors');
+        const messages = {
+            payment_required: "[`Please select at least one payment method.`]",
+            storefront_required: "[`Please select at least one storefront.`]"
+        };
+
+        const controller = new SalesChannelForm({
+            $place_for_errors,
+            $form,
+        });
+
+        const $submit_button = $form.find(':submit').last();
+
+        $form.on('save_request', function () {
+            $place_for_errors.empty();
+            $submit_button.prop('disabled', true).after(spinner_html);
+        });
+        $form.on('save_success save_fail', function (evt, data) {
+            if (data.result?.error_description) {
+                $place_for_errors.append('<span class="state-caution-hint">'+ data.result.error_description +'</span>');
+            }
+            $submit_button.prop('disabled', false).siblings('.spinner').remove();
+        });
+
+        // validation before submitting
+        $submit_button.on('click', () => {
+            $form.find('.state-error-hint').remove();
+
+            const $payment_radio = $('[type="radio"][name="data[params][payment_id]"]', $form);
+            const is_payment_valid = $payment_radio.filter('[value="all"]').is(':checked') || $('[type="checkbox"][name^="data[params][payment_id"]', $form).is(':checked');
+            if (!is_payment_valid) {
+                $payment_radio.filter('[value="id"]').closest('label').after('<div class="state-error-hint">'+messages.payment_required+'</div>');
+            }
+
+            const $storefront_radio = $('[type="radio"][name="data[params][pickup_storefront]"]', $form);
+            const is_storefront_valid = $storefront_radio.filter('[value="all"]').is(':checked') || $('[type="checkbox"][name^="data[params][pickup_storefront"]', $form).is(':checked');
+            if (!is_storefront_valid) {
+                $storefront_radio.filter('[value="id"]').closest('label').after('<div class="state-error-hint">'+messages.storefront_required+'</div>');
+            }
+
+            controller.scrollToEl($('.state-error-hint', $form));
+
+            const can_submit = is_storefront_valid && is_payment_valid;
+            return can_submit;
+        });
+
+        $('input[name="data[params][payment_id]"], input[name="data[params][pickup_storefront]"]').on('change', function () {
+            if ($(this).val() === 'all') {
+                $(this).closest('div.value').find('input:checkbox').not('[name="data[params][pickup]"], [name="data[params][checkout]"], [name="data[params][payment]"]').prop('disabled', true).prop('checked', false);
+            } else {
+                $(this).closest('div.value').find('input:checkbox').not('[name="data[params][pickup]"], [name="data[params][checkout]"], [name="data[params][payment]"]').prop('disabled', false).prop('checked', false);
+            }
+        });
+
+        $('input[name="data[params][address]"]').on('change', function (event) {
+            $('input[name="data[params][latitude]"]').val('');
+            $('input[name="data[params][longitude]"]').val('');
+            $('.js-map-point').html('');
+        });
+
+        $('input[name="data[params][payment]"]').on('click', function () {
+            if ($(this).prop('checked')) {
+                $('input[name="data[params][checkout]"]').prop('checked', true);
+            }
+        });
+
+        $('input[name="data[params][checkout]"]').on('click', function (e) {
+            if (!$(this).prop('checked')) {
+                $('input[name="data[params][payment]"]').prop('checked', false);
+            }
+        });
+
+        $('.js-search-address').on('click', function (event) {
+            event.preventDefault();
+            let that = this;
+            let href = '{$wa_backend_url}?action=map&method=address';
+            let address = $('input[name="data[params][address]"]').val();
+            if (address) {
+                let data = {
+                    address: address,
+                    width: 500,
+                    height: 150
+                };
+                $(that).prop('disabled', true);
+                $.post(href, data, function (data) {
+                    if (data.status === 'ok') {
+                        if (data.data.map_html) {
+                            $('.js-map-point').html(data.data.map_html);
+                        }
+                        if (data.data.geocode) {
+                            if (data.data.geocode.lat) {
+                                $('input[name="data[params][latitude]"]').val(data.data.geocode.lat);
+                            }
+                            if (data.data.geocode.lng) {
+                                $('input[name="data[params][longitude]"]').val(data.data.geocode.lng);
+                            }
+                        }
+                    }
+                }).always(function () {
+                    $(that).prop('disabled', false);
+                });
+            }
+        });
+
+        $('.js-switch-pickup').waSwitch({
+            change: function (active, wa_switch) {
+                let input = $('input[name="data[params][pickup]"]');
+                if (active) {
+                    input.closest('div.value').find('input:checkbox').not('[name="data[params][checkout]"], [name="data[params][payment]"]').prop('disabled', false).prop('checked', false);
+                    input.closest('div.value').find('input:radio').prop('disabled', false);
+                    input.prop('checked', true);
+                } else {
+                    input.closest('div.value').find('input:checkbox').not('[name="data[params][checkout]"], [name="data[params][payment]"]').prop('disabled', true).prop('checked', false);
+                    input.closest('div.value').find('input:radio').prop('disabled', true);
+                    input.prop('checked', false);
+                }
+            }
+        });
+
+        {if empty($channel.id)}
+            // After successfull save of a new channel, redirect to its proper URL containing id
+            $form.on('save_success', function (evt, data) {
+                window.location = {$wa_app_url|json_encode} + 'channels/editor/' + data.result.id;
+            });
+        {else}
+            const channel_id = {$channel.id|json_encode};
+            const $delete_button = $form.find('.js-delete-button');
+            $delete_button.on('click', function (e) {
+                e.preventDefault();
+                $.waDialog.confirm({
+                    title: {_w("Delete permanently?")|json_encode},
+                    success_button_title: {_w("Delete")|json_encode},
+                    success_button_class: 'danger',
+                    cancel_button_title: {_w("Cancel")|json_encode},
+                    cancel_button_class: 'light-gray',
+                    onSuccess: function() {
+                        $delete_button.prop('disabled', true).after(spinner_html);
+                        $.post(delete_url, { id: channel_id }, 'json').then(function(r) {
+                            $submit_button.prop('disabled', false).siblings('.spinner').remove();
+                            window.location = {$wa_app_url|json_encode} + '?action=plugins#/';
+                        });
+                    }
+                });
+            });
+        {/if}
+    });
+</script>

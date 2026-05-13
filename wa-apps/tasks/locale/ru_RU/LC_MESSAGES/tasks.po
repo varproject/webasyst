@@ -1,0 +1,2054 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tasks\n"
+"POT-Creation-Date: 2015-11-28 20:34+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: tasks\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+msgid "Tasks"
+msgstr "Задачи"
+
+msgid "Loading..."
+msgstr "Загрузка…"
+
+msgid "New task"
+msgstr "Новая задача"
+
+msgid "Inbox"
+msgstr "Входящие"
+
+msgid "Hidden"
+msgstr "Скрытые"
+
+msgid "Outbox"
+msgstr "Исходящие"
+
+msgid "Favorites"
+msgstr "Избранное"
+
+msgid "Urgent"
+msgstr "Срочно"
+
+msgid "Milestones"
+msgstr "Сроки"
+
+msgid "Scopes"
+msgstr "Работы"
+
+msgid "Scope"
+msgstr "Работа"
+
+msgid "Agile"
+msgstr "Agile"
+
+msgid "Logs"
+msgstr "Журнал"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Unassigned"
+msgstr "Без назначения"
+
+msgid "Nobody"
+msgstr "Никто"
+
+msgid "Invite"
+msgstr "Пригласить"
+
+msgid "Team"
+msgstr "Команда"
+
+msgid "Projects"
+msgstr "Проекты"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "from"
+msgstr "от"
+
+msgid "to"
+msgstr "по"
+
+msgid "by day"
+msgstr "по дням"
+
+msgid "by month"
+msgstr "по месяцам"
+
+msgid "All time"
+msgstr "Все время"
+
+msgid "Select dates..."
+msgstr "Выбрать даты..."
+
+msgid "Status:"
+msgstr "Статус:"
+
+msgid "Assigned:"
+msgstr "Исполнитель:"
+
+msgid "Empty assignment"
+msgstr "Без назначения"
+
+msgid "%s of %d"
+msgstr "%s из %d"
+
+msgid "Load more..."
+msgstr "Показать еще..."
+
+msgid "Last %d day"
+msgid_plural "Last %d days"
+msgstr[0] "Последний %d день"
+msgstr[1] "Последние %d дня"
+msgstr[2] "Последние %d дней"
+
+msgid "%d record"
+msgid_plural "%d records"
+msgstr[0] "%d запись"
+msgstr[1] "%d записи"
+msgstr[2] "%d записей"
+
+msgid "Due"
+msgstr "Дедлайн"
+
+msgid "New milestone"
+msgstr "Добавить работу"
+
+msgid "New scope"
+msgstr "Добавить работу"
+
+msgid "Milestone successfully saved"
+msgstr "Данные успешно сохранены"
+
+msgid "Scope successfully saved"
+msgstr "Данные успешно сохранены"
+
+msgid "(no name)"
+msgstr "(без названия)"
+
+msgid "Create milestone"
+msgstr "Новый дедлайн"
+
+msgid "Create scope"
+msgstr "Новая работа"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Name"
+msgstr "Название"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Project"
+msgstr "Проект"
+
+msgid "Due date"
+msgstr "Дедлайн"
+
+msgid "Milestone is closed"
+msgstr "Срок истек"
+
+msgid "Scope is closed"
+msgstr "Работа завершена"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Are you sure?"
+msgstr "Вы уверены?"
+
+msgid "Settings successfully updated"
+msgstr "Настройки успешно обновлены"
+
+msgid "Archive datetime"
+msgstr "Время добавления в архив"
+
+msgid "Archive"
+msgstr "Архив"
+
+msgid "New project"
+msgstr "Новый проект"
+
+msgid "Project name"
+msgstr "Название проекта"
+
+msgid "Color"
+msgstr "Цвет"
+
+msgid "Icon"
+msgstr "Иконка"
+
+msgid "Or enter image URL (image will be scaled to 16x16px)"
+msgstr "Или введите URL изображения (изображение будет автоматически уменьшено до 16х16 пикселей)"
+
+msgid "Workflow"
+msgstr "Процесс"
+
+msgid "Customize..."
+msgstr "Настроить..."
+
+msgid "Status name"
+msgstr "Название статуса"
+
+msgid "Button label"
+msgstr "Надпись на кнопке"
+
+msgid "Caption for the button that sends a task into this status"
+msgstr "Текст для кнопки, отправляющей задание в этот статус"
+
+msgid "Task title style"
+msgstr "Стиль надписи на кнопке"
+
+msgid "Italic"
+msgstr "Курсив"
+
+msgid "Bold"
+msgstr "Жирный"
+
+msgid "Task title color"
+msgstr "Цвет надписи на кнопке"
+
+msgid "Button color"
+msgstr "Цвет кнопки"
+
+msgid "Assignment"
+msgstr "Назначение"
+
+msgid "Do not change assignment"
+msgstr "Не менять назначение"
+
+msgid "Assign to user who created the task"
+msgstr "Назначать на автора задачи"
+
+msgid "Assign to specific user"
+msgstr "Назначать на указанного пользователя"
+
+msgid "Show assignment selector every time"
+msgstr "Каждый раз предлагать выбор исполнителя"
+
+msgid "Clear assignment"
+msgstr "Снимать назначение"
+
+msgid "Allow to clear assignment"
+msgstr "Разрешать снимать назначение"
+
+msgid "Comment form"
+msgstr "Поле для комментариев"
+
+msgid "Show comment form"
+msgstr "Показывать поле для ввода комментариев"
+
+msgid "Status settings"
+msgstr "Настройки статуса"
+
+msgid "Add Status"
+msgstr "Новый статус"
+
+msgid "Project ordering"
+msgstr "Сортировка проектов"
+
+msgid "Projects are sorted by name. You can select important projects to show them before everything else. Important projects can be manually reordered via drag-and-drop."
+msgstr "Проекты отсортированы по названиям. Вы можете выделить важные проекты, перенеся их в начало списка путем перетаскивания."
+
+msgid "Manage project ordering"
+msgstr "Изменить сортировку проектов"
+
+msgid "Create a project first"
+msgstr "Создайте хотя бы один проект"
+
+msgid "You need to %sadd your first project%s to be able to create tasks."
+msgstr "%sДобавьте свой первый проект%s, чтобы иметь возможность создавать задания."
+
+msgid "unassigned"
+msgstr "не назначено"
+
+msgid "Add tag"
+msgstr "Добавить тег"
+
+msgid "Custom tag..."
+msgstr "Другой тег..."
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "Edit task"
+msgstr "Редактировать задачу"
+
+msgid "Set favorite"
+msgstr "В избранные"
+
+msgid "Comments"
+msgstr "Комментарии"
+
+msgid "Hide"
+msgstr "Скрыть"
+
+msgid "Assignment removed"
+msgstr "Назначение снято"
+
+msgid "There are no comments for this task yet."
+msgstr "Нет комментариев к этой задаче."
+
+msgid "Please click or drop image file here"
+msgstr "Прикрепить файл к задаче"
+
+msgid "%d task"
+msgid_plural "%d tasks"
+msgstr[0] "%d задача"
+msgstr[1] "%d задачи"
+msgstr[2] "%d задач"
+
+msgid "no tasks"
+msgstr "нет задач"
+
+msgid "You are about to abandon task editor without saving the task. All unsaved data will be lost. Are you sure?"
+msgstr "Вы собираетесь покинуть страницу без сохранения задачи. Все несохраненные данные будут потеряны. Вы уверены?"
+
+msgid "You are about to leave the page without saving the task. Are you sure?"
+msgstr "Вы собираетесь покинуть страницу без сохранения задачи. Вы уверены?"
+
+msgid "Input task name"
+msgstr "Название задачи"
+
+msgid "Input task description"
+msgstr "Описание задачи"
+
+msgid "Click to select files or drag them here"
+msgstr "Прикрепить файл к задаче"
+
+msgid "Assign to"
+msgstr "Ответственный"
+
+msgid "me"
+msgstr "я"
+
+msgid "Show all"
+msgstr "Показать всех"
+
+msgid "No milestone"
+msgstr "Без указания срока"
+
+msgid "No scope"
+msgstr "Без указания работы"
+
+msgid "Choose a date"
+msgstr "Указать дату"
+
+msgid "Save task"
+msgstr "Сохранить"
+
+msgid "Create task"
+msgstr "Создать задачу"
+
+msgid "or"
+msgstr "или"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "SMS"
+msgstr "SMS"
+
+msgid "More fields"
+msgstr "Еще"
+
+msgid "Forward to"
+msgstr "Переслать"
+
+msgid "Choose user"
+msgstr "Выберите пользователя"
+
+msgid "Comment"
+msgstr "Комментарий"
+
+msgid "Input your comment"
+msgstr "Напишите комментарий"
+
+msgid "cancel"
+msgstr "отмена"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Priority"
+msgstr "Приоритет"
+
+msgid "Newest"
+msgstr "Новые"
+
+msgid "Oldest"
+msgstr "Старые"
+
+msgid "Done"
+msgstr "Выполнено"
+
+msgid "Forward (%d)"
+msgstr "Переслать (%d)"
+
+msgid "Return to"
+msgstr "Вернуть"
+
+msgid "Return"
+msgstr "Вернуть"
+
+msgid "A task has been assigned to you."
+msgstr "Задача назначена на вас."
+
+msgid "A task you're assigned to has been updated."
+msgstr "Назначенная на вас задача обновлена."
+
+msgid "A task you created has been updated."
+msgstr "Созданная вами задача обновлена."
+
+msgid "Go to inbox"
+msgstr "Перейти во входящие"
+
+msgid "%d task has been assigned to you"
+msgid_plural "%d tasks has been assigned to you"
+msgstr[0] "%d задача назначена на вас"
+msgstr[1] "%d задачи назначены на вас"
+msgstr[2] "%d задач назначены на вас"
+
+msgid "A task you created has been marked as done."
+msgstr "Созданная вами задача отмечена как выполненная."
+
+msgid "Error Comment ID"
+msgstr "Ошибка в ID комментария"
+
+msgid "Either text or attachment is required to add comment."
+msgstr "Для добавления комментария необходим текст или файл."
+
+msgid "Select Project"
+msgstr "Выберите проект"
+
+msgid "Your browser does not support File API!"
+msgstr "Ваш браузер не поддерживает File API!"
+
+msgid "File not found"
+msgstr "Файл не найден"
+
+msgid "Failed to upload file %s."
+msgstr "Не удалось загрузить файл %s."
+
+msgid "Not found"
+msgstr "Не найдено"
+
+msgid "Milestone not found"
+msgstr "Срок не найден"
+
+msgid "Scope not found"
+msgstr "Работа не найдена"
+
+msgid "This field is required."
+msgstr "Это поле обязательное."
+
+msgid "Access denied"
+msgstr "Доступ запрещен"
+
+msgid "All projects"
+msgstr "Все проекты"
+
+msgid "All statuses"
+msgstr "Все статусы"
+
+msgid "All open"
+msgstr "Все открытые"
+
+msgid "All including closed"
+msgstr "Все, включая закрытые"
+
+msgid "Any milestone"
+msgstr "Все сроки"
+
+msgid "Any scope"
+msgstr "Все работы"
+
+msgid "Everyone"
+msgstr "Все пользователи"
+
+msgid "Your inbox is empty"
+msgstr "Входящих задач нет"
+
+msgid "Inbox automatically collects all tasks assigned to you, and is currently empty."
+msgstr "Раздел «Входящие» содержит все назначенные на вас задачи, и сейчас он пуст."
+
+msgid "Your favorites list is empty"
+msgstr "Ваш список избранных задач пуст"
+
+msgid "To add a task to your personal favorite list, click on a tiny star icon next to task name."
+msgstr "Чтобы следить за задачей, нажмите кнопку «Наблюдать» рядом с ее заголовком."
+
+msgid "Task list is empty"
+msgstr "Задач нет"
+
+msgid "No tasks matching your search criteria."
+msgstr "Нет задач, соответствующих критериям поиска."
+
+msgid "Task not found"
+msgstr "Задача не найдена"
+
+msgid "You can't hide high priority task"
+msgstr "Нельзя отложить задачу с высоким приоритетом"
+
+msgid "You can only hide tasks assigned to you."
+msgstr "Можно отложить только задачи, назначенные на вас."
+
+msgid "Unable to return task because someome modified it."
+msgstr "Невозможно вернуть задачу, т.к. она было кем-то изменена."
+
+msgid "Unable to return task because contact has been deleted. Use forward action instead."
+msgstr "Невозможно вернуть задачу, т.к. контакт был удален. Используйте функцию переназначения."
+
+msgid "%d min"
+msgid_plural "%d mins"
+msgstr[0] "%d мин"
+msgstr[1] "%d мин"
+msgstr[2] "%d мин"
+
+msgid "%d hr"
+msgid_plural "%d hrs"
+msgstr[0] "%d ч"
+msgstr[1] "%d ч"
+msgstr[2] "%d ч"
+
+msgid "%d mo"
+msgid_plural "%d mo"
+msgstr[0] "%d мес"
+msgstr[1] "%d мес"
+msgstr[2] "%d мес"
+
+msgid "%d yr"
+msgid_plural "%d yrs"
+msgstr[0] "%d г"
+msgstr[1] "%d г"
+msgstr[2] "%d г"
+
+msgid "New"
+msgstr "Новые"
+
+msgid "done"
+msgstr "закрыл задачу"
+
+msgid "Just now"
+msgstr "Только что"
+
+msgid "%d d"
+msgstr "%d д"
+
+msgid "%d task has been completed"
+msgid_plural "%d tasks has been completed"
+msgstr[0] "%d задача выполнена"
+msgstr[1] "%d задачи выполнены"
+msgstr[2] "%d задач выполнены"
+
+msgid "A task has been assigned to you"
+msgstr "Задача назначена на вас"
+
+msgid "A task has been completed"
+msgstr "Задача выполнена"
+
+msgid "A task has been updated"
+msgstr "Задача обновлена"
+
+msgid "High"
+msgstr "Высокий"
+
+msgid "Normal"
+msgstr "Средний"
+
+msgid "Low"
+msgstr "Низкий"
+
+msgid "Can manage projects"
+msgstr "Управление проектами"
+
+msgid "No access"
+msgstr "Нет доступа"
+
+msgid "All <strong>%s</strong> in this project will be archived and won't be listed anymore. Are you sure?"
+msgstr "Все <strong>%s</strong>, принадлежащие проекту, попадут в архив и перестанут отображаться в списках. Вы уверены?"
+
+msgid "Self tasks only"
+msgstr "Только назначенные задачи"
+
+msgid "Self & assigned tasks only"
+msgstr "Только свои и назначенные задачи"
+
+msgid "Full access"
+msgstr "Полный доступ"
+
+msgid "Create task from this"
+msgstr "Создать из этого задачу"
+
+msgid "created"
+msgstr "поставил задачу"
+
+msgid "added comment"
+msgstr "добавил комментарий"
+
+msgid "forwarded"
+msgstr "назначил ответственного"
+
+msgid "returned"
+msgstr "вернул задачу"
+
+msgid "edited"
+msgstr "отредактировал задачу"
+
+msgid "Drop anywhere to upload"
+msgstr "Перетащите в любое место, чтобы загрузить"
+
+msgid "Use <strong>app \"%s\"</strong> to provide access to Tasks app for your teammates."
+msgstr "Используйте <strong>приложение «%s»</strong> для предоставления доступа к задачам для сотрудников."
+
+msgid "Create a project by clicking the green tiny icon above."
+msgstr "Создайте проект с помощью зеленой иконки вверху."
+
+msgid "Clear filters"
+msgstr "Очистить фильтры"
+
+msgid "Today"
+msgstr "Сегодня"
+
+msgid "A tiny hint describing this scope."
+msgstr "Короткое описание работы."
+
+msgid "Archived"
+msgstr "В архиве"
+
+msgid "Enable this when this milestone is not actual anymore."
+msgstr "Отметьте, когда этот срок более не будет актуальным."
+
+msgid "New status"
+msgstr "Новый статус"
+
+msgid "Task statuses"
+msgstr "Статусы задач"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "edit"
+msgstr "отредактировал задачу"
+
+msgid "Enter your comment"
+msgstr "Введите свой комментарий"
+
+msgid "Double-click to change task priority"
+msgstr "Двойной щелчок, чтобы изменить приоритет задачи"
+
+msgid "Forward"
+msgstr "Назначить"
+
+msgid "History &amp; Comments"
+msgstr "История и комментарии"
+
+msgid "Hide history"
+msgstr "Скрыть историю"
+
+msgid "Hidden until"
+msgstr "Скрыта до"
+
+msgid "Do not change"
+msgstr "Не изменять"
+
+msgid "Filter tasks"
+msgstr "Фильтр задач"
+
+msgid "Set priority"
+msgstr "Установить приоритет"
+
+msgid "Change priority"
+msgstr "Изменить приоритет"
+
+msgid "User %s sent you a new task"
+msgstr "%s поставил вам новую задачу"
+
+msgid "via Tasks app"
+msgstr "Отправлено из «Webasyst Задачи»"
+
+msgid "%d new task"
+msgid_plural "%d new tasks"
+msgstr[0] "%d новая задача"
+msgstr[1] "%d новые задачи"
+msgstr[2] "%d новых задач"
+
+msgid "<a href=\"%s\">%s</a> from %s"
+msgstr "<a href=\"%s\">%s</a> от %s"
+
+msgid "User %s edited a task you are assigned to:"
+msgstr "%s отредактировал назначенную на вас задачу:"
+
+msgid "User %s edited a task you created:"
+msgstr "%s отредактировал созданную вами задачу:"
+
+msgid "User %s has just completed a task"
+msgstr "%s выполнил задачу"
+
+msgid "Inbox automatically collects all tasks assigned to you. No tasks are assigned to you right now :-)"
+msgstr "Сейчас на вас не назначено ни одной задачи. Попросите коллег поставить вам задачу или сделайте это сами."
+
+msgid "Your outbox is empty"
+msgstr "Исходящих задач нет"
+
+msgid "Outbox automatically collects all tasks you’ve created."
+msgstr "Здесь будут собраны все задачи, в работе над которыми вы принимали участие."
+
+msgid "Your favorite task list is empty"
+msgstr "Здесь пока нет задач"
+
+msgid "Use projects to organize tasks and manage access rights for your teammates."
+msgstr "Используйте проекты для удобной организации задач и настройки прав доступа для сотрудников."
+
+msgid "There are no tasks in this project that require your attention at the moment. If you think its by mistake, ask the account admin to check your access rights."
+msgstr "В этом проекте нет задач, которые требовали бы вашего внимания. Если вы считаете, что тут что-то не так, попросите своего начальника проверить выданные вам права доступа."
+
+msgid "No tasks match your search criteria."
+msgstr "Нет задач, соответствующих критериям поиска."
+
+msgid "ASSIGNED: %d task was assigned to you"
+msgid_plural "ASSIGNED: %d tasks were assigned to you"
+msgstr[0] "НАЗНАЧЕНО: %d задача была назначена на вас"
+msgstr[1] "НАЗНАЧЕНО: %d задачи были назначены на вас"
+msgstr[2] "НАЗНАЧЕНО: %d задач были назначены на вас"
+
+msgid "DONE: %d task was completed"
+msgid_plural "DONE: %d tasks were completed"
+msgstr[0] "ВЫПОЛНЕНО: %d задача была выполнена"
+msgstr[1] "ВЫПОЛНЕНЫ: %d задачи были выполнены"
+msgstr[2] "ВЫПОЛНЕНЫ: %d задач были выполнены"
+
+msgid "ASSIGNED: %s %s"
+msgstr "НАЗНАЧЕНО: %s %s"
+
+msgid "NEW: %s %s"
+msgstr "НОВОЕ: %s %s"
+
+msgid "DONE: %s was completed"
+msgstr "ВЫПОЛНЕНО: %s"
+
+msgid "DONE: %s %s"
+msgstr "ВЫПОЛНЕНО: %s %s"
+
+msgid "EDIT: %s was edited"
+msgstr "ОБНОВЛЕНО: %s"
+
+msgid "EDIT: %s %s"
+msgstr "ОБНОВЛЕНО: %s %s"
+
+msgid "@ %s %s"
+msgstr "@ %s %s"
+
+msgid "created a task"
+msgstr "создал задачу"
+
+msgid "edited a task"
+msgstr "изменил задачу"
+
+msgid "deleted a task"
+msgstr "удалил задачу"
+
+msgid "forwarded a task"
+msgstr "назначил задачу"
+
+msgid "returned a task"
+msgstr "вернул задачу"
+
+msgid "performed action with a task"
+msgstr "выполнил действие с задачей"
+
+msgid "commented on a task"
+msgstr "добавил комментарий к задаче"
+
+msgid "forwarded several tasks"
+msgstr "назначил несколько задач"
+
+msgid "marked several tasks as done"
+msgstr "отметил несколько задач как закрытые"
+
+msgid "Open"
+msgstr "Новые"
+
+msgid "Closed"
+msgstr "Закрытые"
+
+msgid "In %d day"
+msgid_plural "In %d days"
+msgstr[0] "Через %d день"
+msgstr[1] "Через %d дня"
+msgstr[2] "Через %d дней"
+
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "%d день назад"
+msgstr[1] "%d дня назад"
+msgstr[2] "%d дней назад"
+
+msgid "Unhide"
+msgstr "Восстановить"
+
+msgid "Testing"
+msgstr "Проверяется"
+
+msgid "Logbook"
+msgstr "Журнал"
+
+msgid "Archive this project"
+msgstr "Отправить в архив"
+
+msgid "You have unsaved changes. Are you sure you want to leave?"
+msgstr "У вас есть несохраненные изменения на этой странице. Уйти, не сохранив изменения?"
+
+msgid "No tasks in %s project"
+msgstr "В проекте «%s» нет задач"
+
+msgid "No tasks in %s status"
+msgstr "В статусе «%s» нет задач"
+
+msgid "There are currently no tasks in %s status."
+msgstr "В ваших проектах нет ни одной задачи в статусе «%s»."
+
+msgid "There are unsaved task draft."
+msgstr "Есть несохраненная задача."
+
+msgid "Do you want to continue editing?"
+msgstr "Вы хотите продолжить редактирование?"
+
+msgid "Edit template"
+msgstr "Редактировать шаблон"
+
+msgid "Readiness"
+msgstr "Готовность"
+
+msgid "To"
+msgstr "До"
+
+msgid "Add template"
+msgstr "Добавить шаблон"
+
+msgid "Create template"
+msgstr "Создать шаблон"
+
+msgid "Access"
+msgstr "Доступ"
+
+msgid "only me"
+msgstr "только для меня"
+
+msgid "all users"
+msgstr "для всех"
+
+msgid "Add comment"
+msgstr "Добавить комментарий"
+
+msgid "Involve %s to the teamwork just by sending a new task."
+msgstr "Создайте новую задачу и подключайте %s к совместной работе."
+
+msgid "There are no task assigned to %s in projects you collaborate on together."
+msgstr "В проектах, над которыми вы работаете совместно, на %s не назначено ни одной задачи."
+
+msgid "%s's task list is empty"
+msgstr "У %s нет задач"
+
+msgid "My lists"
+msgstr "Мои списки"
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "Search tag..."
+msgstr "Поиск тега..."
+
+msgid "Show %d archived scope"
+msgid_plural "Show %d archived scopes"
+msgstr[0] "Показать %d архивную работу"
+msgstr[1] "Показать %d архивных работы"
+msgstr[2] "Показать %d архивных работ"
+
+msgid "Hide archived scope"
+msgid_plural "Hide archived scopes"
+msgstr[0] "Скрыть архивную работу"
+msgstr[1] "Скрыть архивные работы"
+msgstr[2] "Скрыть архивные работы"
+
+msgid "Show %d archived project"
+msgid_plural "Show %d archived projects"
+msgstr[0] "Показать %d архивный проект"
+msgstr[1] "Показать %d архивных проекта"
+msgstr[2] "Показать %d архивных проектов"
+
+msgid "Hide archived project"
+msgid_plural "Hide archived projects"
+msgstr[0] "Скрыть архивный проект"
+msgstr[1] "Скрыть архивные проекты"
+msgstr[2] "Скрыть архивные проекты"
+
+msgid "Archive this scope"
+msgstr "Отправить в архив"
+
+msgid "Restore this scope"
+msgstr "Восстановить из архива"
+
+msgid "Confirm the action"
+msgstr "Подтвердите действие"
+
+msgid "The task is assigned now to:"
+msgstr "В настоящий момент задача назначена на пользователя:"
+
+msgid "More options"
+msgstr "Дополнительные параметры"
+
+msgid "Parent task"
+msgstr "Родительская задача"
+
+msgid "Child task"
+msgstr "Дочерняя задача"
+
+msgid "invert"
+msgstr "инвертировать"
+
+msgid "remove link"
+msgstr "удалить связь"
+
+msgid "hours"
+msgstr "часов"
+
+msgid "days"
+msgstr "дней"
+
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d день"
+msgstr[1] "%d дня"
+msgstr[2] "%d дней"
+
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d час"
+msgstr[1] "%d часа"
+msgstr[2] "%d часов"
+
+msgid "User %s sent you your task."
+msgstr "%s отправил вам вашу задачу."
+
+msgid "User %s sent you a task."
+msgstr "%s поставил вам задачу."
+
+msgid "User %s sent a task to %s."
+msgstr "%s назначил %s ответственным за задачу."
+
+msgid "Personal settings"
+msgstr "Персональные настройки"
+
+msgid "Assigned to me"
+msgstr "Назначенные на меня"
+
+msgid "Created by me"
+msgstr "Созданные мной"
+
+msgid "Selected projects"
+msgstr "Выбранные проекты"
+
+msgid "Any action"
+msgstr "Любом действии"
+
+msgid "Assignment only"
+msgstr "Только при назначении"
+
+msgid "Switch off"
+msgstr "Отключить уведомления"
+
+msgid "Notifications"
+msgstr "Уведомления"
+
+msgid "Send me notification in case of"
+msgstr "Отправлять мне уведомление при"
+
+msgid "Notify me about next kind of tasks"
+msgstr "По каким задачам отправлять уведомления"
+
+msgid "Save settings"
+msgstr "Сохранить настройки"
+
+msgid "Set deadline"
+msgstr "Установить срок"
+
+msgid "Save in my lists"
+msgstr "Сохранить в моих списках"
+
+msgid "Remove from my lists"
+msgstr "Убрать из моих списков"
+
+msgid "User %s wrote a comment to a task you are assigned to:"
+msgstr "%s добавил комментарий к назначенной на вас задаче:"
+
+msgid "User %s wrote a comment to a task you created:"
+msgstr "%s добавил комментарий к созданной вами задаче:"
+
+msgid "User %s wrote a comment:"
+msgstr "%s добавил комментарий:"
+
+msgid "Files"
+msgstr "Файлы"
+
+msgid "User %s sent you your task"
+msgstr "%s отправил вам вашу задачу"
+
+msgid "User %s sent a new task to user %s"
+msgstr "%s отправил новую задачу пользователю %s"
+
+msgid "User %s edited a task:"
+msgstr "%s отредактировал задачу:"
+
+msgid "Date is not set."
+msgstr "Дата не указана."
+
+msgid "Scopes are not set."
+msgstr "Работы не указаны."
+
+msgid "Start typing in the search field to find a tag."
+msgstr "Начните писать в поле поиска, чтобы найти тег."
+
+msgid "There are more than %u tags."
+msgstr "Доступно более %u тегов."
+
+msgid "All"
+msgstr "Все"
+
+msgid "Confirm"
+msgstr "Подтвердить"
+
+msgid "Cannot create a list from another list."
+msgstr "Невозможно создать список из другого списка."
+
+msgid "Invalid date."
+msgstr "Неправильная дата."
+
+msgid "Save comment"
+msgstr "Сохранить комментарий"
+
+msgid "You do not have sufficient access rights to view this task."
+msgstr "У вас недостаточно прав доступа для просмотра этой задачи."
+
+msgid "Cannot return this task because another user has modified it."
+msgstr "Невозможно вернуть эту задачу, потому что её изменил другой пользователь."
+
+msgid "Helpdesk request: %s"
+msgstr "Запрос в «Поддержке»: %s"
+
+msgid "Hub topic: %s"
+msgstr "Тема «Хаба»: %s"
+
+msgid "Create list"
+msgstr "Создать список"
+
+msgid "A list name is required."
+msgstr "Введите название списка."
+
+msgid "Yesterday"
+msgstr "Вчера"
+
+msgid "Tomorrow"
+msgstr "Завтра"
+
+msgid "unknown status_id=%d"
+msgstr "неизвестный status_id=%d"
+
+msgid "edited comment"
+msgstr "отредактировал комментарий"
+
+msgid "Delete list “%s”"
+msgstr "Удалить список «%s»"
+
+msgid "My preferences"
+msgstr "Мои личные настройки"
+
+msgid "Actions"
+msgstr "Действия"
+
+msgid "Task title"
+msgstr "Задача"
+
+msgid "No active work scopes are defined."
+msgstr "Текущие работы не заданы."
+
+msgid "Add a milestone to group tasks into time-based activities such as sprints, releases, or subprojects."
+msgstr "Группируйте задачи в работы и контролируйте сроки выполнения."
+
+msgid "Show %d completed milestone"
+msgid_plural "Show %d completed milestones"
+msgstr[0] "Показать %d завершенную работу"
+msgstr[1] "Показать %d завершенные работы"
+msgstr[2] "Показать %d завершенных работ"
+
+msgid "Hide completed milestone"
+msgid_plural "Hide completed milestones"
+msgstr[0] "Скрыть завершенные работы"
+msgstr[1] "Скрыть завершенные работы"
+msgstr[2] "Скрыть завершенные работы"
+
+msgid "My notification preferences"
+msgstr "Мои настройки уведомлений"
+
+msgid "Notify me on"
+msgstr "Уведомления"
+
+msgid "All updates and comments"
+msgstr "Все изменения и действия с задачами"
+
+msgid "Assignments only"
+msgstr "Только назначение меня на задачи"
+
+msgid "Turn off all notifications"
+msgstr "Выключить уведомления"
+
+msgid "Which tasks"
+msgstr "Какие задачи"
+
+msgid "Tasks assigned to me"
+msgstr "Задачи, назначенные на меня"
+
+msgid "Tasks created by me"
+msgstr "Задачи, которые я поставил"
+
+msgid "Tasks I’m watching"
+msgstr "Задачи, за которыми я наблюдаю"
+
+msgid "Tasks from selected projects"
+msgstr "Задачи из выбранных проектов"
+
+msgid "Button name"
+msgstr "Текст на кнопке"
+
+msgid "Caption on a button that sends a task into this status. Sometimes it matches the status name, but in most cases, it's a verb."
+msgstr "Текст на кнопке, которая переводит задачу в этот статус. Иногда может совпадать с названием статуса, но чаще всего все-таки является глаголом и поэтому отличается."
+
+msgid "Background color"
+msgstr "Цвет фона"
+
+msgid "Text color"
+msgstr "Цвет текста"
+
+msgid "Keep the assignee unchanged"
+msgstr "Оставить исполнителя без изменения"
+
+msgid "Assign to the user who created the task"
+msgstr "Назначить задачу ее постановщику"
+
+msgid "Force assign to"
+msgstr "Назначить выбранному пользователю"
+
+msgid "Allow to select the assignee"
+msgstr "Предлагать выбрать исполнителя"
+
+msgid "Allow making the task unassigned"
+msgstr "Разрешить оставить задачу без назначения"
+
+msgid "Below is the global list of all statuses a task can pass through. On a project level, custom workflow can be set up by selecting particular statuses only and skipping the unwanted ones."
+msgstr "Здесь настраивается общий список статусов, через которые проходят задачи. На уровне каждого проекта можно затем включить нужные статусы и отключить ненужные."
+
+msgid "Commit changes by clicking “Save” when done editing."
+msgstr "Нажмите «Сохранить», когда закончите редактирование."
+
+msgid "All done!"
+msgstr "Все готово!"
+
+msgid "Congratulations! Everything set to be done in this milestone is marked as complete."
+msgstr "Поздравляем! В этой работе все задачи закрыты."
+
+msgid "Go to settings"
+msgstr "Перейти в настройки"
+
+msgid "Set due date"
+msgstr "Дедлайн"
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Remove from my filters"
+msgstr "Удалить из личных фильтров"
+
+msgid "Save to my custom filters"
+msgstr "Сохранить в личных фильтрах"
+
+msgid "Selected tasks"
+msgstr "Выбранные задачи"
+
+msgid "Close tasks"
+msgstr "Закрыть задачи"
+
+msgid "Delete tasks"
+msgstr "Удалить задачи"
+
+msgid "Tag tasks"
+msgstr "Добавить тег"
+
+msgid "All tags"
+msgstr "Все теги"
+
+msgid "Show all tags"
+msgstr "Показать все теги"
+
+msgid "Find tag"
+msgstr "Найти тег"
+
+msgid "Watching"
+msgstr "Наблюдаю"
+
+msgid "Return to status"
+msgstr "Вернуть в статус"
+
+msgid "Return task"
+msgstr "Вернуть задачу"
+
+msgid "The task is now assigned to:"
+msgstr "Задача назначена:"
+
+msgid "Watch"
+msgstr "Наблюдать"
+
+msgid "No due date"
+msgstr "Нет дедлайна"
+
+msgid "Create new tag"
+msgstr "Создать новый тег"
+
+msgid "Popular tags:"
+msgstr "Популярные теги:"
+
+msgid "Unlink"
+msgstr "Удалить связь"
+
+msgid "Linked task"
+msgstr "Связанная задача"
+
+msgid "Pin"
+msgstr "Прикрепить"
+
+msgid "Pinned"
+msgstr "Прикреплено"
+
+msgid "Task summary"
+msgstr "Текст задачи"
+
+msgid "Attach files"
+msgstr "Прикрепить файлы"
+
+msgid "Show everyone"
+msgstr "Показать всех"
+
+msgid "Forward task"
+msgstr "Назначить задачу"
+
+msgid "Highlight color for the main task list and the kanban board."
+msgstr "Цвет подсветки задач в основном списке и на канбан-доске."
+
+msgid "Logo"
+msgstr "Логотип"
+
+msgid "Image URL to be used as a tiny project icon all around."
+msgstr "Изображение будет использоваться в качестве маленькой иконки проекта повсюду в приложении."
+
+msgid "Similar to %s"
+msgstr "Как в %s"
+
+msgid "DANGER: Deletion will be permanent with no ability to roll back. Are you sure?"
+msgstr "ОПАСНО: Удаление будет безвозвратным. Восстановить данные будет нельзя. Удалить?"
+
+msgid "Menu"
+msgstr "Меню"
+
+msgid "Updates"
+msgstr "Новости"
+
+msgid "Kanban"
+msgstr "Канбан"
+
+msgid "My filters"
+msgstr "Мои фильтры"
+
+msgid "%d open / %d closed"
+msgstr "%d открытых / %d закрытых"
+
+msgid "%d%% completed: %d open / %d closed"
+msgstr "Готовность %d%%: %d открытых задач / %d закрытых"
+
+msgid "Add a project to start creating tasks."
+msgstr "Создайте проект, чтобы начать ставить задачи."
+
+msgid "Edit custom filter"
+msgstr "Редактировать фильтр"
+
+msgid "Save custom filter"
+msgstr "Сохранить фильтр"
+
+msgid "Only you will see this filter in the app navigation."
+msgstr "Только вы будете видеть этот фильтр в интерфейсе приложения."
+
+msgid "Show unassigned"
+msgstr "Показывать задачи без назначения"
+
+msgid "Assigned to %s %s ago"
+msgstr "Назначено %s %s назад"
+
+msgid "Unassigned task"
+msgstr "Задача никому не назначена"
+
+msgid "Restore this milestone"
+msgstr "Восстановить из завершенных"
+
+msgid "Mark as complete"
+msgstr "Отметить как завершенную"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "A tiny hint describing your teammates what this milestone is all about."
+msgstr "Небольшая подсказка коллегам о том, что это за работа и срок."
+
+msgid "Doing"
+msgstr "Делается"
+
+msgid "Start doing"
+msgstr "Взять в работу"
+
+msgid "To test"
+msgstr "На проверку"
+
+msgid "On fire!"
+msgstr "Горит!"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Deleted contact"
+msgstr "Удаленный контакт"
+
+msgid "All milestones"
+msgstr "Все сроки"
+
+msgid "All assignees"
+msgstr "Все исполнители"
+
+msgid "Failed to upload image %s."
+msgstr "Не получилось загрузить изображение %s."
+
+msgid "Save to my filters"
+msgstr "Сохранить в личных фильтрах"
+
+msgid "Backlog"
+msgstr "Беклог"
+
+msgid "Hide tasks from your inbox for a specific period of time to focus on other important tasks. Your teammates will continue to see your hidden tasks as open and visible."
+msgstr "Скрывайте задачи из входящих на ограниченный период времени, чтобы сосредоточиться на других более важных задачах. Скрытие задачи работает только для вас во «Входящих». Другие пользователи будут видеть скрытые задачи как обычно."
+
+msgid "Template"
+msgstr "Шаблон"
+
+msgid "Export"
+msgstr "Экспорт"
+
+msgid "Select tasks"
+msgstr "Выбрать задачи"
+
+msgid "No activity yet"
+msgstr "Здесь пока пусто"
+
+msgid "This screen will collect and present everything you and your team are doing with tasks."
+msgstr "В списке событий будут собраны все действия, которые выполняете с задачами вы и ваши сотрудники."
+
+msgid "DANGER: Task will be deleted without the ability to restore. Delete?"
+msgstr "ВНИМАНИЕ: Задача будет удалена без возможности восстановления. Удалить?"
+
+msgid "Join the %s team on Webasyst to start working on the task:"
+msgstr "Подключайтесь к команде %s на Webasyst, чтобы начать работать над задачей:"
+
+msgid "Accept invitation"
+msgstr "Принять приглашение"
+
+msgid "Text editor"
+msgstr "Редактор"
+
+msgid "WYSIWYG"
+msgstr "Визуальный редактор (WYSIWYG)"
+
+msgid "Markdown"
+msgstr "Markdown (просто текст)"
+
+msgid "Status not found"
+msgstr "Статус не найден"
+
+msgid "No access to project"
+msgstr "Нет доступа к проекту"
+
+msgid "Contact not found"
+msgstr "Контакт не найден"
+
+msgid "You cannot edit task"
+msgstr "Вам не разрешено редактировать эту задачу"
+
+msgid "Contact cannot view task"
+msgstr "У пользователя нет доступа к задаче"
+
+msgid "Email not send"
+msgstr "Письмо не отправлено"
+
+msgid "This contact was banned"
+msgstr "Этот контакт был заблокирован ранее"
+
+msgid "Already in our team!"
+msgstr "Пользователь уже в вашей команде!"
+
+msgid "Invitation token can't created"
+msgstr "Не получилось создать ссылку-приложение"
+
+msgid "This is a required field."
+msgstr "Обязательное поле"
+
+msgid "This does not look like a valid email"
+msgstr "Не похоже это на адрес email"
+
+msgid "All senders"
+msgstr "Все отправители"
+
+msgid "Unarchive"
+msgstr "Восстановить"
+
+msgid "The user will get an invitation to join your team on Webasyst and to start working on this task."
+msgstr "Пользователь получит приглашение в вашу команду Webasyst и увидит эту задачу у себя во входящих."
+
+msgid "Minimal access"
+msgstr "Минимальный доступ"
+
+msgid "Access to all projects"
+msgstr "Доступ ко всем проектам"
+
+msgid "Full access to all projects &amp; settings"
+msgstr "Полный доступ ко всем проектам и настройкам"
+
+msgid "%s %s"
+msgstr "%s %s"
+
+msgid "User %s sent you a task"
+msgstr "%s поставил вам задачу"
+
+msgid "User %s sent a task to %s"
+msgstr "%s назначил %s ответственным за задачу"
+
+msgid "User %s wrote a comment to a task you are assigned to"
+msgstr "%s добавил комментарий к назначенной на вас задаче"
+
+msgid "User %s wrote a comment to a task you created"
+msgstr "%s добавил комментарий к созданной вами задаче"
+
+msgid "User %s wrote a comment."
+msgstr "%s добавил комментарий"
+
+msgid "User %s edited a task you are assigned to"
+msgstr "%s отредактировал назначенную на вас задачу"
+
+msgid "User %s edited a task you created"
+msgstr "%s отредактировал созданную вами задачу"
+
+msgid "User %s edited a task"
+msgstr "%s отредактировал задачу"
+
+msgid "User %s mentioned you in a task"
+msgstr "%s отметил вас в задаче"
+
+msgid "invited"
+msgstr "приглашен"
+
+msgid "Mobile app"
+msgstr "Мобильное приложение"
+
+msgid "Install Webasyst Teamwork mobile app on your phone."
+msgstr "Установите Webasyst Задачи на свой телефон."
+
+msgid "Android is available free today! iOS is coming soon."
+msgstr "Бесплатно для Андроид уже сегодня. iOS — скоро!"
+
+msgid "iOS TestFlight public beta:"
+msgstr "iOS TestFlight бета-версия:"
+
+msgid "publicLinksError400"
+msgstr "Чтобы получить публичную ссылку на задачу, добавьте (поселите) приложение «Задачи» в структуре сайта в приложении «Сайт»."
+
+msgid "Disable public link"
+msgstr "Удалить ссылку"
+
+msgid "Enable public link"
+msgstr "Создать ссылку"
+
+msgid "Get a public link for tracking task status and updates with no access to Webasyst backend."
+msgstr "Ссылка для просмотра текущего статуса и истории выполнения задачи без доступа к Webasyst."
+
+msgid "Get a public link for tracking entire milestone status and updates with no access to Webasyst backend."
+msgstr "Ссылка для просмотра текущего статуса и истории выполнения всей работы без доступа к Webasyst."
+
+msgid "Get a public link for tracking entire project status and updates with no access to Webasyst backend."
+msgstr "Ссылка для просмотра текущего статуса и истории выполнения всего проекта без доступа к Webasyst."
+
+msgid "copied"
+msgstr "Скопировано!"
+
+msgid "https://www.webasyst.com/store/app/tasks/"
+msgstr "https://www.webasyst.ru/store/app/tasks/"
+
+msgid "Watchers"
+msgstr "Наблюдатели"
+
+msgid "Checklist"
+msgstr "Чек-лист"
+
+msgid "404"
+msgstr ""
+
+msgid "Install Webasyst Teamwork mobile app on your phone today:"
+msgstr "Установите Webasyst Задачи на свой телефон:"
+
+msgid "App icon badge"
+msgstr "Счетчик на иконке"
+
+msgid "Urgent open tasks assigned to me"
+msgstr "Срочные открытые задачи, назначенные на меня"
+
+msgid "Unread @mentions"
+msgstr "Непрочитанные @упоминания"
+
+msgid "Both settings are force-set to on for every user on your team."
+msgstr "Обе настройки всегда включены для всех сотрудников в вашей команде."
+
+msgid "New @mentions"
+msgstr "Новые @упоминания"
+
+msgid "Notifications on new mentions are always on for every user on your team."
+msgstr "Уведомления о новых упоминаниях всегда включены у всех сотрудников в вашей команде."
+
+msgid "Push & Email"
+msgstr "Push-уведомления и почта"
+
+msgid "To receive push notifications, make sure the <a href=\"https://www.webasyst.com/mobile/\" target=\"_blank\">%s Webasyst Teamwork mobile app</a> is installed on your device with push notifications enabled/allowed."
+msgstr "Чтобы принимать пуш-уведомления о задачах, установите <a href=\"https://www.webasyst.ru/mobile/\" target=\"_blank\">%s мобильное приложение «Webasyst Задачи»</a> на свой телефон и убедитесь, что отправка уведомлений для приложения включена/разрешена."
+
+msgid "Teamwork"
+msgstr "Задачи"
+
+msgid "%d.%d %s"
+msgstr ""
+
+msgid "Webasyst ID auth is required to be enabled to send an invitation"
+msgstr "Для отправки приглашения вход с Webasyst ID должен быть включен"
+
+msgid "Hello, World!"
+msgstr ""
+
+msgid "This is a demo task. Go ahead and click “Doing” or just close it. #webasyst #demo"
+msgstr "Это тестовая приветственная задача, чтобы показать, как все работает. Нажмите «Взять в работу» или «Закрыть». #webasyst #демо"
+
+msgid "To attach a Pocket Lists checklist, save the task first."
+msgstr "Чтобы добавить чек-лист Pocket Lists, сначала сохраните задачу."
+
+msgid "Tags and links"
+msgstr "Теги и ссылки"
+
+msgid "Delete logo"
+msgstr "Удалить логотип"
+
+msgid "Save project to commit logo deletion."
+msgstr "Сохраните проект для подтверждения удаления логотипа."
+
+msgid "Hashtag, task number, order ID, etc."
+msgstr "Тег, номер задачи или заказа, контакт..."
+
+msgid "https://www.webasyst.com/my/buy/upgrade-to-premium/tasks/"
+msgstr "https://www.webasyst.ru/my/buy/upgrade-to-premium/tasks/"
+
+msgid "Pre-order now"
+msgstr "Предзаказ"
+
+msgid "lifetime"
+msgstr "навсегда"
+
+msgid "%s limited offer for upgrading existing app license to the premium version"
+msgstr "%s спецпредложение на апгрейд базовой лицензии до премиум-версии"
+
+msgid "pre-order"
+msgstr "предзаказ"
+
+msgid "Enabled"
+msgstr "Включено"
+
+msgid "Available now"
+msgstr "Уже доступно"
+
+msgid "You are all set!"
+msgstr "Все включено!"
+
+msgid "Thank you for being a premium user and for supporting the project."
+msgstr "Спасибо за покупку премиум-версии и поддержку проекта!"
+
+msgid "With premium, you are among the first to have access to all features."
+msgstr "У вас приоритетный доступ ко всем новым функциям и обновлениям."
+
+msgid "All scheduled features will be delivered as free updates via Installer."
+msgstr "Все обновления будут доступны в Инсталлере бесплатно."
+
+msgid "See the roadmap below for the planned feature delivery timeline."
+msgstr "Смотрите примерные планы по срокам выпуска обновлений в списке ниже."
+
+msgid "Task types"
+msgstr "Типы задач"
+
+msgid "July 2025"
+msgstr "Июль 2025"
+
+msgid "Specify any custom task type list: dev, bug, feature, story, epic, lead, whatever."
+msgstr "Создавайте кастомные типы задач: фича, баг, пожелание, эпик, стори, заявка, что хотите."
+
+msgid "Gantt chart"
+msgstr "Диаграмма Ганта"
+
+msgid "Visualize working progress based on scopes/milestones."
+msgstr "Следите за процессом закрытия работ и выполнения сроков."
+
+msgid "Custom fields"
+msgstr "Кастомные поля"
+
+msgid "Configure custom task fields based on a task type."
+msgstr "Настраивайте дополнительные описательные поля для задач в зависимости от их типа."
+
+msgid "Reports & visuals"
+msgstr "Отчеты и графики"
+
+msgid "Track  working progress with CFD and LTDC charts, task completion tables, more."
+msgstr "Контролируйте рабочий процесс на графиках CFD, LTDC и сводных таблицах."
+
+msgid "AI assistant"
+msgstr "ИИ-ассистент"
+
+msgid "Summer 2025"
+msgstr "Лето 2025"
+
+msgid "Spellcheck & improve your texts in the task editor with a click. Powered by Webasyst AI."
+msgstr "Пишите правильно и красиво, проверяйте орфографию и стилизуйте текст на основе Webasyst AI."
+
+msgid "Write and spellcheck task content with just few clicks. Powered by Webasyst AI."
+msgstr "Пишите тексты задач с помощью ИИ, проверяйте орфографию и стилизуйте текст. Работает на основе Webasyst AI."
+
+msgid "Project summary private links"
+msgstr "Приватные ссылки на статус проекта"
+
+msgid "Showcase project & its tasks current status to your client via a private link (Teamwork app frontend). View only access with no need to sign up and get extra access to your Webasyst backend."
+msgstr "Показывайте текущий статус работы над проектом клиенту по приватной ссылке (фронтенд приложения «Задачи»). Просмотр доступен без регистрации и предоставления доступа в бекенд вашего Webasyst."
+
+msgid "In-project limited access for clients"
+msgstr "Ограниченный доступ к проекту для клиентов"
+
+msgid "Limited access & user roles"
+msgstr "Ограниченный доступ и роли в задачах"
+
+msgid "With the basic version, you can invite your clients to your Webasyst backend using the free Team app and grant full access to a specific project. With premium, more sophisticated in-project access rights option will be available, such as view, comment, and follow specific tasks only."
+msgstr "В базовой версии вы можете пригласить клиента в бекенд Webasyst с помощью бесплатного приложения «Команда» и представить полный доступ к проекту. В премиум-версии будет больше настроек доступа, в том числе только для просмотра, комментирования, наблюдения за избранными задачами."
+
+msgid "Project templates"
+msgstr "Шаблоны проектов"
+
+msgid "Later in 2025"
+msgstr "Позже в 2025"
+
+msgid "Quickly start new projects with a pre-defined set of template-based tasks & workflows."
+msgstr "Быстро создавайте проекты с заранее преднастроенным набором задач и статусов."
+
+msgid "Per-task time tracking"
+msgstr "Учет времени по задачами"
+
+msgid "Track working time within an individual task (in integration with the Status app)."
+msgstr "Указывайте рабочее время для каждой задачи (в интеграции с приложением «Удаленка»)."
+
+msgid "Suggest a feature"
+msgstr "Предложите свои идеи"
+
+msgid "Share your feedback and suggestions, <a href=\"https://support.webasyst.com/forum/ideas/\" target=\"_blank\">post your ideas on the foum &rsaquo;</a>"
+msgstr "Поделитесь мнением, предложите идеи по новым функциям <a href=\"https://support.webasyst.ru/forum/ideas/\" target=\"_blank\">на форуме &rsaquo;</a>"
+
+msgid "Premium"
+msgstr "Премиум"
+
+msgid "User %s mentioned you in a task."
+msgstr "%s упомянул вас в задаче."
+
+msgid "Promocode"
+msgstr "Промокод"
+
+msgid "Unable to process image file"
+msgstr "Ошибка обработки файла изображения"
+
+msgid "Set milestone"
+msgstr "Привязать к сроку"
+
+msgid "Spellcheck"
+msgstr "Орфография"
+
+msgid "Task fields"
+msgstr "Поля задач"
+
+msgid "Please select a task type"
+msgstr "Пожалуйста, выберите тип задачи"
+
+msgid "Gantt"
+msgstr "Гант"
+
+msgid "Charts"
+msgstr "Графики"
+
+msgid "Reports"
+msgstr "Отчеты"
+
+msgid "CFD"
+msgstr "CFD"
+
+msgid "LTDC"
+msgstr "LTDC"
+
+msgid "Any type"
+msgstr "Любой тип"
+
+msgid "Types"
+msgstr "Типы"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "No milestones available."
+msgstr "Нет доступных для выбора сроков."
+
+msgid "Initial status"
+msgstr "Начальный статус"
+
+msgid "Target status"
+msgstr "Конечный статус"
+
+msgid "New type"
+msgstr "Новый тип"
+
+msgid "Open settings"
+msgstr "Открыть настройки"
+
+msgid "Number of days in this status"
+msgstr "Количество дней в этом статусе"
+
+msgid "Hide new & completed"
+msgstr "Спрятать новые и завершенные"
+
+msgid "Color settings"
+msgstr "Настройки цвета"
+
+msgid "Or enter a color value"
+msgstr "Или задайте цвет вручную"
+
+msgid "Value"
+msgstr "Значение"
+
+msgid "Field name"
+msgstr "Название поля"
+
+msgid "New field"
+msgstr "Новое поле"
+
+msgid "Start date"
+msgstr "Начальная дата"
+
+msgid "End date"
+msgstr "Конечная дата"
+
+msgid "Parent scope"
+msgstr "Родительская работа"
+
+msgid "Not specified"
+msgstr "Не указана"
+
+msgid "Gravity"
+msgstr "Серьезность"
+
+msgid "Planned time costs"
+msgstr "Трудозатраты плановые"
+
+msgid "Actual time costs"
+msgstr "Трудозатраты фактические"
+
+msgid "Affected version"
+msgstr "В какой версии обнаружено"
+
+msgid "Result"
+msgstr "Результат"
+
+msgid "Reports are available in the Webasyst 2 interface only."
+msgstr "Отчеты работают только в интерфейсе Webasyst 2."
+
+msgid "Bad parameters"
+msgstr "Получены неверные параметры"
+
+msgid "Dates"
+msgstr "Даты"
+
+msgid "Number of tasks"
+msgstr "Количество задач"
+
+msgid "Lead time distribution chart"
+msgstr "Частотная диаграмма времени выполнения задач"
+
+msgid "Total tasks"
+msgstr "Всего задач"
+
+msgid "Production time (calendar days from obligation to delivery)"
+msgstr "Время производства (календарных дней от обязательства до поставки)"
+
+msgid "Number of items with specified production time"
+msgstr "Количество элементов с указанным временем производства"
+
+msgid "%s mo."
+msgstr "%s мес"
+
+msgid "Zoom"
+msgstr "Масштаб"
+
+msgid "All task types"
+msgstr "Все типы задач"
+
+msgid "Cumulative flow diagram"
+msgstr "Накопительная диаграмма потока"
+
+msgid "Upgrade to premium"
+msgstr "Подключить премиум"
+
+msgid "special offer!"
+msgstr "спецпредложение!"
+
+msgid "Advanced features for efficient teamwork and productive teams"
+msgstr "Продвинутые функции для эффективных команд и больших свершений"
+
+msgid "Soon"
+msgstr "Скоро"
+
+msgid "Later"
+msgstr "Позже"
+
+msgid "Check spelling"
+msgstr "Проверить ошибки"
+
+msgid "Premium only"
+msgstr "Только в премиум"
+
+msgid "Upgrade to premium to have the feature enabled and this message to disappear permanently."
+msgstr "Апгрейд до премиум сразу откроет все продвинутые функции, а эта надпись исчезнет."
+
+msgid "See what’s there in premium"
+msgstr "Что еще есть в премиум"
+
+msgid "Task types enable custom fields functionality and additional task filters. Task type examples: <em>story, bug, issue, feedback, memo, etc.</em>"
+msgstr "Типы задач позволяют более гибко фильтровать задачи и указывать для задач кастомные поля. Примеры типа: <em>фича, баг, пожелание, эпик, стори, заявка, служебка, шеф сказал, что хотите.</em>"
+
+msgid "Add scope"
+msgstr "Добавить работу"
+
+msgid "Plan"
+msgstr "План"
+
+msgid "Start"
+msgstr "Начало"
+
+msgid "End"
+msgstr "Конец"
+
+msgid "Planned dates identify this scope on a Gantt chart."
+msgstr "Даты начала и окончания работы определяют ее положение на диаграмме Ганта."
+
+msgid "Due date is a milestone when all scope tasks are supposed to be completed."
+msgstr "Дедлайн будет явно подсвечен в интерфейсе для каждой задачи, которая входит в данную работу."
+
+msgid "Task custom fields depend on task types so make sure create at least one task type first."
+msgstr "Кастомные поля заполняются для задач в зависимости от типа."
+
+msgid "1 day"
+msgstr "1 день"
+
+msgid "3 days"
+msgstr "3 дня"
+
+msgid "1 week"
+msgstr "1 неделя"
+
+msgid "2 weeks"
+msgstr "2 недели"
+
+msgid "AI response"
+msgstr "Ответ ИИ"
+
+msgid "Get the entire text"
+msgstr "Взять весь текст"
+
+msgid "Hide completed scopes"
+msgstr "Скрыть выполненные работы"
+
+msgid "Show completed scopes"
+msgstr "Показать выполненные работы"
+
+msgid "Link to more projects"
+msgstr "Также связать с проектами"
+
+msgid "Better tools for better results"
+msgstr "Лучше инструменты —<br> лучше и результат"
+
+msgid "%d features available now, +%d more to come shortly."
+msgstr "%d премиум-функций доступно сейчас, еще %s на подходе."
+
+msgid "All inclusive in the cloud"
+msgstr "В облаке все включено"
+
+msgid "In Webasyst Cloud, simply upgrade to the <b>Premium</b> plan and get all premium features at once with no extra purchase required."
+msgstr "Просто смените тариф на <b>Премиум</b> и пользуйтесь всеми премиум-функциями без покупки лицензий и апгрейдов."
+
+msgid "Early launch offer gets you the best premium upgrade conditions possible."
+msgstr "Премиум-версия открывает ранний доступ ко всем новым функциям и обновлениям."
+
+msgid "Per-server license for the entire company. Unlimited users, all premium features, free updates forever."
+msgstr "Лицензия на один сервер и всю компанию. Сколько угодно пользователей, все функции, бесплатные обновления."
+
+msgid "upgrade to premium"
+msgstr "апгрейд до премиум"
+
+msgid "Private link is a premium feature"
+msgstr "Приватная ссылка доступна только в премиум"
+
+msgid "Access:"
+msgstr "Доступ:"
+
+msgid "This task only"
+msgstr "Только эта задача"
+
+msgid "All tasks in this project"
+msgstr "Все задачи в этом проекте"
+
+msgid "Full access to all projects"
+msgstr "Полный доступ ко всем проектам"
+
+msgid "Save the task to invite."
+msgstr "Сохраните задачу для отправки инвайта."
+
+msgid "To invite someone, click (+) to create a new task > select ‘Invite’ > enter an email address and save. Or use the Webasyst Teamwork mobile app to invite with a 8-digit code."
+msgstr "Чтобы добавить пользователя в команду, нажмите (+) для создания задачи, выберите «Пригласить», введите email и сохраните. Или используйте мобильное приложение Webasyst Задачи, чтобы пригласить с помощью 8-значного инвайт-кода."
+
+msgid "Client"
+msgstr "Заказчик"
+
+msgid "Assistant"
+msgstr "Соисполнитель"
+
+msgid "Decision maker"
+msgstr "ЛПР"
+
+msgid "Supervisor"
+msgstr "Супервайзер"
+
+msgid "Progress"
+msgstr "Прогресс"
+
+msgid "Roles"
+msgstr "Роли"
+
+msgid "User roles"
+msgstr "Роли пользователей"
+
+msgid "Write with AI"
+msgstr "Написать с ИИ"
+
+msgid "Role name"
+msgstr "Название роли"
+
+msgid "Permissions"
+msgstr "Разрешения"
+
+msgid "Specify how users in this role will interact with tasks in addition to being able to just view & comment on them:"
+msgstr "Как пользователи в этой роли будут работать с задачами в дополнение к возможности просмотра и добавления комментариев:"
+
+msgid "Custom user roles allow adding individual users with limited access to specific tasks and to better describe specific user roles within tasks and projects."
+msgstr "Кастомные роли позволяют открывать индивидуальный доступ к задачам пользователям с ограниченным уровнем доступа и лучше описывать, что пользователь делает в рамках задач и проектов."
+
+msgid "New role"
+msgstr "Новая роль"
+
+msgid "Will see tasks in personal inbox"
+msgstr "Увидит задачи в своих «Входящих»"
+
+msgid "Will receive notifications on task updates (unless unsubscribed intentionally)"
+msgstr "Будет получать уведомления об обновлениях задач (если только не отпишется явно)"
+
+msgid "Can edit"
+msgstr "Может редактировать"
+
+msgid "Can process & forward"
+msgstr "Может выполнять и передавать"
+
+msgid "Can comment"
+msgstr "Может комментировать"
+
+msgid "Can delete"
+msgstr "Может удалять"
+
+msgid "No access: user %s is not eligible for the specified role in this task"
+msgstr "Нет доступа: пользователь %s не может быть назначен на эту роль в данной задаче"
+
+msgid "Unknown role"
+msgstr "Непонятная роль"
+
+msgid "Following task updates"
+msgstr "Подписаны на новости задачи"
+
+msgid "Follow"
+msgstr "Подписаться"
+
+msgid "I’m following"
+msgstr "Подписан"
+
+msgid "Mention"
+msgstr "Тегнуть пользователя"
+
+msgid "Following"
+msgstr "Наблюдаю"
+
+msgid "Write task with AI"
+msgstr "Написать задачу с ИИ"
+
+msgid "Briefly describe the task goal. Webasyst AI will continue writing and suggest you the complete task text template."
+msgstr "Кратко сформулируйте суть и цель задачи. ИИ напишет текст задачи или продолжит написанный вами текст."
+
+msgid "Write a task about..."
+msgstr "Написать задачу про то как..."
+
+msgid "%d trials left"
+msgstr "осталось %d бесплатно"
+
+msgid "Try AI free"
+msgstr "Попробовать ИИ бесплатно"
+
+msgid "Use this text"
+msgstr "Использовать этот текст"

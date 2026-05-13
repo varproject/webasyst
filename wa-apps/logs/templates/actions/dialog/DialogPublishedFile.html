@@ -1,0 +1,98 @@
+<div>
+    {if isset($error)}
+        <div class="fields">
+            <div class="field">
+                <div class="name">[`Path`]</div>
+                <div class="value">
+                    <strong>{if $file.folder}<span class="gray">{$file.folder}</span>{/if}{$file.name}</strong>
+                </div>
+            </div>
+            <div class="field">
+                <div class="value">
+                    <span class="state-error">{$error}</span>
+                </div>
+            </div>
+        </div>
+    {else}
+        <div class="fields">
+            <div class="field">
+                <div class="name">[`Path`]</div>
+                <div class="value">
+                    <strong class="break-all">{if $file.folder}<span class="gray">{$file.folder}</span>{/if}{$file.name}</strong>
+                </div>
+            </div>
+            <div class="field">
+                <div class="name">[`Public link`]</div>
+                <div class="value">
+                    <div class="fields">
+                        <div class="field">
+                            <div class="value">
+                                <div class="switch-with-text published-status-selector">
+                                    <span class="switch published-status-switch small">
+                                        {$controls.status.value}
+                                    </span>
+                                    <label for="published-status-selector-checkbox" data-active-text="[`link enabled`]" data-inactive-text="[`link disabled`]">{if $published_file}[`link enabled`]{else}[`link disabled`]{/if}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field published-url-container"{if !$published_file} style="display: none;"{/if}>
+                            <div class="value">
+                                {$controls.url.value}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field hidden-field"{if !$published_file} style="display: none;"{/if}>
+                <div class="name">[`Password protection`]</div>
+                <div class="value">
+                    <form class="published-password-protection" data-set-password-action="publishedFileSetPassword">
+                        {$controls.password.path}
+
+                        <div class="published-password-empty"{if !empty($published_file.password)} style="display: none;"{/if}>
+                            <div class="fields">
+                                <div class="field">
+                                    <div class="value">
+                                        <span class="state-caution"><i class="fas fa-exclamation-triangle"></i> <strong>[`This file is not password-protected.`]</strong></span> <span class="gray">[`Non-authorized persons may view sensitive information about your server configuration.`]</span>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="value">
+                                        <a href="javascript:void(0);" class="published-set-password-link"><i class="fas fa-plus"></i> [`set password`]</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="published-password-exists"{if empty($published_file.password)} style="display: none;"{/if}>
+                            <div class="fields">
+                                <div class="field">
+                                    <div class="value">
+                                        <span class="state-success"><i class="fas fa-lock"></i> <strong>[`This file is password-protected.`]</strong></span>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="value">
+                                        <span class="small">[`Password`]</span>
+                                        {$controls.password.value}
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="value">
+                                        <a href="javascript:void(0);" class="published-reset-password-link"><i class="fas fa-sync-alt"></i> [`change password`]</a>
+                                        <a href="javascript:void(0);" class="published-remove-password-link custom-ml-8"><i class="fas fa-times"></i> [`remove password`]</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="field dialog-error-message">
+                <div class="value">
+                    <span class="state-error"></span>
+                </div>
+            </div>
+        </div>
+    {/if}
+</div>

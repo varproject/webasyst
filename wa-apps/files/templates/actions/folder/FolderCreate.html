@@ -1,0 +1,109 @@
+{function form_begin}
+    {if $can_add && !$in_sync}<form>{/if}
+{/function}
+{function form_end}
+    {if $can_add && !$in_sync}</form>{/if}
+{/function}
+
+{$dialog_id = uniqid('f-create-folder-dialog')}
+
+<div class="dialog f-dialog f-create-folder-dialog" id="{$dialog_id}">
+    {form_begin}
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <h3 class="dialog-header">[`Create folder`]</h3>
+            <div class="dialog-content">
+                {if !$can_add}
+                    [`No permissions to create a folder`]
+                {elseif $in_sync}
+                    [`Sync is in process. No changes available until synchronization finish.`]
+                {else}
+                    <div class="fields">
+                        <div class="field">
+                            <div class="name for-input">[`Name`]</div>
+                            <div class="value">
+                                <input type="text" value="" name="name" placeholder="" autocomplete="off" class="bold">
+                            </div>
+                        </div>
+                    </div>
+                {/if}
+            </div>
+            <div class="dialog-footer">
+                {if $can_add && !$in_sync}
+                    {$wa->csrf()}
+                    <button type="submit" class="button"><i class="fas fa-spinner fa-spin loading custom-mr-8 hidden"></i> [`Create folder`]</button>
+                    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+                    {if !empty($folder_id)}
+                        <input type="hidden" name="folder_id" value="{$folder_id}">
+                    {else}
+                        <input type="hidden" name="storage_id" value="{$storage_id}">
+                    {/if}
+                {else}
+                    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+                {/if}
+            </div>
+        </div>
+    {form_end}
+    <script>
+        $(function() {
+            const dialog = $('#{$dialog_id}');
+            $('.f-create-folder-dialog').not(dialog).remove();
+
+            {if !$can_add || $in_sync}
+
+            // just open dialog
+            dialog.filesDialog();
+
+            {else}
+
+            dialog.filesDialog({
+                onOpen: function($dialog, dialog_instance) {
+                    $dialog.find(':input[name="name"]').focus().val('');
+
+                    $dialog.find('[type="submit"]').on('click', function(e) {
+                        e.preventDefault();
+
+                        if ($dialog.data('loading')) {
+                            return false;
+                        }
+
+                        $dialog.find('.fa-spinner').removeClass('hidden');
+                        this.disabled = true;
+
+                        $dialog.data('loading', 1);
+                        $.files.clearValidateErrors($dialog);
+
+                        const error = r =>  {
+                            dialog_instance.close();
+                            $.files.alertError("[`Couldn't create folder`]", r);
+                        };
+
+                        // make post request
+                        $.files.jsonPost({
+                            url: '?module=folder&action=save',
+                            data: $dialog.find('form').serialize(),
+                            onSuccess: function(r) {
+                                if (r.status !== 'ok') {
+                                    $.files.showValidateErrors(r.errors, $dialog);
+                                } else if (!r.data.folder) {
+                                    error(r.data);
+                                } else {
+                                    $.files.controller.reloadPage();
+                                    $.files.refreshSidebar();
+                                    dialog_instance.close();
+                                }
+                            },
+                            onFailure: error,
+                            onAlways: () => {
+                                this.disabled = false;
+                                $dialog.data('loading', 0);
+                                $dialog.find('.fa-spinner').addClass('hidden');
+                            }
+                        });
+                    })
+                }
+            });
+            {/if}
+        });
+    </script>
+</div>

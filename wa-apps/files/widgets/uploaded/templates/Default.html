@@ -1,0 +1,29 @@
+<div class="fud-widget-wrapper">
+
+    <div class="block">
+        <h6 class="heading nowrap">{$filter_name|escape}</h6>
+    </div>
+    <table class="zebra fud-widget-table">
+
+        {foreach $files as $_f}
+            <tr>
+                <td class="fud-img">
+                    <a href="{$app_url}{$_f.backend_url}"><img src="{$_f.photo_url.file_list_small}" /></a>
+                </td>
+                <td class="fud-name">
+                    <a href="{$app_url}{$_f.backend_url}">{filesApp::truncate($_f.name|escape)}</a>
+                </td>
+            </tr>
+        {foreachelse}
+            <tr>
+                <td colspan="2"><div class="align-center">[`No files to show.`]</div></td>
+            </tr>
+        {/foreach}
+
+   </table>
+
+</div>
+
+<style>
+    {include file="../css/uploaded.css" inline}
+</style>

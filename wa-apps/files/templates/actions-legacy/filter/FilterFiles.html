@@ -1,0 +1,109 @@
+{* SETTINGS LINK IF FILTER IS TUNABLE *}
+{capture assign="before_links_block"}{strip}
+    {if $is_filter_tunable}&nbsp;
+        <a href="javascript:void(0);" class="f-filter-settings-trigger" id="f-filter-settings-trigger">
+            <i class="icon16 settings" style="margin-top: 8px;"></i>
+            <i class="icon16 loading" style="display: none;"></i>
+        </a>
+    {/if}
+{/strip}{/capture}
+
+{* SHOW FILE LISTING *}
+{include file="../../files-legacy/include.files.html"
+    can_create_folder=false
+    can_share_folder=false
+    before_links_block=$before_links_block
+inline}
+
+
+{* FILTER SETTINGS *}
+{if $is_filter_tunable}
+    <div class="f-filter-settings-wrapper" id="f-filter-settings-wrapper" style="display:none;">
+        <form>
+            <div class="block">
+                {$filter_settings_html}
+                <div class="buttons">
+                    <input type="hidden" name="id" value="{$filter.id}">
+                    <input type="submit" class="button green" value="[`Submit`]"> [`or`]
+                    <a href="javascript:void(0)" class="cancel f-cancel">[`cancel`]</a>
+                </div>
+            </div>
+        </form>
+    </div>
+{/if}
+
+<script>
+    $(function() {
+        $.files.config.getSidebar().trigger('notify', [{
+            hash: 'filter/{$filter.id}',
+            counters: {
+                filter: {
+                    {$filter.id}: {$total_count}
+                }
+            }
+        }]);
+
+        {if $is_filter_tunable}
+
+            var openSettings = function(fn) {
+                var main_container = $.files.config.getMainContainer();
+                $('.f-main-settings-block', main_container).slideDown(200, fn);
+                $('.f-main-header-wrapper', main_container).hide();
+            };
+
+            var closeSettings = function() {
+                var main_container = $.files.config.getMainContainer();
+                $('.f-main-settings-block', main_container).slideUp();
+                $('.f-main-header-wrapper', main_container).show();
+            };
+
+            $('#f-filter-settings-trigger').click(function() {
+                var main_container = $.files.config.getMainContainer();
+                var settings_wrapper = $('#f-filter-settings-wrapper');
+
+                // not first click on trigger button
+                if ($('.f-main-settings-block .f-filter-settings', main_container).length) {
+                    openSettings();
+                    return;
+                }
+
+                // first click on trigger button
+                $('.f-main-settings-block', main_container).html(settings_wrapper.show());
+                $('.f-cancel', settings_wrapper).click(function() {
+                    closeSettings();
+                });
+                $('.f-filter-delete', settings_wrapper).click(function() {
+                    $.files.confirmDelete(
+                        {
+                            title: '[`Delete filter`]',
+                            msg: '[`Are you sure?`]'
+                        },
+                        function() {
+                            $.files.jsonPost({
+                                url: '?module=filter&action=delete',
+                                data: { id: '{$filter.id}' },
+                                onSuccess: function() {
+                                    $.files.refreshSidebar();
+                                    $.files.controller.gotoDefaultPage();
+                                }
+                            });
+                        });
+                });
+                $('form', settings_wrapper).submit(function() {
+                    $.files.filterSettingsFormSubmit($(this), {
+                        onSuccess: function() {
+                            closeSettings();
+                        }
+                    });
+                    return false;
+                });
+                openSettings(function() {
+                    // ibuttons require container be shown for correct drawing
+                    $('.f-filter-settings', main_container).trigger('reinit_ibuttons');
+                });
+
+            });
+        {/if}
+
+    });
+</script>

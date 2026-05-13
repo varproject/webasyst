@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+
+{* Head Assets *}
+{if !$is_htmx}
+    {include file="./_parts/backend_head_assets.html" inline}
+{/if}
+
+<body class="layout-fixed sidebar-expand-lg bg-body-light{if !$has_fullscreen} wa-header{/if}">
+
+    {* Webasyst Header *}
+    {if !$has_fullscreen}
+        {if !$is_htmx}
+            <htmx hx-boost="false">
+                {$wa->header()}
+            </htmx>
+        {else}
+            {$wa->header()}
+        {/if}
+    {/if}
+
+    {* App Wrapper *}
+    {if $app}
+
+        {* Modal Page *}
+        {if $backend_modal_page}
+            {include file="./_parts/backend_modal_page.html" inline}
+        {/if}
+
+        <div id="wa-app" class="app-wrapper vh-100 overflow-hidden">
+
+            {* App Sidebar *}
+            {if $sidebar_enabled}
+                {include file="./BackendSidebar.html" inline}
+            {/if}
+
+            {* App Header *}
+            {if $header_enabled}
+                {include file="./BackendHeader.html" inline}
+            {/if}
+
+            {* App Main *}
+            {if $main_enabled}
+                <main id="main" class="app-main">
+                    <div class="app-content d-flex flex-column flex-grow-1 overflow-hidden h-100 px-0">
+                        <div class="container-fluid d-flex flex-column flex-grow-1 overflow-hidden h-100 px-0">
+                            {include file="./BackendMain.html" inline}
+                        </div>
+                    </div>
+                </main>
+            {/if}
+
+        </div>
+    {/if}
+
+    {* Body Assets *}
+    {if !$is_htmx}
+        {include file="./_parts/backend_body_assets.html" inline}
+    {/if}
+</body>
+
+</html>

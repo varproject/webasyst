@@ -1,0 +1,21 @@
+<div>
+    <p>
+        [`Files with the following names already exist in the specified folder`]
+        <ul class="menu-v f-conflict-files">
+            {foreach $conflict_files as $file}
+                <li><img class="f-file-image" src="{$file.photo_url.file_list_small}" alt="">&nbsp;<span class="f-file-name">{$file.name|escape}</span></li>
+            {/foreach}
+        </ul>
+    </p>
+
+    <p>
+        [`Select an action to resolve the name conflict:`]
+        <ul class="menu-v">
+            {if $can_replace}
+                <li><label><input type="radio" name="solve" value="replace" checked="checked"> [`Replace`]</label></li>
+            {/if}
+            <li><label><input type="radio" name="solve" value="rename"> [`Rename`]</label></li>
+            <li><label><input type="radio" name="solve" value="exclude"> [`Skip`]</label></li>
+        </ul>
+    </p>
+</div>

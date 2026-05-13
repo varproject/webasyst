@@ -1,0 +1,190 @@
+/*
+// .nouislider
+*/
+@use 'sass:list';
+@use 'sass:math';
+@use 'sass:color';
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+
+$_slider--size: math.max(vs.$sa-nouislider__guide--height, vs.$sa-nouislider__handle--size);
+$_marker--sizes: vs.$sa-nouislider__marker--sizes;
+$_marker--max-size: math.max($_marker--sizes...);
+$_marker-sm--size: list.nth(vs.$sa-nouislider__marker--sizes, 1);
+$_marker-nl--size: list.nth(vs.$sa-nouislider__marker--sizes, 2);
+$_marker-lg--size: list.nth(vs.$sa-nouislider__marker--sizes, 3);
+
+.noUi-target {
+    --sa-nouislider-pips--max-width: 0px;
+    --sa-nouislider-pips--max-height: 0px;
+
+    display: flex;
+    background: transparent;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+}
+.noUi-base {
+    flex-shrink: 0;
+
+    &:before {
+        position: absolute;
+        content: '';
+        background: vs.$sa-nouislider__guide--bg-color;
+        border-radius: vs.$sa-nouislider__guide--border-radius;
+    }
+}
+.noUi-connect {
+    background: vs.$sa-nouislider__guide--active-bg-color;
+}
+.noUi-handle {
+    position: absolute;
+    border: none;
+    box-shadow: vs.$sa-outline--normal;
+    background: vs.$sa-nouislider__handle--color;
+    border-radius: (vs.$sa-nouislider__handle--size * .5);
+    transition: box-shadow .2s ease-in-out;
+
+    &:after {
+        content: none;
+    }
+    &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        border-radius: (vs.$sa-nouislider__handle--circle-size * .5);
+        background: vs.$sa-nouislider__handle--circle-color;
+    }
+}
+.noUi-handle:focus,
+.noUi-active {
+    outline: none;
+    box-shadow: vs.$sa-outline--focus;
+
+    .noUi-tooltip {
+        --sa-noui-tooltip--offset: 6px;
+    }
+}
+.noUi-active,
+.noUi-active:focus {
+    box-shadow: vs.$sa-outline--active;
+
+    .noUi-tooltip {
+        --sa-noui-tooltip--offset: 7px;
+    }
+}
+.noUi-pips {
+    position: relative;
+}
+.noUi-value {
+    font-size: vs.$sa-nouislider__label--font-size;
+    line-height: 1;
+    padding: 0;
+}
+.noUi-tooltip {
+    --sa-noui-tooltip--offset: 4px;
+
+    border: none;
+    background: vs.$sa-nouislider__tooltip--bg-color;
+    color: vs.$sa-nouislider__tooltip--font-color;
+    padding: vs.$sa-nouislider__tooltip--padding-x vs.$sa-nouislider__tooltip--padding-y;
+    border-radius: vs.$sa-nouislider__tooltip--border-radius;
+    font-size: vs.$sa-nouislider__tooltip--font-size;
+
+    opacity: 0;
+    pointer-events: none;
+
+    .noUi-handle:focus & {
+        opacity: 1;
+    }
+}
+.noUi-marker,
+.noUi-marker-sub,
+.noUi-marker-large {
+    background: vs.$sa-nouislider__marker--color;
+    opacity: vs.$sa-nouislider__marker--opacity;
+}
+.noUi-value,
+.noUi-value-sub {
+    color: vs.$sa-nouislider__label--font-color;
+}
+
+@each $direction in (horizontal, vertical) {
+    $flex-direction-column: if($direction == 'horizontal', column, row);
+    $height: if($direction == 'horizontal', height, width);
+    $width: if($direction == 'horizontal', width, height);
+    $left: if($direction == 'horizontal', left, top);
+    $right: if($direction == 'horizontal', right, bottom);
+    $top: if($direction == 'horizontal', top, left);
+    $bottom: if($direction == 'horizontal', bottom, right);
+    $x: if($direction == 'horizontal', X, Y);
+    $y: if($direction == 'horizontal', Y, X);
+
+    .noUi-#{$direction} {
+        #{$height}: auto;
+        flex-direction: $flex-direction-column;
+    }
+    .noUi-#{$direction} .noUi-base {
+        #{$width}: calc(100% - #{vs.$sa-nouislider__handle--size});
+        #{$height}: vs.$sa-nouislider__guide--height;
+        margin-#{$left}: (vs.$sa-nouislider__handle--size * .5);
+        margin-#{$right}: (vs.$sa-nouislider__handle--size * .5);
+        margin-#{$top}: math.max(($_slider--size - vs.$sa-nouislider__guide--height) * .5, 0);
+        margin-#{$bottom}: math.max(($_slider--size - vs.$sa-nouislider__guide--height) * .5, 0);
+
+        &:before {
+            #{$width}: calc(100% + #{vs.$sa-nouislider__handle--size});
+            #{$height}: 100%;
+            #{$left}: -(vs.$sa-nouislider__handle--size * .5);
+        }
+    }
+    .noUi-#{$direction} .noUi-handle {
+        position: absolute;
+        #{$width}: vs.$sa-nouislider__handle--size;
+        #{$height}: vs.$sa-nouislider__handle--size;
+
+        @if($direction == 'horizontal') {
+            right: -(vs.$sa-nouislider__handle--size * .5);
+            top: ((vs.$sa-nouislider__guide--height - vs.$sa-nouislider__handle--size) * .5);
+        } @else {
+            right: ((vs.$sa-nouislider__guide--height - vs.$sa-nouislider__handle--size) * .5);
+            top: -(vs.$sa-nouislider__handle--size * .5);
+        }
+
+        &:before {
+            width: vs.$sa-nouislider__handle--circle-size;
+            height: vs.$sa-nouislider__handle--circle-size;
+            left: ((vs.$sa-nouislider__handle--size - vs.$sa-nouislider__handle--circle-size) * .5);
+            top: ((vs.$sa-nouislider__handle--size - vs.$sa-nouislider__handle--circle-size) * .5);
+        }
+    }
+    .noUi-pips-#{$direction} {
+        #{$width}: calc(100% - #{vs.$sa-nouislider__handle--size});
+        #{$height}: calc(#{$_marker--max-size + vs.$sa-nouislider__label--gutter} + var(--sa-nouislider-pips--max-#{$height}));
+        #{$top}: 0;
+        padding: 0;
+        margin-#{$top}: vs.$sa-nouislider__ruler--gutter;
+        margin-#{$left}: (vs.$sa-nouislider__handle--size * .5);
+        margin-#{$right}: (vs.$sa-nouislider__handle--size * .5);
+    }
+    .noUi-marker-#{$direction}.noUi-marker {
+        #{$width}: 1px;
+        #{$height}: $_marker-sm--size;
+    }
+    .noUi-marker-#{$direction}.noUi-marker-sub {
+        #{$height}: $_marker-nl--size;
+    }
+    .noUi-marker-#{$direction}.noUi-marker-large {
+        #{$height}: $_marker-lg--size;
+    }
+    .noUi-value-#{$direction} {
+        #{$top}: ($_marker--max-size + vs.$sa-nouislider__label--gutter);
+        transform: translate#{$x}(calc(-50% - 1px));
+    }
+    .noUi-#{$direction} .noUi-tooltip {
+        #{$bottom}: calc(100% + var(--sa-noui-tooltip--offset));
+        transition:
+            #{$bottom} .2s ease-in-out,
+            opacity .2s ease-in-out;
+    }
+}

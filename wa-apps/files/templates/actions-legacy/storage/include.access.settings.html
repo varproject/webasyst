@@ -1,0 +1,275 @@
+{if !$storage.is_persistent}
+    <div class="field">
+        <div class="name f-first-level">[`Access rights`]</div>
+        <div class="value f-first-level">
+            <ul class="menu-v">
+                {if $storage.access_type === filesStorageModel::ACCESS_TYPE_PERSONAL}
+                    <li>
+                        <label>
+                            <input type="radio"
+                                   name="access_type"
+                                   value="{filesStorageModel::ACCESS_TYPE_PERSONAL}"
+                                   {if $storage.access_type === filesStorageModel::ACCESS_TYPE_PERSONAL}checked="checked"{/if}>
+                            [`Personal`]
+                            <span class="hint">[`Me only`]</span>
+                        </label>
+                    </li>
+                {/if}
+                <li>
+                    <label>
+                        <input type="radio"
+                               name="access_type"
+                               value="{filesStorageModel::ACCESS_TYPE_EVERYONE}"
+                               {if $storage.access_type === filesStorageModel::ACCESS_TYPE_EVERYONE}checked="checked"{/if}>
+                        [`Everyone`]
+                        <span class="hint">[`All backend users`]</span>
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="radio"
+                               name="access_type"
+                               value="{filesStorageModel::ACCESS_TYPE_LIMITED}"
+                               {if $storage.access_type === filesStorageModel::ACCESS_TYPE_LIMITED}checked="checked"{/if}>
+                        [`Limited`]
+                        <span class="hint">[`Only certain backend users will be able to access this storage`]</span>
+                    </label>
+                </li>
+            </ul>
+
+            <div class="f-access-rights-wrapper">
+                {if !empty($all_groups)}
+                    <div class="f-group-settings">
+                        {foreach $all_groups|default:[] as $group_id => $group_name}
+                            <div class="field">
+                                <div class="name">
+                                    <label>
+                                        <input name="group_id[{$group_id}]" type="checkbox" value="1"
+                                                {if !empty($admin_map[$group_id])}
+                                            checked="checked" disabled="disabled" data-enable-ignore="1"
+                                                {elseif !empty($groups[$group_id])}
+                                            checked="checked"
+                                                {/if}>
+                                        {$group_name|escape}
+                                        {if !empty($admin_map[$group_id])}
+                                            <span class="hint highlighted">[`Full access`]</span>
+                                        {/if}
+                                    </label>
+                                </div>
+                                <div class="value">
+                                    {if empty($admin_map[$group_id])}
+                                        <select name="level[{$group_id}]" {if !empty($admin_map[$group_id])}disabled="disabled" data-enable-ignore="1"{/if}>
+                                            {foreach $levels|default:[] as $level_id => $level_name}
+                                                <option value="{$level_id}" {if $level_id == $groups[$group_id]|default:filesRightConfig::RIGHT_LEVEL_ADD_FILES}selected="selected"{/if}>{$level_name|escape}</option>
+                                            {/foreach}
+                                        </select>
+                                    {/if}
+                                </div>
+                            </div>
+                        {/foreach}
+                        <div class="field">
+                            <div class="name">
+                                <label id="show-selected-user-list">
+                                    <input type="checkbox" name="" {if !empty($users)}checked{/if}>
+                                    [`Selected users`]
+                                </label>
+                            </div>
+                            <div class="value"></div>
+                        </div>
+
+                    </div>
+                {else}
+                    <div>[`There are no user groups in your Webasyst account. Add groups using Contacts app to be able to manage access to storage.`]</div>
+                {/if}
+
+                <table class="f-user-settings {if !empty($users)}is-shown{/if}">
+                    <tbody>
+                    {foreach $users|default:[] as $user}
+                        <tr class="f-user-item">
+                            <td>
+                                <a href="{$wa_backend_url}contacts/#/contact/{$user.id}" title="{$user.name|escape}">
+                                    <i class="icon16 userpic20 f-userpick" style="background-image: url({$user.photo_url_20});"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <span class="f-name bold">{$user.name|escape}</span>
+                            </td>
+                            <td>
+                                <select name="level[-{$user.id}]">
+                                    {foreach $levels|default:[] as $level_id => $level_name}
+                                        <option value="{$level_id}" {if $level_id == $user.level}selected="selected"{/if}>{$level_name|escape}</option>
+                                    {/foreach}
+                                </select>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" class="f-delete"><i class="icon16 delete"></i></a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                    <tr class="f-user-item f-template" style="display: none;">
+                        <td>
+                            <a class="f-url" href="{$wa_backend_url}contacts/#/contact/" title="">
+                                <i class="icon16 userpic20 f-userpic"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <span class="f-name bold"></span>
+                        </td>
+                        <td>
+                            <select>
+                                {foreach $levels|default:[] as $level_id => $level_name}
+                                    <option value="{$level_id}" {if $level_id == filesRightConfig::RIGHT_LEVEL_ADD_FILES}selected="selected"{/if}>{$level_name|escape}</option>
+                                {/foreach}
+                            </select>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" class="f-delete"><i class="icon16 delete"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td><i class="icon16 add"></i></td>
+                        <td><input type="text" class="bold f-autocomplete" placeholder="[`Start typing user name...`]" name=""></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="f-changed-message" style="display: none">
+                        <td></td>
+                        <td colspan="3">
+                            <em>[`Click “Save” button below to commit changes.`]</em>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+
+            var container = $("#{$container_id}");
+
+            var show = function(block, animate) {
+                return animate ? block.slideDown() : block.show();
+            };
+
+            var hide = function(block, animate) {
+                return animate ? block.slideUp() : block.hide();
+            };
+
+            // choose access_type hanlder
+            $(':radio[name="access_type"]', container).click(function(e, simple) {
+                var el = $(this);
+                var val = el.val();
+
+                // rights block
+                var rights_block = $('.f-access-rights-wrapper', container);
+                if (val !== '{filesStorageModel::ACCESS_TYPE_LIMITED}') {
+                    hide(rights_block, !simple);
+                } else {
+                    show(rights_block, !simple);
+                }
+
+                // icons block
+                {if !$storage.id}
+                    var icons_block = $('.f-icons-settings-block', container);
+                    if (val === '{filesStorageModel::ACCESS_TYPE_PERSONAL}') {
+                        hide(icons_block, !simple);
+                    } else {
+                        show(icons_block, !simple);
+                    }
+                {/if}
+
+            }).filter(':checked').trigger('click', [true]);
+
+            // group checkbox
+            ( function(block) {
+                var clickHanlder = function(checkbox) {
+                    var $field = checkbox.closest('.field'),
+                        $value = $field.find('.value'),
+                        shown_class = "is-shown";
+                    if ( checkbox.is(':checked') ) {
+                        $value.addClass(shown_class)
+                            .find(':input').not('[data-enable-ignore=1]').attr('disabled', false);
+                    } else {
+                        $value.removeClass(shown_class)
+                            .find(':input').not('[data-enable-ignore=1]').attr('disabled', true);
+                    }
+                };
+                $(':input[name^=group_id]', block).click(function() {
+                    clickHanlder($(this));
+                }).each(function() {
+                    clickHanlder($(this));
+                });
+            })($('.f-group-settings', container));
+
+            // user settings
+            ( function(block) {
+
+                var showMessage = function() {
+                    $('.f-changed-message', block).show();
+                };
+
+                // autocomplete
+                $('.f-autocomplete', block).autocomplete({
+                    source: '?action=autocomplete&type=contact',
+                    minLength: 2,
+                    delay: 300,
+                    select: function(event, ui) {
+                        $(this).val('');
+                        var tr = container.find('.f-template').clone().show().removeClass('f-template');
+
+                        var href = tr.find('.f-url').attr('href');
+                        tr.find('.f-url').attr('href', href + ui.item.id + '/');
+                        tr.find('.f-name').text(ui.item.name);
+                        tr.find('.f-userpic').css({
+                            backgroundImage: 'url(' + ui.item.userpic20 + ')'
+                        });
+                        tr.find('select').attr('name', "level[-" + ui.item.id + "]");
+
+                        container.find('tbody').append(tr);
+
+                        showMessage();
+
+                        return false;
+                    },
+                    focus: function (event, ui) {
+                        this.value = ui.item.name;
+                        return false;
+                    }
+                });
+
+                // delete link
+                block.off('click', '.f-delete').on('click', '.f-delete', function() {
+                    $(this).closest('tr').remove();
+                    showMessage();
+                });
+
+            })($('.f-user-settings', container));
+
+            // Show selected users list
+            var $customUsersCheckbox = $("#show-selected-user-list input:checkbox");
+            $customUsersCheckbox.on("click", function() {
+                var $input = $(this),
+                        $list = container.find(".f-user-settings"),
+                        is_checked = ( $input.attr("checked") === "checked" ),
+                        shown_class = "is-shown";
+
+                if (is_checked) {
+                    $list.addClass(shown_class);
+                } else {
+                    // Remove users
+                    var $users = $list.find(".f-user-item").not(".f-template"),
+                            $deleteLinks = $users.find(".delete");
+                    $deleteLinks.trigger("click");
+
+                    $list.removeClass(shown_class);
+                }
+            });
+
+        });
+    </script>
+
+{/if}

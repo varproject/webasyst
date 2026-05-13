@@ -1,0 +1,46 @@
+{* Левый блок *}
+{if $main_navbar_left_enabled}
+    <ul id="main_navbar_left" class="navbar-nav">
+
+        {* Меню 3 уровня *}
+        {if !empty($main_navbar_left_items)}
+            <div id="main_navbar_left_items" class="d-contents">
+                {foreach $main_navbar_left_items as $item}
+                    <li class="nav-item d-none d-md-block">
+                        <a href="{$wa_app_url}{$item.url}" class="nav-link{if $item.is_active} active{/if}">
+                            {if !empty($item.icon)}
+                                <span class="icon-wrapper">
+                                    {$item.icon|escape:'img'}
+                                </span>
+                            {/if}
+                            {$item.name|escape}
+                        </a>
+                    </li>
+                {/foreach}
+            </div>
+        {elseif $main_navbar_left_message_enabled}
+            <span id="main_navbar_left_message" class="text-body-tertiary">{$main_navbar_left_message_text}</span>
+        {/if}
+
+        {* Кастомные пункты в меню *}
+        {if !empty($main_navbar_left_custom_items)}
+            {* <div id="main_navbar_left_custom_items" class="d-contents"> *}
+            {foreach $main_navbar_left_custom_items as $item}
+                {$item}
+            {/foreach}
+            {* </div> *}
+        {/if}
+
+    </ul>
+{/if}
+
+{* Правый блок *}
+{if $main_navbar_right_enabled}
+    <ul id="main_navbar_right" class="navbar-nav ms-auto">
+        {if !empty($main_navbar_right_items)}
+            {foreach $main_navbar_right_items as $item}
+                {$item}
+            {/foreach}
+        {/if}
+    </ul>
+{/if}

@@ -1,0 +1,192 @@
+<div class="article">
+    <div class="article-body break-word">
+        {include file="./Sidebar.html" inline}
+
+        <div id="settings-block">
+            <form action="" method="post" id="settings-form">
+                <div class="flexbox">
+                    <h3 class="custom-mt-0 custom-mr-8 js-page-title">[`My personal settings`]</h3>
+                    <i class="userpic userpic-32" style="background-image:url({$wa->user()->getPhoto(32)}); margin: 0;"></i>
+                </div>
+
+                <div class="fields custom-mt-4">
+                    <div class="fields-group">
+                        <div class="field">
+                            <div class="name">
+                                [`App icon counter`]
+                                <span class="badge small red">1</span>
+                            </div>
+
+                            <div class="value">
+                                <label class="small">
+                                    <span class="wa-checkbox">
+                                        <input type="checkbox" name="type_items_count[]" value="comments" class="js-primary-checkbox"{if !empty($settings.type_items_count.comments)} checked="checked"{/if}>
+                                        <span>
+                                            <span class="icon">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    [`New comments on topics I follow`]
+                                </label>
+
+                                <div class="custom-mt-4">
+                                    <label class="small">
+                                        <span class="wa-checkbox">
+                                            <input type="checkbox" name="type_items_count[]" value="topics"{if !empty($settings.type_items_count.topics)} checked="checked"{/if}>
+                                            <span>
+                                                <span class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        [`New topics published by other users`]
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fields-group custom-mt-20">
+                        <div class="field">
+                            <div class="name">
+                                [`Notifications`]
+                            </div>
+
+                            <div class="value">
+                                <label class="small">
+                                    <span class="wa-checkbox ">
+                                        <input type="checkbox" name="email_following" value="1"{if !empty($settings.email_following)} checked="checked"{/if}>
+                                        <span>
+                                            <span class="icon">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    [`Email me about new comments on topics I follow`]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {if $is_admin}
+                    <div class="fields-group">
+                        <h3>[`General settings`]</h3>
+
+                        <div class="field">
+                            <div class="name">
+                                [`Gravatar`]
+                            </div>
+
+                            <div class="value">
+                                <label class="small">
+                                    <span class="wa-checkbox">
+                                        <input type="hidden" name="global_settings[gravatar]" value="0">
+                                        <input type="checkbox" name="global_settings[gravatar]" value="1" {if !empty($global_settings.gravatar)} checked="checked"{/if}>
+                                        <span>
+                                            <span class="icon">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    [`Enable Gravatar userpics`]
+                                </label>
+
+                                <div class="custom-mt-8 js-settings-gravatar">
+                                    <div class="small gray">[`If no Gravatar userpic is uploaded`]:</div>
+
+                                    <div class="wa-select smaller custom-mt-4 custom-mr-0">
+                                        <select class="width-100-mobile" name="global_settings[gravatar_default]">
+                                            {html_options selected=ifset($global_settings.gravatar_default, 'retro') options=[
+                                            'custom' => "[`Use default userpic`]",
+                                            'mm' => "[`(mystery-man) a simple, cartoon-style silhouetted outline of a person (does not vary by email hash)`]",
+                                            'identicon' => "[`a geometric pattern based on an email hash`]",
+                                            'monsterid' => "[`a generated 'monster' with different colors, faces, etc`]",
+                                            'wavatar' => "[`generated faces with differing features and backgrounds`]",
+                                            'retro' => "[`awesome generated, 8-bit arcade-style pixelated faces`]"
+                                            ]}
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <img id="h-settings-general-gravatar" src="http://www.gravatar.com/avatar/0000000000000000?s=50&d={ifset($global_settings.gravatar_default, 'retro')}" style='width: 50px; margin-top: 10px;'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+
+                    <div class="fields-group">
+                        <div class="field">
+                            <div class="value submit">
+                                <button type="submit" name="save" class="button blue">[`Save`]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>(function() {
+
+    const $form = $('#settings-form');
+
+    $(window).on('wa_loaded', function() {
+        $form.on('change', function(event) {
+            $(this).find(':submit').addClass('yellow');
+        });
+    });
+
+    $form.submit(function(event) {
+        event.preventDefault();
+
+        const $spinner = $('<i class="fas fa-spinner fa-spin custom-ml-4 js-loading"></i><i class="fas fa-check-circle hidden custom-ml-4 js-loading-ok"></i>');
+        $form.find(':submit').append($spinner);
+        $.post("?module=settings", $(this).serialize(), function (html) {
+            $form.find('.js-loading-ok').removeClass('hidden');
+            setTimeout(() => {
+                $form.find('.js-loading-ok').remove();
+            }, 1000);
+        }).always(function() {
+            $form.find('.js-loading').remove();
+            $form.find(':submit').removeClass('yellow');
+        });
+    });
+
+    // Gravatar control
+    (function() {
+        var $preview_img = $('#h-settings-general-gravatar');
+        var $select_wrapper = $preview_img.closest('.js-settings-gravatar');
+        var $select = $select_wrapper.find('select');
+        var $checkbox = $select_wrapper.closest('.field').find('input:checkbox');
+
+        var gravatar_url = $preview_img.attr('src').replace(/=[^=]+$/, '=');
+
+        var delay = 0;
+        $checkbox.on('change', function() {
+            if ($checkbox.is(':checked')) {
+                $select_wrapper.slideDown(delay);
+                ensurePreview();
+            } else {
+                $select_wrapper.slideUp(delay);
+            }
+        }).change();
+        delay = 300;
+
+        $select.on('change', function() {
+            ensurePreview();
+        });
+
+        function ensurePreview() {
+            var selected = $select.val();
+            if (selected == 'custom') {
+                $preview_img.attr('src', "{$wa_url}wa-content/img/userpic50.jpg");
+            } else {
+                $preview_img.attr('src', gravatar_url+$select.val());
+            }
+        }
+
+    })();
+
+})();</script>

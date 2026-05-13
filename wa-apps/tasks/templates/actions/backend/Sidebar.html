@@ -1,0 +1,492 @@
+{strip}
+
+    {function user_count user_id=null}{strip}
+        {if $is_admin}
+            {$user_count = ifset($team_counts[$user_id], $empty_user_count)}
+            {tasksUserTasksCounterService::getPairs($user_count.total, $user_count.count, $user_count.bg_color, $user_count.text_color)}
+        {/if}
+    {/strip}{/function}
+
+
+{$is_premium = $wa->tasks->isPremium()}
+
+{$empty_user_count = [
+    count => 0,
+    total => 0,
+    text_color => '#999',
+    bg_color => 'transparent'
+]}
+
+{if $wa->isSingleAppMode()}
+    <div class="box custom-py-0">
+        {$wa->headerSingleAppUser()}
+    </div>
+{/if}
+<nav class="sidebar-mobile-toggle">
+    <div class="box align-center">
+        <a href="#" href="javascript:void(0);">
+            <i class="fas fa-bars"></i>
+            [`Menu`]
+        </a>
+    </div>
+</nav>
+
+<div class="sidebar-body t-sidebar-block" id="t-sidebar">
+
+    <div class="box custom-mt-4">
+        <div class="flexbox space-8">
+            <div class="wide">
+                <div class="state-with-inner-icon left width-100">
+                    <span class="icon"><i class="fas fa-search text-gray"></i></span>
+                    <input class="solid full-width" id="t-search-input" type="search" placeholder="[`Search`]"{if !empty($search_value)} value="{$search_value|escape}"{/if}>
+                </div>
+                <!-- <input class="t-sidebar-search-submit js-search-submit" type="button" value=""> -->
+            </div>
+            {if $user_has_minimum_access}
+            <div>
+                <a class="add-task-link circle button desktop-and-tablet-only" href="#/add/">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </div>
+            {/if}
+        </div>
+    </div>
+
+    <div class="bricks custom-mt-4">
+        <a href="#/tasks/inbox/" class="brick">
+            <span class="icon" style="color: var(--accent-color);"><i class="fas fa-inbox"></i></span>
+            <span>[`Inbox`]</span>
+            <span class="count">
+                {$user_count = ifset($team_counts[$wa->user('id')], $empty_user_count)}
+                {if $user_count.total == $user_count.count}
+                    {$inbox_urgent_count = $user_count.count - $hidden_count}
+                {else}
+                    {$inbox_urgent_count = $user_count.count}
+                {/if}
+                {if $favorites_counts.unread_total}
+                    <span class="badge red">@<span class="count-unread" style="display: none;">{$favorites_counts.unread_total|escape}</span></span>
+                {/if}
+                {tasksUserTasksCounterService::getPairs($user_count.total-$hidden_count, $inbox_urgent_count, $user_count.bg_color, $user_count.text_color)}
+            </span>
+        </a>
+        <a href="#/tasks/outbox/" class="brick">
+            <span class="icon"><i class="fas fa-paper-plane"></i></span>
+            <span>[`Outbox`]</span>
+            <span class="count">{$outbox_count}</span>
+        </a>
+        <a href="#/log/" class="brick t-mini-brick">
+            <span class="icon text-yellow"><i class="fas fa-bolt"></i></span>
+            <span>[`Updates`]</span>
+            <span class="count"></span>
+        </a>
+        <a href="#/kanban/" class="brick t-mini-brick">
+            <span class="icon text-green"><i class="fas fa-table"></i></span>
+            <span>[`Kanban`]</span>
+            <span class="count"></span>
+        </a>
+        {if $is_admin}
+        <a href="#/milestones/" class="brick t-mini-brick">
+            <span class="icon{if $is_premium} text-purple{/if}"><i class="fas fa-stream"></i></span>
+            <span>[`Gantt`]</span>
+            <span class="count"></span>
+        </a>
+        <a href="#/cfd/" class="brick t-mini-brick">
+            <span class="icon{if $is_premium} text-orange{/if}"><i class="fas fa-chart-line"></i></span>
+            <span>[`Reports`]</span>
+            <span class="count"></span>
+        </a>
+        {/if}
+    </div>
+
+    <ul class="menu custom-mt-0 mobile-friendly">
+
+        <li>
+            <a href="#/tasks/favorites/">
+                <i class="fas fa-at"></i>
+                <span>[`Following`]</span>
+                <span class="count">{tasksUserTasksCounterService::getPairs($favorites_counts.total, $favorites_counts.count, $favorites_counts.bg_color, $favorites_counts.text_color)}</span>
+            </a>
+        </li>
+        <li>
+            <a href="#/tasks/urgent/">
+                <i class="fas fa-exclamation-triangle{if $super_urgent_count} text-red{/if}"></i>
+                <span>[`Urgent`]</span>
+                <span class="count">{tasksUserTasksCounterService::getPairs($urgent_count, $super_urgent_count, '#ff0000', 'white')}</span>
+            </a>
+        </li>
+        <li class="inbox-hidden gray"{if !$hidden_count} style="display: none"{/if}>
+            <a href="#/tasks/hidden/">
+                <i class="fas fa-eye-slash"></i>
+                <span>[`Hidden`]</span>
+                <span class="count">{$hidden_count}</span>
+            </a>
+        </li>
+
+        <!-- plugin hook: 'backend_sidebar.top_li' -->
+        {* @event backend_sidebar.%plugin_id%.top_li *}
+        {if !empty($backend_sidebar)}{foreach $backend_sidebar as $_}{ifset($_.top_li)}{/foreach}{/if}
+
+    </ul>
+
+    {if $lists}
+        <div class="t-view-list-wrapper collapsible" data-type="lists" id="t-view-list-wrapper">
+            <h5 class="heading">
+                <span>
+                    <span class="caret"><i class="fas fa-caret-down"></i></span>
+                    [`My filters`]
+                </span>
+            </h5>
+            <div class="collapsible__content">
+                <ul class="menu t-view-list hide-when-collapsed mobile-friendly">
+
+                    {foreach $lists as $_list}
+                        <li data-id="{$_list.id}">
+                            {$_params = [
+                                "list_id={$_list.id}",
+                                "hash={$_list.hash|escape}"
+                            ]}
+                            {if $_list.params != null}
+                                {$_params[] = $_list.params|escape}
+                            {/if}
+                            {if $_list.order != null}
+                                {$_params[] = "order="|cat:$_list.order|escape}
+                            {/if}
+                            {$_params_str = join('&', $_params)}
+
+                            {$_href = "#/tasks/{$_params_str}/"}
+                            <a title="{$_list.name|escape}" href="{$_href}">
+                                <i class="fas fa-tasks"></i>
+                                <span>{$_list.name|truncate:18:'...':true|escape}</span>
+                                <span class="count">{$_list.count|default:0}</span>
+                            </a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+    {/if}
+
+    {if $scopes || $is_admin}
+        <div class="collapsible" data-type="milestones">
+            <h5 class="heading">
+                <span>
+                    <span class="caret"><i class="fas fa-caret-down"></i></span>
+                    [`Scopes`]
+                </span>
+                {if $is_admin}
+                    <a class="add-scope count action" href="#/webasyst/tasks/#/settings/scope/add/"><i class="fas fa-plus-circle text-green"></i></a>
+                {/if}
+            </h5>
+            <div class="collapsible__content">
+                {if $scopes}
+                    <ul class="t-scopes menu mobile-friendly hide-when-collapsed">
+                        {foreach $scopes as $scope}
+                            {$_scope_is_100_complete = isset($scope.closed_percent) && $scope.closed_percent >= 100}
+                            <li class="t-scope">
+                                <a href="#/tasks/scope/{$scope.id}/"
+                                    {if !empty($scope.project_access_full)}
+                                        {if isset($scope.closed_percent)}class="t-scope-title"{/if}
+                                        title="{sprintf('[`%d%% completed: %d open / %d closed`]', $scope.closed_percent|default: 0, $scope.open_tasks|default:0, $scope.closed_tasks|default:0)}"
+                                    {/if}
+                                >
+                                    {$scope.project.icon_html}
+                                    <span>
+                                        <span class="flexbox">
+                                            <span class="wide">
+                                                {$scope.name|escape|truncate:42}
+                                            </span>
+                                            {if !empty($scope.project_access_full)}
+                                                <span class="count{if $_scope_is_100_complete} text-green bold{elseif !empty($scope.due_date) && $scope.due_date < date('Y-m-d')} text-red bold{/if}">
+                                                    {if $_scope_is_100_complete}
+                                                        <i class="fas fa-check-circle fa-xs text-green"></i>
+                                                    {else}
+                                                        {tasksUserTasksCounterService::getPairs($scope.open_tasks, $scope.proirity_tasks, $scope.priority_count_bg_color, $scope.priority_count_text_color)}
+                                                    {/if}
+                                                </span>
+                                            {/if}
+                                        </span>
+
+                                        {if !empty($scope.project_access_full)}
+                                            <div class="progressbar">
+                                                <div class="progressbar-line-wrapper">
+                                                    <div class="progressbar-outer"><div class="progressbar-inner" style="{if isset($scope.closed_percent)}width: {$scope.closed_percent}%;{/if}{if $_scope_is_100_complete}background: var(--green);{elseif !empty($scope.due_date) && $scope.due_date < date('Y-m-d')}background: var(--red);{/if}"></div></div>
+                                                    <span class="hint t-closed-percent"></span>
+                                                </div>
+                                            </div>
+                                        {/if}
+
+                                        <span class="hint{if !empty($scope.due_date) && $scope.due_date < date('Y-m-d')} text-red bold{/if}" style="display: block;">
+                                            {if !empty($scope.due_date)}
+                                                {wa_date('humandate', $scope.due_date, waDateTime::getDefaultTimezone())|escape}
+                                            {/if}
+                                        </span>
+
+                                    </span>
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                {else}
+                    <div class="box align-center custom-my-16">
+                        <p class="hint">[`Add a milestone to group tasks into time-based activities such as sprints, releases, or subprojects.`]</p>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    {/if}
+
+    <!-- plugin hook: 'backend_sidebar.section' -->
+    {* @event backend_sidebar.%plugin_id%.section *}
+    {if !empty($backend_sidebar)}{foreach $backend_sidebar as $_}{ifset($_.section)}{/foreach}{/if}
+
+    <div class="team-list-wrapper collapsible" id="team-list-wrapper" data-type="team">
+        <h5 class="heading">
+            <span>
+                <span class="caret"><i class="fas fa-caret-down"></i></span>
+                [`Team`]
+            </span>
+            <a href="javascript:alert('[`To invite someone, click (+) to create a new task > select ‘Invite’ > enter an email address and save. Or use the Webasyst Teamwork mobile app to invite with a 8-digit code.`]');" class="count small action"><i class="fas fa-user-plus opacity-40" style="font-size: 0.8125rem;"></i></a>
+
+        </h5>
+        <div class="collapsible__content">
+            {if !empty($users)}
+                <ul class="menu mobile-friendly hide-when-collapsed">
+                    {foreach $users as $user}
+                        <li>
+                            <a href="#/tasks/assigned/{$user.id}/">
+                                <span class="icon">
+                                    <i class="userpic" style="background-image: url({waContact::getPhotoUrl($user.id, $user.photo, 40, 40, 'person', 0)})"></i>
+                                </span>
+                                <span class=" {if $user.invited}gray{/if}">
+                                    {$user.name|escape}
+                                    {if $user.calendar_status}<div class="custom-mt-4 width-100"><span class="badge small nowrap" style="display: inline-block; text-overflow: ellipsis; overflow: hidden; max-width: 99px; background-color: {$user.calendar_status->getBgColor()};color: {$user.calendar_status->getFontColor()};" title="{$user.calendar_status->getName()|escape}">{$user.calendar_status->getName()|escape|truncate:32}</span></div>{/if}
+                                    {if $user.invited}
+                                        <span class="badge small squared light-gray custom-ml-4">[`invited`]</span>
+                                    {/if}
+                                </span>
+                                <span class="count">
+                                    {user_count user_id=$user.id}
+                                </span>
+                            </a>
+                        </li>
+                    {/foreach}
+                </ul>
+            {else}
+                <div class="box align-center custom-my-12 hide-when-collapsed">
+                    <p class="hint">{sprintf(_w('Use <strong>app "%s"</strong> to provide access to Tasks app for your teammates.'), $team_app_name)}</p>
+                </div>
+            {/if}
+        </div>
+    </div>
+
+    <div id="status-list-wrapper" class="collapsible" data-type="status">
+        <h5 class="heading">
+            <span>
+                <span class="caret"><i class="fas fa-caret-down"></i></span>
+                [`Status`]
+            </span>
+            {if $is_admin}
+                <a class="count action" href="#/settings/"><i class="fas fa-cog opacity-40"></i></a>
+            {/if}
+        </h5>
+        <div class="collapsible__content">
+            <ul class="menu mobile-friendly">
+                {foreach tasksHelper::getStatuses() as $s}
+                    <li>
+                        <a href="#/tasks/status/{$s.id}/">
+                            <span class="icon">
+
+                                {if $s.special}
+                                    {if $s.id == 0}
+                                        {* open *}
+                                        <i class="rounded t-status-icon-open"></i>
+                                    {elseif $s.id == -1}
+                                        {* closed *}
+                                        <i class="fas fa-check-circle t-status-icon-closed"></i>
+                                    {/if}
+                                {else}
+                                    <span class="rounded"{if !empty($s.params.button_color)} style="background-color: #{$s.params.button_color};"{/if}></span>
+                                {/if}
+
+                            </span>
+                            <span>{$s.name|escape}</span>
+                            {if $status_counts}<span class="count">{ifset($status_counts[$s.id], 0)}</span>{/if}
+                        </a>
+                    </li>
+                {/foreach}
+                <li class="gray">
+                    <a href="#/tasks/unassigned/">
+                        <span class="icon"><img src="{$wa_url}wa-content/img/userpic.svg" alt="[`Unassigned`]" class="userpic"></span>
+                        <span class="text-gray">[`Unassigned`]</span>
+                        <span class="count">{user_count user_id=''}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    {if $projects || $is_admin}
+        <div class="projects-list-wrapper collapsible" data-type="projects" id="projects-list-wrapper">
+            <h5 class="heading">
+                <span href="javascript:void(0);">
+                    <span class="caret"><i class="fas fa-caret-down"></i></span>
+                    [`Projects`]
+                </span>
+                {if $is_admin}
+                    <a class="add-project count action" href="#/settings/project/add/"><i class="fas fa-plus-circle text-green"></i></a>
+                {/if}
+            </h5>
+            <div class="collapsible__content">
+                {if $projects}
+                    <ul class="menu hide-when-collapsed mobile-friendly">
+                        {foreach $projects as $project}
+                            <li>
+                                <a href="#/tasks/project/{$project.id}/">
+                                    {$project.icon_html}
+                                    <span>{$project.name|escape|truncate:42}</span>
+                                    {if $project.count !== null}
+                                        <span class="count">{tasksUserTasksCounterService::getPairs($project.total, $project.count, $project.priority_count.bg_color, $project.priority_count.text_color)}</span>
+                                    {/if}
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                {else}
+                    <div class="box align-center custom-my-12 hide-when-collapsed">
+                        <p class="hint">[`Add a project to start creating tasks.`]</p>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    {/if}
+
+    {if !empty($cloud)}
+
+        <div id="collapsible-tags" data-block="tags"  data-type="tags" class="collapsible">
+            <h5 id="t-tags" class="heading collapse-handler">
+                <span>
+                    <span class="caret"><i class="fas fa-caret-down"></i></span>
+                    [`Tags`]
+                </span>
+            </h5>
+            <div class="collapsible__content">
+                <div class="box align-center small t-tags-wrapper js-tags-wrapper hide-when-collapsed">
+                    <ul class="chips tags small">
+
+                        {* top tags 'copy-paste #1' *}
+
+                        {$_tag_usage_counts = []}
+                        {foreach $cloud as $tag}
+                            {$_tag_usage_counts[ $tag.id ] = $tag.count}
+                        {/foreach}
+
+                        {capture}{arsort($_tag_usage_counts)}{/capture}
+
+                        {$_top_tags_ids = []}
+                        {$_max_tag_visible = 13}
+                        {$_i = 0}
+                        {foreach $_tag_usage_counts as $_tid => $_tcount}
+                            {$_top_tags_ids[ $_tid ] = $_tcount}
+                            {if $_i >= $_max_tag_visible}
+                                {break}
+                            {/if}
+                            {$_i = $_i + 1}
+                        {/foreach}
+
+                        {$_hidden_tags_counter = 0}
+                        {foreach $cloud as $tag}
+                            {$_visible = $tag.id|array_key_exists:$_top_tags_ids}
+
+                            <li{if !$_visible} class="t-tags-hidden-tag js-tags-hidden-tag"{/if}>
+                                <a data-id="{$tag.id}" data-value="{$tag.name|escape}" href="#/tasks/tag/{$tag.name|escape}/">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span>{$tag.name|escape}</span>
+                                    {if $is_admin}<span class="count">{$tag.count}</span>{/if}
+                                </a>
+                            </li>
+                            {if !$_visible}
+                                {$_hidden_tags_counter = $_hidden_tags_counter + 1}
+                            {/if}
+
+                        {/foreach}
+
+                        {if $_hidden_tags_counter > 0}
+                            <li class="transparent">
+                                <a href="#" style="background: transparent !important; color: rgba(127,127,127,0.5) !important;" class="js-tags-show-all-link">[`Show all tags`] ({count($cloud)})</a>
+                            </li>
+                        {/if}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+    {/if}
+
+</div>
+
+<div class="sidebar-footer shadowed">
+
+    <ul class="menu">
+        {if $is_admin}
+            <li>
+                <a href="#/plugins/">
+                    <i class="fas fa-plug"></i>
+                    <span>[s`Plugins`]</span>
+                </a>
+            </li>
+        {/if}
+        <li>
+            <a href="#/personal-settings/">
+                <i class="fas fa-cog"></i>
+                <span>[`Settings`]</span>
+            </a>
+        </li>
+
+        {if $is_admin && !$is_premium}
+            <li class="top-padded">
+                <a href="#/upgrade/">
+                    <i class="fas fa-star{if !$is_premium} text-yellow{/if}"></i>
+                    <span>[`Premium`]</span>
+                    {if !$is_premium && !$wa->tasks->isCloud()}
+                        {$p = $wa->tasks->getPremiumPricing()}
+                        {if !empty($p.special_short)}<span class="count"><span class="badge small {$p.special_color}">{$p.special_short}</span></span>{/if}
+                    {/if}
+                </a>
+            </li>
+        {/if}
+
+        <!-- plugin hook: 'backend_sidebar.bottom_li' -->
+        {* @event backend_sidebar.%plugin_id%.bottom_li *}
+        {if !empty($backend_sidebar)}{foreach $backend_sidebar as $_}{ifset($_.bottom_li)}{/foreach}{/if}
+
+        {*
+            <div class="bricks">
+                <div class="brick full-width">
+                    <span class="badge yellow">Good news!</span>
+                    Webasyst Teamwork is now available on <strong>iOS and Android</strong>.
+                    Download free today!
+                </div>
+            </div>
+        *}
+
+    </ul>
+
+</div>
+
+{/strip}
+<script>
+    (function ($) {
+
+        new TasksSidebar({
+            $wrapper: $(".t-sidebar-block")
+        });
+
+        $('.js-tags-show-all-link').on('click', function (e) {
+            e.preventDefault();
+            $(this).closest('.tags').find('.js-tags-hidden-tag').show();
+            $(this).hide();
+        });
+
+    })(jQuery);
+</script>

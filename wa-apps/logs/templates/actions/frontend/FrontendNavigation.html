@@ -1,0 +1,28 @@
+<div class="navigation flexbox">
+    <h1 class="wide custom-mb-0">{if strlen($item.folder|default:'')}<span class="gray">{$item.folder|escape}</span>{/if}{$item.name|escape}</h1>
+
+    {if $actions}
+        <ul class="action-menu">
+            {foreach $actions as $action_id => $action}
+                <li>
+                    <a href="{if isset($action.url)}{$action.url|escape}{/if}" title="{$action.title|escape}"><i class="fas {$action.icon_class}"></i></a>
+                </li>
+            {/foreach}
+        </ul>
+    {/if}
+</div>
+
+<div class="dialog-template-error">
+    <div class="dialog">
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <header class="dialog-header"><h1>[`Error`]</h1></header>
+            <div class="dialog-content">
+                <span class="state-error bold"></span>
+            </div>
+            <footer class="dialog-footer">
+                <button class="button light-gray js-submit">[`OK`]</button>
+            </footer>
+        </div>
+    </div>
+</div>

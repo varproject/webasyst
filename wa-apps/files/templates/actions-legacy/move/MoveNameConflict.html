@@ -1,0 +1,125 @@
+{$dialog_id = 'f-name-conflict-dialog-'}
+
+<div class="dialog width650px height350px f-name-conflict-dialog" id="{$dialog_id}" style="display:none;">
+    <form>
+        <div class="dialog-background"></div>
+        <div class="dialog-window">
+            <div class="dialog-content">
+                <div class="dialog-content-indent">
+
+                    <h1>[`Move`]</h1>
+
+                    <p>
+                        [`Files with the following names already exist in the specified folder`]
+                        <ul class="menu-v">
+                            {foreach $conflict_files as $file}
+                                <li><img class="f-file-image" src="{$file.photo_url.file_list_small}" alt="">&nbsp;<span class="f-file-name">{$file.name|escape}</span></li>
+                            {/foreach}
+                        </ul>
+                    </p>
+
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+
+                    {if $can_replace}
+                        <input class="button yellow" type="button" value="[`Replace`]" data-solve="replace">
+                    {/if}
+                    <input class="button blue" type="button" value="[`Rename`]" data-solve="rename">
+                    <input class="button green" type="button" value="[`Skip`]" data-solve="exclude">
+                    <input type="hidden" name="solve" value="exclude">
+
+                    <i class="icon16 f-submit-loading loading" style="display:none;"></i> [`or`] <a class="cancel" href="javascript:void(0);">[`cancel`]</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        var dialog = $('#{$dialog_id}');
+        $('.f-name-conflict-dialog').not(dialog).remove();
+        $.wa.dialogHide();
+        dialog.filesDialog({
+            disableButtonsOnSubmit: true,
+            onLoad: function () {
+                dialog.find('.cancel').click(function () {
+                    $.wa.dialogHide();
+                });
+            },
+            onSubmit: function() {
+                dialog.find('input[type=button]').attr('disabled', true);
+                var is_restore = {$is_restore|default:''|json_encode};
+                dialog.find('.f-submit-loading').show();
+                $.files.jsonPost({
+                    url: '?module=move&action=files',
+                    data: {
+                        folder_id: {$folder_id},
+                        storage_id: {$storage_id},
+                        file_id: {json_encode(array_keys($files))},
+                        solve: $(this).find('[name=solve]').val(),
+                        restore: is_restore
+                    },
+                    onSuccess: function(r) {
+                        if (r.status === 'ok') {
+
+                            var reload_page = true;
+
+                            $.files.runCopyFiles();
+                            $.files.checkBackendChanges();
+                            // run dialog if process_id is present and not empty
+
+                            if (r.data.process_id > 0) {
+                                $.files.loadDialog('?module=move&action=processDialog&copytask_process_id=' + r.data.process_id, {
+                                    onLoad: function (d) {
+                                        $.wa.dialogHide();
+                                        d.show();
+                                    }
+                                });
+                                reload_page = false;
+                            }
+
+                            if (r.data.count > 0) {
+                                $.files.refreshSidebar();
+                            }
+
+                            if (reload_page) {
+                                $.wa.dialogHide();
+                                $.files.controller.reloadPage();
+                            }
+
+                            // Uncheck All
+                            var $catalog = $("#f-catalog-wrapper");
+                            if ($catalog.length) {
+                                $catalog.trigger("unSelectAll");
+                            }
+                        } else {
+                            $.wa.dialogHide();
+                            $.files.alertError(r.errors[0][0]);
+                        }
+                    },
+                    onFailure: function(r) {
+                        $.wa.dialogHide();
+                        if ($.isPlainObject(r) && r.same_place) {
+                            $.files.alertError($_("Files from the same place"));
+                        } else {
+                            $.files.alertError('[`Server error`]', r);
+                        }
+                    },
+                    onAlways: function() {
+                        dialog.find('.f-submit-loading').hide();
+                        dialog.find('input[type=button]').attr('disabled', false);
+                    }
+                });
+                return false;
+            }
+        });
+        dialog.find('.dialog-buttons input[type="button"]').click(function() {
+            $(this).siblings('[name=solve]').val($(this).data('solve'));
+            dialog.find('form').submit();
+        });
+    });
+</script>

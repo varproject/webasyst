@@ -1,0 +1,45 @@
+/*
+// .sa-anchor
+*/
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-anchor {
+    $local-padding: 1rem;
+
+    pointer-events: none;
+
+    &:before {
+        display: block;
+        content: '';
+        padding-top: calc(var(--sa-sticky-height, 0) + #{$local-padding});
+        margin-top: calc((var(--sa-sticky-height, 0) + #{$local-padding}) * -1);
+    }
+}
+.sa-anchor__body {
+    pointer-events: auto;
+}
+.sa-anchor__link {
+    opacity: 0;
+    transition: opacity .12s;
+    font-weight: bt.$font-weight-normal;
+    text-decoration: none;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .25em;
+    }
+}
+.sa-anchor:hover {
+    .sa-anchor__link {
+        opacity: .4;
+    }
+}
+.sa-anchor {
+    .sa-anchor__link:hover,
+    .sa-anchor__link:focus {
+        color: bt.$link-color;
+        opacity: .8;
+        text-decoration: none;
+    }
+}

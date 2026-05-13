@@ -1,0 +1,126 @@
+{strip}
+
+{$ident = rand(0, 1024)}
+
+<div class="t-task-forward-wrapper" id="forward-wrapper-{$ident}">
+    <form method="post" action="{$form_url}" data-task-action="forward" data-task-id="{$task.id|default:''}" data-task-uuid="{$task_uuid|default:''}">
+    <div class="fields">
+
+        {if !empty($projects)}
+            <div class="field">
+                <div class="name for-input">[`Project`]</div>
+                <div class="value">
+                    <div class="wa-select">
+                        <select name="project_id">
+                            <option value=""></option>
+                            {foreach $projects as $p}
+                                <option value="{$p.id}">{$p.name|escape}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        {/if}
+
+        <div class="field">
+            <div class="name for-input">[`New status`]</div>
+            <div class="value">
+                <div class="wa-select">
+                    <select name="status_id">
+                        <option value="">[`Do not change`]</option>
+                        {foreach $statuses as $s_id => $s}
+                            <option {if isset($selected_status_id) && $selected_status_id == $s_id}selected{/if} value="{$s_id}">{$s.name|escape}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name custom-pt-16">[`Assign to`]</div>
+            <div class="value">
+                <input type="hidden" name="assigned_contact_id" value="">
+                <div class="t-team-list-wrapper"></div>
+
+                {include file="./includes/TasksEditInviteForm.inc.html" inline}
+                
+                <script>
+                    (function ($) {
+                        var $wrapper = $("#forward-wrapper-{$ident}"),
+                            show_class = "is-shown",
+                            show_flag = false,
+                            $checked_user = $wrapper.find('input:checked');
+
+                        if ($checked_user) {
+                            moveCheckedUserToTop($checked_user)
+                        }
+
+                        $wrapper.on("click", ".show-team-users", function () {
+                            showFullTeam($(this));
+                            $(this).hide();
+                            show_flag = show_flag ? false : true;
+                        });
+
+                        function showFullTeam($link) {
+                            if (!show_flag) {
+                                {* Show full list *}
+                                $wrapper.find(".t-user-item").not("." + show_class).addClass(show_class);
+                                $wrapper.find('.t-link-item').find('i').text('[`Hide`]');
+
+                            } else {
+                                {*Hide user before link*}
+                                $link.closest('li').nextAll('li.t-user-item').removeClass('is-shown');
+                                $wrapper.find('.t-link-item').find('i').text('[`Show everyone`]');
+                            }
+
+                            {* TRIGGER RESIZE *}
+                            $wrapper.closest(".t-status-form-wrapper").trigger("onResize");
+                        }
+
+                        function moveCheckedUserToTop($checked_user) {
+                            var $parent = $checked_user.closest('li');
+                            $parent.remove();
+                            $wrapper.find('.t-team-list-wrapper').prepend($parent);
+                        }
+
+                        function fetchTeamList(project_id) {
+                            $.tasks.teamList({
+                                container: $wrapper.find('.t-team-list-wrapper'),
+                                targetField: $wrapper.find('[name="assigned_contact_id"]'),
+                                inviteField: $wrapper.find('.t-team-invite'),
+                                projectId: project_id,
+                                assignedContactId: '{$task.assigned_contact_id|default:""}'
+                            });
+                        }
+
+                        $wrapper.find('[name="project_id"]').on('change', function (e) {
+                            fetchTeamList(e.target.value);
+                        });
+
+                        fetchTeamList({$task.project_id|default:""});
+
+                    })(jQuery);
+                </script>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="custom-mt-16">
+
+        {include file="./TaskStatusForm.DropArea.html" inline}
+
+        <div class="t-buttons-block">
+            <button type="submit" class="button large">[`Forward task`]</button>
+        </div>
+
+        <div class="t-hiddenform-cancel-link custom-mt-16" style="display: none;">
+            <button type="submit" class="button">[`Save`]</button>
+            <a class="js-close-dialog cancel" href="javascript:void(0);">[`Cancel`]</a>
+        </div>
+
+    </div>
+
+    </form>
+</div>
+
+{/strip}

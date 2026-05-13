@@ -1,0 +1,478 @@
+{$_title = "[`Reports`]"}
+
+{$_is_won_chart = waRequest::request("chart", null)}
+
+{* DATE *}
+{$filter_dates = [
+    "30" => [
+        "id" => "30",
+        "uri" => crmHelper::getUrl(["timeframe" => 30, "start" => null, "end" => null]),
+        "name" => _w('Last %d day', 'Last %d days', 30),
+        "group_by" => "days",
+        "timeframe" => 30
+    ],
+    "90" => [
+        "id" => "90",
+        "uri" => crmHelper::getUrl(["timeframe" => 90, "start" => null, "end" => null]),
+        "name" => _w('Last %d day', 'Last %d days', 90),
+        "group_by" => "days",
+        "timeframe" => 90
+    ],
+    "365" => [
+        "id" => "365",
+        "uri" => crmHelper::getUrl(["timeframe" => 365, "start" => null, "end" => null]),
+        "name" => _w('Last %d day', 'Last %d days', 365),
+        "group_by" => "months",
+        "timeframe" => 365
+    ],
+    "all" => [
+        "id" => "all",
+        "uri" => crmHelper::getUrl(["timeframe" => "all", "start" => null, "end" => null]),
+        "name" => "[`All time`]",
+        "group_by" => "months",
+        "timeframe" => "all"
+    ],
+    "custom" => [
+        "id" => "custom",
+        "uri" => "javascript:void(0);",
+        "name" => "[`Select dates...`]",
+        "group_by" => "",
+        "timeframe" => "custom"
+    ]
+]}
+
+{if $timeframe && !empty($filter_dates[$timeframe])}
+    {$selected_filter_date = $filter_dates[$timeframe]}
+{else}
+    {$selected_filter_date = reset($filter_dates)}
+{/if}
+
+<div class="c-report-page shadowed" id="c-report-page">
+    <div class="box contentbox height-100 blank">
+
+        <header class="c-report-header custom-mb-16">
+            <form>
+            <div class="flexbox full-width space-8 wrap">
+                <div class="c-column">
+                    <div class="flexbox wrap middle space-8 c-nav-wrapper">
+                        {strip}
+
+                        {if !empty($is_invoices)}
+                            {include file="./ReportMenu.inc.html" _active='invoices' inline}
+                        {elseif empty($charts)}
+                            {include file="./ReportMenu.inc.html" _active='lost' inline}
+                        {else}
+                            {include file="./ReportMenu.inc.html" _active='won' inline}
+                        {/if}
+
+                        {if $funnel}
+                            <div class="c-filter-wrapper nowrap">
+                                <div class="dropdown" id="dropdown-funnel-filter">
+                                    <button class="dropdown-toggle light-gray small" type="button">
+                                        <i class="{$funnel.icon|default:'fas fa-briefcase'|escape} custom-mr-8" style="color: {$funnel.color}"></i>
+                                        <span class="filter-name">{$funnel.name|escape}</span>
+                                    </button>
+                                    <div class="dropdown-body">
+                                        <ul class="menu with-icons">
+                                            {foreach $funnels as $_funnel}
+                                                <li class="{if $funnel.id == $_funnel.id}selected{/if}">
+                                                    {if isset($_funnel.deal_count)}
+                                                        <span class="count">{$_funnel.deal_count}</span>
+                                                    {/if}
+                                                    <a href="{crmHelper::getUrl(["funnel" => $_funnel.id, "/field-.+/" => null])}">
+                                                        <i class="{$_funnel.icon|default:'fas fa-briefcase'|escape} custom-mr-8" style="color: {$_funnel.color}"></i>
+                                                        <span class="filter-funnel-name">{$_funnel.name|escape}</span>
+                                                    </a>
+                                                </li>
+                                            {/foreach}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                ( function($) {
+                                    $("#dropdown-funnel-filter").waDropdown();
+                                })(jQuery);
+                            </script>
+                        {/if}
+
+                        {* USERS *}
+                        <div class="c-filter-wrapper nowrap">
+                            <div class="dropdown" id="dropdown-contact-filter">
+                                <button class="dropdown-toggle light-gray small" type="button">
+                                    {if !empty($user.photo_url_16)}
+                                        <span class="icon size-16 rounded userpic custom-mr-8" style="background-image: url({$user.photo_url_16})"></span>
+                                    {/if}
+                                        <span class="filter-name">{$wa->crm->contactName($user.name)}</span>
+                                </button>
+                                <div class="dropdown-body">
+                                    <ul class="menu with-icons">
+                                        {foreach $users as $_contact}
+                                        <li class="t-menu-item {if $user.id === $_contact.id}selected{/if}">
+                                            <a href="{crmHelper::getUrl("user", $_contact.id)}">
+                                            {if !empty($_contact.photo_url_16)}
+                                                <span class="icon size-16 rounded custom-mr-8" style="background-image: url({$_contact.photo_url_16})"></span>
+                                            {/if}
+                                                <span class="filter-name">{$wa->crm->contactName($_contact.name)}</span>
+                                            </a>
+                                        </li>
+                                        {/foreach}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            ( function($) {
+                                $("#dropdown-contact-filter").waDropdown();
+                            })(jQuery);
+                        </script>
+
+                        {* TAGS *}
+                        <div class="c-filter-wrapper c-tags-filter js-tags-filter {if empty($popular_cloud)}is-locked{/if}">
+                            <div class="dropdown" id="dropdown-tags-filter">
+                                <button class="dropdown-toggle light-gray small" type="button">
+                                    <span class="icon size-14 custom-mr-8"><i class="fas fa-tags"></i></span>
+                                    <span class="filter-name">{if !empty($active_deal_tag)}{$active_deal_tag.name|escape}{else}[`Tag`]{/if}</span>
+                                </button>
+
+                                {if !empty($popular_cloud)}
+                                <div class="dropdown-body">
+                                    <ul class="menu with-icons">
+                                        {if !empty($active_deal_tag)}
+                                        <li>
+                                            <a href="{crmHelper::getUrl("tag", null)}">[`Show all`]</a>
+                                        </li>
+                                        {/if}
+
+                                        <li class="c-tags-wrapper">
+                                            <ul class="chips tags small mobile-friendly custom-my-0 js-popular-tags-part">
+                                                {foreach $popular_cloud as $_tag}
+                                                <li data-id="{$_tag.id}">
+                                                    <a class="{if !empty($active_deal_tag) && $active_deal_tag.id === $_tag.id}selected{/if}" href="{crmHelper::getUrl("tag", {$_tag.id})}">
+                                                        <i class="fas fa-hashtag"></i>
+                                                        <span class="name custom-mr-4">{$_tag.name|escape}</span>
+                                                        <span class="count">{ifempty($_tag.count, 0)}</span>
+                                                    </a>
+                                                </li>
+                                                {/foreach}
+                                            </ul>
+                                            {if $tag_cloud|@count > 15}
+                                            <div class="gray small js-show-all">
+                                                <div class="cursor-pointer">[`Show all`] ({$tag_cloud|@count - $popular_cloud|@count})</div>
+                                            </div>
+                                            {/if}
+                                            <div class="js-hidden-tags-part">
+                                                <ul class="chips tags small mobile-friendly custom-my-0">
+                                                    {foreach $tag_cloud as $_tag}
+                                                    <li data-id="{$_tag.id}">
+                                                        <a class="{if !empty($active_deal_tag) && $active_deal_tag.id === $_tag.id}selected{/if}" href="{crmHelper::getUrl("tag", {$_tag.id})}">
+                                                            <i class="fas fa-hashtag"></i>
+                                                            <span class="name custom-mr-4">{$_tag.name|escape}</span>
+                                                            <span class="count">{ifempty($_tag.count, 0)}</span>
+                                                        </a>
+                                                    </li>
+                                                    {/foreach}
+                                                </ul>
+                                            </div>
+
+                                            {*foreach $tag_cloud as $_tag}
+                                                <a class="{if !empty($active_deal_tag) && $active_deal_tag.id === $_tag.id}selected{/if}" href="{crmHelper::getUrl("tag", {$_tag.id})}" style="font-size: {$_tag.size}%; opacity: {$_tag.opacity};">
+                                                {$_tag.name|escape}
+                                                </a>
+                                            {/foreach*}
+                                        </li>
+                                    </ul>
+                                </div>
+                                {/if}
+                            </div>
+                        </div>
+                        <script>
+                            ( function($) {
+                                $("#dropdown-tags-filter").waDropdown();
+                            })(jQuery);
+
+                        </script>
+
+                        {* FIELDS *}
+                        {foreach $fields as $_field}
+                            <div class="c-filter-wrapper c-fields-filter {if empty($fields)}is-locked{/if}">
+                                <div class="dropdown" id="dropdown-field-filter-{$_field.id}">
+                                    <button class="dropdown-toggle light-gray small" type="button">
+                                        {if !empty($active_fields[$_field.id])}
+                                            {$active_fields[$_field.id]|escape}
+                                        {else}
+                                            {$_field.name|escape}
+                                        {/if}
+                                    </button>
+                                    {if !empty($_field)}
+                                    <div class="dropdown-body">
+                                        <ul class="menu with-icons">
+                                            {if !empty($active_fields[$_field.id])}
+                                                <li class="t-menu-item">
+                                                    <a href="{crmHelper::getUrl({'field-'|cat:$_field.id}, null)}">[`Show all`]</a>
+                                                </li>
+                                            {/if}
+                                            {foreach $_field.options as $field_key => $field_option}
+                                                <li class="t-menu-item {if !empty($active_fields[$_field.id]) && $active_fields[$_field.id] == $field_option}selected{/if}">
+                                                    <a href="{crmHelper::getUrl({'field-'|cat:$_field.id}, {$field_key})}">{$field_option}</a>
+                                                </li>
+                                            {/foreach}
+                                        </ul>
+                                    </div>
+                                    {/if}
+                                </div>
+                            </div>
+                            <script>
+                                ( function($) {
+                                    $("#dropdown-field-filter-{$_field.id}").waDropdown();
+                                })(jQuery);
+                            </script>
+                        {/foreach}
+                        {/strip}
+                    </div>
+
+                    {* need for generation uri, "custom" timeframe *}
+                    <input name="funnel" type="hidden" value="{$funnel.id}">
+                    <input name="user" type="hidden" value="{$user.id}">
+                    <input name="tag" type="hidden" value="{if !empty($active_deal_tag)}{$active_deal_tag.id}{/if}">
+                    {foreach $fields as $_field}
+                        {if !empty($active_fields[$_field.id])}
+                            <input name="{'field-'|cat:$_field.id}" type="hidden" value="{$active_fields[$_field.id]|escape}">
+                        {/if}
+                    {/foreach}
+                </div>
+                <div class="c-column right">
+                    <div class="c-dates-filter js-dates-filter">
+                        <div class="flexbox wrap middle space-8 c-nav-wrapper">
+                            <div class="c-filter-wrapper">
+                                <div class="dropdown" id="dropdown-date-filter">
+                                    <button class="dropdown-toggle nowrap light-gray small" type="button">
+                                        <span class="js-link-text">{$selected_filter_date.name|escape}</span>
+                                    </button>
+                                    <div class="dropdown-body right">
+                                        <ul class="menu with-icons js-list">
+                                            {foreach $filter_dates as $_date}
+                                                <li class="js-toggle {if $selected_filter_date.id == $_date.id}selected{/if}" data-timeframe="{$_date.timeframe}">
+                                                    <a href="{$_date.uri}">{$_date.name|escape}</a>
+                                                </li>
+                                            {/foreach}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <script>
+                                    ( function($) {
+                                        $("#dropdown-date-filter").waDropdown();
+                                    })(jQuery);
+                                </script>
+                            </div>
+                            <div class="c-filter-wrapper c-hidden-part js-hidden-part {if $timeframe == "custom"}is-shown{/if}">
+                                <div class="c-filter-text">
+                                    [` from`]
+                                    <input class="small custom-mr-0 js-datepicker" type="text" value="{$start_date|wa_date}" style="width:100px;" data-selector="js-start-field">
+                                    <input class="js-start-field" name="start" type="hidden" value="{$start_date}">
+                                    [` to`]
+                                    <input class="small custom-mr-0 js-datepicker" type="text" value="{$end_date|wa_date}" style="width:100px;" data-selector="js-end-field">
+                                    <input class="js-end-field" name="end" type="hidden" value="{$end_date}">
+
+                                    {if !empty($charts)}
+                                    <div class="wa-select small custom-mr-0">
+                                        <select name="groupby" class="not-styled js-group-field">
+                                            <option value="days" {if $chart_params.group_by == "days"}selected{/if}>[`by day`]</option>
+                                            <option value="months" {if $chart_params.group_by == "months"}selected{/if}>[`by month`]</option>
+                                        </select>
+                                    </div>
+                                    {/if}
+
+                                    <input class="button small light-gray" type="submit" value="[`Apply`]">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {if !empty($charts)}<input type="hidden" name="chart" value="1">{/if}
+
+            </form>
+        </header>
+
+        <div class="c-report-page-content block double-padded">
+            {if !empty($stages) && !empty($closed)}
+                {* Default view *}
+                {if empty($charts)}
+
+                    <section class="c-header-section">
+                        <h1 class="c-page-header">
+                            {$won_deals_stat.count}
+                            <span class="gray custom-pr-4" style="font-weight: normal;">{_w('deal won', 'deals won', $won_deals_stat.count)}. [`Total won amount`]:</span>
+                            {$won_deals_stat.amount|wa_format_amount_currency:$won_deals_stat.currency_id}
+                        </h1>
+                    </section>
+
+                    <div class="c-report-wrapper">
+                        <table class="c-report-table">
+
+                            {$_stages_count = $stages|count}
+                            {$_start = 100}
+                            {$_min = 30}
+                            {$_count = _w('%d deal', '%d deals', $closed)}
+
+                            {foreach $stages as $_stage}
+                                {$_opacity = ($_min + ( (100 - $_min) * $_stage@iteration/$_stages_count))/100}
+                                {$_percent = $_stage.rest_percent|floor}
+
+                                <tr>
+                                    <td class="c-column-name">
+                                        <div class="c-name">{$_stage.name|escape}</div>
+                                    </td>
+                                    <td class="c-column-bar">
+                                        <div class="c-bar-wrapper">
+                                            <div class="c-bar js-svg-bar" style="opacity: {$_opacity};" data-start="{$_start}" data-end="{$_percent}" data-color="{$funnel.color}"></div>
+                                            <div class="c-text">{$_count}</div>
+                                        </div>
+                                    </td>
+                                    <td class="c-column-text">
+                                        <div class="c-text">{$_percent}% ({_w('%d deal lost', '%d deals lost', $_stage.lost)})</div>
+                                    </td>
+                                </tr>
+
+                                {$_start = $_percent}
+                                {$_count = _w('%d deal', '%d deals', $_stage.rest)}
+                            {/foreach}
+
+                            <tr>
+                                <td class="c-column-name">[`WON`]</td>
+                                <td class="c-column-bar">
+                                    <div class="c-bar-wrapper">
+                                        <div class="c-text">{$_count}</div>
+                                    </div>
+                                </td>
+                                <td class="c-column-text"></td>
+                            </tr>
+                        </table>
+
+                        {if !empty($reasons)}
+                            {$_min = 0}
+                            {$_max = 0}
+
+                            {foreach $reasons as $_reason}
+                                {if $_reason.cnt > $_max}
+                                    {$_max = $_reason.cnt}
+                                {/if}
+                                {if $_reason.cnt < $_min}
+                                    {$_min = $_reason.cnt}
+                                {/if}
+                            {/foreach}
+
+                            {$_delta = $_max - $_min}
+
+                            <section class="c-reasons-wrapper">
+                                <h6 class="c-reasons-heading">[`Deal loss reasons`]</h6>
+                                <ul class="c-reasons-list">
+                                    {foreach $reasons as $_reason}
+                                        {if $_reason.lost_id}
+                                            {$_name = $_reason.name}
+                                        {elseif $_reason.lost_id === '0'}
+                                            {$_name = '[`Other`]'}
+                                        {else}
+                                            {$_name = '[`Not specified`]'}
+                                        {/if}
+
+                                        {$_percent = round($_reason.cnt*100/$_max)}
+
+                                        <li class="c-reason">
+                                            <div class="c-bar" style="width:{$_percent}%"></div>
+                                            <div class="c-text">
+                                                <div class="c-layout fixed">
+                                                    <div class="c-column">
+
+                                                        <div class="c-name">{$_name|escape}</div>
+
+                                                    </div>
+                                                    <div class="c-column c-column-count right">
+                                                        <div class="c-count">{$_reason.cnt}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {/foreach}
+                                </ul>
+                            </section>
+                        {/if}
+                    </div>
+
+                {* Chart view *}
+                {else}
+                    <section class="c-header-section">
+                        <h1 class="c-page-header">
+                            {$won_deals_stat.count}
+                            <span class="gray custom-pr-4" style="font-weight: normal;">{_w('deal won', 'deals won', $won_deals_stat.count)}. [`Total won amount`]:</span>
+                            {$won_deals_stat.amount|wa_format_amount_currency:$won_deals_stat.currency_id}
+                        </h1>
+                    </section>
+
+                    <section class="c-graph-section js-graph-section">
+                        <div class="c-graph-wrapper js-sum-graph">
+                            <div class="c-graph js-graph"></div>
+                            <div class="c-hint-wrapper">
+                                <div class="line">
+                                    <span class="js-name"></span>
+                                    {*<span class="js-value"></span>*}
+                                </div>
+                                {*<div class="line">*}
+                                    {*<span class="js-date hint"></span>*}
+                                {*</div>*}
+                            </div>
+                        </div>
+                        <div class="c-graph-wrapper js-amount-graph">
+                            <div class="c-graph js-graph"></div>
+                            <div class="c-hint-wrapper">
+                                <div class="line">
+                                    <span class="js-name"></span>
+                                    <span class="js-value"></span>
+                                </div>
+                                <div class="line">
+                                    <span class="js-date hint"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                {/if}
+            {else}
+
+                <div class="c-empty-message not-blank">[`There are no closed deals for specified period.`]</div>
+            {/if}
+        </div>
+    </div>
+
+    <script>
+        ( function($) {
+            $.crm.title.set({$_title|json_encode});
+            //$.crm.renderSVG("#c-report-page");
+
+            new CRMReportPage({
+                $wrapper: $("#c-report-page"),
+                funnel_id: {if !empty($funnel.id)}{$funnel.id|json_encode}{else}false{/if},
+                funnel_color: {$funnel.color|default:"#aaa"|json_encode},
+                chartsData: {if !empty($charts)}{$charts|json_encode}{else}false{/if},
+                group_by: {if !empty($chart_params.group_by)}{$chart_params.group_by|json_encode}{else}false{/if},
+                locales: {
+                    months: [
+                        "{_ws('January', 'January')}",
+                        "{_ws('February', 'February', 1)}",
+                        "{_ws('March', 'March')}",
+                        "{_ws('April', 'April')}",
+                        "{_ws('May', 'May')}",
+                        "{_ws('June', 'June')}",
+                        "{_ws('July', 'July')}",
+                        "{_ws('August', 'August')}",
+                        "{_ws('September', 'September')}",
+                        "{_ws('October', 'October')}",
+                        "{_ws('November', 'November')}",
+                        "{_ws('December', 'December')}"
+                    ]
+                }
+            });
+        })(jQuery);
+    </script>
+</div>

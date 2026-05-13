@@ -1,0 +1,49 @@
+<div class="modal-dialog {$moda_size|default:''}">
+    <div class="modal-content category-form-wrapper">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">{$modal_title|escape}</h1>
+            </div>
+
+            <div class="modal-body">
+
+                <form method="POST" action="{$post_action_url|escape}" id="catalog_form">
+                    {$wa->csrf()}
+                    <input type="hidden" name="edit_id" value="{$catalog.id|escape}">
+
+                    <div class="mb-3">
+                        <label for="catalogName" class="form-label">Название каталога</label>
+                        <input type="text" class="form-control" id="catalogName" name="catalog[name]"
+                            value="{$catalog.name|escape}" placeholder="Например: Каталог для Озон" autofocus required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="catalogIcon" class="form-label">Иконка html</label>
+                        <input type="text" class="form-control" id="catalogIcon" name="catalog[icon]"
+                            value="{$catalog.icon|escape}" placeholder='Например: <i class="bi bi-folder"></i>'>
+                    </div>
+
+                    <div class="mb-0">
+                        <label for="catalogDescription" class="form-label">Описание</label>
+                        <textarea class="form-control" id="catalogDescription" name="catalog[description]" rows="3"
+                            placeholder="Краткое описание...">{$catalog.description|escape}</textarea>
+                    </div>
+
+                </form>
+                
+            </div>
+
+            <div class="modal-footer justify-content-start user-select-none">
+                <div class="field-group w-100">
+                    <a href="{$close_button_url|escape}" class="btn btn-secondary btn-sm me-2"
+                        hx-boost="true">Закрыть</a>
+                    <button type="submit" form="catalog_form" class="btn btn-success btn-sm">
+                        {$save_button_name|escape}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+{* SETTINGS LINK IF FILTER IS TUNABLE *}
+{capture assign="after_title_block"}{strip}
+    {if $is_filter_tunable}
+        <a href="javascript:void(0);" class="button nobutton circle" id="f-filter-settings-trigger" style="font-size: 1rem;">
+            <i class="fas fa-edit"></i>
+            <i class="fas fa-spin fa-spinner loading" style="display: none;"></i>
+        </a>
+    {/if}
+{/strip}{/capture}
+
+{* SHOW FILE LISTING *}
+{include file="../../files/include.files.html"
+    can_create_folder=false
+    can_share_folder=false
+    after_title_block=$after_title_block
+inline}
+
+
+{* FILTER SETTINGS *}
+{if $is_filter_tunable}
+    <div class="f-filter-settings-wrapper transparent" id="f-filter-settings-wrapper" style="display:none;">
+        <form>
+            <div class="custom-mb-16">
+                {$filter_settings_html}
+                <div class="buttons custom-mt-16">
+                    <input type="hidden" name="id" value="{$filter.id}">
+                    <input type="submit" class="button" value="[`Submit`]">
+                    <a href="javascript:void(0)" class="button light-gray f-cancel">[`Cancel`]</a>
+                </div>
+            </div>
+        </form>
+    </div>
+{/if}
+
+<script>
+    $(function() {
+        $.files.config.getSidebar().trigger('notify', [{
+            hash: 'filter/{$filter.id}',
+            counters: {
+                filter: {
+                    {$filter.id}: {$total_count}
+                }
+            }
+        }]);
+
+        {if $is_filter_tunable}
+
+            const $filter_settings_trigger = $('#f-filter-settings-trigger');
+
+            $.files.config.getMainContainer().find('.f-header-name').addClass('editable').on('click', function() {
+                $filter_settings_trigger.trigger('click');
+            });
+
+            var openSettings = function(fn) {
+                var main_container = $.files.config.getMainContainer();
+                $('.f-main-settings-block', main_container).slideDown(200, fn);
+                $('.f-main-header-wrapper', main_container).hide();
+            };
+
+            var closeSettings = function() {
+                var main_container = $.files.config.getMainContainer();
+                $('.f-main-settings-block', main_container).slideUp();
+                $('.f-main-header-wrapper', main_container).show();
+            };
+
+            $filter_settings_trigger.on('click', function() {
+                var main_container = $.files.config.getMainContainer();
+                var settings_wrapper = $('#f-filter-settings-wrapper');
+
+                // not first click on trigger button
+                if ($('.f-main-settings-block .f-filter-settings', main_container).length) {
+                    openSettings();
+                    return;
+                }
+
+                // first click on trigger button
+                $('.f-main-settings-block', main_container).html(settings_wrapper.show());
+                $('.f-cancel', settings_wrapper).on('click', function() {
+                    closeSettings();
+                });
+                $('.f-filter-delete', settings_wrapper).on('click', function() {
+                    $.files.confirmDelete(
+                        {
+                            title: '[`Delete filter`]',
+                            msg: '[`Are you sure?`]'
+                        },
+                        function() {
+                            $.files.jsonPost({
+                                url: '?module=filter&action=delete',
+                                data: { id: '{$filter.id}' },
+                                onSuccess: function() {
+                                    $.files.refreshSidebar();
+                                    $.files.controller.gotoDefaultPage();
+                                }
+                            });
+                        });
+                });
+                $('form', settings_wrapper).submit(function() {
+                    $.files.filterSettingsFormSubmit($(this), {
+                        onSuccess: function() {
+                            closeSettings();
+                        }
+                    });
+                    return false;
+                });
+                openSettings(function() {
+                    // хак для активации тоглера
+                    main_container.find('.f-filter-settings .f-toggle > :not(.selected)').trigger('click');
+                    main_container.find('.f-filter-settings .f-toggle > :not(.selected)').trigger('click');
+                });
+
+            });
+        {/if}
+
+    });
+</script>

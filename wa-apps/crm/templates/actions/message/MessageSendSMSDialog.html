@@ -1,0 +1,183 @@
+{if $iframe}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$wa->appName()} &mdash; {$wa->accountName()}</title>
+
+    {* CSS *}
+    {$wa->css()}
+    <link href="{$wa_app_static_url}js/jquery/jquery-ui.css?v={$wa->version()}" rel="stylesheet">
+    <link href="{$wa_app_static_url}css/crm.css?v={$wa->version()}" rel="stylesheet">
+    <link href="{$wa_app_static_url}css/crm2.css?v={$wa->version()}" rel="stylesheet">
+    <link href="{$wa_url}wa-content/js/redactor/2/redactor.css?v{$wa->version(true)}" rel="stylesheet">
+
+    {wa_js}
+        {$wa_url}wa-content/js/jquery/jquery-3.6.0.min.js
+        {$wa_url}wa-content/js/jquery-plugins/jquery.store.js
+        {$wa_url}wa-content/js/jquery-wa/wa.js
+    {/wa_js}
+
+    {wa_js}
+        {$wa_app_static_url}js/crmDialog/crmDialog.js
+        {$wa_app_static_url}js/crm.js
+        {$wa_app_static_url}js/message/message.sendSmsDialog.js
+    {/wa_js}
+
+    {$wa->js()}
+
+</head>
+<body>
+{/if}
+
+{$class = 'c-send-sms-dialog'}
+{$dialog_id = uniqid($class)}
+
+    <div class="{if $iframe}iframe-style {else}dialog {/if} {$class}" id="{$dialog_id}" >
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <form>
+                <header class="dialog-header">
+                    <h1>
+                        {sprintf(_w("Write SMS to %s"), $phone_formatted)}
+                    </h1>
+                </header>
+
+                <div class="dialog-content">
+                    <div class="fields c-message-form-wrapper">
+
+                        <div class="field">
+                            <div class="name">[`Sender`]</div>
+                            <div class="value" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <select name="from" class="js-sms-sender-list">
+                                    {foreach $sms_senders as $key => $item}
+                                        <option value="{$key}">{$item['name']|escape}</option>
+                                    {/foreach}
+                                </select>
+                                <input name="from" type="text" class="js-specified-sms-sender c-specified-sms-sender" style="display: none;" required disabled>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="name">[`To`]</div>
+                            <div class="value">
+                                <div class="c-layout">
+                                    <div class="c-column">
+                                        <span class="c-user-name">
+                                            <i class="icon userpic userpic-20 size-20" style="background-image: url({waContact::getPhotoUrl($contact.id, $contact.photo, 20)|escape});"></i>
+                                            {$contact.name|escape}
+
+                                            <input type="hidden" name="contact_id" value="{$contact.id}">
+                                            <input type="hidden" name="phone" value="{$phone}">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {if !empty($deal)}
+                            <div class="field">
+                                <div class="name">[`Deal`]</div>
+                                <div class="value js-message-deal">
+                                    {$_funnel = $funnels[$deal.funnel_id]|default:null}
+                                    {if $_funnel}
+                                        {$_stage = $stages[$deal.stage_id]|default:null}
+                                        {if $_stage}
+                                            <i class="{$_funnel.icon|default:'fas fa-briefcase'} funnel-state" style="color: {$_stage.color|escape}" title="{$_funnel.name|escape} / {$_stage.name|escape}"></i>
+                                            <a href="{$wa_app_url}deal/{$deal.id}/">{strip_tags($deal.name)|escape}</a>
+                                        {else}
+                                            [`Stage deleted`]
+                                        {/if}
+                                    {else}
+                                        [`Funnel deleted`]
+                                    {/if}
+                                </div>
+                                <input type="hidden" name="deal_id" value="{$deal.id}">
+                            </div>
+                        {/if}
+
+                        <div class="field textarea-class">
+                            <div class="name">[`Text`]</div>
+                            <div class="value ">
+                                <textarea name="text" class="wide js-send-sms-textarea" value="" placeholder="[`Type SMS here`]" required></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <footer class="dialog-footer flexbox middle space-4">
+                    <input class="button js-submit-button" type="submit" value="[`Send SMS`]">
+                    <a class="button light-gray js-close-dialog" href="javascript:void(0);">[`Cancel`]</a>
+                </footer>
+
+                <input name="hash" value="{$hash|default:""}" type="hidden">
+            </form>
+        </div>
+
+        {capture assign="_success_html"}
+            <div class="dialog-content" style="min-height: 40px;">
+                <p>[`Message sent successfully`]</p>
+            </div>
+
+            <footer class="dialog-footer">
+                <a class="button light-gray js-close-dialog" href="javascript:void(0);">[`Close`]</a>
+            </footer>
+        {/capture}
+
+        {capture assign="_error_html"}
+            <div class="dialog-content" style="min-height: 40px;">
+                <p class="js-error-text"></p>
+                {if $wa->user()->isAdmin()}
+                    <p class="js-technical-info-block js-unknown-error">
+                        {sprintf(_w('See detailed error-related information in log file <em>%s</em>.'), "sms.log")}
+                    </p>
+                    <p>{sprintf(
+                        sprintf_wp(
+                            'Check <a %s>SMS sending settings</a>.',
+                            'target="_top" href="%s"'
+                        ),
+                        "`$wa_backend_url`webasyst/settings/sms/")
+                    }</a></p>
+                {else}
+                    <p>{_ws('Please refer to your system administrator.')}</p>
+                {/if}
+
+            </div>
+            <footer class="dialog-footer">
+                <a class="button light-gray js-close-dialog" href="javascript:void(0);">[`Close`]</a>
+            </footer>
+        {/capture}
+
+    </div>
+
+    {$_locales = [
+        'send_error_title' => {_w("Message sending error")},
+        'send_error_text' => {_w("Can't send SMS")}
+    ]}
+
+    <script>
+        ( function($) {
+           // var $body = $(window.top.document).find("body");
+          //  $.waDialog({
+               // html: $body.find('#{$dialog_id}').show(),
+               // onOpen: function() {
+                    new CRMSendSmsDialog({
+                        $wrapper: $('#{$dialog_id}'),
+                        success_html: {$_success_html|json_encode},
+                        error_html: {$_error_html|json_encode},
+                        hash: {$hash|json_encode},
+                        send_action_url: {$send_action_url|default:''|json_encode},
+                        app_url: {"`$wa_backend_url`crm/"|json_encode},
+                        locales: {$_locales|json_encode},
+                        iframe: {$iframe|json_encode}
+                    });
+             //   }
+           // });
+        })(jQuery);
+    </script>
+
+{if $iframe}
+</body>
+</html>
+{/if}

@@ -1,0 +1,56 @@
+<div id="promos" class="custom-pr-8">
+    <p class="alert">
+        {sprintf_wp(
+            'These advanced features will become available after the purchase of the <strong>Logs+</strong> license in %sInstaller%s.',
+            {sprintf(
+                '<a href="%sinstaller/store/app/logs/">',
+                $wa_backend_url
+            )},
+            '</a>'
+        )}
+    </p>
+    <div class="promos-list">
+        <div class="promo" data-feature="search-file-name">
+            <h3><i class="fas fa-star text-yellow"></i> [`Search by file name`]</h3>
+            <p>[`Start typing any <strong>part of a file name</strong> and quickly open the desired log file from the found list.`]</p>
+            <p><img src="{$wa_app_static_url}img/premium/promos/{$locale}/search-file-name.jpg?{$wa->version()}"></p>
+        </div>
+        <div class="promo" data-feature="search-file-text">
+            <h3><i class="fas fa-star text-yellow"></i> [`Search files by text`]</h3>
+            <p>[`Type a <strong>word or phrase</strong> to quickly find all files containing the entered text.`]</p>
+            <p><img src="{$wa_app_static_url}img/premium/promos/{$locale}/search-file-text.jpg?{$wa->version()}"></p>
+        </div>
+        <div class="promo" data-feature="search-app">
+            <h3><i class="fas fa-star text-yellow"></i> [`Search by app, plugin or widget`]</h3>
+            <p>[`Use the smart search to view only <strong>files related to a certain software product</strong>.`]</p>
+            <p><img src="{$wa_app_static_url}img/premium/promos/{$locale}/search-product.jpg?{$wa->version()}"></p>
+        </div>
+        <div class="promo" data-feature="search-file-contents">
+            <h3><i class="fas fa-star text-yellow"></i> [`Search text in a file`]</h3>
+            <p>[`Find <strong>all occurrences of a text query in a file</strong>. Easy navigation across all found entries using the “previous” and “next” buttons.`]</p>
+            <p><img src="{$wa_app_static_url}img/premium/promos/{$locale}/search-file-contents.jpg?{$wa->version()}"></p>
+        </div>
+        <div class="promo" data-feature="tracked-email-notifications">
+            <h3><i class="fas fa-star text-yellow"></i> [`Get email notifications on updated files`]</h3>
+            {capture name="tracked_icon"}
+            <i class="fas fa-flag"></i>
+            {/capture}
+            <p>{sprintf_wp(
+                'Mark <strong>important log files</strong> as <em>tracked</em> %s and enable the <strong>email notification setting</strong> to get the list of those files emailed to you every time their contents are updated.',
+                trim($smarty.capture.tracked_icon)
+            )}</p>
+            <p>[`You can save any <strong>keywords</strong> in the settings to look for in updated files.`]</p>
+            <p><img src="{$wa_app_static_url}img/premium/promos/{$locale}/email-updated-files.jpg?{$wa->version()}"></p>
+        </div>
+        <div class="promo" data-feature="bulk-delete">
+            <h3><i class="fas fa-star text-yellow"></i> [`Multiple files deletion`]</h3>
+            <p>[`Select <strong>any number of files and directories</strong> and delete them all in one click.`]</p>
+            <p><img src="{$wa_app_static_url}img/premium/promos/{$locale}/multiple-files-deletion.jpg?{$wa->version()}"></p>
+        </div>
+        <div class="promo" data-feature="sort-mode">
+            <h3><i class="fas fa-star text-yellow"></i> [`Auto-remembered sort order`]</h3>
+            <p>[`Enable <strong>auto-remembering of the sort order</strong> of files and directories to make them always sorted according to your last choice when you open the app’s home page.`]</p>
+            <p><img src="{$wa_app_static_url}img/premium/promos/{$locale}/sort-mode.jpg?{$wa->version()}"></p>
+        </div>
+    </div>
+</div>

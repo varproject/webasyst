@@ -1,0 +1,47 @@
+/*
+// .sa-entity-layout
+*/
+@use '../direction' as dir;
+
+.sa-entity-layout {
+    --sa-entity-layout--gutter: 1.5em;
+}
+.sa-entity-layout__body {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(var(--sa-entity-layout--gutter) * -1);
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: calc(var(--sa-entity-layout--gutter) * -1);
+    }
+}
+.sa-entity-layout__main,
+.sa-entity-layout__sidebar {
+    flex-basis: calc(100% - var(--sa-entity-layout--gutter));
+    max-width: calc(100% - var(--sa-entity-layout--gutter));
+    flex-grow: 1;
+    margin-top: var(--sa-entity-layout--gutter);
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: var(--sa-entity-layout--gutter);
+    }
+}
+
+.sa-entity-layout--size--md {
+    .sa-entity-layout__main,
+    .sa-entity-layout__sidebar {
+        flex-basis: 0;
+    }
+    .sa-entity-layout__main {
+        width: auto;
+        flex-shrink: 1;
+    }
+    .sa-entity-layout__sidebar {
+        max-width: 20rem;
+    }
+}
+.sa-entity-layout--size--lg {
+    .sa-entity-layout__sidebar {
+        max-width: 24rem;
+    }
+}

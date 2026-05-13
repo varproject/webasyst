@@ -1,0 +1,28 @@
+/*
+// labels
+*/
+@use 'sass:map';
+@use 'sass:math';
+@use '../custom-variables' as vs;
+
+@each $size, $variables in vs.$sa-input--sizes {
+    $local-prefix: '';
+
+    @if($size != 'default') {
+        $local-prefix: '-' + $size;
+    }
+
+    $local-line-height: map.get($variables, line-height);
+
+    @if (math.is-unitless($local-line-height)) {
+        $local-line-height: map.get($variables, font-size) * map.get($variables, line-height);
+    }
+
+    .col-form-label#{$local-prefix} {
+        padding-top: calc(#{map.get($variables, padding-y)} + #{vs.$sa-input--border-width});
+        padding-bottom: calc(#{map.get($variables, padding-y)} + #{vs.$sa-input--border-width});
+        font-size: map.get($variables, font-size);
+        line-height: $local-line-height;
+        min-height: calc(#{$local-line-height} + #{vs.$sa-input--border-width * 2} + var(--sa-input-padding-y) * 2);
+    }
+}

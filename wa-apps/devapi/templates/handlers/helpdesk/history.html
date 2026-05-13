@@ -1,0 +1,20 @@
+<header class="drawer-header custom-p-12"><h4>[`Другие запросы пользователя`] <span class="gray"> [{count($requests)}]</span></header>
+<ul id="devapi-requests-history" class="list">
+    {foreach $requests as $r}
+        <li class="item" request-id="{$r.id}">
+            <a class="image request"><img class="userpic" src="{$r.client_photo_url}" style="max-width: 50px;"></a>
+            <a class="details request">
+                <div class="tablebox">
+                    <strong>{$r.summary}</strong>
+                    <span class="badge gray smaller custom-p-8" style="float: right;">{$r.state}</span>
+                </div>
+                <p class="hint">{$r.time_since_update}</p>
+            </a>
+        </li>
+    {/foreach}
+</ul>
+<style>
+    #devapi-requests-history > li:hover {
+        background: var(--list-item-selected-background-color);
+    }
+</style>

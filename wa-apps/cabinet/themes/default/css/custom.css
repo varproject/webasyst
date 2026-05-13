@@ -1,0 +1,13 @@
+.sa-nav__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 12px;
+}
+
+.sa-nav__icon i {
+    font-size: 16px;
+    line-height: 1;
+}

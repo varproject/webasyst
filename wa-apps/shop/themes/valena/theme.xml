@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE theme PUBLIC "wa-app-theme" "http://www.webasyst.com/wa-content/xml/wa-app-theme.dtd">
+<theme id="valena" vendor="123456" author="Petrosian Vagram" app="shop" version="1.0.0">
+    <name locale="ru_RU">Valena</name>
+    <name locale="en_US">Valena</name>
+
+    <files>
+        <file path="index.html">
+            <description locale="ru_RU">Основной макет</description>
+            <description locale="en_US">Main layout</description>
+        </file>
+
+        <file path="page.html">
+            <description locale="ru_RU">Стандартная страница</description>
+        </file>
+
+        <file path="category.html">
+            <description locale="ru_RU">Категория каталога</description>
+        </file>
+
+        <file path="product.html">
+            <description locale="ru_RU">Страница товара</description>
+        </file>
+
+        <file path="cart.html">
+            <description locale="ru_RU">Корзина</description>
+        </file>
+
+        <file path="checkout.html">
+            <description locale="ru_RU">Оформление заказа</description>
+        </file>
+
+        <file path="search.html">
+            <description locale="ru_RU">Результаты поиска</description>
+        </file>
+
+        <file path="sidebar.html">
+            <description locale="ru_RU">Боковая колонка</description>
+        </file>
+
+        <file path="error.html">
+            <description locale="ru_RU">Ошибки и 404</description>
+        </file>
+
+        <file path="default.css">
+            <description locale="ru_RU">Основные стили</description>
+        </file>
+
+        <file path="mobile.css">
+            <description locale="ru_RU">Мобильные стили</description>
+        </file>
+    </files>
+</theme>

@@ -1,0 +1,60 @@
+{if empty($disabled_waid)}
+<div class="s-settings-business">
+    {if !empty($assets)}{$assets}{/if}
+    <h1 class="flexbox middle space-8">
+        <i class="icon webasyst-magic-wand"></i>
+        Развивайте бизнес вместе с Webasyst
+    </h1>
+    <p class="small">
+        Специальные предложения от банков-партнеров и платежных систем.
+    </p>
+
+    <div class="s-business-lead-forms custom-mb-32">
+        {if $lead_forms|count > 1}
+            <div class="custom-mb-16">
+                {include file="./BackendFormPrefills.html" inline}
+            </div>
+
+            {* BRICKS *}
+            <div class="s-business-bricks-wrapper">
+                <div class="s-business-bricks bricks">
+                    {foreach $lead_forms as $form_id => $form}
+                        <a class="brick{if $form@first} selected{/if}" href="javascript:void(0)" data-form-id="{$form_id}"
+                            style="background-image: url({$img_path}/{$form_id}.logo.png?v1); background-color: var(--{$form_id}-primary-color);">
+                            {if is_array($form) && !empty($form.is_recommended)}
+                                <span class="badge red"><i class="fas fa-star"></i></span>
+                            {/if}
+                        </a>
+                    {/foreach}
+                </div>
+            </div>
+        {/if}
+
+        {* LEAD FORMS *}
+        <div class="s-business-lead-form-list custom-mt-16">
+            {foreach $lead_forms as $form_id => $form}
+                <div class="s-business-lead-form-wrapper{if $form@first} is-show{/if}" data-id="{$form_id}">{(is_array($form)) ? $form.html : $form}</div>
+            {/foreach}
+        </div>
+    </div>
+
+</div>
+<script>
+$(function () {
+    document.title = "[`Business`] — {$wa->accountName(false)|escape:javascript}";
+
+    $('.s-business-bricks [data-form-id]').on('click', function () {
+        const $self = $(this);
+        $self.addClass('selected').siblings().removeClass('selected');
+
+        const $need_form = $(`.s-business-lead-form-wrapper[data-id="${ $self.data('form-id') }"]`).addClass('is-show');
+        $need_form.siblings().removeClass('is-show');
+    });
+})
+</script>
+
+{else}
+<div class="alert warning">
+    Для работы плагина нужно <a href="{$wa_backend_url}webasyst/settings/waid/">включить Webasyst ID</a> в общих настройках системы.
+</div>
+{/if}

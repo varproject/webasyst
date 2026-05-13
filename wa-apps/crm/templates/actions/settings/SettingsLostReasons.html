@@ -1,0 +1,95 @@
+<div class="c-reasons-page" id="c-reasons-page">
+    <form>
+        <h1 class="c-page-header">[`Deal loss reasons`]</h1>
+
+        <div class="custom-my-20 custom-ml-2 small">
+            <div class="custom-mb-12">
+                <label>
+                    <span class="wa-checkbox"><input type="checkbox" name="lost_reason_require" {if !empty($lost_reason_require)}checked{/if}>
+                        <span>
+                            <span class="icon">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        </span>
+                    </span>
+                    <span>[`Request a reason for lost deals`]</span>
+                </label>
+            </div>
+            <div>
+                <label>
+                  <span class="wa-checkbox">
+                    <input class="js-free-field" type="checkbox" name="lost_reason_freeform" {if !empty($lost_reason_freeform)}checked{/if}>
+                    <span>
+                      <span class="icon">
+                          <i class="fas fa-check"></i>
+                      </span>
+                  </span>
+                  </span>
+                  <span>[`Allow entering free-form reasons in addition to predefined options`]</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="fields">
+            <section class="c-reasons-section fields-group">
+                {function _renderReason}
+                    <li class="flexbox middle wrap space-12 c-reason" {if !empty($_reason)}data-id="{$_reason.id}"{/if}>
+                        <i class="fas fa-grip-vertical text-light-gray c-sort-toggle js-sort-toggle"></i>
+                        <div class="flexbox middle wrap space-8">
+                            <input class="js-name-field" type="text" placeholder="[`Reason name`]" value="{if !empty($_reason)}{$_reason.name|escape}{else}[`New reason`]{/if}" required>
+                            <div class="wa-select">
+                                <select class="js-funnel-id-field not-styled">
+                                    <option value="0">[`All funnels`]</option>
+                                    {foreach $_funnels as $_funnel}
+                                        <option value="{$_funnel.id}" {if isset($_reason.funnel_id) && $_reason.funnel_id == $_funnel.id}selected{/if}>{$_funnel.name|escape:"html"}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                            <a class="button nobutton light-gray small c-delete-link js-delete-reason" href="javascript:void(0);" title="[`Delete`]">
+                                <i class="fas fa-trash-alt text-red"></i>
+                            </a>
+                        </div>
+
+                    </li>
+                {/function}
+
+                {capture assign="_reason_template_html"}{_renderReason _reason=[] _funnels=$funnels}{/capture}
+
+                <ul class="compact c-reasons-list js-reasons-list">
+                    {foreach $reasons as $_reason}
+                        {_renderReason _reason=$_reason _funnels=$funnels}
+                    {/foreach}
+                </ul>
+
+                <div class="c-actions custom-mt-20">
+                    <a class="button small rounded light-gray js-add-reason" href="javascript:void(0);">
+                        <i class="fas fa-plus-circle text-green"></i>
+                        [`Add reason`]
+                    </a>
+                </div>
+            </section>
+        </div>
+
+        <div class="c-settings-footer bottombar sticky">
+            <div class="c-footer-actions js-footer-actions">
+                <button class="button js-submit-button" type="submit">[`Save`]</button>
+                <span class="js-hidden-actions" style="display: none;">
+                    <a href="{$wa_app_url}settings/lostReasons/" class="button light-gray">[`Cancel`]</a>
+                </span>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        ( function($) {
+            new CRMReasonsPage({
+                $wrapper: $("#c-reasons-page"),
+                reason_template_html: {$_reason_template_html|json_encode},
+                locales: {
+                    saving: '<span class="c-hint"> <i class="fas fa-spinner fa-spin loading"></i></span>',
+                    saved: '<span class="c-hint"> <i class="fas fa-check-circle"></i></span>'
+                }
+            });
+        })(jQuery);
+    </script>
+</div>

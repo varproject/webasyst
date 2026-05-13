@@ -1,0 +1,519 @@
+{strip}
+
+{function order_url info=[] text=''}
+    <a href="{if !$hash_url}#{else}#/{$hash_url}{/if}/{$info.link|default:''}">{$text}{if $info.order} <i class="large fas fa-caret-{if $info.order === 'asc'}up{elseif $info.order === 'desc'}down{/if}"></i>{/if}</a>
+{/function}
+
+{if !isset($operations)}
+    {$operations = ['move', 'move_to_trash', 'rename', 'mark', 'copy', 'tags', 'send']}
+{/if}
+
+{$hidden_cols_map = array_fill_keys($hidden_cols|default:[], true)}
+{$operations_map = array_fill_keys($operations, true)}
+
+{function lazy_load_block offset=0 count=0 total_count=0}
+    <div class="block half-padded">
+        <br>
+        <div class="f-lazyloading-progress-string">{_w('%d item','%d items', min($offset + $count, $total_count))}&nbsp;{sprintf(_w('of %d'), $total_count)}</div><br>
+        <a href="javascript:void(0);" class="f-lazyloading-link" {if $count >= $total_count}style="display:none;"{/if}>[`Show more files`]</a>
+        <span class="f-lazyloading-progress" style="display:none">
+            <i class="fas fa-spinner fa-spin custom-mr-4"></i> [`Loading`] <span class="f-lazyloading-chunk">{_w('%d item','%d items', min($total_count - $offset - $count, $count))}...</span>
+        </span>
+    </div>
+{/function}
+
+{* TEMPLATE HELPERS END *}
+
+{if !$in_lazy_process}
+
+    <h1 class="f-main-header-wrapper flexbox middle wrap-mobile custom-mt-0">
+        <a class="f-back-to-list small back custom-mr-8" href="javascript:void(0);" title="[`Back`]"><i class="fas fa-arrow-circle-left custom-mr-4"></i></a>
+        <span class="f-header-name">{$title|escape}</span>
+
+        <div class="custom-ml-8 flexbox middle space-4 smallest">
+            {$after_title_block|default:''}
+        </div>
+
+        {if $source.icon_html}
+            <span class="f-header-icon smaller">
+                {if $source.access}
+                    <a href="#/source/{$source.id}/" title="{sprintf('[`via %s (%s)`]', $source.provider_name|escape, $source.name|escape)}">{$source.icon_html}</a>
+                {else}
+                    {$source.icon_html}
+                {/if}
+                {if !$source.has_valid_token}
+                    {if $source.access}
+                        <a href="#/source/{$source.id}/" title="[`Source authorization code is canceled or expired`]" class="text-yellow"><i class="fas fa-exclamation-triangle smaller"></i></a>
+                    {else}
+                        <i class="fas fa-exclamation-triangle smaller text-yellow" title="[`Source authorization code is canceled or expired`]"></i>
+                    {/if}
+                {/if}
+            </span>
+        {/if}
+        <i class="fas fa-spinner fa-spin smaller custom-ml-8 text-gray f-loading" style="display: none"></i>
+    </h1>
+
+    <div class="f-main-settings-block" style="display:none;"></div>
+
+    <div class="flexbox middle space-4 custom-mb-16">
+
+        {if $can_create_folder|default:''}
+            <a id="f-create-folder-link" class="f-create-folder-link button light-gray rounded {if !empty($in_sync)}f-in-sync{/if}" href="javascript:void(0);">
+                <i class="fas fa-folder-plus text-blue"></i>
+                <span class="custom-ml-8 desktop-only">[`Create subfolder`]</span>
+            </a>
+        {/if}
+        {if $can_share_folder|default:''}
+            {if $has_full_access_to_folder}
+                <a id="f-public-link" class="f-public-link button light-gray rounded" href="javascript:void(0)">
+                    <i class="fas fa-globe{if !empty($folder.hash) && $folder.hash} text-blue{else} text-gray{/if}"></i>
+                    <span class="custom-ml-4 desktop-only">[`Public link`]</span>
+                </a>
+                <a id="f-share-link" class="f-share-link button light-gray rounded" href="javascript:void(0);">
+                    <i class="fas fa-users text-gray custom-mr-4"></i>
+                    {* if $is_folder_shared}
+                        [`Sharing settings`]
+                    {else}
+                        [`Share this folder`]
+                    {/if *}
+                    [`Access`]
+                </a>
+            {/if}
+        {/if}
+
+        {$before_links_block|default:''}
+        {$after_links_block|default:''}
+
+        {if !empty($is_trash) && $files}
+                <a class="f-trash-clear button light-gray rounded text-red" id="f-trash-clear" href="javascript:void(0);" data-confirm-text="[`Do you really want to clean the trash and delete all files?`]" title="[`Clear trash`] ">
+                    <i class="fas fa fa-trash-alt"></i>
+                </a>
+        {/if}
+    </div>
+
+
+    {if !empty($breadcrumbs) && count($breadcrumbs)>1}
+        <ul class="breadcrumbs custom-mb-32">
+            {foreach $breadcrumbs as $breadcrumb}
+                {if !$breadcrumb@last}
+                    <li>
+                        <a href="{$breadcrumb.backend_url}" title="{$breadcrumb.name|escape}">{$breadcrumb.name|escape|truncate:64}</a>
+                    </li>
+                {/if}
+            {/foreach}
+        </ul>
+    {/if}
+
+    {$after_breadcrumbs_block|default:''}
+
+    <div class="f-message-block" style="display:none;"></div>
+
+    <div id="f-lazyloading-files-container">
+        <div class="f-catalog-content table-scrollable-x">
+            {if !empty($operations)}
+                <div class="f-operations-wrapper" id="f-operations-menu">
+                    <div class="f-checkbox-wrapper">
+                        <input class="f-checkbox" type="checkbox" name="">
+                    </div>
+                    <ul class="f-operations-list chips custom-ml-16 small">
+                        {if $operations_map.rename|default:''}
+                            <li>
+                                <a class="f-operation-link is-rename {if !empty($in_sync)}f-in-sync{/if} js-rename-link" id="f-rename-link" href="javascript:void(0);">
+                                    <i class="fas fa-pencil-alt text-orange"></i>[`Rename`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.send|default:''}
+                            <li>
+                                <a class="f-operation-link is-send js-send-link" id="f-send-link" href="javascript:void(0);">
+                                    <i class="fas fa-envelope text-yellow"></i>[`Send as attachment`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.copy|default:''}
+                            <li>
+                                <a class="f-operation-link is-copy {if !empty($in_sync)}f-in-sync{/if} js-copy-link" id="f-copy-link" href="javascript:void(0);">
+                                    <i class="fas fa-copy text-blue"></i>[`Duplicate`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.move|default:''}
+                            <li>
+                                <a class="f-operation-link is-move {if !empty($in_sync)}f-in-sync{/if} js-move-link" id="f-move-link" href="javascript:void(0);">
+                                    <i class="fas fa-file-export text-blue"></i>
+                                    [`Move`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.mark|default:''}
+                            <li>
+                                <a class="f-operation-link is-mark js-mark-link" id="f-mark-link" href="javascript:void(0);">
+                                    <i class="fas fa-palette text-purple"></i>
+                                    [`Mark`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.tags|default:''}
+                            <li>
+                                <a class="f-operation-link is-tags js-tags-link" id="f-tags-link" href="javascript:void(0);">
+                                    <i class="fas fa-hashtag text-green"></i>
+                                    [`Tags`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.move_to_trash|default:''}
+                            <li>
+                                <a class="f-operation-link is-trash {if !empty($in_sync)}f-in-sync{/if} js-move-to-trash-link" id="f-move-to-trash-link" href="javascript:void(0);">
+                                    <i class="fas fa-trash text-red"></i>
+                                    [`Delete`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.restore|default:''}
+                            <li>
+                                <a class="f-operation-link is-restore {if !empty($in_sync)}f-in-sync{/if} js-restore-link" id="f-restore-link" href="javascript:void(0);">
+                                    <i class="fas fa-trash-restore text-blue"></i>
+                                    [`Restore`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+                        {if $operations_map.delete|default:''}
+                            <li>
+                                <a class="f-operation-link is-delete {if !empty($in_sync)}f-in-sync{/if} js-delete-link" id="f-delete-link" href="javascript:void(0);">
+                                    <i class="fas fa-times text-red"></i>
+                                    [`Delete permanently`]<span class="f-count count"></span>
+                                </a>
+                            </li>
+                        {/if}
+
+
+                        <!-- plugin hook: 'backend_file.operations_menu' -->
+                        {* @event backend_file.%plugin_id%.operations_menu *}
+                        {foreach $backend_file_list as $plugin_id => $item}
+                            {if !empty($item.operations_menu)}
+                                {$item.operations_menu}
+                            {/if}
+                        {/foreach}
+
+                    </ul>
+
+                    <div class="dropdown smaller js-operations-list-dd">
+                        <button class="dropdown-toggle button light-gray" type="button">[`Выберите действие`]</button>
+                        <div class="dropdown-body dd-wide">
+
+                            <ul class="f-operations-list menu">
+                                {if $operations_map.rename|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-rename {if !empty($in_sync)}f-in-sync{/if} js-rename-link" id="f-rename-link" href="javascript:void(0);">
+                                            <i class="fas fa-pencil-alt text-orange"></i>[`Rename`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if $operations_map.send|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-send js-send-link" id="f-send-link" href="javascript:void(0);">
+                                            <i class="fas fa-envelope text-yellow"></i>[`Send as attachment`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if $operations_map.copy|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-copy {if !empty($in_sync)}f-in-sync{/if} js-copy-link" id="f-copy-link" href="javascript:void(0);">
+                                            <i class="fas fa-copy text-blue"></i>[`Duplicate`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if $operations_map.move|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-move {if !empty($in_sync)}f-in-sync{/if} js-move-link" id="f-move-link" href="javascript:void(0);">
+                                            <i class="fas fa-file-export text-blue"></i>
+                                            [`Move`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if $operations_map.mark|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-mark js-mark-link" id="f-mark-link" href="javascript:void(0);">
+                                            <i class="fas fa-palette text-purple"></i>
+                                            [`Mark`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if $operations_map.tags|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-tags js-tags-link" id="f-tags-link" href="javascript:void(0);">
+                                            <i class="fas fa-hashtag text-green"></i>
+                                            [`Tags`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if $operations_map.move_to_trash|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-trash {if !empty($in_sync)}f-in-sync{/if} js-move-to-trash-link" id="f-move-to-trash-link" href="javascript:void(0);">
+                                            <i class="fas fa-trash text-red"></i>
+                                            [`Delete`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if $operations_map.restore|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-restore {if !empty($in_sync)}f-in-sync{/if} js-restore-link" id="f-restore-link" href="javascript:void(0);">
+                                            <i class="fas fa-trash-restore text-blue"></i>
+                                            [`Restore`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+                                {if $operations_map.delete|default:''}
+                                    <li>
+                                        <a class="f-operation-link is-delete {if !empty($in_sync)}f-in-sync{/if} js-delete-link" id="f-delete-link" href="javascript:void(0);">
+                                            <i class="fas fa-times text-red"></i>
+                                            [`Delete permanently`]<span class="f-count count"></span>
+                                        </a>
+                                    </li>
+                                {/if}
+
+
+                                <!-- plugin hook: 'backend_file.operations_menu' -->
+                                {* @event backend_file.%plugin_id%.operations_menu *}
+                                {foreach $backend_file_list as $plugin_id => $item}
+                                    {if !empty($item.operations_menu)}
+                                        {$item.operations_menu}
+                                    {/if}
+                                {/foreach}
+
+                            </ul>
+
+                        </div>
+                        <script>
+                            ( function($) {
+                                $(".js-operations-list-dd").waDropdown();
+                            })(jQuery);
+                        </script>
+                    </div>
+
+                </div>
+            {/if}
+
+            <div class="f-catalog-wrapper" id="f-catalog-wrapper">
+
+                {* HEADER *}
+                <div class="f-row-wrapper f-catalog-header">
+
+                    {if $total_count > 0}
+                        <div class="f-column-item f-column-header f-checkbox-column">
+                            <input class="f-checkbox check-all-files" type="checkbox" name="">
+                        </div>
+                    {/if}
+
+                    <div class="f-column-item f-column-header f-image-column"></div>
+
+                    <div class="f-column-item f-column-header f-name-column nowrap">
+                        {order_url info=$order_info.name text="[`Name`]"}
+                    </div>
+
+                    {if !$hidden_cols_map.share|default:''}
+                        <div class="f-column-item f-column-header f-link-column"></div>
+                    {/if}
+
+                    <div class="f-column-item f-column-header f-update-column nowrap">
+                        {order_url info=$order_info.update_datetime text="[`Updated`]"}
+                    </div>
+
+                    <div class="f-column-item f-column-header f-size-column nowrap">
+                        {order_url info=$order_info.size text="[`Size`]"}
+                    </div>
+
+                    <div class="f-column-item f-column-header f-meta-column"></div>
+
+                    {if !$hidden_cols_map.contact|default:''}
+                        <div class="f-column-item f-column-header f-contact-column"></div>
+                    {/if}
+
+                    {if !$hidden_cols_map.favorite|default:''}
+                        <div class="f-column-item f-column-header f-favorites-column"></div>
+                    {/if}
+                </div>
+
+                {* CATALOG *}
+                {include file="./include.files.content.html" inline}
+            </div>
+            {lazy_load_block count=$count offset=$offset total_count=$total_count}
+        </div>
+    </div>
+
+    <script>( function($) {
+
+        {* Init Files Catalog Page *}
+        new FilesCatalog({
+            $catalog: $("#f-catalog-wrapper"),
+            $operationMenu: $("#f-operations-menu"),
+            storage_id: {if isset($storage_id)}{$storage_id}{else}false{/if},
+            folder_id: {if isset($folder_id)}{$folder_id}{else}false{/if},
+        });
+
+        $.files.config.setPageInfo($.files.controller.getCurrentHash(2), {$page_info|json_encode});
+
+        {if $source && $source.id > 0}
+            $.files.config.setSourceId({$source.id});
+        {else}
+            $.files.config.setSourceId(0);
+        {/if}
+
+        $.files.detectFlexWrap('.f-operations-list');
+
+        $( function() {
+
+            var files_list_wrapper = $('#f-catalog-wrapper').favorite('.f-set-favorite-link', {
+                url: '?module=favorite&action=save',
+                serialize: function(el) {
+                    return 'id=' + el.closest('.f-catalog-item').data('id');
+                },
+                onSuccess: function(r) {
+                    if (r && r.status === 'ok') {
+                        $.files.refreshSidebar();
+                        if (r.data.favorite) {
+                            return 'favorite';
+                        } else {
+                            return '';
+                        }
+                    }
+                }
+            });
+
+            $.files.initLazyLoad({
+                url: '{$url|default:''}',
+                container: '#f-lazyloading-files-container',
+                total_count: {$total_count},
+                count: {$count},
+                onLoad: function() {
+                    files_list_wrapper.favorite('.f-set-favorite-link', 'init');
+                }
+            });
+
+            $.files.setBrowserTitle('{$title|escape:"javascript"}');
+
+            {if $operations_map.move|default:'' || $operations_map.move_to_trash|default:''}
+                var sidebar = $.files.config.getSidebar();
+                var file_list = $.files.config.getFileList();
+                $.files.dragndrop.init({
+                    file_list: file_list,
+                    sidebar: sidebar
+                });
+
+                {if $operations_map.move|default:''}
+
+                    let empty_process_dialog = $('.f-move-process-empty-dialog');
+                    if (!empty_process_dialog.length) {
+                        $.files.loadDialog('?module=move&action=processDialog', {
+                            onOpen: function ($dialog) {
+                                empty_process_dialog = $dialog;
+                                empty_process_dialog.hide();
+                                setTimeout(() => $('body').removeClass('is-locked'))
+                            }
+                        });
+                    }
+                    file_list.on('move_files', function(e, options) {
+                        var file_ids = options.file_ids || [];
+                        var folder_id = options.folder_id || 0;
+                        var storage_id = options.storage_id || 0;
+                        if (!file_ids.length) {
+                            return;
+                        }
+                        if (!folder_id && !storage_id) {
+                            return;
+                        }
+
+                        $.files.moveFiles({
+                            file_ids: file_ids,
+                            folder_id: folder_id,
+                            storage_id: storage_id,
+                            beforeMoveFiles: function () {
+                                if (empty_process_dialog.length) {
+                                    $('.dialog').hide();
+                                    empty_process_dialog.show();
+                                }
+                            },
+                            onSuccess: function (r) {
+                                if (r.status === 'ok') {
+
+                                    $.files.runCopyFiles();
+                                    $.files.checkBackendChanges();
+
+                                    var $catalog = $("#f-catalog-wrapper");
+                                    if ($catalog.length) {
+                                        $catalog.trigger("unSelectAll");
+                                    }
+
+                                    if (r.data.process_id > 0) {
+                                        $.files.loadDialog('?module=move&action=processDialog&copytask_process_id=' + r.data.process_id, {
+                                            onOpen: function ($dialog) {
+                                                $('.dialog').hide();
+                                            }
+                                        });
+                                        $.files.refreshSidebar();
+                                        return;
+                                    }
+
+                                    $.files.refreshSidebar();
+                                    $.files.controller.reloadPage();
+                                    $('.dialog').hide();
+
+                                } else {
+                                    $('.dialog').hide();
+                                    $.files.alertError(r.errors[0][0]);
+                                }
+                            }
+                        });
+                    });
+                {/if}
+
+                {if $operations_map.move_to_trash|default:''}
+                    file_list.on('move_files_to_trash', function(e, options) {
+                        var q = $.map(options.file_ids || [], function(file_id) {
+                            return 'file_id[]=' + file_id;
+                        }).join('&');
+                        $.files.loadDialog('?module=delete&' + q);
+                    });
+                {/if}
+
+            {/if}
+
+            $.files.config.getFileList().on('click', '.show-public-link-dialog', function() {
+                var file_id = $(this).closest('.f-catalog-item').data('id');
+                $.files.loadDialog('?module=share&public_link=1&file_id=' + file_id);
+            });
+
+            $.files.config.getFileList().on('make_filter', function(e, options) {
+                var file_ids = options.file_ids;
+                if (!$.isEmptyObject(file_ids)) {
+                    if (file_ids.length === 1) {
+                        $.files.jsonPost({
+                            url: '?module=filter&action=save',
+                            data: { file_id: file_ids, acting_type: '{filesFilterModel::ACTING_TYPE_LIST}' },
+                            onSuccess: function(r) {
+                                if (r.status === 'ok' && r.data.filter) {
+                                    $.files.refreshSidebar();
+                                }
+                            }
+                        });
+                    } else {
+                        var q = $.map(options.file_ids || [], function(file_id) {
+                            return 'file_id[]=' + file_id;
+                        }).join('&');
+                        $.files.loadDialog('?module=filter&action=create&acting_type={filesFilterModel::ACTING_TYPE_LIST}&' + q);
+                    }
+                }
+            });
+
+        });
+
+    })(jQuery);</script>
+
+{else}
+    <div class="f-lazyloading-files-container">
+        {include file="./include.files.content.html" inline}
+        {lazy_load_block count=$count offset=$offset total_count=$total_count}
+    </div>
+{/if}
+
+{/strip}

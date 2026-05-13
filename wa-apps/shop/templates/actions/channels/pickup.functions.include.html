@@ -1,0 +1,139 @@
+{function name="_close_button"}
+    <a class="js-close-dialog p-4" href="javascript:void(0)">
+        <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.0718 12.0714L5 19.1432M12.0718 12.0714L5 5M12.0718 12.0714L19.1428 5.00041M12.0718 12.0714L19.1428 19.1423" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+{/function}
+
+{function name="_header_block" title='' show_back=false mobile_toolbar=false}
+<div class="pickup-header">
+    <div class="flex">
+        {if $show_back}
+            <a class="js-back" href="javascript:void(0)" title="[`Back`]" style="transform: rotate(180deg);align-self: flex-start;margin-right: 0.5rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.3751 19.5713L17.4462 12.5002L10.375 5.4292" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        {/if}
+        <h3 class="pickup-heading js-heading">{$title|escape}</h3>
+        {_close_button}
+    </div>
+    {if $mobile_toolbar}
+        <div class="pickup-mobile-toolbar mt-16">
+            <h4 class="m-0">
+                [`Pickup locations`]
+            </h4>
+            <div class="pickup-toggler js-view-toolbar">
+                <span data-id="list" class="selected">[`List`]</span>
+                <span data-id="map" class="">[`Map`]</span>
+            </div>
+        </div>
+    {/if}
+</div>
+{/function}
+
+{function name="_sku_remainder" stock_id=null count=null}
+    {$green_fill = '#14B00E'}
+    {$red_fill = '#F43434'}
+    {$orange_fill = '#F2994A'}
+    {$gray_fill = '#E0E0E0'}
+    {$rect_fills = [$green_fill, $green_fill, $green_fill]}
+
+    {if !empty($stocks[$stock_id]) && $count !== null}
+        {$_stock = $stocks[$stock_id]}
+        {if $count <=0}
+            {$rect_fills = [$gray_fill, $gray_fill, $gray_fill]}
+        {elseif $count <= $_stock.critical_count}
+            {$rect_fills = [$gray_fill, $gray_fill, $red_fill]}
+        {elseif $count <= $_stock.low_count}
+            {$rect_fills = [$gray_fill, $orange_fill, $orange_fill]}
+        {/if}
+    {/if}
+    <div class="flex items-center gap-8">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="4.5" width="12" height="2" rx="1" fill="{$rect_fills[0]}"/>
+            <rect x="3" y="8.5" width="12" height="2" rx="1" fill="{$rect_fills[1]}"/>
+            <rect x="3" y="12.5" width="12" height="2" rx="1" fill="{$rect_fills[2]}"/>
+        </svg>
+        <span>
+            {if $count === null}
+                [`In stock`]
+            {elseif $count < 1}
+                [`Out of stock`]
+            {else}
+                {_wp('Only %d left in stock', 'Only %d left in stock', $count)}
+            {/if}
+        </span>
+    </div>
+{/function}
+
+{function name="_pickup_item" pickup=[]}
+    {$_stock_id = null}
+    {$_count = null}
+    {$sku = $product.skus[$selected_sku_id]}
+    {foreach $stocks_product_count as $stock_product_count}
+        {if $selected_sku_id == $stock_product_count.sku_id}
+            {foreach $stock_product_count.stocks as $_stock}
+                {if $_stock.stock_id == $pickup.params.stock_id}
+                    {$_stock_id = $_stock.stock_id}
+                    {$_count = ifset($sku.stock[$_stock_id])}
+                {/if}
+            {/foreach}
+        {/if}
+    {/foreach}
+    <li class="pickup-card card" data-pickup-id="{$pickup.id}" data-stock="{$_count}">
+        <div class="card-header flex justify-between">
+            <h4 class="js-name">{$pickup.name|escape}</h4>
+            <a href="javascript:void(0)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.3751 19.5713L17.4462 12.5002L10.375 5.4292" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="js-info card-info">
+                <div class="flex flex-col justify-between gap-8">
+                    {if $_stock_id && ($_count === null || $_count > 0)}
+                        <div>[`Available for pickup today`]</div>
+                    {/if}
+                    <div>
+                        {_sku_remainder stock_id=$_stock_id count=$_count}
+                    </div>
+                    {if !empty($pickup.params.address)}
+                        <div class="flex gap-8">
+                            <span>
+                                <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.4466 17.4093C4.36009 11.4851 3.60156 10.877 3.60156 8.69981C3.60156 5.71746 6.01922 3.2998 9.00156 3.2998C11.9839 3.2998 14.4016 5.71746 14.4016 8.69981C14.4016 10.877 13.643 11.4851 9.55653 17.4093C9.28835 17.7967 8.71474 17.7966 8.4466 17.4093ZM9.00156 10.9498C10.2442 10.9498 11.2516 9.94245 11.2516 8.69981C11.2516 7.45716 10.2442 6.44981 9.00156 6.44981C7.75892 6.44981 6.75156 7.45716 6.75156 8.69981C6.75156 9.94245 7.75892 10.9498 9.00156 10.9498Z" fill="currentColor"/></svg>
+                            </span>
+                            <span class="gray">
+                                {$pickup.params.address|escape}
+                            </span>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+            <div class="js-description" style="display: none;">
+                {$pickup.params.point_info}
+            </div>
+        </div>
+    </li>
+{/function}
+
+{function name="_product" product=[]}
+    {$sku = $product.skus[$selected_sku_id]}
+
+    {$url_crop = "`$wa_app_static_url`img/frontend/dummy48.png"}
+    {$image_description = ''}
+    {$image_id = ifempty($sku.image_id, $product.image_id)}
+    {$images = $product->getImages()}
+    {if isset($images[$image_id])}
+        {$url_crop = $images[$image_id].url_crop}
+        {$image_description = $images[$image_id].description}
+    {/if}
+
+    {if !empty($sku)}
+        <div class="pickup-product flex gap-16">
+            <div>
+                <img class="pickup-product-image" src="{$url_crop}" alt="{$image_description|escape}">
+            </div>
+            <div class="flex flex-col gap-8">
+                <div class="semibold">{$product.name|escape}</div>
+                <div>{$sku.name|escape}</div>
+            </div>
+        </div>
+    {/if}
+{/function}

@@ -1,0 +1,13 @@
+<section class="error-page">
+    <h1>{if isset($code)}Ошибка {$code}{else}Ошибка{/if}</h1>
+
+    <p>
+        {if !empty($message)}
+            {$message|escape}
+        {else}
+            Запрашиваемая страница не найдена или временно недоступна.
+        {/if}
+    </p>
+
+    <p><a href="{$wa_app_url}">Вернуться на главную</a></p>
+</section>

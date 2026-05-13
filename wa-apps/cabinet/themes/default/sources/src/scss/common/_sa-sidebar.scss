@@ -1,0 +1,47 @@
+/*
+// .sa-sidebar
+*/
+@use '../custom-variables' as vs;
+
+.sa-sidebar {
+    width: var(--sa-sidebar-width);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    backface-visibility: hidden;
+    background-color: vs.$sa-sidebar--bg-color;
+    color: vs.$sa-sidebar--font-color;
+
+    .simplebar-track {
+        --simplebar-track--color: #{vs.$sa-sidebar--scrollbar-color};
+    }
+}
+.sa-sidebar__header {
+    background-color: vs.$sa-sidebar__header--bg-color;
+    color: vs.$sa-sidebar__header--font-color;
+    height: var(--sa-toolbar-height);
+    flex-shrink: 0;
+}
+.sa-sidebar__logo {
+    display: flex;
+    align-items: flex-start;
+    height: 100%;
+    padding: .5rem 1rem;
+
+    & > * {
+        margin: auto 0;
+        height: auto;
+        width: auto;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+.sa-sidebar__body {
+    position: relative;
+    height: calc(100% - var(--sa-toolbar-height));
+}

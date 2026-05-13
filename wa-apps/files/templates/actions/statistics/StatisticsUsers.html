@@ -1,0 +1,14 @@
+{* assign $body *}
+{include file="./include.body.users.html" assign="body"}
+
+{* render content *}
+{include file="./include.content.html"
+    action = 'users'
+    title = '[`User statistics`]'
+    cols = [
+        'name' => '[`User`]',
+        'size' => '[`Size`]',
+        'count' => '[`Files`]'
+    ]
+    body = $body
+inline}

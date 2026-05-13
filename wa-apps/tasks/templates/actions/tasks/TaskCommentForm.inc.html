@@ -1,0 +1,139 @@
+{$comment = $comment|default:[]}
+
+{$loc = explode('_', $wa->locale())}
+
+{$ident = rand(0, 1024)}
+
+{$task_id = $task.id|default:$comment.task_id}
+
+<div class="t-comment-form">
+
+    <form {if $post_action_url|default:''}action="{$post_action_url}"{/if} method="post">
+
+        <div class="flexbox space-12">
+            <div class="wide" style="overflow-x: clip;">
+
+                <div class="t-big-editor-wrapper">
+
+                    {* TEXTAREA *}
+                    <div class="line t-textarea-wrapper">
+                        {$_text = $comment.text|default:''}
+                        <textarea id="redactor-comment-{$ident}" name="data[text]" class="t-redactor-comments" placeholder="[`Add comment`]">{$_text|escape}</textarea>
+                        <script>
+                            (function () {
+                                if (lexicalEditor) {
+                                    const el = document.getElementById('redactor-comment-{$ident}');
+
+                                    lexicalEditor.createLexicalInstance({
+                                        el,
+                                        isRichMode: TasksController ? TasksController.options.text_editor === 'wysiwyg' : false,
+                                        taskId: '{$task_id}',
+                                        {if $action === 'add'}storage: TasksController ? TasksController.getDraftKeyCommentText({$task_id}) : '',{/if}
+                                        placeholder: '[`Add comment`]',
+                                        imageUploadUrl: '?module=attachments&action=imageUpload',
+                                        imageUploadTaskUuid: document.querySelector('.article').dataset.taskUuid || '',
+                                        mentions: {},
+                                        mentionsFetchUrlWA: true,
+                                        lang: '{$loc[0]}',
+                                        autoFocus: true
+                                    });
+
+                                    if(TasksController.options.text_editor === 'markdown') {
+                                        $(el).textareaAutocomplete({
+                                            urlEntity: '?module=tasks&action=entityAutocomplete',
+                                            urlMention: '?module=tasks&action=mentionAutocomplete',
+                                            autoFocus: false,
+                                            delay: 300
+                                        });
+                                    }
+                                }
+                            })();
+                        </script>
+                    </div>
+
+                    <div class="line t-attach-wrapper">
+
+                        {* ATTACH DROPAREA *}
+                        <div class="t-attach-droparea">
+                            <div class="t-droparea-hint"><i class="fas fa-paperclip"></i> [`Attach files`]</div>
+                            <input type="file" name="files[]" multiple="true" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {* ATTACHMENTS *}
+                <div class="line t-attach-wrapper">
+
+                    {* Container For Attached Files *}
+                    {$_images = $comment.images|default:[]}
+                    {$_files = $comment.files|default:[]}
+                    <div class="t-attached-files-wrapper {if $_images || $_files}is-shown{/if}">
+                        <div class="t-images-list">
+
+                            {foreach $_images as $_image}
+                                <div class="t-image-item" data-file-ident="{$_image.id}">
+                                    <a class="t-image-link" href="?module=attachments&action=download&id={$_image.id}" title="{$_image.name|escape}">
+                                        <img src="?module=attachments&action=download&id={$_image.id}" alt="{$_image.name|escape}">
+                                    </a>
+                                    <div class="t-file-name">{$_image.name|escape}</div>
+                                    <div class="t-file-size">{$_image.size|wa_format_file_size}</div>
+                                    <a class="t-file-delete" href="javascript:void(0);"></a>
+                                </div>
+                            {/foreach}
+
+                            <div class="t-image-item is-template">
+                                <a class="t-image-link" href="javascript:void(0);">
+                                    <img src="" alt="">
+                                </a>
+                                <div class="t-file-name"></div>
+                                <div class="t-file-size"></div>
+                                <a class="t-file-delete" href="javascript:void(0);"></a>
+                                <div class="t-file-error"></div>
+                            </div>
+                        </div>
+
+                        <div class="t-files-list">
+
+                            {foreach $_files as $_file}
+                                <div class="t-file-item" data-file-ident="{$_file.id}">
+                                    <a class="t-file-link" href="?module=attachments&action=download&id={$_file.id}" title="{$_file.name|escape}">
+                                        <i class="fas fa-cloud-download-alt custom-mr-4"></i>
+                                        <span class="t-file-name">{$_file.name|escape}</span>
+                                        <span class="t-file-size">{$_file.size|wa_format_file_size}</span>
+                                    </a>
+                                    <a class="t-file-delete" href="javascript:void(0);"></a>
+                                </div>
+                            {/foreach}
+
+                            <div class="t-file-item is-template">
+                                <div class="t-file-link">
+                                    <i class="fas fa-cloud-download-alt custom-mr-4"></i>
+                                    <span class="t-file-name"></span>
+                                    <span class="t-file-size"></span>
+                                </div>
+                                <a class="t-file-delete" href="javascript:void(0);"></a>
+                                <div class="t-file-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="image">
+                <img src="{$wa->user()->getPhoto(64)}" alt="" class="userpic userpic-32 custom-mt-8">
+            </div>
+        </div>
+
+        {* BUTTONS *}
+        <div class="line t-buttons-block">
+            {$_button_text = $button_text|default:_w('Add comment')}
+            <button class="t-add-comment-button button" type="submit">{$_button_text}</button>
+            {$_cancel_link = $cancel_link|default:''}
+            {if $_cancel_link}
+                <a href="javascript:void(0)" class="t-cancel-link button light-gray">[`Cancel`]</a>
+            {/if}
+        </div>
+    </form>
+</div>

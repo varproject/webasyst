@@ -1,0 +1,73 @@
+/*
+// .sa-toolbar-user
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+$local-avatar-size: 2rem;
+
+.sa-toolbar-user {
+    display: flex;
+    align-items: center;
+    padding: 0 (vs.$sa-toolbar--gutter + .125rem);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    height: 100%;
+    transition: background-color .12s ease-out;
+    color: inherit;
+
+    @include dir.scope {
+        text-align: dir.$inline-start;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover,
+    &:focus {
+        background-color: vs.$sa-toolbar__button--hover-bg-color;
+    }
+    &:active,
+    &.show {
+        transition-duration: 0s;
+        background-color: vs.$sa-toolbar__button--active-bg-color;
+    }
+}
+.sa-toolbar-user__avatar {
+    font-size: $local-avatar-size;
+}
+.sa-toolbar-user__avatar + .sa-toolbar-user__info {
+    @include dir.scope {
+        #{dir.$margin-inline-start}: .5rem;
+    }
+}
+.sa-toolbar-user__info {
+    line-height: 1;
+    display: flex;
+    flex-direction: column;
+
+    @include dir.scope {
+        #{dir.$padding-inline-end}: .25rem;
+    }
+}
+.sa-toolbar-user__title {
+    font-size: .875rem;
+    font-weight: bt.$font-weight-medium;
+}
+.sa-toolbar-user__subtitle {
+    color: vs.$sa-toolbar--font-muted-color;
+    font-size: func.rem(13);
+}
+.sa-toolbar-user__title + .sa-toolbar-user__subtitle {
+    margin-top: .125rem;
+}
+
+@include bt.media-breakpoint-down(md) {
+    .sa-toolbar-user__info {
+        display: none;
+    }
+}

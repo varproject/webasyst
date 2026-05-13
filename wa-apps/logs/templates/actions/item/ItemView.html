@@ -1,0 +1,125 @@
+{if isset($error)}
+    {if $wa->getEnv() == 'backend'}
+        <span class="hidden logs-item-view-error-message"
+            data-redirect-url="{$redirect_url|default:null}"
+            data-premium-promo-feature="{$premium_promo_feature|default:null}"
+            data-custom-header="{$dialog_header|default:null}"
+            data-no-error="{$no_error|default:false}"
+        >{$error}</span>
+
+        {if !empty($premium_promo_feature)}
+            <script>
+                $(() => {
+                    const $error_message = $('.logs-item-view-error-message');
+
+                    $.get('?module=dialog&action=premiumPromo', {
+                        feature: $error_message.data('premium-promo-feature'),
+                        show_always: true,
+                    }).then(html => {
+                        $.waDialog({
+                            html: html,
+                            esc: false,
+                            onOpen: function ($dialog, dialog) {
+                                $dialog.find('.js-submit').on('click', function () {
+                                    $(this).append('<i class="fas fa-spinner wa-animation-spin custom-ml-4"/>')
+                                    location.href = $error_message.data('redirect-url') ?? '?action=files&mode=updatetime';
+                                });
+                            }
+                        });
+                    });
+                });
+            </script>
+        {else}
+            <script>
+                $(() => {
+                    const $error_message = $('.logs-item-view-error-message');
+
+                    $.waDialog({
+                        html: $('.dialog-template-error').clone().html(),
+                        esc: false,
+                        onOpen: function ($dialog, dialog) {
+                            const $message = $dialog.find('.state-error');
+                            const dialog_header = $error_message.data('custom-header');
+
+                            if (dialog_header) {
+                                $dialog.find('header h1').html(dialog_header);
+                            }
+
+                            if ($error_message.data('no-error')) {
+                                $message.attr('class', '');
+                            }
+
+                            $message.html($error_message.html());
+                            dialog.resize();
+
+                            $dialog.on('click', '.js-submit', function () {
+                                const $dialog_footer = $dialog.find('.dialog-footer');
+                                const $spinner = $('<i class="fas fa-spinner fa-spin"></i>')
+
+                                $spinner.appendTo($dialog_footer);
+                                location.href = $error_message.data('redirect-url') ?? '?action=files&mode=updatetime';
+                            });
+                        }
+                    });
+                });
+            </script>
+        {/if}
+    {/if}
+{else}
+    <div class="item-data" data-item-lines-empty-message="[`no new records`]" data-item-lines-dialog-ok="[`OK`]">
+        {capture name="pagination"}
+            {wa_pagination page=$wa->get('page', $item.page_count) total=$item.page_count attrs=['class' => "paging",  title => "[`Choose a page`]"]}
+        {/capture}
+
+        {$pagination = $smarty.capture.pagination|trim}
+
+        {if strlen($pagination)}
+            <div class="pagination">{$pagination}</div>
+        {/if}
+
+        <div class="item-lines previous {if $wa->get('page', $item.page_count) == 1 || !empty($item.search)}disabled{/if}" {if $wa->get('page', $item.page_count) > 1}title="[`View previous lines`]"{/if}>
+            <span class="arrow">
+                <i class="{if !empty($item.search)}icon{else}fas fa-caret-up{/if}"></i>
+            </span>
+        </div>
+
+        {capture assign="content"}{strip}
+            {$item.contents|escape:'hexentity'}
+        {/strip}{/capture}
+
+        {if $highlighting_pattern|default:''|strlen}
+            {$content = $content|regex_replace:$highlighting_pattern:$highlighting_replacement}
+        {/if}
+
+        <pre class="prettyprint item-contents small{if !empty($item.search)} file-search-results{/if}">{$content}</pre>
+
+        <div class="item-lines next{if !empty($item.search)} disabled{/if}" title="[`View next lines`]">
+            <span class="arrow">
+                <i class="{if !empty($item.search)}icon{else}fas fa-caret-down{/if}"></i>
+            </span>
+        </div>
+    </div>
+
+    <form class="item-lines-form" data-item-lines-url="{$item_lines_url|default:''}" class="hidden">
+        <input type="hidden" name="first_line" value="{$item.first_line}">
+        <input type="hidden" name="last_line" value="{$item.last_line}">
+        <input type="hidden" name="direction" value="">
+        <input type="hidden" name="last_eol" value="{$item.last_eol|default:''}">
+        <input type="hidden" name="file_end_eol" value="{$item.file_end_eol|default:''}">
+    </form>
+
+    {if !empty($item.search)}
+        <span id="search-navigation" class="inlinebox inline space-4 middle hidden" data-premium="{$premium}">
+            <span class="text-gray bold">[`Search`]</span>
+            <button class="button smallest search-navigation-button{if empty($item.search.urls.previous)} disabled{/if}" title="[`Previous search results`]" data-url="{$item.search.urls.previous|default:''}" data-direction="previous" data-disabled="{empty($item.search.urls.previous)}">
+                <span class="icon"><i class="fas fa-chevron-up"></i></span>
+            </button>
+            <button class="button smallest search-navigation-button{if empty($item.search.urls.next)} disabled{/if} custom-ml-4" title="[`Next search results`]" data-url="{$item.search.urls.next|default:''}" data-direction="next" data-disabled="{empty($item.search.urls.next)}">
+                <span class="icon"><i class="fas fa-chevron-down"></i></span>
+            </button>
+            <a href="{$item.search.urls.cancel}" class="small text-gray logs-finish-search" title="[`Finish search`]">
+                <i class="fas fa-times"></i>
+            </a>
+        </span>
+    {/if}
+{/if}

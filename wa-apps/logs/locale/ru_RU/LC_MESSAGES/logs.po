@@ -1,0 +1,770 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: logs\n"
+"POT-Creation-Date: 2013-10-14 22:25+0400\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: logs\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+
+msgid "No logs."
+msgstr "Логов нет."
+
+msgid "By directory"
+msgstr "По директориям"
+
+msgid "By file size"
+msgstr "По размеру"
+
+msgid "B,KB,MB,GB"
+msgstr "Б,кБ,МБ,ГБ"
+
+msgid "Logs"
+msgstr "Логи"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Delete file"
+msgstr "Удалить файл"
+
+msgid "Deletion of files and directories"
+msgstr "Удаление файлов и директорий"
+
+msgid "OK"
+msgstr "Понятно"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Download"
+msgstr "Скачать"
+
+msgid "By update time"
+msgstr "По времени изменения"
+
+msgid "Choose a page"
+msgstr "Выберите страницу"
+
+msgid "View previous lines"
+msgstr "Предыдущее содержимое"
+
+msgid "View next lines"
+msgstr "Следующее содержимое"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "PHP error messages are saved to file <em>wa-log/<b>php.log</b></em>."
+msgstr "Сообщения об ошибках PHP сохраняются в файл <em>wa-log/<b>php.log</b></em>."
+
+msgid "Cannot save changes due to insufficient write permissions for file <em>%s</em>."
+msgstr "Не удалось сохранить изменения из-за недостаточных прав доступа к файлу <em>%s</em>."
+
+msgid "Enable PHP error log"
+msgstr "Включить логирование ошибок PHP"
+
+msgid "no new records"
+msgstr "новых записей нет"
+
+msgid "PHP info"
+msgstr "Конфигурация PHP"
+
+msgid "PHP info (public link enabled)"
+msgstr "Конфигурация PHP (включена публичная ссылка)"
+
+msgid "Common settings management"
+msgstr "Управление общими настройками"
+
+msgid "Viewing PHP configuration"
+msgstr "Просмотр конфигурации PHP"
+
+msgid "back"
+msgstr "назад"
+
+msgid "deleted file"
+msgstr "удалил файл"
+
+msgid "published file"
+msgstr "опубликовал файл"
+
+msgid "unpublished file"
+msgstr "отменил публикацию файла"
+
+msgid "published PHP configuration page"
+msgstr "опубликовал страницу с конфигурацией PHP"
+
+msgid "unpublished PHP configuration page"
+msgstr "отменил публикацию страницы с конфигурацией PHP"
+
+msgid "set password for published file"
+msgstr "установил пароль для опубликованного файла"
+
+msgid "set password for PHP configuration page"
+msgstr "установил пароль для опубликованной страницы с конфигурацией PHP"
+
+msgid "removed password for PHP configuration page"
+msgstr "убрал пароль для опубликованной страницы с конфигурацией PHP"
+
+msgid "removed password for published file"
+msgstr "убрал пароль для опубликованного файла"
+
+msgid "Notify me on large logs size"
+msgstr "Уведомлять меня о большом размере логов"
+
+msgid "Show the %s&nbsp;badge next to the app’s icon in the main menu when the total logs size exceeds 1&nbsp;GB."
+msgstr "Показывать индикатор %s рядом с иконкой приложения в главном меню, когда общий размер логов превысит 1&nbsp;ГБ."
+
+msgid "1+ GB"
+msgstr "1+ ГБ"
+
+msgid "Reload list"
+msgstr "Обновить список"
+
+msgid "PHP errors will be logged without limitations, because “%s” is enabled <a href=\"%s\" target=\"_blank\">in&nbsp;system settings</a>."
+msgstr "Ошибки PHP будут логироваться без ограничений, потому что включен «%s» <a href=\"%s\" target=\"_blank\">в&nbsp;системных настройках</a>."
+
+msgid "This limitation will not be applied if you enable “%s” setting <a href=\"%s\" target=\"_blank\">in&nbsp;system settings</a>."
+msgstr "Это ограничение не будет действовать, если включить «%s» <a href=\"%s\" target=\"_blank\">в&nbsp;системных настройках</a>."
+
+msgid "PHP errors will be logged during 1 hour only (until %s), to prevent large error logs from occupying server disk space."
+msgstr "Ошибки PHP будут логироваться только в течение 1 часа (до %s) во избежание заполнения дискового пространства большими файлами логов."
+
+msgid "Re-enable logging after this time expires, if necessary."
+msgstr "Включите логирование повторно после истечения этого времени, если необходимо."
+
+msgid "PHP errors will be logged during 1 hour only, to prevent large error logs from occupying server disk space."
+msgstr "Ошибки PHP будут логироваться только в течение 1 часа во избежание заполнения дискового пространства большими файлами логов."
+
+msgid "Function <tt>phpinfo()</tt>, used to display the PHP configuration, is not available on your server."
+msgstr "Функция <tt>phpinfo()</tt>, использующаяся для показа конфигурации PHP, недоступна на вашем сервере."
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "File %s is not published."
+msgstr "Файл %s не опубликован."
+
+msgid "Published file"
+msgstr "Опубликованный файл"
+
+msgid "Insufficient access rights to delete log files or directories."
+msgstr "Недостаточно прав доступа для удаления файлов и директорий."
+
+msgid "%s is not available for deletion."
+msgstr "%s недоступен для удаления."
+
+msgid "You have no access rights to publish or unpublish log files."
+msgstr "У вас недостаточно прав доступа для публикации или отмены публикации файлов."
+
+msgid "This file is not available any more. Reload this page."
+msgstr "Этот файл более не доступен. Обновите страницу."
+
+msgid "Managing public links to files"
+msgstr "Управление публичными ссылками на файлы"
+
+msgid "Password protection"
+msgstr "Защита паролем"
+
+msgid "This file is not password-protected."
+msgstr "Этот файл не защищён паролем."
+
+msgid "set password"
+msgstr "установить пароль"
+
+msgid "This file is password-protected."
+msgstr "Этот файл защищён паролем."
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "change password"
+msgstr "изменить пароль"
+
+msgid "remove password"
+msgstr "убрать пароль"
+
+msgid "Enter a password"
+msgstr "Введите пароль"
+
+msgid "Send"
+msgstr "Отправить"
+
+msgid "This file is not published. Reload this page and publish the file."
+msgstr "Этот файл не опубликован. Обновите эту страницу и опубликуйте файл."
+
+msgid "File %s does not exist or is not accessible."
+msgstr "Файл %s не существует или недоступен."
+
+msgid "Incorrect password."
+msgstr "Неверный пароль."
+
+msgid "PHP configuration"
+msgstr "Конфигурация PHP"
+
+msgid "View"
+msgstr "Просмотр"
+
+msgid "open"
+msgstr "открыть"
+
+msgid "Public link"
+msgstr "Публичная ссылка"
+
+msgid "Public link (enabled)"
+msgstr "Публичная ссылка (включена)"
+
+msgid "The link to your PHP configuration is not password-protected."
+msgstr "Ссылка на страницу с конфигурацией PHP не защищена паролем."
+
+msgid "The PHP configuration page is not published. Reload this page and try again."
+msgstr "Страница с конфигурацией PHP не опубликована. Обновите страницу и повторите попытку."
+
+msgid "You have no access rights to publish or unpublish the PHP configuration page."
+msgstr "У вас недостаточно прав доступа для изменения статуса публикации страницы с конфигурацией PHP."
+
+msgid "This server does not allow viewing the PHP configuration."
+msgstr "Этот сервер не позволяет просматривать конфигурацию PHP."
+
+msgid "The PHP configuration page is not published."
+msgstr "Страница с конфигурацией PHP не опубликована."
+
+msgid "The link to the PHP configuration viewing page is password-protected."
+msgstr "Ссылка на страницу просмотра конфигурации PHP защищена паролем."
+
+msgid "An error has occurred. Reload this page and try again."
+msgstr "Произошла ошибка. Обновите страницу и повторите попытку."
+
+msgid "Rename"
+msgstr "Переименовать"
+
+msgid "Non-authorized persons may view sensitive information about your server configuration."
+msgstr "Неавторизованные пользователи могут просматривать информацию о конфигурации вашего сервера."
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "User actions"
+msgstr "Действия пользователей"
+
+msgid "Empty name."
+msgstr "Пустое имя."
+
+msgid "New name matches the old one."
+msgstr "Новое имя совпадает со старым."
+
+msgid "Failed to rename to “%s”. Invalid name or insufficient server permissions."
+msgstr "Не удалось переименовать в «%s». Некорректное имя или недостаточно серверных прав доступа."
+
+msgid "Delete directory"
+msgstr "Удалить директорию"
+
+msgid "Show relative file paths instead of absolute paths in error logs"
+msgstr "Показывать в логах относительные пути к файлам вместо абсолютных"
+
+msgid "%u published file in this directory will no longer be available via a published link."
+msgid_plural "%u published files in this directory will no longer be available via published links."
+msgstr[0] "%u опубликованный файл в этой директории больше не будет доступен по публичной ссылке."
+msgstr[1] "%u опубликованных файла в этой директории больше не будут доступны по публичным ссылкам."
+msgstr[2] "%u опубликованных файлов в этой директории больше не будут доступны по публичным ссылкам."
+
+msgid "You have no access rights to rename files and directories."
+msgstr "У вас недостаточно прав доступа для переименования файлов директорий."
+
+msgid "Rename directory"
+msgstr "Переименовать директорию"
+
+msgid "Rename file"
+msgstr "Переименовать файл"
+
+msgid "This file has a %s&nbsp;<em>published link</em> enabled. It will no longer work after the file is deleted."
+msgstr "Для этого файла включена %s&nbsp;<em>публичная ссылка</em>. Она больше не будет доступна после удаления файла."
+
+msgid "%u entry"
+msgid_plural "%u entries"
+msgstr[0] "%u запись"
+msgstr[1] "%u записи"
+msgstr[2] "%u записей"
+
+msgid "Directory"
+msgstr "Директория"
+
+msgid "Log file"
+msgstr "Файл логов"
+
+msgid "User action list"
+msgstr "Список действий пользователей"
+
+msgid "User action"
+msgstr "Действие пользователей"
+
+msgid "Renaming files and directories"
+msgstr "Переименование файлов и директорий"
+
+msgid "Invalid name."
+msgstr "Некорректное имя."
+
+msgid "The file is not accessible."
+msgstr "Файл недоступен."
+
+msgid "link disabled"
+msgstr "выключена"
+
+msgid "link enabled"
+msgstr "включена"
+
+msgid "PHP errors are being logged without limitations, because <tt>php_logging_admin</tt> parameter is enabled in Logs’ configuration file."
+msgstr "Ошибки PHP логируются без ограничений, потому что параметр <tt>php_logging_admin</tt> включён в конфигурационном файле."
+
+msgid "To make PHP errors be logged only during 1 hour, disable <tt>php_logging_admin</tt> parameter in file <em>%s</em>."
+msgstr "Для того чтобы ошибки PHP логировались только в течение 1 часа, отключите параметр <tt>php_logging_admin</tt> в файле <tt>%s</tt>."
+
+msgid "PHP errors will be logged without limitations, because <tt>php_logging_admin</tt> parameter is enabled in Logs’ configuration file."
+msgstr "Ошибки PHP будут логироваться без ограничений, потому что параметр <tt>php_logging_admin</tt> включён в конфигурационном файле."
+
+msgid "PHP errors are being logged without limitations, because the “%s” is enabled <a href=\"%s\" target=\"_blank\">in&nbsp;system settings</a>."
+msgstr "Ошибки PHP логируются без ограничений, потому что «%s» включён <a href=\"%s\" target=\"_blank\">в&nbsp;системных настройках</a>."
+
+msgid "logs"
+msgstr "логи"
+
+msgid "This file’s size"
+msgstr "Размер этого файла"
+
+msgid "All log files’ total size"
+msgstr "Размер всех файлов с логами"
+
+msgid "Empty password."
+msgstr "Пустой пароль."
+
+msgid "in published files"
+msgstr "в опубликованных файлах"
+
+msgid "in backend"
+msgstr "в бекенде"
+
+msgid "Hide IP addresses in error logs"
+msgstr "Скрывать IP-адреса в логах"
+
+msgid "Types of PHP errors"
+msgstr "Типы ошибок PHP"
+
+msgid "all"
+msgstr "все"
+
+msgid "fatal errors"
+msgstr "критичные ошибки"
+
+msgid "warnings"
+msgstr "предупреждения"
+
+msgid "A file with this name exists. Enter another name."
+msgstr "Файл с таким именем существует. Введите другое имя."
+
+msgid "Managing public link to PHP configuration viewing page"
+msgstr "Управление публичной ссылкой на страницу просмотра конфигурации PHP"
+
+msgid "You have no access rights to view the PHP configuration."
+msgstr "У вас недостаточно прав доступа для просмотра конфигурации PHP."
+
+msgid "Add a rule for Logs in the <a %s>Site</a> app’s settings to create a public link."
+msgstr "Добавьте правило для «Логов» в настройках приложения «<a %s>Сайт</a>», чтобы создать публичную ссылку."
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "Latest update time"
+msgstr "Время последнего обновления"
+
+msgid "Error"
+msgstr "Ошибка"
+
+msgid "Path"
+msgstr "Путь"
+
+msgid "Tracked file"
+msgstr "Отслеживаемый файл"
+
+msgid "File updates tracking"
+msgstr "Отслеживание изменений файла"
+
+msgid "Tracking"
+msgstr "Отслеживание"
+
+msgid "tracking enabled"
+msgstr "включено"
+
+msgid "tracking disabled"
+msgstr "выключено"
+
+msgid "Track changes"
+msgstr "Отслеживание изменений"
+
+msgid "Track changes (enabled)"
+msgstr "Отслеживание изменений (включено)"
+
+msgid "Updated tracked file"
+msgstr "Обновлённый отслеживаемый файл"
+
+msgid "Once this file is updated, you will see a %s&nbsp;badge next to the app’s icon in the main menu."
+msgstr "Как только этот файл обновится, вы увидите индикатор&nbsp;%s рядом с иконкой приложения в главном меню."
+
+msgid "You will be further notified on this file’s updates until the “%” option is disabled."
+msgstr "Вы будете продолжать видеть уведомления об обновлениях этого файла, пока не отключите настройку «%s»."
+
+msgid "You will be further notified on this file’s updates <em>by its old name</em> until the “%” option is disabled."
+msgstr "Вы будете продолжать видеть уведомления об обновлениях этого файла <em>по его старому имени</em>, пока не отключите настройку «%s»."
+
+msgid "Other users will be further notified on this file’s updates until the “%” option is disabled."
+msgstr "Другие пользователи будут продолжать видеть уведомления об обновлениях этого файла, пока не отключат настройку «%s»."
+
+msgid "Other users will be further notified on this file’s updates <em>by its old name</em> until the “%” option is disabled."
+msgstr "Другие пользователи будут продолжать видеть уведомления об обновлениях этого файла <em>по его старому имени</em>, пока не отключат настройку «%s»."
+
+msgid "You and other users will be further notified on this file’s updates until the %s&nbsp;“%” option is disabled."
+msgstr "Вы и другие пользователи будете продолжать видеть уведомления об обновлениях этого файла, пока не отключите настройку %s&nbsp;«%s»."
+
+msgid "You and other users will be further notified on this file’s updates <em>by its old name</em> until the “%” option is disabled."
+msgstr "Вы и другие пользователи будете продолжать видеть уведомления об обновлениях этого файла <em>по его старому имени</em>, пока не отключите настройку «%s»."
+
+msgid "You and other users will no longer be notified on %u file’s updates."
+msgid_plural "You and other users will no longer be notified on %u files’ updates."
+msgstr[0] "Вы и другие пользователи больше не будете видеть уведомления об обновлениях %u файла."
+msgstr[1] "Вы и другие пользователи больше не будете видеть уведомления об обновлениях %u файлов."
+msgstr[2] "Вы и другие пользователи больше не будете видеть уведомления об обновлениях %u файлов."
+
+msgid "You will no longer be notified on %u file’s updates."
+msgid_plural "You will no longer be notified on %u files’ updates."
+msgstr[0] "Вы больше не будете видеть уведомления об обновлениях %u файла."
+msgstr[1] "Вы больше не будете видеть уведомления об обновлениях %u файлов."
+msgstr[2] "Вы больше не будете видеть уведомления об обновлениях %u файлов."
+
+msgid "Other users will no longer be notified on %u file’s updates."
+msgid_plural "Other users will no longer be notified on %u files’ updates."
+msgstr[0] "Другие пользователи больше не будут видеть уведомления об обновлениях %u файла."
+msgstr[1] "Другие пользователи больше не будут видеть уведомления об обновлениях %u файлов."
+msgstr[2] "Другие пользователи больше не будут видеть уведомления об обновлениях %u файлов."
+
+msgid "You and other users will no longer be notified on %u file’s updates in this directory."
+msgid_plural "You and other users will no longer be notified on %u files’ updates in this directory."
+msgstr[0] "Вы и другие пользователи больше не будете видеть уведомления об обновлениях %u файла в этой директории."
+msgstr[1] "Вы и другие пользователи больше не будете видеть уведомления об обновлениях %u файлов в этой директории."
+msgstr[2] "Вы и другие пользователи больше не будете видеть уведомления об обновлениях %u файлов в этой директории."
+
+msgid "You will no longer be notified on %u file’s updates in this directory."
+msgid_plural "You will no longer be notified on %u files’ updates in this directory."
+msgstr[0] "Вы больше не будете видеть уведомления об обновлениях %u файла в этой директории."
+msgstr[1] "Вы больше не будете видеть уведомления об обновлениях %u файлов в этой директории."
+msgstr[2] "Вы больше не будете видеть уведомления об обновлениях %u файлов в этой директории."
+
+msgid "Other users will no longer be notified on %u file’s updates in this directory."
+msgid_plural "Other users will no longer be notified on %u files’ updates in this directory."
+msgstr[0] "Другие пользователи больше не будут видеть уведомления об обновлениях %u файла в этой директории."
+msgstr[1] "Другие пользователи больше не будут видеть уведомления об обновлениях %u файлов в этой директории."
+msgstr[2] "Другие пользователи больше не будут видеть уведомления об обновлениях %u файлов в этой директории."
+
+msgid "Only the last line matching the search query is shown per found file."
+msgstr "Для каждого файла показана только последняя из строк, содержащих введённый запрос."
+
+msgid "No logs found."
+msgstr "Логи не найдены."
+
+msgid "Size"
+msgstr "Размер"
+
+msgid "Search by “%s”"
+msgstr "Поиск «%s»"
+
+msgid "Choose"
+msgstr "Выбрать"
+
+msgid "Search by file name"
+msgstr "Поиск по имени файла"
+
+msgid "Search by text"
+msgstr "Поиск по тексту"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Search by app, plugin, or widget"
+msgstr "Поиск по приложению, плагину или виджету"
+
+msgid "These advanced features will become available after the purchase of the <strong>Logs+</strong> license in %sInstaller%s."
+msgstr "Эти дополнительные возможности станут доступны после покупки лицензии <strong>Логи+</strong> в «%sИнсталлере%s»."
+
+msgid "Start typing any <strong>part of a file name</strong> and quickly open the desired log file from the found list."
+msgstr "Начните писать любую <strong>часть имени файла</strong>, чтобы быстро открыть нужный файл из найденного списка."
+
+msgid "Search files by text"
+msgstr "Поиск по содержимому файлов"
+
+msgid "Type a <strong>word or phrase</strong> to quickly find all files containing the entered text."
+msgstr "Напишите <strong>слово или фразу</strong>, чтобы найти все файлы логов, в которых есть такой текст."
+
+msgid "Search by app, plugin or widget"
+msgstr "Поиск по приложению, плагину или виджету"
+
+msgid "Use the smart search to view only <strong>files related to a certain software product</strong>."
+msgstr "С помощью умного поиска можно легко выбрать файлы логов для <strong>выбранного программного продукта</strong>."
+
+msgid "Get email notifications on updated files"
+msgstr "Email-уведомления об обновлённых файлах"
+
+msgid "Mark <strong>important log files</strong> as <em>tracked</em> %s and enable the <strong>email notification setting</strong> to get the list of those files emailed to you every time their contents are updated."
+msgstr "Отметьте <strong>важные для вас файлы</strong> как <em>отслеживаемые</em> %s и включите отправку <strong>email-уведомлений о них</strong>. Список этих файлов будет отправляться вам по электронной почте каждый раз, когда обновится их содержимое."
+
+msgid "You can save any <strong>keywords</strong> in the settings to look for in updated files."
+msgstr "Можно сохранить в настройках <strong>ключевые слова</strong>, которые нужно искать в обновлённых файлах."
+
+msgid "Logs+"
+msgstr "Логи+"
+
+msgid "CRON setup"
+msgstr "Настройка cron"
+
+msgid "Add the following command to the CRON settings of your cloud account:"
+msgstr "Добавьте следующую команду в настройки cron вашего аккаунта в облаке:"
+
+msgid "Add the following command to your server’s CRON settings:"
+msgstr "Добавьте следующую команду в настройки cron вашего сервера:"
+
+msgid "Recommended execution frequency is <strong>once an hour every day</strong>."
+msgstr "Рекомендуемая частота выполнения — <strong>каждый день раз в час</strong>."
+
+msgid "The CRON job is already set up. Last time it worked: %s."
+msgstr "Задание CRON уже настроено. Время последнего срабатывания: %s."
+
+msgid "Get these features"
+msgstr "Получить эти возможности"
+
+msgid "Dear %s,"
+msgstr "Здравствуйте, %s!"
+
+msgid "Below is the list of tracked log files in your Webasyst account updated since the last time you viewed them:"
+msgstr "Список отслеживаемых файлов с логами в вашем Webasyst-аккаунте, которые были обновлены с того момента, когда вы в последний раз их смотрели:"
+
+msgid "No users have enabled email notifications on tracked files."
+msgstr "Никто из пользователей не включил отправку email-уведомлений об отслеживаемых файлах."
+
+msgid "Logs app: updated log files you have marked as tracked"
+msgstr "Приложение «Логи»: обновлённые файлы, которые вы отметили как отслеживаемые"
+
+msgid "User %s has no email address to send a notification on updated log files."
+msgstr "У пользователя %s нет email-адреса для отправки уведомлений об обновлённых файлах с логами."
+
+msgid "User %s has no invalid email address to send a notification on updated log files: %s."
+msgstr "В профиле пользователя %s указан некорректный email-адрес для отправки уведомлений об обновлённых файлах с логами: %s."
+
+msgid "More useful features with Logs+ license"
+msgstr "Больше полезных функций с лицензией Логи+"
+
+msgid "app"
+msgstr "приложение"
+
+msgid "SMS"
+msgstr "SMS"
+
+msgid "shipping"
+msgstr "доставка"
+
+msgid "payment"
+msgstr "оплата"
+
+msgid "plugin"
+msgstr "плагин"
+
+msgid "widget"
+msgstr "виджет"
+
+msgid "Notify me on updated tracked files"
+msgstr "Уведомлять меня об обновлённых отслеживаемых файлах"
+
+msgid "Send me the names of updated tracked files by email."
+msgstr "Отправлять мне названия обновлённых отслеживаемых файлов по email."
+
+msgid "<a href=\"javascript:void(0);\" class=\"show-cron-setup-link\">CRON setup</a> is required."
+msgstr "Требуется <a href=\"javascript:void(0);\" class=\"show-cron-setup-link\">настройка cron</a>."
+
+msgid "Check words"
+msgstr "Проверять слова"
+
+msgid "Write <strong>words</strong> or <strong>groups of words</strong>, each on a separate line, that must be available in updated tracked log files that you want to be notified of by email."
+msgstr "Напишите <strong>слова</strong> или <strong>словосочетания</strong>, каждое на отдельной строке, которые должны присутствовать в обновлённых отслеживаемых файлах, чтобы получать об этом уведомления по email."
+
+msgid "You have no email address specified in your <a %s>user profile</a>; no notifications will be sent to you until you add an address."
+msgstr "В вашем <a %s>профиле пользователя</a> не указан email-адрес, поэтому уведомления не будут отправляться, пока вы не добавите адрес."
+
+msgid "To view other results, enter a more detailed query"
+msgstr "Чтобы увидеть другие результаты, введите более подробный поисковый запрос"
+
+msgid "“%s” app"
+msgstr "приложение «%s»"
+
+msgid "“%s” plugin (%s)"
+msgstr "плагин «%s» (%s)"
+
+msgid "“%s” widget (%s)"
+msgstr "виджет «%s» (%s)"
+
+msgid "Webasyst"
+msgstr "Вебасист"
+
+msgid "No updated tracked files have been detected."
+msgstr "Нет обновлённых отслеживаемых файлов."
+
+msgid "Show less search fields"
+msgstr "Показать меньше полей поиска"
+
+msgid "Show more search fields"
+msgstr "Показать больше полей поиска"
+
+msgid "Webasyst framework"
+msgstr "фреймворк Webasyst"
+
+msgid "Delete selected"
+msgstr "Удалить выбранное"
+
+msgid "Failed to delete the items marked below. Check server permissions. Or reload this page and try again."
+msgstr "Не удалось удалить отмеченное ниже. Проверьте серверные права доступа. Или обновите страницу и повторите попытку."
+
+msgid "The Logs+ license is required for bulk deletion."
+msgstr "Требуется лицензия «Логи+» для использования массового удаления."
+
+msgid "Nothing is selected."
+msgstr "Ничего не выбрано."
+
+msgid "No allowed files or directories are selected. Please reload this page and try again."
+msgstr "Не выбраны разрешённые файлы или директории. Обновите страницу и повторите попытку."
+
+msgid "Selected items include some %s&nbsp;<em>directories</em>; the files contained in them are listed here and will be deleted, too."
+msgstr "Выбраны %s&nbsp;<em>директории</em> — содержащиеся в них файлы перечислены здесь и будут также удалены."
+
+msgid "Some of the files to be deleted have %s&nbsp;<em>published links</em> enabled; they will no longer work after the files are deleted."
+msgstr "Для некоторых из удаляемых файлов включены %s&nbsp;<em>публичные ссылки</em> — они перестанут работать после удаления файлов."
+
+msgid "Some of the files to be deleted are marked as %s&nbsp;<em>tracked</em>. Users will continue to receive notifications on such files’ updates until they disable the corresponding option once the files are created again."
+msgstr "Некоторые из удаляемых файлов отмечены как %s&nbsp;<em>отслеживаемые</em>. Пользователи будут продолжать получать уведомления об обновлении этих файлов, пока не отключат соответствующую настройку после их повторного создания."
+
+msgid "To make PHP errors be logged only during 1 hour, disable the “%s”."
+msgstr "Для того чтобы ошибки PHP логировались только в течение 1 часа, отключите «%s»."
+
+msgid "What will be deleted"
+msgstr "Что будет удалено"
+
+msgid "The files contained in this directory are listed here and will be deleted, too."
+msgstr "Файлы, содержащиеся в этой директории, перечислены здесь и будут также удалены."
+
+msgid "This file is marked as %s&nbsp;<em>tracked</em>. Users will continue to receive notifications on its updates until they disable the corresponding option once the file is created again."
+msgstr "Этот файл отмечен как %s&nbsp;<em>отслеживаемый</em>. Пользователи будут продолжать получать уведомления об его обновлении, пока не отключат соответствующую настройку после его повторного создания."
+
+msgid "Multiple files deletion"
+msgstr "Удаление нескольких файлов"
+
+msgid "Select <strong>any number of files and directories</strong> and delete them all in one click."
+msgstr "Выберите <strong>любое количество файлов и директорий</strong> и удалите их все одной кнопкой."
+
+msgid "Copied to clipboard."
+msgstr "Скопировано в буфер обмена."
+
+msgid "Add more features"
+msgstr "Добавить больше возможностей"
+
+msgid "Search by file names and file contents, filtering by software products, email notifications on updated files, bulk files deletion."
+msgstr "Поиск по именам и содержимому файлов, фильтрация файлов по программным продуктам, email-уведомления об обновлённых файлах, массовое удаление файлов и директорий."
+
+msgid "Read more"
+msgstr "Подробнее"
+
+msgid "Deleting log files does not affect the functioning of your Webasyst account."
+msgstr "Удаление файлов логов не влияет на работу вашего аккаунта Webasyst."
+
+msgid "You can receive <strong>email notifications</strong> on this file’s updates with the <em>Logs+</em> license."
+msgstr "Можно получать <strong>email-уведомления</strong> об обновлениях этого файла — с лицензией <em>Логи+</em>."
+
+msgid "You can <strong>delete multiple files at once</strong> with the <em>Logs+</em> license."
+msgstr "Можно <strong>удалять сразу несколько файлов</strong> — с лицензией <em>Логи+</em>."
+
+msgid "You can <strong>search files</strong> by <em>name</em>, <em>contents</em> and selected <em>product</em> with the <em>Logs+</em> license."
+msgstr "Можно <strong>искать файлы</strong> по <em>имени</em>, <em>содержимому</em> и выбранному <em>продукту</em> — с лицензией <em>Логи+</em>."
+
+msgid "Files search"
+msgstr "Поиск файлов"
+
+msgid "Do not show again"
+msgstr "Больше не показывать"
+
+msgid "By search results"
+msgstr "По результатам поиска"
+
+msgid "Sort order auto-remembering"
+msgstr "Запоминание порядка сортировки"
+
+msgid "Remember sort order"
+msgstr "Запоминать порядок сортировки"
+
+msgid "Sort files and directories according to your last choice when opening the app’s home page."
+msgstr "При переходе на главную страницу приложения сортировать файлы и директории в соответствии с вашим последним выбором."
+
+msgid "The selected sort order can be <strong>auto-remembered</strong> with the <em>Logs+</em> license."
+msgstr "Выбранный вариант сортировки может <strong>автоматически запоминаться</strong> — с лицензией <em>Логи+</em>."
+
+msgid "Auto-remembered sort order"
+msgstr "Автозапоминание сортировки"
+
+msgid "Enable <strong>auto-remembering of the sort order</strong> of files and directories to make them always sorted according to your last choice when you open the app’s home page."
+msgstr "Включите <strong>запоминание порядка сортировки</strong> файлов и директорий, чтобы при открытии главной страницы приложения они всегда были упорядочены в соответствии с вашим последним выбором."
+
+msgid "Previous search results"
+msgstr "Предыдущие результаты поиска"
+
+msgid "Next search results"
+msgstr "Следующие результаты поиска"
+
+msgid "Finish search"
+msgstr "Закончить поиск"
+
+msgid "File"
+msgstr "Файл"
+
+msgid "Search query"
+msgstr "Поисковый запрос"
+
+msgid "Empty search query."
+msgstr "Пустой поисковый запрос."
+
+msgid "Find text in this file"
+msgstr "Поиск текста в этом файле"
+
+msgid "Text <mark %s>%s</mark> not found."
+msgstr "Текст <mark %s>%s</mark> не найден."
+
+msgid "Text search in file"
+msgstr "Поиск текста в файле"
+
+msgid "Your query wasn’t found on the last page."
+msgstr "Текст не был найден на последней странице."
+
+msgid "<strong>Searching on other file pages</strong> is available with the <em>Logs+</em> license."
+msgstr "<strong>Поиск на других страницах файла</strong> доступен только с лицензией <em>Логи+</em>."
+
+msgid "You have reached the limit of free scrolls to search results. <strong>Scrolling to further results</strong> is available with the <em>Logs+</em> license."
+msgstr "Закончилось доступное количество переходов к результатам поиска. <strong>Переход к дальнейшим результатам</strong> доступен только с лицензией <em>Логи+</em>."
+
+msgid "Search text in a file"
+msgstr "Поиск текста в файле"
+
+msgid "Find <strong>all occurrences of a text query in a file</strong>. Easy navigation across all found entries using the “previous” and “next” buttons."
+msgstr "Найдите <strong>все упоминания указанного слова или словосочетания в файле</strong>. Удобная навигация по всем найденным результатам кнопками «следующий» и «предыдущий»."
+
+msgid "Search results"
+msgstr "Результаты поиска"

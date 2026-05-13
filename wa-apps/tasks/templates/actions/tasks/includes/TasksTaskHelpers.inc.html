@@ -1,0 +1,18 @@
+{function task_userpics_block}
+
+    {* CREATOR OF LAST ASSIGNMENT *}
+    {$_assignment_creator = $task.assignment_creator}
+
+    {* ASSIGNED CONTACT *}
+    {$_assigned_contact = $task.assigned_contact}
+
+    {* show assigned userpic by default; if assigned to me, show vis-a-vis userpic instead (to avoid seeing self in the Inbox all the time) *}
+    {if $_assigned_contact.id == $wa->user()->getId()}
+        {* assigned to me: show vis-a-vis *}
+        <i class="userpic userpic-48" style="background-image: url('{waContact::getPhotoUrl($_assignment_creator.id, $_assignment_creator.photo, 96)}')"></i>
+    {else}
+        {* assigned to someone else: show whom is assigned *}
+        <i class="userpic userpic-48" style="background-image: url('{waContact::getPhotoUrl($_assigned_contact.id, $_assigned_contact.photo, 96)}')"></i>
+    {/if}
+
+{/function}

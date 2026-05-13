@@ -1,0 +1,5 @@
+{strip}{if empty($result.error)}
+{$result.message|default:'OK'}
+{else}
+{$result.error|escape}
+{/if}{/strip}

@@ -1,0 +1,18 @@
+{$category_id = $product.category_id}
+{$category = $wa->shop->category($category_id)}
+
+{* 1. Синхронизируем фильтры по категории товара *}
+{$active_filters = shopFiltersCustom::syncFiltersForCategory($category_id)}
+
+{* 2. Берём товары категории с учётом активных фильтров *}
+{$products = shopFiltersCustom::getCategoryProductsWithActiveFilters($category_id)}
+
+{* 3. Фильтры по фактической коллекции *}
+{$filters = shopFiltersCustom::getCategoryEnabledFiltersByCollection($products, $category_id)}
+
+{include file="cat_prod.html"
+    category=$category
+    products=$products
+    filters=$filters
+    active_filters=$active_filters
+}

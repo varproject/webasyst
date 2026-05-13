@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE theme PUBLIC "wa-app-theme" "http://www.webasyst.com/wa-content/xml/wa-app-theme.dtd">
+<theme id="default" system="0" vendor="977221" author="Petrosian Vagram" app="cabinet" version="1.0.0">
+
+    <!-- Название темы -->
+    <name locale="ru_RU">B2B Default 1.0</name>
+    <name locale="en_US">B2B Default 1.0</name>
+
+    <!-- Файлы, доступные в редакторе дизайна -->
+    <files>
+        <file path="index.html">
+            <description locale="ru_RU">Основной шаблон B2B-приложения</description>
+        </file>
+        <file path="main.html">
+            <description locale="ru_RU">Макет с общим каркасом (layout)</description>
+        </file>
+        <file path="home.html">
+            <description locale="ru_RU">Главная страница кабинета</description>
+        </file>
+        <file path="category.html">
+            <description locale="ru_RU">Страница категории</description>
+        </file>
+    </files>
+
+    <!-- Настройки темы -->
+    <settings>
+        <!-- Логотип компании -->
+        <setting var="logo" control_type="image">
+            <!-- по умолчанию пусто; пользователь загрузит свой логотип -->
+            <value></value>
+
+            <!-- путь внутри активной темы (ВАЖНО: папка должна существовать) -->
+            <filename>img/logo.*</filename>
+
+            <name locale="ru_RU">Логотип кабинета</name>
+            <name locale="en_US">Cabinet logo</name>
+
+            <description locale="ru_RU">
+                Загрузите логотип компании. Файл будет сохранён в папку img/ активной темы.
+            </description>
+            <description locale="en_US">
+                Upload your company logo. File will be stored in the theme's img/ directory.
+            </description>
+        </setting>
+    </settings>
+
+</theme>

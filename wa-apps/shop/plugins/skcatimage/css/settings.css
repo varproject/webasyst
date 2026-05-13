@@ -1,0 +1,36 @@
+.shop-skcatimage-settings{
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+.shop-skcatimage-groups__actions{
+    white-space: nowrap;
+}
+.shop-skcatimage-groups__actions a{
+    margin-left: 5px;
+}
+.shop-skcatimage-groups__actions a, .shop-skcatimage-groups__actions span{
+    display: inline-block !important;
+    vertical-align: middle;
+}
+.shop-skcatimage-groups__actions .icon16{
+    margin-right: 0;
+}
+.shop-skcatimage-groups{
+
+}
+.shop-skcatimage-groups__add{
+    margin-top: 15px;
+}
+.shop-skcatimage-groups__hint{
+    float: right;
+    margin-top: 10px;
+}
+.shop-skcatimage-groups__item input.error{
+    color: #000;
+}
+.shop-skcatimage-groups__error{
+    font-size: 12px;
+    display: block;
+    color: red;
+    margin-top: 5px;
+}

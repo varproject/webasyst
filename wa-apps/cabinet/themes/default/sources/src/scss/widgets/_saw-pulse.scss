@@ -1,0 +1,63 @@
+/*
+// .saw-pulse
+*/
+@use '../direction' as dir;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+
+.saw-pulse {}
+.saw-pulse__header {
+    padding: 1.25rem;
+}
+.saw-pulse__counter {
+    margin: 0 1.25rem .75rem;
+    border-radius: .125rem;
+    background: vs.$saw-pulse__counter--bg-color;
+    color: vs.$saw-pulse__counter--font-color;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bt.$font-weight-medium;
+    line-height: 1;
+}
+.saw-pulse__table {
+    --sa-widget-table__body-cell--padding-y: .25rem;
+
+    border-bottom: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+    margin-bottom: 1rem;
+}
+
+
+.saw-pulse--size--lg {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1.25rem;
+
+    .saw-pulse__header {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 1.25rem;
+    }
+    .saw-pulse__counter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        min-width: 12rem;
+
+        @include dir.scope {
+            #{dir.$margin-inline-end}: 1.25rem;
+        }
+    }
+
+    .saw-pulse__table {
+        --sa-widget-table--padding-x: .75rem;
+        --sa-widget-table__head-cell--padding-y: .375rem;
+        --sa-widget-table__body-cell--padding-y: .25rem;
+
+        margin: 0;
+        flex-grow: 1;
+        border: 1px solid vs.$sa-card--divider-color; // SKIP-PIXELS
+        border-radius: .125rem;
+    }
+}

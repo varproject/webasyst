@@ -1,0 +1,42 @@
+{if !empty($categories)}
+    {$depth = -1}
+    {foreach $categories as $category}
+        {if $category.depth < $depth}
+        {section name="end-category" loop = $depth - $category.depth}
+                </li>
+            </ul>
+        {/section}
+        {$depth = $category.depth}
+        {/if}
+
+        {if $category.depth == $depth}
+                </li>
+            <li>
+        {/if}
+
+        {if $category.depth > $depth}
+            <ul class="menu">
+                <li>
+                {$depth = $category.depth}
+        {/if}
+
+        <label>
+            <span class="wa-checkbox">
+                <input type="checkbox" name="category_id[]" value="{$category.id}">
+                <span>
+                    <span class="icon">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </span>
+            </span>
+            <i class="fas fa-folder"></i>
+            {$category.name|escape}
+        </label>
+
+    {/foreach}
+
+    {section name="end-category" loop = $depth + 1}
+            </li>
+        </ul>
+    {/section}
+{/if}

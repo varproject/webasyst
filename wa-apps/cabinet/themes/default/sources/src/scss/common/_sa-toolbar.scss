@@ -1,0 +1,126 @@
+/*
+// .sa-toolbar
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-toolbar {}
+.sa-toolbar__body {
+    display: flex;
+    height: 100%;
+    background-color: vs.$sa-toolbar--bg-color;
+    color: vs.$sa-toolbar--font-color;
+}
+.sa-toolbar__shadow {
+    pointer-events: none;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    top: 100%;
+    height: 2rem;
+    left: 0; // SKIP-RTL
+
+    &::before {
+        display: block;
+        content: '';
+        position: absolute;
+        width: calc(100% + 4rem);
+        height: 100%;
+        left: -2rem; // SKIP-RTL
+        bottom: 100%;
+        box-shadow: vs.$sa-toolbar--shadow;
+    }
+}
+.sa-toolbar__item {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    @include dir.scope {
+        #{dir.$margin-inline-start}: vs.$sa-toolbar--gutter;
+    }
+}
+.sa-toolbar__item--search {
+    max-width: 22.5rem;
+    flex-shrink: 1;
+    flex-grow: 1;
+    flex-basis: 0;
+    transition: max-width .2s ease-in-out;
+}
+.sa-toolbar__button {
+    position: relative;
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: vs.$sa-toolbar--inner-height;
+    height: vs.$sa-toolbar--inner-height;
+    color: inherit;
+    border-radius: .125rem;
+    transition: background-color .12s ease-out;
+
+    &:hover {
+        background-color: vs.$sa-toolbar__button--hover-bg-color;
+    }
+    &:active,
+    &.show {
+        background-color: vs.$sa-toolbar__button--active-bg-color;
+        transition-duration: 0s;
+    }
+    &:focus {
+        outline: none;
+    }
+}
+.sa-toolbar__button-indicator {
+    $local-size: func.rem(13);
+
+    position: absolute;
+    width: $local-size;
+    height: $local-size;
+    border-radius: ($local-size * .5);
+    background: vs.$sa-toolbar__counter--bg-color;
+    font-size: func.rem(9);
+    font-weight: bt.$font-weight-bold;
+    text-align: center;
+    color: vs.$sa-toolbar__counter--font-color;
+    top: .1875rem;
+
+    @include dir.scope {
+        #{dir.$inset-inline-end}: .3125rem;
+    }
+}
+
+@include bt.media-breakpoint-up(sm) {
+    .sa-toolbar--search-shown {
+        .sa-toolbar__item--search {
+            max-width: 32.5rem;
+        }
+    }
+}
+@include bt.media-breakpoint-down(sm) {
+    .sa-toolbar--search-hidden {
+        .sa-toolbar__item--search {
+            visibility: hidden;
+        }
+    }
+    .sa-toolbar--search-shown {
+        .sa-toolbar__item--search {
+            visibility: visible;
+        }
+    }
+    .sa-toolbar__item--search {
+        width: 100%;
+        position: absolute;
+        max-width: none;
+        padding: vs.$sa-toolbar--gutter;
+        z-index: 1;
+
+        @include dir.scope {
+            margin: 0;
+        }
+    }
+}

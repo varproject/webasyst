@@ -1,0 +1,22 @@
+{if !empty($set_password)}
+    {$wa->setPasswordForm()}
+{else}
+    {if !empty($sent)}
+        <div class="alert alert-success">
+            Инструкция по восстановлению пароля отправлена.
+        </div>
+
+        <a href="{$auth_url|escape}" class="btn btn-primary w-100">
+            Я вспомнил пароль
+        </a>
+    {else}
+        {$wa->forgotPasswordForm()}
+    {/if}
+{/if}
+
+<style>
+    .wa-forgotpassword-button {
+        margin-top: 20px;
+        width: 100%;
+    }
+</style>

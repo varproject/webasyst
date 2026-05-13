@@ -1,0 +1,129 @@
+{$prefix = 'f-file-view-helper-folder-html-'}
+
+<style>
+    #{$prefix}{$folder_hash}-block .f-file-image {
+        display: inline-block;
+        vertical-align: middle;
+        max-width: 25px;
+        max-height: 25px;
+        margin: 0 4px 0 0;
+    }
+
+    #{$prefix}{$folder_hash}-block .f-file-name {
+        display: inline;
+        vertical-align: middle;
+    }
+
+    #{$prefix}{$folder_hash}-block .f-file-list-table {
+        width: 100%;
+        table-layout: fixed;
+    }
+    #{$prefix}{$folder_hash}-block .f-file-list-table td,
+    #{$prefix}{$folder_hash}-block .f-file-list-table th {
+        padding: 4px;
+        vertical-align: middle;
+        border: solid rgba(0,0,0,0.1);
+        border-width: 0 0 1px;
+    }
+    #{$prefix}{$folder_hash}-block .f-file-list-table .f-image-column {
+        width: 32px;
+        font-size: 0;
+        line-height: 0;
+    }
+    #{$prefix}{$folder_hash}-block .f-file-list-table .f-image-column .f-file-image {
+        width: 32px;
+        height: 32px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+    }
+    #{$prefix}{$folder_hash}-block .f-file-list-table .f-name-column {
+        text-align: left;
+    }
+    #{$prefix}{$folder_hash}-block .f-file-list-table .f-name-column .f-name-wrapper {
+        max-width: 100%;
+        line-height: 0;
+    }
+    #{$prefix}{$folder_hash}-block .f-file-list-table .f-name-column .f-name-wrapper .f-file-name {
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        line-height: 1.25em;
+    }
+    #{$prefix}{$folder_hash}-block .f-file-list-table .f-date-column,
+    #{$prefix}{$folder_hash}-block .f-file-list-table .f-size-column {
+        width: 125px;
+        text-align: center;
+    }
+
+</style>
+
+<div id="{$prefix}{$folder_hash}-block" class="{$prefix}block block">
+    <h1>
+        {if $parent && $parent['hash']}
+            <a href="{$parent.frontend_url}" class="f-parent-link">..</a> /
+        {/if}
+        {$title|escape}
+    </h1>
+
+    {if $files}
+        <table class="f-file-list-table zebra" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th class="f-image-column"></th>
+                    <th class="f-name-column">{_wd('files', 'Name')}</th>
+                    <th class="f-date-column">{_wd('files', 'Updated')}</th>
+                    <th class="f-size-column">{_wd('files', 'Size')}</th>
+                </tr>
+            </thead>
+
+            <tbody class="f-file-list">
+                {foreach $files as $file}
+                    <tr class="f-file-item">
+                        <td class="f-image-column">
+                            <a href="{$file.frontend_url}" data-type="{$file.type}" class="f-file-link">
+                                <img class="f-file-image" src="{$file.photo_url.file_list_small}" alt="">
+                            </a>
+                        </td>
+                        <td class="f-name-column">
+                            <div class="f-name-wrapper">
+                                <a class="f-file-name" href="{$file.frontend_url}" data-type="{$file.type}">{$file.name|escape}</a>
+                            </div>
+                        </td>
+                        <td class="f-date-column">{$file.update_datetime_str}</td>
+                        <td class="f-size-column">
+                            {if $file.type === filesFileModel::TYPE_FILE}
+                                {$file.size_str}
+                            {else}
+                                &mdash;
+                            {/if}
+                        </td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    {/if}
+</div>
+
+{if !$wa->get('ignore_js')}
+    <script>
+        $(function() {
+            var block = $('#{$prefix}{$folder_hash}-block');
+            block.on('click', '.f-parent-link, .f-file-link, .f-file-name', function() {
+                var el = $(this);
+                if (el.data('type') === '{filesFileModel::TYPE_FILE}') {
+                    return;
+                }
+                var href = el.attr('href');
+                $.get(href + '&ignore_js=1', function(html) {
+                    var tmp = $('<div>').html(html);
+                    block.empty().html(tmp.children());
+                    tmp.remove();
+                });
+                return false;
+            });
+        });
+    </script>
+{/if}

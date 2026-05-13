@@ -1,0 +1,139 @@
+/*
+// alert
+*/
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:color';
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+@mixin _local-link-background-color($color) {
+    @if ($color != null) {
+        & {
+            background-color: color.scale($color, $alpha: -30%);
+        }
+        &:hover {
+            background-color: $color;
+        }
+        &:active {
+            background-color: color.scale($color, $alpha: -15%);
+        }
+    }
+};
+
+.alert {
+    @include bt.font-size(func.rem(15));
+
+    line-height: func.rem(22);
+
+    .alert-link {
+        z-index: 0;
+        position: relative;
+        color: vs.$sa-alert__link--font-color;
+        padding: 0 .25rem;
+        text-decoration: none;
+        border-radius: .125rem;
+        transition: background-color .12s;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+
+        @include _local-link-background-color(vs.$sa-alert__link--bg-color);
+    }
+    .alert-link:hover {
+        text-decoration: none;
+    }
+    .alert-link:active {
+        transition-duration: 0s;
+    }
+
+    .sa-close {
+        top: 0;
+        position: absolute;
+        z-index: bt.$stretched-link-z-index + 1;
+        padding: bt.$alert-padding-y * math.div(19, 14);
+
+        @include dir.scope {
+            #{dir.$inset-inline-end}: 0;
+        }
+    }
+}
+.alert-sa-has-icon {
+    display: flex;
+}
+.alert-sa-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+
+    @include dir.scope {
+        @include dir.margin(func.rem(-1) .75rem func.rem(-1) -.375rem);
+    }
+}
+.alert-sa-content {
+    align-self: center;
+}
+
+%alert-styles {
+    hr {
+        opacity: .12;
+    }
+
+    .alert-sa-icon {
+        opacity: .8;
+    }
+}
+
+@each $type, $variables in vs.$sa-alert--styles {
+    .alert-#{$type} {
+        @extend %alert-styles;
+
+        background: map_get($variables, bg-color);
+        color: map_get($variables, font-color);
+
+        .alert-link {
+            color: map.get($variables, link-font-color);
+
+            @include _local-link-background-color(map.get($variables, link-bg-color));
+        }
+    }
+}
+
+%alert-sa-card-styles {
+    background-color: vs.$sa-card--bg-color;
+    box-shadow: vs.$sa-card--shadow;
+    border-radius: bt.$alert-border-radius;
+
+    hr {
+        opacity: .2;
+    }
+
+    .sa-close {
+        color: vs.$sa-alert-card--close-color;
+    }
+};
+
+@each $type, $variables in vs.$sa-alert-card--styles {
+    .alert-sa-#{$type}-card {
+        @extend %alert-sa-card-styles;
+
+        color: map_get($variables, font-color);
+
+        .alert-sa-icon {
+            color: map_get($variables, icon-color);
+        }
+
+        .alert-link {
+            background-color: color.scale(map_get($variables, font-color), $alpha: -85%);
+        }
+        .alert-link:focus,
+        .alert-link:hover {
+            background-color: color.scale(map_get($variables, font-color), $alpha: -75%);
+        }
+        .alert-link:active {
+            background-color: color.scale(map_get($variables, font-color), $alpha: -90%);
+        }
+    }
+}

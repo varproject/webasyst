@@ -1,0 +1,108 @@
+{$dialog_id = 'f-tag-assign-dialog-'}
+
+<div class="dialog f-tag-assign-dialog" id="{$dialog_id}">
+    <form>
+        <div class="dialog-background"></div>
+        <div class="dialog-body">
+            <h3 class="dialog-header">[`Assign tags`]</h3>
+            <div class="dialog-content">
+
+                <div class="f-tags-wrapper" data-add-tag-text="[`enter tags`]">
+                    <input id="{$dialog_id}tags-input" type="text" name="tags" value="">
+
+                    {$_count = count($popular_tags)}
+                    {if $_count > 0}
+                    <div class="flexbox middle f-popular-tags">
+                        <span class="custom-mr-8">[`Popular tags`]:</span>
+                        <ul class="chips tags small">
+                            {foreach $popular_tags as $tag_id => $tag_name name=tloop}
+                                <li><a href="javascript:void(0);" title="{$tag_name|escape}"><i class="fas fa-hashtag"></i> {$tag_name|escape|truncate:20}</a></li>
+                            {/foreach}
+                            </ul>
+                        </div>
+                    {/if}
+                </div>
+
+            </div>
+            <div class="dialog-footer dialog-buttons">
+                <div class="dialog-buttons-gradient">
+                    {$wa->csrf()}
+                    <button type="submit" class="button"><i class="fas fa-spinner fa-spin loading hidden custom-mr-4"></i> [`Assign`]</button>
+                    <a class="js-close-dialog button light-gray" href="javascript:void(0);">[`Cancel`]</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        $(function() {
+            var dialog = $('#{$dialog_id}');
+            $('.f-tag-assign-dialog').not(dialog).remove();
+
+            var default_text = '[`Add tag`]';
+
+            dialog.filesDialog({
+                onOpen: function($dialog, dialog_instance) {
+                    const input = $dialog.find(':input[name="tags"]');
+                    input.tagsInput({
+                        defaultText: default_text,
+                        autocomplete_url: '',
+                        autocomplete: {
+                            source: function (request, response) {
+                                $.getJSON('?module=tag&action=autocomplete&term=' + request.term,
+                                    function (r) {
+                                        if (r.status === 'ok') {
+                                            response(r.data.tags || []);
+                                        } else {
+                                            response([]);
+                                        }
+                                    });
+                            }
+                        }
+                    });
+                    input.importTags('');
+
+                    $('.f-popular-tags', dialog).find('a').on('click', function () {
+                        const name = $(this).text();
+                        input.removeTag(name);
+                        input.addTag(name);
+                    });
+
+                    // Placeholder hack
+                    dialog.find("#f-tag-assign-dialog-tags-input_tag").val("").attr("placeholder", default_text);
+
+
+                    $dialog.find('[type="submit"]').on('click', function(e) {
+                        e.preventDefault();
+
+                        $(this).find('.fa-spinner').removeClass('hidden');
+                        this.disabled = true;
+
+                        const input = $dialog.find(':input[name="tags"]');
+
+                        // add not finished tag
+                        const current_tag_input = $('#' + input.attr('id') + '_tag');
+                        const tag = current_tag_input.val();
+                        if (tag && tag !== default_text) {
+                            input.addTag(tag);
+                        }
+
+                        const tags = (input.val() || '').trim();
+                        if (!tags) {
+                            dialog_instance.close();
+                        }
+
+                        $.files.jsonPost({
+                            url: '?module=tag&action=save&add=1',
+                            data: { file_id: {$file_ids|json_encode}, tags: tags },
+                            onAlways: function() {
+                                $.files.controller.reloadPage();
+                                dialog_instance.close();
+                            }
+                        });
+                    })
+                }
+            });
+        });
+    </script>
+</div>
+

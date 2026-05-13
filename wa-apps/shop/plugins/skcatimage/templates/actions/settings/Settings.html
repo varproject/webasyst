@@ -1,0 +1,80 @@
+<link rel="stylesheet" type="text/css" href="{$shop_plugin_url}css/settings.css" />
+<script src="{$shop_plugin_url}js/settings.js" ></script>
+
+<h1>{$plugin_info.name}</h1>
+
+<div class="shop-skcatimage js-skcatimage">
+
+    <div class="shop-skcatimage-settings">
+        <div class="form">
+            <form action="?module=plugins&id={$plugin_id}&action=save" method="post" id="plugins-settings-form" class="js-skcatimage-settings-form" enctype="multipart/form-data" target="plugins-settings-iframe">
+                {$wa->csrf()}
+                {foreach $settings_controls as $name => $control}
+                <div class="field">
+                    {$control}
+                </div>
+                {/foreach}
+
+            </form>
+            <iframe style="display:none" name="plugins-settings-iframe" id="plugins-settings-iframe"></iframe>
+        </div>
+
+    </div>
+
+    <div class="shop-skcatimage-groups">
+        <form class="shop-skcatimage-groups__form js-skcatimage-groups-form">
+            <table class="shop-skcatimage-groups__table zebra mode-sales">
+                <thead>
+                    <tr class="shop-skcatimage-groups__zags white s-header-row">
+                        <th>Наименование</th>
+                        <th>Идентифкатор</th>
+                        <th>Ширина</th>
+                        <th>Высота</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody class="js-skcatimage-groups-body">
+                    {foreach $groups as $group}
+                    <tr class="shop-skcatimage-groups__item js-skcatimage-groups-item s-summary-row" data-iteration="{$group@iteration}">
+                        <td>
+                            <input type="text" name="title[{$group.id}]" value="{$group.title|escape}" data-name="title" data-id="{$group.id}" />
+                            <span class="shop-skcatimage-groups__error js-error-msg"></span>
+                        </td>
+                        <td>
+                            <input type="text" name="name[{$group.id}]" class="js-skcatimage-groups-input-id" value="{$group.name|escape}" data-name="name" data-id="{$group.id}" />
+                            <span class="shop-skcatimage-groups__error js-error-msg"></span>
+                        </td>
+                        <td>
+                            <input type="text" name="width[{$group.id}]" value="{$group.width}" data-name="width" data-id="{$group.id}" /> px.
+                            <span class="shop-skcatimage-groups__error js-error-msg"></span>
+                        </td>
+                        <td>
+                            <input type="text" name="height[{$group.id}]" value="{$group.height}" data-name="height" data-id="{$group.id}" /> px.
+                            <span class="shop-skcatimage-groups__error js-error-msg"></span>
+                        </td>
+                        <td class="shop-skcatimage-groups__actions">
+                            <a href="javascript:void(0)" class="gray inline-link  js-skcatimage-groups-refresh" title="Обновить эскизы группы изображений">
+                                <i class="icon16 update"></i>
+                            </a>
+                            <span class="small js-skcatimage-groups-percent"></span>
+                            <a href="javascript:void(0)" class="gray inline-link  js-skcatimage-groups-delete" title="Удалить группу">
+                                <i class="icon16 delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </form>
+        <div class="hint shop-skcatimage-groups__hint" >Изменения применяются автоматически</div>
+        <div class="shop-skcatimage-groups__add">
+            <a href="javascript:void(0)" class="inline-link js-skcatimage-groups-add">
+                <i class="icon16 add"></i><b><i>Добавить категорию</i></b>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    var shopSkcatimageSettingsInit = new shopSkcatimageSettings({$shop_skcatimage_config|json_encode});
+</script>

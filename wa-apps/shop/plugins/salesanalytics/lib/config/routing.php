@@ -1,0 +1,5 @@
+<?php
+
+return [
+    'salesanalytics/*' => 'frontend',
+];

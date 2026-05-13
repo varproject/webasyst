@@ -1,0 +1,29 @@
+/*
+// .sa-widget-header
+*/
+@use 'sass:math';
+@use '../functions' as func;
+@use '../mixins/bootstrap' as bt;
+@use '../direction' as dir;
+
+.sa-widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sa-widget-header__title {
+    font-size: func.rem(17);
+    font-weight: bt.$font-weight-medium;
+    margin: 0;
+}
+.sa-widget-header__actions {
+    display: flex;
+
+    @include dir.scope {
+        #{dir.$margin-inline-end}: -.625rem;
+    }
+
+    .btn {
+        margin: -.3125rem 0;
+    }
+}

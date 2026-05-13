@@ -1,0 +1,28 @@
+/*
+// form-range
+*/
+@use '../custom-variables' as vs;
+
+.form-range {
+    // Pseudo-elements must be split across multiple rulesets to have an effect.
+    // No box-shadow() mixin for focus accessibility.
+    &::-webkit-slider-thumb { box-shadow: vs.$sa-outline--normal; }
+    &::-moz-range-thumb     { box-shadow: vs.$sa-outline--normal; }
+
+    &:focus {
+        outline: 0;
+
+        // Pseudo-elements must be split across multiple rulesets to have an effect.
+        // No box-shadow() mixin for focus accessibility.
+        &::-webkit-slider-thumb { box-shadow: vs.$sa-outline--focus; }
+        &::-moz-range-thumb     { box-shadow: vs.$sa-outline--focus; }
+    }
+    &:active:focus {
+        outline: 0;
+
+        // Pseudo-elements must be split across multiple rulesets to have an effect.
+        // No box-shadow() mixin for focus accessibility.
+        &::-webkit-slider-thumb { box-shadow: vs.$sa-outline--active; }
+        &::-moz-range-thumb     { box-shadow: vs.$sa-outline--active; }
+    }
+}

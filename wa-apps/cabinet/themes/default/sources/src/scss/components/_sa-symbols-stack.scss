@@ -1,0 +1,21 @@
+/*
+// .sa-symbols-stack
+*/
+@use '../functions' as func;
+@use '../custom-variables' as vs;
+
+.sa-symbols-stack {
+    --sa-symbols-stack--divider-size: #{func.rem(3)};
+    --sa-symbols-stack--parent-bg-color: #{vs.$sa-card--bg-color};
+
+    display: flex;
+}
+.sa-symbols-stack__item {
+    --sa-symbol--size: 2rem;
+
+    border: var(--sa-symbols-stack--divider-size) solid var(--sa-symbols-stack--parent-bg-color);
+    margin: calc(var(--sa-symbols-stack--divider-size) * -1);
+}
+.sa-symbols-stack__item + .sa-symbols-stack__item {
+    margin-left: calc(var(--sa-symbol--size) * .25 * -1);
+}

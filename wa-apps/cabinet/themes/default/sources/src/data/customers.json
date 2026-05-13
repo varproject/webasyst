@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Jessica Moore",
+    "email": "moore-jessica@example.com",
+    "country": "USA",
+    "avatar": "images/customers/customer-1.jpg",
+    "createdAt": "June 26, 2021",
+    "groups": ["Default"],
+    "spent": 28522.35
+  },
+  {
+    "name": "Adam Taylor",
+    "email": "taylor-adam@example.com",
+    "country": "Russia",
+    "avatar": "images/customers/customer-2.jpg",
+    "createdAt": "May 15, 2021",
+    "groups": ["Default"],
+    "spent": 34392.10
+  },
+  {
+    "name": "Helena Garcia",
+    "email": "garcia-helena@example.com",
+    "country": "China",
+    "avatar": "images/customers/customer-3.jpg",
+    "createdAt": "February 23, 2021",
+    "groups": ["Default"],
+    "spent": 5702.02
+  },
+  {
+    "name": "Ryan Ford",
+    "email": "ford-ryan@example.com",
+    "country": "India",
+    "avatar": "images/customers/customer-4.jpg",
+    "createdAt": "Oct 19, 2021",
+    "groups": ["Default"],
+    "spent": 973.64
+  },
+  {
+    "name": "Olivia Smith",
+    "email": "smith-olivia@example.com",
+    "country": "USA",
+    "avatar": "images/customers/customer-5.jpg",
+    "createdAt": "November 9, 2021",
+    "groups": ["Default"],
+    "spent": 8061.02
+  },
+  {
+    "name": "Kevin Smith",
+    "email": "smith-kevin@example.com",
+    "country": "Poland",
+    "avatar": "images/customers/customer-6.jpg",
+    "createdAt": "April 4, 2021",
+    "groups": ["Default"],
+    "spent": 6147.64
+  },
+  {
+    "name": "Brian Wood",
+    "email": "wood-brian@example.com",
+    "country": "Germany",
+    "avatar": "images/customers/customer-7.jpg",
+    "createdAt": "August 17, 2021",
+    "groups": ["Default"],
+    "spent": 1332.58
+  },
+  {
+    "name": "Ethan Young",
+    "email": "young-ethan@example.com",
+    "country": "Russia",
+    "avatar": "images/customers/customer-8.jpg",
+    "createdAt": "September 28, 2021",
+    "groups": ["Wholesaler"],
+    "spent": 594.97
+  },
+  {
+    "name": "Charlotte Jones",
+    "email": "jones-charlotte@example.com",
+    "country": "Canada",
+    "avatar": "images/customers/customer-9.jpg",
+    "createdAt": "December 31, 2021",
+    "groups": ["Default"],
+    "spent": 5192.42
+  },
+  {
+    "name": "Isabel Williams",
+    "email": "williams-isabel@example.com",
+    "country": "China",
+    "avatar": "images/customers/customer-10.jpg",
+    "createdAt": "October 2, 2021",
+    "groups": ["Default"],
+    "spent": 35762.74
+  },
+  {
+    "name": "Jacob Lee",
+    "email": "lee-jacob@example.com",
+    "country": "Ukraine",
+    "avatar": "images/customers/customer-11.jpg",
+    "createdAt": "May 12, 2021",
+    "groups": ["Wholesaler"],
+    "spent": 911.27
+  },
+  {
+    "name": "Anna Wilson",
+    "email": "wilson-anna@example.com",
+    "country": "Italy",
+    "avatar": "images/customers/customer-12.jpg",
+    "createdAt": "February 26, 2021",
+    "groups": ["Wholesaler"],
+    "spent": 25486.20
+  }
+]

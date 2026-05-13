@@ -1,0 +1,76 @@
+{if isset($error)}
+    <p class="state-error">{$error}</p>
+{else}
+    <div id="settings" style="overflow-y: auto;">
+        {if !$premium}
+            <div class="alert">
+                <div class="fields">
+                    <div class="field">
+                        <div class="name">[`Add more features`]
+                            <span class="premium-icon-container">
+                                <i class="fas fa-star"></i>
+                            </span>
+                        </div>
+                        <div class="value">
+                            <a href="javascript:void(0);" class="view-premium-link">[`Logs+`]</a>
+                            <p class="gray small custom-mb-0">
+                                [`Search by file names and file contents, filtering by software products, email notifications on updated files, bulk files deletion.`]
+                                <a href="javascript:void(0);" class="text-blue view-premium-link">[`Read more`] ›</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+
+        <form>
+            <div class="fields">
+                {$controls}
+
+                <div class="field">
+                    <div class="value">
+                        <span class="state-error"></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="dialog-template-cron-setup hidden">
+        <div class="dialog">
+            <div class="dialog-background"></div>
+            <div class="dialog-body">
+                <header class="dialog-header"><h1>[`CRON setup`]</h1></header>
+                <div class="dialog-content">
+                    {if $in_cloud}
+                        <p>[`Add the following command to the CRON settings of your cloud account:`]</p>
+                        <pre class="bold"><span class="badge blue">[`Logs`]</span> <strong>check</strong></pre>
+                    {else}
+                        <p>[`Add the following command to your server’s CRON settings:`]</p>
+                        <pre class="bold">{$cron_command}</pre>
+                    {/if}
+
+                    <p class="gray">[`Recommended execution frequency is <strong>once an hour every day</strong>.`]</p>
+
+                    {if $last_cron_datetime}
+                        <p>
+                            <span style="color: var(--green);"><i class="fas fa-check"></i></span>
+
+                            {capture name="last_cron_datetime"}
+                                <strong class="highlighted nowrap">{$last_cron_datetime|wa_datetime:'humandatetime'|mb_strtolower}</strong>
+                            {/capture}
+
+                            {sprintf_wp(
+                                'The CRON job is already set up. Last time it worked: %s.',
+                                $smarty.capture.last_cron_datetime|trim
+                            )}
+                        </p>
+                    {/if}
+                </div>
+                <footer class="dialog-footer">
+                    <button class="button light-gray js-close-dialog">[`Close`]</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+{/if}

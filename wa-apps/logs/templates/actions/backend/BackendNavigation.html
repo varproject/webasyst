@@ -1,0 +1,247 @@
+{capture name="breadcrumbs"}
+    {if !empty($breadcrumbs)}
+        <span id="breadcrumbs-wrapper"{if $wa->isMobile() && $is_search_mode} class="hidden"{/if}>
+            {strip}
+                {if !empty($back)}
+                    <a href="{$back_url}" class="back-link" title="[`back`]"><i class="fas fa-arrow-left"></i></a>
+                {/if}
+
+                <span class="breadcrumbs{if in_array($wa->get('action', ''), ['file', 'action'])} item{/if}">
+                    {foreach $breadcrumbs as $item}
+                        <span class="breadcrumb breadcrumb">
+                            {if !$item@last}
+                                <a href="{if $item@first}{$wa_app_url}{else}?{$item.url}{/if}">{$item.name}</a>
+                            {else}
+                                {$item.name}
+                            {/if}
+                        </span>
+
+                        {if !$item@last}
+                            <span class="breadcrumbs-separator">/</span>
+                        {/if}
+                    {/foreach}
+                </span>
+            {/strip}
+        </span>
+    {/if}
+{/capture}
+
+{capture name="view_modes_dropdown"}
+    {if !empty($view_modes)}
+        <div class="dropdown" id="view-modes-dropdown">
+            {$current_view_mode = null}
+            {foreach $view_modes as $view_mode}
+                {if $view_mode.selected}
+                    {$current_view_mode = $view_mode}
+                    <button class="dropdown-toggle button" type="button">{$view_mode.title}</button>
+                {/if}
+            {/foreach}
+
+            {* e.g., in search results *}
+            {if !$current_view_mode}
+                <button class="dropdown-toggle button" type="button">[`Choose`]</button>
+            {/if}
+
+            <div class="dropdown-body">
+                <ul class="menu">
+                    {foreach $view_modes as $view_mode}
+                        {if $view_mode.selected}
+                            <li class="selected">
+                                <a href="javascript: void(0);"><i class="{$view_mode.icon}"></i> <span>{$view_mode.title}</span></a>
+                            </li>
+                        {else}
+                            <li>
+                                <a href="{$wa_app_url}{$view_mode.url}"><i class="{$view_mode.icon}"></i> <span>{$view_mode.title}</span></a>
+                            </li>
+                        {/if}
+                    {/foreach}
+
+                    {if $show_search_promo}
+                        <li class="logs-open-premium-feature-button-wrapper">
+                            <a href="javascript: void(0);" class="logs-open-premium-feature-button" data-feature="search">
+                                <i class="fas fa-search"></i>
+                                <span class="text-gray">[`By search results`]</span>
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                        </li>
+                    {elseif $show_sort_mode_promo}
+                        <li class="logs-open-premium-feature-button-wrapper">
+                            <a href="javascript: void(0);" class="logs-open-premium-feature-button" data-feature="sort-mode">
+                                <i class="fas fa-lock"></i>
+                                <span class="text-gray">[`Sort order auto-remembering`]</span>
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                        </li>
+                    {/if}
+                </ul>
+            </div>
+        </div>
+    {/if}
+{/capture}
+
+{capture name="reload_button"}
+    <span class="list-update-action js-list-update-action{if $wa->isMobile()} custom-mt-4-mobile{/if}" title="[`Reload list`]">
+        <i class="fas fa-redo-alt"></i>
+    </span>
+{/capture}
+
+{capture name="mobile_menu_dropdown"}
+    <div class="dropdown" id="mobile-menu-dropdown">
+        <button class="dropdown-toggle without-arrow button custom-mr-0" type="button">
+            <i class="fas fa-ellipsis-h"></i>
+        </button>
+
+        <div class="dropdown-body right">
+            <div class="box">
+                <div class="fields">
+                    {if isset($total_size)}
+                        <div class="field">
+                            <div class="name">{$total_size_hint}</div>
+                            <div class="value">{$total_size}</div>
+                        </div>
+                    {/if}
+
+                    {foreach $item_actions as $action_id => $action}
+                        <div class="field action-menu">
+                            <div class="name">{$action.title}</div>
+                            <div class="value">
+                                <button class="light-gray">
+                                    {if isset($action.url)}<a href="{$action.url}">{/if}
+
+                                    {$data = ''}
+                                    {if isset($action.data)}
+                                        {foreach $action.data as $data_key => $data_value}
+                                            {$data = $data|cat:" data-`$data_key`='`$data_value`'"}
+                                        {/foreach}
+                                    {/if}
+
+                                    <span
+                                        class="logs-action-{$action_id}{if !empty($action.enabled)} enabled-action-container{/if}"
+                                        title="{$action.title}"
+                                        {if strlen($action.title_simple|default:'')} data-title-simple="{$action.title_simple}"{/if}
+                                        {if strlen($action.title_enabled|default:'')} data-title-enabled="{$action.title_enabled}"{/if}
+                                    >
+                                        <i class="{$action.icon_class} logs-action-icon"{$data}></i>
+                                    </span>
+
+                                    {if isset($action.url)}</a>{/if}
+                                </button>
+                            </div>
+                        </div>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+    </div>
+{/capture}
+
+{capture name="action_buttons"}
+    <ul class="action-menu">
+        {$common_actions_found = false}
+        {$marker_actions_found = false}
+
+        {foreach $item_actions as $action_id => $action}
+            {$container_class = null}
+
+            {$add_common_actions_class = !$common_actions_found && !empty($action.common)}
+            {if $add_common_actions_class}
+                {$common_actions_found = true}
+            {/if}
+
+            {$add_marker_actions_class = !$marker_actions_found && !empty($action.marker)}
+            {if $add_marker_actions_class}
+                {$marker_actions_found = true}
+            {/if}
+
+            {if $add_common_actions_class || $add_marker_actions_class}{$container_class = 'action-group-container'}{/if}
+
+            <li{if $container_class} class="{$container_class}"{/if}>
+                {if isset($action.url)}<a href="{$action.url}">{/if}
+
+                {$data = ''}
+                {if isset($action.data)}
+                    {foreach $action.data as $data_key => $data_value}
+                        {$data = $data|cat:" data-`$data_key`='`$data_value`'"}
+                    {/foreach}
+                {/if}
+
+                <span
+                    class="logs-action-{$action_id}{if !empty($action.enabled)} enabled-action-container{/if}"
+                    title="{$action.title}"
+                    {if strlen($action.title_simple|default:'')} data-title-simple="{$action.title_simple}"{/if}
+                    {if strlen($action.title_enabled|default:'')} data-title-enabled="{$action.title_enabled}"{/if}>
+                    <i class="{$action.icon_class} logs-action-icon"{$data}></i>
+                </span>
+
+                {if isset($action.url)}</a>{/if}
+            </li>
+        {/foreach}
+    </ul>
+{/capture}
+
+{capture name="total_size"}
+    {if isset($total_size)}
+        <span class="{$total_size_class}" title="{$total_size_hint}">{$total_size}</span>
+    {/if}
+{/capture}
+
+{capture name="file_search"}
+    {if $premium}
+        {if $is_item_list}
+            <div id="file-search" class="custom-mt-12 custom-mt-8-mobile">
+                {$expand_search_form = in_array($wa->get('mode', ''), ['search', 'product'])}
+
+                <div class="flexbox custom-mt-8">
+                    <input type="search" id="file-name-search-field" class="full-width-input" placeholder="[`Search by file name`]">
+                    <span class="dropdown" id="file-search-dropdown">
+                        <button class="search-toggle-custom button light-gray{if $expand_search_form} expanded{/if}" type="button" title="{if $expand_search_form}[`Show less search fields`]{else}[`Show more search fields`]{/if}" data-title-expanded="[`Show less search fields`]" data-title-collapsed="[`Show more search fields`]"></button>
+                    </span>
+                </div>
+
+                <div id="file-search-dropdown-body"{if !$expand_search_form} style="display: none;"{/if}>
+                    <div class="custom-mt-4">
+                        <form action="?action=files&mode=search" class="flexbox full-width" id="file-text-search-form">
+                            <input type="hidden" name="action" value="files">
+                            <input type="hidden" name="mode" value="search">
+                            <input type="search" name="query" class="full-width-input" placeholder="[`Search by text`]" value="{$wa->get('query', '')|escape}">
+                            <input type="submit" value="[`Search`]" class="button">
+                        </form>
+                    </div>
+
+                    <div class="custom-mt-4">
+                        <input type="search" id="product-search-field" class="full-width-input" placeholder="[`Search by app, plugin, or widget`]" value="{$product_search_product_name}">
+                    </div>
+                </div>
+            </div>
+        {/if}
+    {/if}
+{/capture}
+
+<div class="navigation-basic">
+    <div class="flexbox full-width{if !strlen($smarty.capture.breadcrumbs|trim)} middle{/if}">
+        {if strlen($smarty.capture.breadcrumbs|trim)}
+            {$smarty.capture.breadcrumbs}
+        {else}
+            {if $is_item_list}
+                {$smarty.capture.view_modes_dropdown}
+                {$smarty.capture.reload_button}
+            {/if}
+        {/if}
+
+        {if $wa->isMobile()}
+            {$smarty.capture.mobile_menu_dropdown}
+        {else}
+            {if $wa->isMobile()}
+                {$smarty.capture.action_buttons}
+                {$smarty.capture.total_size}
+            {else}
+                <span>
+                    {$smarty.capture.action_buttons}
+                    {$smarty.capture.total_size}
+                </span>
+            {/if}
+        {/if}
+    </div>
+
+    {$smarty.capture.file_search}
+</div>
