@@ -1,62 +1,76 @@
 <?php
 
-class apanelPluginsRemoveAction extends waViewAction
+class apanelPluginsRemoveController extends waController
 {
     public function execute()
     {
         $this->checkRights();
+        $this->checkPostMethod();
 
+        $plugin_id = $this->getPluginId();
+        $plugin = $this->getPlugin($plugin_id);
+
+        $plugin_name = $plugin->getName();
+
+        $this->removePlugin($plugin);
+
+        $this->logAction('plugin_remove', [
+            'plugin_id'   => $plugin_id,
+            'plugin_name' => $plugin_name,
+        ]);
+
+        $this->redirect($this->getPluginsUrl());
+    }
+
+    protected function checkPostMethod()
+    {
+        if (waRequest::method() !== waRequest::METHOD_POST) {
+            throw new waException('Method not allowed', 405);
+        }
+    }
+
+    protected function getPluginId()
+    {
         $plugin_id = waRequest::param('id', '', waRequest::TYPE_STRING_TRIM);
 
         if (!$plugin_id || !preg_match('~^[a-z0-9_]+$~i', $plugin_id)) {
             throw new waException('Invalid plugin ID', 400);
         }
 
-        try {
-            $plugin = wa('apanel')->getPlugin($plugin_id);
-            if (!$plugin) {
-                throw new waException('Plugin not found', 404);
-            }
-
-            // Если POST — удаляем
-            if (waRequest::method() === waRequest::METHOD_POST) {
-                $this->removePlugin($plugin);
-
-                $this->logAction('plugin_remove', array(
-                    'plugin_id'   => $plugin_id,
-                    'plugin_name' => $plugin->getName(),
-                ));
-
-                $this->redirect(wa()->getAppUrl('apanel') . 'plugins/');
-            }
-
-            // Иначе показываем подтверждение
-            $this->setLayout(new apanelBackendLayout());
-
-            $this->view->assign(array(
-                'plugin_id'   => $plugin_id,
-                'plugin_name' => $plugin->getName(),
-            ));
-        } catch (Exception $e) {
-            throw new waException($e->getMessage(), 500);
-        }
+        return $plugin_id;
     }
 
-    protected function removePlugin($plugin)
+    protected function getPlugin($plugin_id)
     {
-        // Отключаем плагин
+        try {
+            $plugin = wa('apanel')->getPlugin($plugin_id);
+        } catch (Exception $e) {
+            throw new waException('Plugin not found', 404);
+        }
+
+        if (!$plugin) {
+            throw new waException('Plugin not found', 404);
+        }
+
+        return $plugin;
+    }
+
+    protected function removePlugin(waPlugin $plugin)
+    {
         $enabled_plugins = $this->getEnabledPlugins();
         unset($enabled_plugins[$plugin->getId()]);
+
         $this->saveEnabledPlugins($enabled_plugins);
 
-        // Запускаем uninstall скрипт
         $plugin->uninstall();
 
-        // Удаляем директорию плагина
         $plugin_path = $plugin->getPath();
+
         if (is_dir($plugin_path)) {
             waFiles::removeDir($plugin_path);
         }
+
+        wa('apanel')->getConfig()->clearCache();
     }
 
     protected function getEnabledPlugins()
@@ -64,14 +78,15 @@ class apanelPluginsRemoveAction extends waViewAction
         $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/apanel/plugins.php';
 
         if (!is_file($path)) {
-            return array();
+            return [];
         }
 
         $plugins = include($path);
-        return is_array($plugins) ? $plugins : array();
+
+        return is_array($plugins) ? $plugins : [];
     }
 
-    protected function saveEnabledPlugins($plugins)
+    protected function saveEnabledPlugins(array $plugins)
     {
         $path = wa()->getConfig()->getRootPath() . '/wa-config/apps/apanel/';
 
@@ -80,9 +95,13 @@ class apanelPluginsRemoveAction extends waViewAction
         }
 
         $content = "<?php\n\nreturn " . var_export($plugins, true) . ";\n";
-        file_put_contents($path . 'plugins.php', $content);
 
-        wa('apanel')->getConfig()->clearCache();
+        file_put_contents($path . 'plugins.php', $content);
+    }
+
+    protected function getPluginsUrl()
+    {
+        return wa()->getAppUrl('apanel') . 'settings/plugins/';
     }
 
     protected function checkRights()
