@@ -6,8 +6,8 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     protected function getBaseFieldsConfig(): array
     {
         $res = parent::getBaseFieldsConfig();
-        $res['name']['class'] = 'width-50';
-        $res['description']['class'] = 'smallest width-50';
+        // $res['name']['class'] = 'width-50';
+        $res['description']['class'] = 'smallest';
         return $res;
     }
 
@@ -25,10 +25,10 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
         return [
             'route_key' => [
-                'title' => 'Домен',
-                'description' => 'Выберите поселение Shop-Script, через которое будет открываться клиентский B2B-витрина.',
+                'title' => 'Поселение',
+                'description' => 'Выберите домен, через которое будет открываться клиентская B2B-витрина.',
                 'control_type' => waHtmlControl::SELECT,
-                'class' => 'width-50',
+                // 'class' => 'width-50',
                 'options' => $this->getShopRouteOptions(),
                 'value' => ifset($values, 'route_key', ''),
             ],
@@ -37,7 +37,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'title' => 'Адрес витрины',
                 'description' => 'Укажите корневой URL витрины. Например: b2b, clients, portal.',
                 'control_type' => waHtmlControl::INPUT,
-                'class' => 'width-50',
+                // 'class' => 'width-50',
                 'value' => $frontend_url_value,
                 'disabled' => $frontend_from_root,
             ],
@@ -59,18 +59,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             ],
         ];
     }
-
-    // Обработка полей перед отправкой в html
-    protected function getFormFields(array $channel): array
-    {
-        if (isset($channel['params']['frontend_url'])) {
-            $channel['params']['frontend_url'] = rtrim($channel['params']['frontend_url'], '/*');
-        }
-
-        return parent::getFormFields($channel);
-    }
-
-
 
     public function getFormHtml(array $channel): string
     {
