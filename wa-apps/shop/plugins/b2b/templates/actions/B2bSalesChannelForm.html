@@ -28,14 +28,96 @@
             {/foreach}
         </div>
 
-        <div class="fields-group custom-mt-24">
-            <h5 class="heading">B2B-портал</h5>
+        <div class="fields-group custom-mt-24 js-b2b-address-settings">
+            <h3 class="heading">Настройка витрины</h3>
 
-            {foreach $b2b_fields as $name => $control_html}
-                <div class="field{if $name === 'frontend_url'} js-b2b-frontend-url-field{/if}">
-                    {$control_html}
+            <input type="hidden" name="data[params][frontend_from_root]" class="js-b2b-frontend-from-root"
+                value="{if !empty($frontend_from_root)}1{else}0{/if}">
+
+            <div class="field">
+                <div class="name">
+                    Тип адреса витрины
                 </div>
-            {/foreach}
+                <div class="value">
+                    <div class="toggle small js-b2b-url-type-toggle">
+                        <span data-value="custom" {if empty($frontend_from_root)} class="selected" {/if}>
+                            От корня поселения + свой url
+                        </span>
+                        <span data-value="root" {if !empty($frontend_from_root)} class="selected" {/if}>
+                            От корня поселения
+                        </span>
+                    </div>
+
+                    <p class="hint">
+                        <b data-mode="custom" class="js-b2b-url-type-title">От корня поселения + свой URL</b> —
+                        указанный URL станет корнем B2B-витрины внутри выбранного
+                        поселения, например <code>/b2b/</code>; все вложенные адреса, также будут
+                        обрабатываться по правилам текущей витрины. Например указав <code>/my/</code> можно подменить
+                        штатный ЛК магазина.<br>
+                        <b data-mode="root" class="js-b2b-url-type-title">От корня поселения</b> — корнем B2B-витрины
+                        станет само выбранное поселение; витрина будет
+                        обрабатывать всё его адресное пространство, включая вложенные URL.
+                    </p>
+                    <style>
+                        .js-b2b-url-type-title.is-selected {
+                            color: var(--green, #22b14c);
+                        }
+                    </style>
+
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name for-input">
+                    Адрес витрины
+                </div>
+                <div class="value">
+                    <div class="flexbox middle space-8">
+                        <div class="wa-select small">
+                            <select name="data[params][route_key]" class="js-b2b-route-key">
+                                {foreach $route_options as $option}
+                                    <option value="{$option.value|escape}" data-domain="{$option.domain|default:''|escape}"
+                                        data-route-url="{$option.route_url|default:''|escape}"
+                                        {if !empty($channel.params.route_key) && $channel.params.route_key == $option.value}selected{/if}>
+                                        {$option.title|escape}
+                                    </option>
+                                {/foreach}
+                            </select>
+                        </div>
+
+                        <span class="hint">/</span>
+
+                        <input type="text" name="data[params][frontend_custom_url]"
+                            class="small js-b2b-frontend-custom-url width-30 custom-mr-0"
+                            value="{$frontend_custom_url|escape}" placeholder="b2b" autocomplete="off">
+
+                        <a class="button nowrap js-b2b-open-storefront small" href="#" target="_blank" rel="noopener"
+                            aria-disabled="true">
+                            Открыть →
+                        </a>
+                    </div>
+
+                    <p class="hint">Для url допустимы буквы, цифры и дефис. Например: b2b, clients, opt-2025, закупки и
+                        т.д.</p>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
+                    Режим доступа
+                </div>
+                <div class="value">
+                    <div class="switch-with-text">
+                        <span class="switch middle smaller shift-3 js-b2b-auth-switch">
+                            <input type="checkbox" name="data[params][auth_required]" id="auth-switch" value="1"
+                                {if !empty($auth_required)}checked{/if}>
+                        </span>
+                        <label for="auth-switch">Закрытая витрина со входом</label>
+                    </div>
+                    <p class="hint">Включите, чтобы закрыть от гостей и показывать её только авторизованным клиентам.
+                    </p>
+                </div>
+            </div>
         </div>
 
         {* блок сохранить/удалить *}
@@ -68,29 +150,13 @@
         const delete_url = {$wa_app_url|json_encode} + '?module=channels&action=delete';
 
         const $form = $('#js-sales-channel-form');
-        const $frontend_url_input = $form.find('input[name="data[params][frontend_url]"]');
-
-        let $open_storefront_button = $form.find('.js-b2b-open-storefront');
-
-        if (!$open_storefront_button.length && $frontend_url_input.length) {
-            const $value = $frontend_url_input.closest('.value');
-
-            $frontend_url_input.wrap('<div class="flexbox middle space-8 js-b2b-storefront-url-line"></div>');
-
-            $open_storefront_button = $(
-                '<a class="button light-gray nowrap js-b2b-open-storefront small" href="#" target="_blank" rel="noopener" aria-disabled="true">' +
-                'Открыть на витрине &#8594;' +
-                '</a>'
-            );
-
-            $frontend_url_input.after($open_storefront_button);
-
-            const $hint = $value.find('.hint, p.hint').first();
-
-            if ($hint.length) {
-                $value.append($hint);
-            }
-        }
+        const $url_type_toggle = $form.find('.js-b2b-url-type-toggle');
+        const $frontend_from_root = $form.find('.js-b2b-frontend-from-root');
+        const $route_key = $form.find('.js-b2b-route-key');
+        const $custom_url = $form.find('.js-b2b-frontend-custom-url');
+        const $open_storefront_button = $form.find('.js-b2b-open-storefront');
+        const $auth_switch = $form.find('.js-b2b-auth-switch');
+        const $url_type_titles = $form.find('.js-b2b-url-type-title');
 
         const cleanRoutePart = function(value) {
             value = String(value || '').trim();
@@ -103,6 +169,27 @@
             value = value.replace(/^\/+|\/+$/g, '');
 
             return value;
+        };
+
+        const normalizeCustomUrl = function(value) {
+            value = String(value || '').trim();
+            value = value.replace(/\*/g, '');
+            value = value.replace(/^\/+|\/+$/g, '');
+
+            return value;
+        };
+
+        const isRootMode = function() {
+            return String($frontend_from_root.val()) === '1';
+        };
+
+        const getSelectedRouteData = function() {
+            const $option = $route_key.find(':selected');
+
+            return {
+                domain: String($option.data('domain') || ''),
+                route_url: String($option.data('route-url') || '')
+            };
         };
 
         const buildStorefrontUrl = function(params) {
@@ -122,6 +209,17 @@
             return protocol + '//' + domain + '/' + (path ? path + '/' : '');
         };
 
+        const getCurrentStorefrontParams = function() {
+            const route = getSelectedRouteData();
+            const custom_url = normalizeCustomUrl($custom_url.val());
+
+            return {
+                domain: route.domain,
+                route_url: route.route_url,
+                frontend_url: isRootMode() ? '*' : custom_url + '/*'
+            };
+        };
+
         const updateStorefrontButton = function(params) {
             const url = buildStorefrontUrl(params);
 
@@ -138,6 +236,89 @@
             }
         };
 
+        const updateUrlTypeHint = function() {
+            const mode = isRootMode() ? 'root' : 'custom';
+
+            $url_type_titles
+                .removeClass('is-selected')
+                .css('color', '');
+
+            $url_type_titles
+                .filter('[data-mode="' + mode + '"]')
+                .addClass('is-selected')
+                .css('color', 'var(--green, #22b14c)');
+        };
+
+        const updateUrlTypeToggle = function() {
+            const mode = isRootMode() ? 'root' : 'custom';
+
+            $url_type_toggle
+                .find('span')
+                .removeClass('selected');
+
+            $url_type_toggle
+                .find('span[data-value="' + mode + '"]')
+                .addClass('selected');
+        };
+
+        const updateCustomUrlState = function() {
+            if (isRootMode()) {
+                $custom_url
+                    .prop('readonly', true)
+                    .attr('aria-disabled', 'true')
+                    .css('opacity', '0.2');
+            } else {
+                $custom_url
+                    .prop('readonly', false)
+                    .attr('aria-disabled', 'false')
+                    .css('opacity', '');
+            }
+
+            updateUrlTypeHint();
+            updateStorefrontButton(getCurrentStorefrontParams());
+        };
+
+        if ($url_type_toggle.length && $.fn.waToggle) {
+            $url_type_toggle.waToggle({
+                change: function(event, target) {
+                    const value = $(target).data('value');
+
+                    $frontend_from_root.val(value === 'root' ? '1' : '0');
+
+                    updateUrlTypeToggle();
+                    updateCustomUrlState();
+                }
+            });
+        } else {
+            $url_type_toggle.on('click', 'span', function() {
+                const $target = $(this);
+
+                $target
+                    .addClass('selected')
+                    .siblings()
+                    .removeClass('selected');
+
+                $frontend_from_root.val($target.data('value') === 'root' ? '1' : '0');
+
+                updateUrlTypeToggle();
+                updateCustomUrlState();
+            });
+        }
+
+        if ($auth_switch.length && $.fn.waSwitch) {
+            $auth_switch.waSwitch();
+        }
+
+        $route_key.on('change', function() {
+            updateStorefrontButton(getCurrentStorefrontParams());
+        });
+
+        $custom_url.on('input change', function() {
+            updateStorefrontButton(getCurrentStorefrontParams());
+        });
+
+        updateUrlTypeToggle();
+        updateCustomUrlState();
         updateStorefrontButton({$channel.params|default:[]|json_encode});
 
         const controller = new SalesChannelForm({
@@ -156,7 +337,19 @@
         });
 
         $form.on('save_success', function(evt, data) {
-            updateStorefrontButton(data.result && data.result.params ? data.result.params : {});
+            const params = data.result && data.result.params ? data.result.params : {};
+
+            if (params.frontend_from_root !== undefined) {
+                $frontend_from_root.val(String(params.frontend_from_root) === '1' ? '1' : '0');
+            }
+
+            if (params.frontend_custom_url) {
+                $custom_url.val(params.frontend_custom_url);
+            }
+
+            updateUrlTypeToggle();
+            updateCustomUrlState();
+            updateStorefrontButton(params);
         });
 
         {if empty($channel.id)}
