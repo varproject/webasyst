@@ -42,6 +42,14 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             //     'disabled' => $frontend_from_root,
             // ],
 
+            'frontend_from_root' => [
+                'title' => 'Сделать от корня',
+                'description' => 'B2B-витрина будет открываться от корня выбранного поселения.' . $this->getFrontendFromRootScript(),
+                'control_type' => waHtmlControl::CHECKBOX,
+                'class' => 'checkbox',
+                'value' => $frontend_from_root ? 1 : 0,
+            ],
+
             'frontend_url' => [
                 'title' => 'Адрес витрины',
                 'description' => 'Укажите корневой URL витрины. Например: b2b, clients, portal.',
@@ -60,14 +68,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                     '</div>' .
                     '%s' .
                     '</div>',
-            ],
-
-            'frontend_from_root' => [
-                'title' => 'Сделать от корня',
-                'description' => 'B2B-витрина будет открываться от корня выбранного поселения.' . $this->getFrontendFromRootScript(),
-                'control_type' => waHtmlControl::CHECKBOX,
-                'class' => 'checkbox',
-                'value' => $frontend_from_root ? 1 : 0,
             ],
 
             'auth_required' => [
