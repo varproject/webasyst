@@ -269,13 +269,9 @@ abstract class shopSalesChannelType
     /**
 
      * Helper used by default implementaion of getFormHtml().
-
      * Takes field descriptions from getFormFieldsConfig() and getBaseFieldsConfig(),
-
      * as well as waHtmlControl params from getFormFieldParams()
-
      * and returns array of rendered form fields.
-
      */
 
     protected function getFormFields(array $channel): array

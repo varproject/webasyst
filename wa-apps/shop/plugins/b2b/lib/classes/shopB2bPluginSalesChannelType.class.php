@@ -4,7 +4,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 {
     // Пля формы настройки канала продаж
     protected function getFormFieldsConfig($values = []): array
-    {        
+    {
         $frontend_from_root = !empty($values['frontend_from_root'])
             || ifset($values, 'frontend_url', '') === '*';
 
@@ -17,14 +17,14 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         return [
             'route_key' => [
                 'title' => 'Домен',
-                'description' => 'Выберите поселение Shop-Script, через которое будет открываться клиентский B2B-портал.',
+                'description' => 'Выберите поселение Shop-Script, через которое будет открываться клиентский B2B-витрина.',
                 'control_type' => waHtmlControl::SELECT,
                 'options' => $this->getShopRouteOptions(),
                 'value' => ifset($values, 'route_key', ''),
             ],
 
             'frontend_url' => [
-                'title' => 'Адрес url',
+                'title' => 'Адрес витрины',
                 'description' => 'Укажите URL внутри поселения Shop-Script. Например: b2b, clients, portal.',
                 'control_type' => waHtmlControl::INPUT,
                 'value' => $frontend_url_value,
@@ -33,7 +33,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
             'frontend_from_root' => [
                 'title' => 'Сделать от корня',
-                'description' => 'B2B-портал будет открываться от корня выбранного поселения.',
+                'description' => 'B2B-витрина будет открываться от корня выбранного поселения.' . $this->getFrontendFromRootScript(),
                 'control_type' => waHtmlControl::CHECKBOX,
                 'class' => 'checkbox',
                 'value' => $frontend_from_root ? 1 : 0,
@@ -47,6 +47,15 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'value' => ifset($values, 'auth_required', 1),
             ],
         ];
+    }
+
+    protected function getFormFields(array $channel): array
+    {
+        if (isset($channel['params']['frontend_url'])) {
+            $channel['params']['frontend_url'] = rtrim($channel['params']['frontend_url'], '/*');
+        }
+
+        return parent::getFormFields($channel);
     }
 
     // Проверяет и нормализует параметры канала перед сохранением.
@@ -140,6 +149,13 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
         if (substr($url, -1) === '*') {
             return rtrim($url, '/');
+        }
+
+        $url = preg_replace('/[^a-zа-я0-9\-]/ui', '', $url);
+        $url = mb_strtolower($url, 'UTF-8');
+
+        if ($url === '') {
+            return '*';
         }
 
         return $url . '/*';
