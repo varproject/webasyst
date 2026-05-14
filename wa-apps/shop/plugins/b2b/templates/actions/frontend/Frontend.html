@@ -1,1 +1,13 @@
-wa-apps\shop\plugins\b2b\templates\actions\frontend\Frontend.html
+<div class="b2b-portal">
+    <h1>{$channel.name|escape}</h1>
+
+    <p>Канал продаж: {$sales_channel|escape}</p>
+
+    {if !empty($channel.params.settlement)}
+        <p>Поселение: {$channel.params.settlement|escape}</p>
+    {/if}
+
+    {if !empty($channel.params.frontend_url)}
+        <p>Адрес внутри поселения: {$channel.params.frontend_url|escape}</p>
+    {/if}
+</div>
