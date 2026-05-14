@@ -11,6 +11,11 @@ final class shopLkPluginRouteService
         self::$current_route = false;
     }
 
+    public static function ensureSchema()
+    {
+        shopLkPluginSchema::ensure();
+    }
+
     public static function getMainSettings()
     {
         try {
@@ -62,12 +67,14 @@ final class shopLkPluginRouteService
 
     public static function getRoutesForCurrentStorefront()
     {
+        self::ensureSchema();
         $sf = self::getCurrentStorefront();
         return (new shopLkPluginRouteModel())->getEnabledByStorefront($sf['domain'], $sf['shop_url']);
     }
 
     public static function getCurrentRoute()
     {
+        self::ensureSchema();
         if (self::$current_route !== false) {
             return self::$current_route;
         }
@@ -92,6 +99,7 @@ final class shopLkPluginRouteService
 
     public function getSettingsRows()
     {
+        self::ensureSchema();
         $model = new shopLkPluginRouteModel();
         $payment_model = new shopLkPluginPaymentTypeModel();
         $storefronts = self::getRoutingStorefronts();
@@ -113,6 +121,7 @@ final class shopLkPluginRouteService
 
     public function saveFromSettings(array $settings)
     {
+        self::ensureSchema();
         $route_model = new shopLkPluginRouteModel();
         $payment_model = new shopLkPluginPaymentTypeModel();
 

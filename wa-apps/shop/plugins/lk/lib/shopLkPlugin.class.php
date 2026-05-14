@@ -4,6 +4,7 @@ class shopLkPlugin extends shopPlugin
 {
     public function saveSettings($settings = array())
     {
+        shopLkPluginSchema::ensure();
         $settings = is_array($settings) ? $settings : array();
         $main = isset($settings['main']) && is_array($settings['main']) ? $settings['main'] : array();
         $main['enabled'] = !empty($main['enabled']) ? 1 : 0;
