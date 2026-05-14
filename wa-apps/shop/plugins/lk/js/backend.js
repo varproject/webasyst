@@ -1,4 +1,6 @@
 (function ($) {
+    'use strict';
+
     $(document).on('change', '.js-lk-storefront-select', function () {
         var $option = $(this).find(':selected');
 

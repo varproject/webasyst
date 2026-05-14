@@ -9,14 +9,22 @@ class shopLkPluginSettingsAction extends waViewAction
         $service = new shopLkPluginRouteService();
         $data = $service->getSettingsRows();
 
+        $plugins = wa('shop')->getConfig()->getPlugins();
+
         $this->view->assign(array(
             'main'        => shopLkPluginRouteService::getMainSettings(),
             'storefronts' => $data['storefronts'],
             'routes'      => $data['routes'],
             'sections'    => shopLkPluginNavigation::getSections(),
-            'settings_save_url' => '?module=plugins&id=lk&action=save',
-            'copy_url'   => '?plugin=lk&module=settings&action=copyRoute',
-            'delete_url' => '?plugin=lk&module=settings&action=deleteRoute',
+
+            'plugin_id'   => 'lk',
+            'plugin_info' => ifset($plugins, 'lk', array()),
+            'plugins_count' => count($plugins),
+            'app_id' => 'shop',
+            'need_show_review_widget' => wa()->appExists('installer'),
+
+            'shop_plugins_settings_template' => wa()->getAppPath('templates/actions/plugins/PluginsSettings.html', 'shop'),
+            'lk_settings_content_template' => wa()->getAppPath('plugins/lk/templates/actions/settings/SettingsContent.html', 'shop'),
         ));
     }
 }
