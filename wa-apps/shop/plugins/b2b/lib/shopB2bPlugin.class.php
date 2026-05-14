@@ -79,6 +79,19 @@ class shopB2bPlugin extends shopPlugin
         ];
     }
 
+    // Добавляет пункт B2B в правое верхнее меню Shop-Script WA 1.3.
+    public function backendMenu($params)
+    {
+        $selected = (waRequest::get('plugin') == $this->id) ? 'selected' : 'no-tab';
+        $shop_backend_url = wa('shop')->getAppUrl(null, true);
+
+        return [
+            'aux_li' => '<li class="small float-right ' . $selected . '" id="s-plugin-debug">
+                <a href="' . $shop_backend_url . $this->id . '/">B2B портал</a>
+            </li>',
+        ];
+    }
+
     // Добавляет backend-роут /webasyst/shop/b2b/.
     public function routingHandler($route)
     {
