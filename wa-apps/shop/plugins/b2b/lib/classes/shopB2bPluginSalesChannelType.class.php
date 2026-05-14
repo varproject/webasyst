@@ -33,13 +33,33 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'value' => ifset($values, 'route_key', ''),
             ],
 
+            // 'frontend_url' => [
+            //     'title' => 'Адрес витрины',
+            //     'description' => 'Укажите корневой URL витрины. Например: b2b, clients, portal.',
+            //     'control_type' => waHtmlControl::INPUT,
+            //     // 'class' => 'width-50',
+            //     'value' => $frontend_url_value,
+            //     'disabled' => $frontend_from_root,
+            // ],
+
             'frontend_url' => [
                 'title' => 'Адрес витрины',
                 'description' => 'Укажите корневой URL витрины. Например: b2b, clients, portal.',
                 'control_type' => waHtmlControl::INPUT,
-                // 'class' => 'width-50',
+                'class' => 'small',
                 'value' => $frontend_url_value,
                 'disabled' => $frontend_from_root,
+                'control_wrapper' =>
+                '<div class="name for-input">%s</div>' .
+                    '<div class="value">' .
+                    '<div class="flexbox middle space-8">' .
+                    '%s' .
+                    '<a class="button light-gray nowrap js-b2b-open-storefront small" href="#" target="_blank" rel="noopener" aria-disabled="true">' .
+                    'Открыть на витрине' .
+                    '</a>' .
+                    '</div>' .
+                    '%s' .
+                    '</div>',
             ],
 
             'frontend_from_root' => [

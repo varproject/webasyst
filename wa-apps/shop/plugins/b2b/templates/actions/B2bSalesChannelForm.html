@@ -32,7 +32,7 @@
             <h5 class="heading">B2B-портал</h5>
 
             {foreach $b2b_fields as $name => $control_html}
-                <div class="field">
+                <div class="field{if $name === 'frontend_url'} js-b2b-frontend-url-field{/if}">
                     {$control_html}
                 </div>
             {/foreach}
@@ -42,9 +42,10 @@
         <div class="bottombar sticky s-settings-fixed-bottombar field">
             <div class="value">
                 <div class="flexbox middle">
-                    <div class="wide">
+                    <div class="wide js-place-for-errors">
                         <input type="submit" class="button js-form-submit green" value="Сохранить">
                     </div>
+
                     {if !empty($channel.id)}
                         <div class="nowrap">
                             <button class="button red outlined js-delete-button" type="button">
@@ -59,8 +60,6 @@
     </form>
 </div>
 
-
-
 <script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
 <script>
     $(function() {
@@ -69,6 +68,78 @@
         const delete_url = {$wa_app_url|json_encode} + '?module=channels&action=delete';
 
         const $form = $('#js-sales-channel-form');
+        const $frontend_url_input = $form.find('input[name="data[params][frontend_url]"]');
+
+        let $open_storefront_button = $form.find('.js-b2b-open-storefront');
+
+        if (!$open_storefront_button.length && $frontend_url_input.length) {
+            const $value = $frontend_url_input.closest('.value');
+
+            $frontend_url_input.wrap('<div class="flexbox middle space-8 js-b2b-storefront-url-line"></div>');
+
+            $open_storefront_button = $(
+                '<a class="button light-gray nowrap js-b2b-open-storefront small" href="#" target="_blank" rel="noopener" aria-disabled="true">' +
+                'Открыть на витрине &#8594;' +
+                '</a>'
+            );
+
+            $frontend_url_input.after($open_storefront_button);
+
+            const $hint = $value.find('.hint, p.hint').first();
+
+            if ($hint.length) {
+                $value.append($hint);
+            }
+        }
+
+        const cleanRoutePart = function(value) {
+            value = String(value || '').trim();
+
+            if (!value || value === '*') {
+                return '';
+            }
+
+            value = value.replace(/\*/g, '');
+            value = value.replace(/^\/+|\/+$/g, '');
+
+            return value;
+        };
+
+        const buildStorefrontUrl = function(params) {
+            params = params || {};
+
+            const domain = String(params.domain || '').replace(/^\/+|\/+$/g, '');
+            const route_url = cleanRoutePart(params.route_url || '');
+            const frontend_url = cleanRoutePart(params.frontend_url || '');
+
+            if (!domain) {
+                return '';
+            }
+
+            const path = [route_url, frontend_url].filter(Boolean).join('/');
+            const protocol = window.location.protocol || 'https:';
+
+            return protocol + '//' + domain + '/' + (path ? path + '/' : '');
+        };
+
+        const updateStorefrontButton = function(params) {
+            const url = buildStorefrontUrl(params);
+
+            if (url) {
+                $open_storefront_button
+                    .attr('href', url)
+                    .removeClass('disabled')
+                    .attr('aria-disabled', 'false');
+            } else {
+                $open_storefront_button
+                    .attr('href', '#')
+                    .addClass('disabled')
+                    .attr('aria-disabled', 'true');
+            }
+        };
+
+        updateStorefrontButton({$channel.params|default:[]|json_encode});
+
         const controller = new SalesChannelForm({
             $place_for_errors: $form.find('.js-place-for-errors'),
             $form: $form
@@ -82,6 +153,10 @@
 
         $form.on('save_success save_fail', function() {
             $submit_button.prop('disabled', false).siblings('.spinner').remove();
+        });
+
+        $form.on('save_success', function(evt, data) {
+            updateStorefrontButton(data.result && data.result.params ? data.result.params : {});
         });
 
         {if empty($channel.id)}
