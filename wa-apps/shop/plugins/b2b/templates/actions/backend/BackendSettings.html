@@ -1,0 +1,46 @@
+<div class="article">
+    <div class="article-body">
+        <h1>B2B</h1>
+
+        <div class="box">
+            <p>
+                <a href="{$new_channel_url}" class="button green">
+                    Создать B2B-канал
+                </a>
+            </p>
+        </div>
+
+        {if !empty($channels)}
+            <table class="zebra">
+                <thead>
+                    <tr>
+                        <th>Канал</th>
+                        <th>Идентификатор</th>
+                        <th>Поселение</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $channels as $channel}
+                        <tr>
+                            <td>{$channel.name|escape}</td>
+                            <td>{$channel.sales_channel_id|escape}</td>
+                            <td>{$channel.params.settlement|default:'—'|escape}</td>
+                            <td>
+                                {if !empty($channel.status)}
+                                    Включён
+                                {else}
+                                    Выключен
+                                {/if}
+                            </td>
+                        </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        {else}
+            <div class="box">
+                B2B-каналы ещё не созданы.
+            </div>
+        {/if}
+    </div>
+</div>

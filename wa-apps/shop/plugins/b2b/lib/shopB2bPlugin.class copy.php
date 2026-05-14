@@ -112,26 +112,26 @@ class _shopB2bPlugin extends shopPlugin
 
 
     // Добавляет ссылку в боковое меню магазина WA 2.0
-    // public function backendExtendedMenu(&$params)
-    // {
-    //     if (!wa()->getUser()->getRights('shop', 'settings')) {
-    //         return;
-    //     }
+    public function backendExtendedMenu(&$params)
+    {
+        if (!wa()->getUser()->getRights('shop', 'settings')) {
+            return;
+        }
 
-    //     $shop_backend_url = wa('shop')->getAppUrl(null, true);
+        $shop_backend_url = wa('shop')->getAppUrl(null, true);
 
-    //     $params['menu'][$this->id . '_channel'] = [
-    //         'id' => $this->id . '_channel',
-    //         'name' => _wp('B2B'),
-    //         'icon' => '<i class="fas fa-briefcase"></i>',
-    //         'url' => $shop_backend_url . $this->id . '/',
-    //         'placement' => 'channels',
-    //         'insert_after' => 'storefront',
-    //         'userRights' => [
-    //             'settings',
-    //         ],
-    //     ];
-    // }
+        $params['menu'][$this->id . '_channel'] = [
+            'id' => $this->id . '_channel',
+            'name' => _wp('B2B'),
+            'icon' => '<i class="fas fa-briefcase"></i>',
+            'url' => $shop_backend_url . $this->id . '/',
+            'placement' => 'channels',
+            'insert_after' => 'storefront',
+            'userRights' => [
+                'settings',
+            ],
+        ];
+    }
 
     // public function backendMenu($params)
     // {

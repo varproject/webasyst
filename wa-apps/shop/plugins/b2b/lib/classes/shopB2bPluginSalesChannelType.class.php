@@ -2,12 +2,7 @@
 
 class shopB2bPluginSalesChannelType extends shopSalesChannelType
 {
-    /**
-     * Поля формы настроек канала продаж.
-     *
-     * Эти поля отображаются в стандартном интерфейсе Shop-Script:
-     * /webasyst/shop/channels/new/b2b/
-     */
+    // Поля стандартной формы настройки канала продаж.
     protected function getFormFieldsConfig($values = []): array
     {
         return [
@@ -42,11 +37,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         ];
     }
 
-    /**
-     * Проверяет и нормализует параметры канала перед сохранением.
-     *
-     * Shop-Script сам сохранит результат в shop_sales_channel_params.
-     */
+    // Проверяет и нормализует параметры канала перед сохранением.
     public function sanitizeAndValidateParams(?int $id, array &$params, $params_mode): array
     {
         $errors = [];
@@ -59,7 +50,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         if ($params_mode === 'set' && $params['route_key'] === '') {
             $errors[] = [
                 'field' => 'data[params][route_key]',
-                'error_description' => _wp('Select a storefront settlement.'),
+                'error_description' => 'Выберите поселение витрины.',
             ];
 
             return $errors;
@@ -70,14 +61,12 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         if (!$route) {
             $errors[] = [
                 'field' => 'data[params][route_key]',
-                'error_description' => _wp('Selected storefront settlement was not found.'),
+                'error_description' => 'Выбранное поселение витрины не найдено.',
             ];
 
             return $errors;
         }
 
-        // Дублируем нормализованные данные в params канала,
-        // чтобы их было удобно читать без повторного разбора route_key.
         $params['domain'] = $route['domain'];
         $params['route_id'] = $route['route_id'];
         $params['route_url'] = $route['url'];
@@ -86,22 +75,10 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         return $errors;
     }
 
-    /**
-     * Дополнительное действие после сохранения канала.
-     *
-     * Сейчас ничего не делаем:
-     * связь с поселением уже сохранена в shop_sales_channel_params.
-     */
-    public function onSave(array $channel)
-    {
-        // intentionally empty
-    }
+    // Дополнительные действия после сохранения канала сейчас не требуются.
+    public function onSave(array $channel) {}
 
-    /**
-     * Параметры канала, которые можно отдавать во frontend Headless API.
-     *
-     * Не возвращаем служебные domain/route_id, если они не нужны публично.
-     */
+    // Публичные параметры канала для Headless API.
     public function getPublicStorefrontParams(array $channel): array
     {
         $params = ifset($channel, 'params', []);
@@ -113,19 +90,13 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         ]);
     }
 
-    /**
-     * Формирует список shop-поселений для select.
-     *
-     * Используется только системный waRouting:
-     * - getDomains()
-     * - getByApp('shop', $domain)
-     */
+    // Формирует список shop-поселений для select.
     protected function getShopRouteOptions(): array
     {
         $options = [
             [
                 'value' => '',
-                'title' => _wp('Select a storefront'),
+                'title' => 'Выберите витрину',
             ],
         ];
 
@@ -147,12 +118,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         return $options;
     }
 
-    /**
-     * Разбирает route_key вида:
-     * domain|route_id
-     *
-     * И проверяет, что такое shop-поселение реально существует.
-     */
+    // Разбирает route_key вида domain|route_id и проверяет существование поселения.
     protected function parseRouteKey($route_key)
     {
         $route_key = (string) $route_key;
@@ -188,20 +154,13 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         ];
     }
 
-    /**
-     * Единый формат ключа привязки канала к поселению.
-     */
+    // Формирует ключ привязки канала к поселению.
     protected function buildRouteKey($domain, $route_id): string
     {
         return $domain . '|' . $route_id;
     }
 
-    /**
-     * Человекочитаемое название поселения.
-     *
-     * Пример:
-     * webasyst.loc/b2b/
-     */
+    // Формирует человекочитаемое название поселения.
     protected function formatSettlementTitle($domain, $url): string
     {
         $url = trim((string) $url);

@@ -9,15 +9,22 @@ return array(
   // 'custom_settings' => true,
 
   'handlers'  => [
-    // 'backend_menu'   => 'backendMenu', // 1.3 tab main menu
-    // 'backend_extended_menu' => 'backendExtendedMenu', // 2.0 sidebar main menu
-    // 'routing' => 'routingHandler',
-
-
+    // Регистрирует тип канала продаж b2b.
     'sales_channel_types' => 'salesChannelTypes',
+
+    // Описывает неизвестные b2b:* каналы для старых заказов.
     'sales_channels' => 'salesChannels',
 
-    // Чтобы после создания заказа гарантированно проставить sales_channel.
+    // Добавляет пункт B2B в левое меню Shop-Script WA 1.3.
+    'backend_menu'   => 'backendMenu',
+    
+    // Добавляет пункт B2B в левое меню Shop-Script WA 2.0.
+    'backend_extended_menu' => 'backendExtendedMenu',
+
+    // Добавляет backend-роут /webasyst/shop/b2b/.
+    'routing' => 'routingHandler',
+
+    // После создания заказа проставляет sales_channel = b2b:{id}.
     'order_action.create' => 'orderActionCreate',
   ],
 );

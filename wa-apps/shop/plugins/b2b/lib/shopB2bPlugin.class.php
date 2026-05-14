@@ -2,7 +2,7 @@
 
 class shopB2bPlugin extends shopPlugin
 {
-    // Подключить пользовательские функции и модификаторы
+    // Подключает пользовательские функции и модификаторы плагина.
     public function __construct($info)
     {
         parent::__construct($info);
@@ -16,26 +16,13 @@ class shopB2bPlugin extends shopPlugin
         }
     }
 
-    /**
-     * Регистрирует тип канала продаж "B2B portal".
-     *
-     * Этот хук НЕ создает сам канал.
-     * Он только сообщает Shop-Script, что существует тип каналов b2b.
-     *
-     * После этого Shop-Script сможет создать запись:
-     * shop_sales_channel.type = b2b
-     */
+    // Регистрирует тип канала продаж B2B.
     public function salesChannelTypes(&$params)
     {
-        // Если нужно ограничить регион, можно использовать:
-        // if (!in_array($params['locality'], ['all', 'ru'])) {
-        //     return [];
-        // }
-
         return [
             [
                 'id' => 'b2b',
-                'name' => _wp('B2B portal'),
+                'name' => 'B2B-портал',
                 'class' => 'shopB2bPluginSalesChannelType',
                 'menu_icon' => '<i class="fas fa-briefcase"></i>',
                 'available' => true,
@@ -43,12 +30,7 @@ class shopB2bPlugin extends shopPlugin
         ];
     }
 
-    /**
-     * Описывает неизвестные sales_channel ID вида b2b:{id}.
-     *
-     * Основной механизм отображения b2b-каналов работает через shop_sales_channel.
-     * Этот хук нужен только как fallback для старых заказов, если канал был удален.
-     */
+    // Описывает неизвестные sales_channel ID вида b2b:{id}.
     public function salesChannels(&$params)
     {
         $missing_channel_ids = ifset($params, 'missing_channel_ids', []);
@@ -67,7 +49,7 @@ class shopB2bPlugin extends shopPlugin
             $result[] = [
                 'id' => $sales_channel_id,
                 'type' => 'storefront',
-                'name' => _wp('B2B portal'),
+                'name' => 'B2B-портал',
                 'icon_url' => wa()->getRootUrl(true) . 'wa-apps/shop/plugins/' . $this->id . '/img/b2b-channel.png',
             ];
         }
@@ -75,12 +57,7 @@ class shopB2bPlugin extends shopPlugin
         return $result;
     }
 
-    /**
-     * Добавляет пункт B2B в левое меню Shop-Script WA 2.0.
-     *
-     * Это только ссылка на внутренний backend-интерфейс плагина.
-     * Сам канал продаж создается через sales_channel_types + стандартный интерфейс каналов.
-     */
+    // Добавляет пункт B2B в левое меню Shop-Script WA 2.0.
     public function backendExtendedMenu(&$params)
     {
         if (!wa()->getUser()->isAdmin('shop')) {
@@ -91,7 +68,7 @@ class shopB2bPlugin extends shopPlugin
 
         $params['menu'][$this->id . '_portal'] = [
             'id' => $this->id . '_portal',
-            'name' => _wp('B2B'),
+            'name' => 'B2B',
             'icon' => '<i class="fas fa-briefcase"></i>',
             'url' => $shop_backend_url . $this->id . '/',
             'placement' => 'channels',
@@ -102,15 +79,7 @@ class shopB2bPlugin extends shopPlugin
         ];
     }
 
-    /**
-     * Backend route для внутренней страницы плагина.
-     *
-     * URL:
-     * /webasyst/shop/b2b/
-     *
-     * Класс:
-     * shopB2bPluginBackendSettingsAction
-     */
+    // Добавляет backend-роут /webasyst/shop/b2b/.
     public function routingHandler($route)
     {
         if (wa()->getEnv() !== 'backend') {
@@ -122,16 +91,7 @@ class shopB2bPlugin extends shopPlugin
         ];
     }
 
-    /**
-     * После создания заказа проставляет правильный канал продаж.
-     *
-     * Shop-Script при создании заказа сам ставит sales_channel:
-     * - storefront:{storefront}, если заказ с витрины;
-     * - other:, если storefront неизвестен.
-     *
-     * Для B2B-портала нужно заменить это значение на:
-     * b2b:{channel_id}
-     */
+    // После создания заказа проставляет правильный канал продаж.
     public function orderActionCreate($params)
     {
         if (wa()->getEnv() !== 'frontend') {
@@ -154,23 +114,14 @@ class shopB2bPlugin extends shopPlugin
 
         $order_params_model = new shopOrderParamsModel();
 
-        // Третий параметр false обязателен:
-        // он обновит только переданные параметры и не сотрет остальные order params.
+        // false нужен, чтобы обновить только переданные параметры и не стереть остальные параметры заказа.
         $order_params_model->set($order_id, [
             'sales_channel' => $sales_channel,
             'b2b_channel_id' => $channel['id'],
         ], false);
     }
 
-    /**
-     * Находит B2B-канал, который привязан к текущему frontend-поселению.
-     *
-     * Никаких дополнительных helper/resolver классов.
-     * Используются только системные классы:
-     * - waRouting
-     * - shopSalesChannelModel
-     * - shopSalesChannelParamsModel
-     */
+    // Находит B2B-канал, который привязан к текущему frontend-поселению.
     protected function getCurrentB2bChannel()
     {
         $route_key = $this->getCurrentShopRouteKey();
@@ -180,8 +131,6 @@ class shopB2bPlugin extends shopPlugin
         }
 
         $channel_model = new shopSalesChannelModel();
-
-        // Берем все каналы типа b2b.
         $channels = $channel_model->getByField('type', 'b2b', true);
 
         if (!$channels) {
@@ -197,7 +146,6 @@ class shopB2bPlugin extends shopPlugin
 
             $channel_params = $params_model->get((int) $channel['id']);
 
-            // route_key был сохранен в настройках канала продаж.
             if (ifset($channel_params, 'route_key', '') !== $route_key) {
                 continue;
             }
@@ -210,17 +158,7 @@ class shopB2bPlugin extends shopPlugin
         return null;
     }
 
-    /**
-     * Возвращает ключ текущего shop-поселения:
-     * domain|route_id
-     *
-     * Например:
-     * webasyst.loc|2
-     *
-     * Важно:
-     * текущий route не всегда содержит свой ID внутри массива,
-     * поэтому route_id определяется через waRouting::getByApp('shop', $domain).
-     */
+    // Возвращает ключ текущего shop-поселения в формате domain|route_id.
     protected function getCurrentShopRouteKey()
     {
         $routing = wa()->getRouting();
@@ -236,12 +174,10 @@ class shopB2bPlugin extends shopPlugin
             return null;
         }
 
-        // Если route_id уже есть в текущем route — используем его.
         if (isset($current_route['_id'])) {
             return $domain . '|' . $current_route['_id'];
         }
 
-        // Иначе ищем route_id по списку shop-поселений текущего домена.
         $routes = $routing->getByApp('shop', $domain);
 
         foreach ($routes as $route_id => $route) {
@@ -253,15 +189,7 @@ class shopB2bPlugin extends shopPlugin
         return null;
     }
 
-    /**
-     * Сравнивает текущий route с route из списка поселений.
-     *
-     * Используем минимально надежные признаки:
-     * - app
-     * - url
-     *
-     * Этого достаточно для определения settlement внутри одного домена.
-     */
+    // Сравнивает текущий route с route из списка поселений.
     protected function isSameRoute(array $route_a, array $route_b)
     {
         return ifset($route_a, 'app', '') === ifset($route_b, 'app', '')
