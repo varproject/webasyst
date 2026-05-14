@@ -10,4 +10,5 @@ return array (
   'lk' => true,
   'salesanalytics' => true,
   'shoporders' => true,
+  'b2b' => true,
 );
