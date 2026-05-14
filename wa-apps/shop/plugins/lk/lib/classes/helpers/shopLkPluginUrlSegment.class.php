@@ -2,180 +2,32 @@
 
 final class shopLkPluginUrlSegment
 {
-    public const APP_ID = 'shop';
+    private static $cache = null;
 
-    /**
-     * Внутренний кеш вычисленных сегментов.
-     *
-     * @var array<int, string>|null
-     */
-    private static ?array $cache = null;
-
-    /**
-     * Возвращает сегмент по позиции.
-     *
-     * Позиции начинаются с 1.
-     *
-     * @param int $position
-     * @param string|null $default
-     * @return string|null
-     */
-    public static function get(int $position, ?string $default = null): ?string
+    public static function get($position, $default = null)
     {
-        if ($position < 1) {
-            return $default;
-        }
-
         $segments = self::all();
-
-        return $segments[$position - 1] ?? $default;
+        return isset($segments[$position - 1]) ? $segments[$position - 1] : $default;
     }
 
-    /**
-     * Возвращает сегмент как целое число.
-     * 
-     * Если сегмент не является целым числом или отсутствует, 
-     * возвращает $default.
-     *
-     * @param int $position Позиция (с 1)
-     * @param int|null $default Значение по умолчанию
-     * @return int|null
-     */
-    public static function getInt(int $position, ?int $default = null): ?int
-    {
-        // Позиции меньше 1 невалидны по условию
-        if ($position < 1) {
-            return $default;
-        }
-
-        $segments = self::all();
-        $value = $segments[$position - 1] ?? null;
-
-        // Если сегмента нет, сразу возвращаем дефолт
-        if ($value === null) {
-            return $default;
-        }
-
-        // Строго проверяем, что в строке только целое число
-        $validated = filter_var($value, FILTER_VALIDATE_INT);
-
-        // Если валидация не прошла, filter_var вернет false
-        return ($validated !== false) ? $validated : $default;
-    }
-
-
-
-    /**
-     * Возвращает все сегменты запроса.
-     *
-     * Поведение:
-     * - CLI: пропускает системные аргументы и возвращает хвост argv;
-     * - Web: возвращает сегменты URL после префикса приложения.
-     *
-     * @return array<int, string>
-     */
-    public static function all(): array
+    public static function all()
     {
         if (self::$cache !== null) {
             return self::$cache;
         }
-
-        if (PHP_SAPI === 'cli') {
-            $segments = array_slice(ifset($_SERVER['argv'], []), 2);
-
-            self::$cache = array_values(array_filter(array_map(static function ($value) {
-                return (string) $value;
-            }, $segments), static function ($value) {
-                return $value !== '';
-            }));
-
-            return self::$cache;
+        $path = (string) parse_url((string) waRequest::server('REQUEST_URI', ''), PHP_URL_PATH);
+        $app_url = (string) parse_url((string) wa()->getAppUrl('shop'), PHP_URL_PATH);
+        $app_url = rtrim($app_url, '/') . '/';
+        if ($app_url !== '/' && strpos($path, $app_url) === 0) {
+            $path = substr($path, strlen($app_url));
+        } else {
+            $path = trim($path, '/');
         }
-
-        $request_uri = (string) waRequest::server('REQUEST_URI', '');
-        $path_only   = (string) parse_url($request_uri, PHP_URL_PATH);
-
-        if ($path_only === '') {
-            return self::$cache = [];
-        }
-
-        try {
-            $app_url = wa()->getAppUrl(self::APP_ID);
-        } catch (Exception $e) {
-            return self::$cache = [];
-        }
-
-        $prefix = (string) parse_url((string) $app_url, PHP_URL_PATH);
-
-        if ($prefix === '') {
-            return self::$cache = [];
-        }
-
-        $prefix     = rtrim($prefix, '/') . '/';
-        $prefix_len = strlen($prefix);
-
-        if (strncmp($path_only, $prefix, $prefix_len) !== 0) {
-            return self::$cache = [];
-        }
-
-        $relative = trim(substr($path_only, $prefix_len), '/');
-
-        if ($relative === '') {
-            return self::$cache = [];
-        }
-
-        self::$cache = array_values(array_filter(array_map(static function ($value) {
-            return rawurldecode((string) $value);
-        }, explode('/', $relative)), static function ($value) {
-            return $value !== '';
-        }));
-
+        self::$cache = $path === '' ? array() : array_values(array_filter(explode('/', trim($path, '/')), 'strlen'));
         return self::$cache;
     }
 
-    /**
-     * Возвращает все сегменты в dot-формате.
-     *
-     * @return string
-     */
-    public static function asDot(): string
-    {
-        return implode('.', self::all());
-    }
-
-    /**
-     * Возвращает все сегменты в snace-формате.
-     *
-     * @return string
-     */
-    public static function asSnace(): string
-    {
-        return implode('_', self::all());
-    }
-
-    /**
-     * Возвращает все сегменты как строку пути.
-     *
-     * @param bool $with_trailing_slash
-     * @return string
-     */
-    public static function asString(bool $with_trailing_slash = true): string
-    {
-        $path = implode('/', self::all());
-
-        if ($path === '') {
-            return '';
-        }
-
-        return $with_trailing_slash ? $path . '/' : $path;
-    }
-
-    /**
-     * Сбрасывает внутренний кеш.
-     *
-     * @return void
-     */
-    public static function reset(): void
+    public static function reset()
     {
         self::$cache = null;
     }

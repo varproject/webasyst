@@ -1,0 +1,10 @@
+.lk-settings h1 { margin-bottom: 20px; }
+.lk-route-card { border:1px solid #ddd; border-radius:10px; padding:16px; margin:16px 0; background:#fff; }
+.lk-route-card.highlighted { background:#f8fbff; border-color:#b9d3ff; }
+.lk-route-head { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.lk-route-head h3 { margin:0 0 12px; }
+.lk-small-table { width:100%; margin:10px 0 18px; }
+.lk-small-table input[type="text"] { width:100%; box-sizing:border-box; }
+.lk-small-table input.shortest { width:60px; }
+.lk-settings input.long { min-width:360px; }
+.lk-settings input.short { width:140px; }

@@ -1,454 +1,92 @@
-{if $wa->whichUI() == '1.3'}
-    {$tab_class = 'tabs'}
-    {$active_tab_class = 'selected'}
-{else}
-    {$tab_class = 'chips'}
-    {$active_tab_class = 'accented'}
-{/if}
+<link rel="stylesheet" href="{$wa_app_static_url}plugins/lk/css/backend.css?v={$wa->version()|escape}">
+<script src="{$wa_app_static_url}plugins/lk/js/backend.js?v={$wa->version()|escape}"></script>
 
-<link rel="stylesheet" href="{$wa_app_static_url}plugins/lk/css/vendors/select2-4.1.0-rc.min.css">
-<script src="{$wa_app_static_url}plugins/lk/js/vendors/select2-4.1.0-rc.min.js"></script>
+<div class="lk-settings">
+    <h1>B2B личный кабинет</h1>
 
-<div class="js-lk-settings-root">
-    {include file="{$settings_path}SettingsTabs.html"}
+    <form action="?module=plugins&id=lk&action=save" method="post" id="plugins-settings-form">
+        {$wa->csrf()}
 
-    {if !empty($action_modal_page)}
-        <div class="js-lk-action-modal-page">
-            {$action_modal_page}
+        <div class="fields form">
+            <div class="field">
+                <div class="name">Плагин</div>
+                <div class="value">
+                    <label><input type="hidden" name="shop_lk[main][enabled]" value="0"><input type="checkbox" name="shop_lk[main][enabled]" value="1" {if !empty($main.enabled)}checked{/if}> Включить</label>
+                </div>
+            </div>
         </div>
-    {else}
-        {include file="{$settings_path}SettingsTabsForm.html"}
-    {/if}
+
+        <h2>Изолированные роуты кабинета</h2>
+        <p class="hint">Каждый роут привязан к домену + поселению Shop-Script и хранит собственную конфигурацию, разделы и типы оплаты.</p>
+
+        {foreach $routes as $route}
+            {$config = $route.config_array|default:[]}
+            <div class="lk-route-card">
+                <div class="lk-route-head">
+                    <h3>{$route.domain|escape}/{$route.shop_url|escape}{$route.route|escape}/</h3>
+                    <a href="{$route.front_url|escape}" target="_blank">Открыть →</a>
+                </div>
+                <input type="hidden" name="shop_lk[routes][{$route.id}][domain]" value="{$route.domain|escape}">
+                <input type="hidden" name="shop_lk[routes][{$route.id}][shop_url]" value="{$route.shop_url|escape}">
+                <div class="fields form">
+                    <div class="field"><div class="name">Включен</div><div class="value"><input type="hidden" name="shop_lk[routes][{$route.id}][enabled]" value="0"><input type="checkbox" name="shop_lk[routes][{$route.id}][enabled]" value="1" {if !empty($route.enabled)}checked{/if}></div></div>
+                    <div class="field"><div class="name">Название</div><div class="value"><input type="text" name="shop_lk[routes][{$route.id}][name]" value="{$route.name|escape}" class="long"></div></div>
+                    <div class="field"><div class="name">Root route</div><div class="value"><input type="text" name="shop_lk[routes][{$route.id}][route]" value="{$route.route|escape}" class="short"></div></div>
+                    <div class="field"><div class="name">B2B</div><div class="value"><input type="hidden" name="shop_lk[routes][{$route.id}][b2b_mode]" value="0"><label><input type="checkbox" name="shop_lk[routes][{$route.id}][b2b_mode]" value="1" {if !empty($route.b2b_mode)}checked{/if}> B2B-режим</label></div></div>
+                    <div class="field"><div class="name">Lock mode</div><div class="value"><select name="shop_lk[routes][{$route.id}][lock_mode]"><option value="cabinet" {if $route.lock_mode == 'cabinet'}selected{/if}>Только кабинет</option><option value="storefront" {if $route.lock_mode == 'storefront'}selected{/if}>Вся витрина</option></select></div></div>
+                </div>
+
+                <h4>Разделы</h4>
+                <table class="zebra lk-small-table">
+                    <tr><th>Вкл</th><th>Раздел</th><th>Путь</th></tr>
+                    {foreach $sections as $sid => $section}
+                        {$s = $config.sections[$sid]|default:[]}
+                        <tr>
+                            <td><input type="hidden" name="shop_lk[routes][{$route.id}][config][sections][{$sid}][enabled]" value="0"><input type="checkbox" name="shop_lk[routes][{$route.id}][config][sections][{$sid}][enabled]" value="1" {if !empty($s.enabled) || !empty($section.always_enabled)}checked{/if} {if !empty($section.always_enabled)}disabled{/if}></td>
+                            <td><input type="text" name="shop_lk[routes][{$route.id}][config][sections][{$sid}][name]" value="{$s.name|default:$section.name|escape}"></td>
+                            <td><input type="text" name="shop_lk[routes][{$route.id}][config][sections][{$sid}][path]" value="{$s.path|default:$section.path|escape}"></td>
+                        </tr>
+                    {/foreach}
+                </table>
+
+                <h4>Типы оплаты</h4>
+                <table class="zebra lk-small-table">
+                    <tr><th>Вкл</th><th>Код</th><th>Название</th><th>Описание</th><th>Сорт.</th></tr>
+                    {foreach $route.payments as $payment}
+                        <tr>
+                            <td><input type="hidden" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][enabled]" value="0"><input type="checkbox" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][enabled]" value="1" {if !empty($payment.enabled)}checked{/if}></td>
+                            <td><input type="text" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][code]" value="{$payment.code|escape}"></td>
+                            <td><input type="text" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][name]" value="{$payment.name|escape}"></td>
+                            <td><input type="text" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][description]" value="{$payment.description|escape}" class="long"></td>
+                            <td><input type="text" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][sort]" value="{$payment.sort|escape}" class="shortest"></td>
+                        </tr>
+                    {/foreach}
+                </table>
+            </div>
+        {/foreach}
+
+        <div class="lk-route-card highlighted">
+            <h3>Добавить новый роут</h3>
+            <div class="fields form">
+                <div class="field"><div class="name">Витрина</div><div class="value"><select class="js-lk-storefront-select">
+                    <option value="">Выберите витрину</option>
+                    {foreach $storefronts as $sf}
+                        <option value="{$sf.key|escape}" data-domain="{$sf.domain|escape}" data-shop-url="{$sf.shop_url|escape}">{$sf.domain|escape}/{$sf.shop_url|escape}</option>
+                    {/foreach}
+                </select></div></div>
+                <input type="hidden" name="shop_lk[new_route][domain]" class="js-lk-new-domain">
+                <input type="hidden" name="shop_lk[new_route][shop_url]" class="js-lk-new-shop-url">
+                <div class="field"><div class="name">Включен</div><div class="value"><label><input type="checkbox" name="shop_lk[new_route][enabled]" value="1"> Включить после сохранения</label></div></div>
+                <div class="field"><div class="name">Название</div><div class="value"><input type="text" name="shop_lk[new_route][name]" class="long" placeholder="B2B кабинет"></div></div>
+                <div class="field"><div class="name">Root route</div><div class="value"><input type="text" name="shop_lk[new_route][route]" class="short" placeholder="b2b"></div></div>
+            </div>
+        </div>
+
+        <div class="field submit">
+            <div class="value submit">
+                <input type="submit" class="button green" value="[s`Save`]">
+                <span id="plugins-settings-form-status" style="display:none"></span>
+            </div>
+        </div>
+    </form>
 </div>
-
-
-
-<style>
-    label {
-        margin-right: 10px;
-    }
-
-    .errormsg,
-    .successmsg {
-        font-size: 100%;
-        font-weight: 500;
-    }
-
-    .errormsg {
-        color: red !important;
-    }
-
-    .successmsg {
-        color: green !important;
-    }
-
-    .errormsg svg,
-    .successmsg svg,
-    .errormsg i,
-    .successmsg i {
-        margin-right: 5px;
-        vertical-align: text-top !important;
-    }
-
-    .tabs h2 {
-        margin: 0 0 20px 0;
-    }
-
-    .chips code,
-    .tabs code {
-        background: #0014500f;
-        color: #dd54ab;
-        border-radius: 0.375rem;
-        padding: 0.125rem 0.25rem;
-    }
-
-    .js-fill-input {
-        cursor: pointer;
-        color: #689bfb;
-    }
-
-    .lk-settings-page {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .lk-storefronts-box {
-        max-width: 100%;
-        overflow-x: auto;
-    }
-
-    .lk-storefronts-table {
-        width: 100%;
-        min-width: 1120px;
-        border-collapse: collapse;
-    }
-
-    .lk-storefronts-table th,
-    .lk-storefronts-table td {
-        vertical-align: middle;
-    }
-
-    .lk-storefronts-table thead th {
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-    .lk-storefronts-table__check,
-    .lk-storefronts-table__b2b {
-        width: 1%;
-        text-align: center;
-    }
-
-    .lk-storefronts-table__status {
-        width: 90px;
-    }
-
-    .lk-storefronts-table__link {
-        width: 90px;
-        text-align: center;
-        white-space: nowrap;
-    }
-
-    .lk-storefronts-table__domain {
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-    .lk-storefronts-table input.short {
-        width: 110px;
-    }
-
-    .lk-storefront-status {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 54px;
-        padding: 2px 8px;
-        border-radius: 999px;
-        background: #f1f1f1;
-        color: #777;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 18px;
-    }
-
-    .js-lk-storefront-row.is-enabled .lk-storefront-status {
-        background: #e8f7ec;
-        color: #22863a;
-    }
-
-    .js-lk-storefront-row.is-b2b .lk-storefront-status {
-        background: #eaf2ff;
-        color: #1d5fad;
-    }
-
-    .js-lk-storefront-row.is-disabled .lk-storefront-status {
-        background: #f7eeee;
-        color: #b13a3a;
-    }
-
-    .lk-storefront-status.is-saved {
-        box-shadow: 0 0 0 2px rgba(34, 134, 58, .15);
-    }
-
-    .lk-sections-table {
-        width: 100%;
-    }
-
-    .lk-sections-table__check {
-        width: 1%;
-        text-align: center;
-    }
-
-    .lk-sections-table input[type="text"] {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .lk-sections-table input.short {
-        width: 120px;
-    }
-
-    .lk-auth-modal textarea {
-        min-height: 72px;
-        width: 100%;
-    }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-        all: unset;
-    }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        padding-left: 5px;
-        background-color: beige;
-        cursor: pointer;
-    }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover,
-    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus {
-        background-color: transparent;
-        color: #ff0000;
-    }
-</style>
-
-<script>
-    (function($) {
-
-        // Инициализация Select2 для полей, которые могут быть в модальных настройках.
-        function initSelect2() {
-            if (!$.fn.select2) {
-                return;
-            }
-
-            $('.js-select2, .js-domains').each(function() {
-                var $select = $(this);
-
-                if ($select.hasClass('select2-hidden-accessible')) {
-                    return;
-                }
-
-                $select.select2({
-                    width: '100%'
-                });
-            });
-        }
-
-        // Инициализация клика по подсказкам .js-fill-input.
-        function initFillInput() {
-            $(document)
-                .off('click.lkFillInput', '.js-fill-input')
-                .on('click.lkFillInput', '.js-fill-input', function(e) {
-                    e.preventDefault();
-
-                    var $el = $(this);
-                    var value = $.trim($el.text());
-                    var $input = $el.closest('.field').find('input[type="text"], textarea').first();
-
-                    if (navigator.clipboard && window.isSecureContext) {
-                        navigator.clipboard.writeText(value);
-                    }
-
-                    if (!$input.length) {
-                        return;
-                    }
-
-                    $input.val(value).trigger('focus').trigger('change');
-
-                    var color = $el.css('color');
-
-                    $el.css('color', '#28a745');
-
-                    setTimeout(function() {
-                        $el.css('color', color);
-                    }, 500);
-                });
-        }
-
-        // Подготовить route для сборки ссылки на кабинет.
-        function normalizeRoute(route) {
-            route = $.trim(route || '');
-            route = route.replace(/^\/+|\/+$/g, '');
-
-            return route;
-        }
-
-        // Собрать URL кабинета по base_url и route.
-        function buildCabinetUrl(baseUrl, route) {
-            route = normalizeRoute(route);
-
-            if (!route) {
-                return baseUrl;
-            }
-
-            return baseUrl + route + '/';
-        }
-
-        // Обновить одну строку витрины.
-        function updateStorefrontRow($row) {
-            var enabled = $row.find('.js-lk-storefront-check').prop('checked');
-            var b2b = $row.find('.js-lk-storefront-b2b').prop('checked');
-            var route = $row.find('.js-lk-storefront-route').val();
-            var baseUrl = $row.data('base-url');
-            var defaultRoute = $row.data('default-route') || 'my';
-            var status = 'Выкл';
-
-            // Если B2B выключен, пустой route не разрешаем на уровне интерфейса.
-            if (!b2b && normalizeRoute(route) === '') {
-                route = defaultRoute;
-                $row.find('.js-lk-storefront-route').val(route);
-            }
-
-            if (enabled) {
-                status = b2b ? 'B2B' : 'Вкл';
-            }
-
-            $row.toggleClass('is-enabled', enabled);
-            $row.toggleClass('is-disabled', !enabled);
-            $row.toggleClass('is-b2b', enabled && b2b);
-
-            $row.find('.js-lk-storefront-status').text(status);
-            $row.find('.js-lk-storefront-link').attr('href', buildCabinetUrl(baseUrl, route));
-        }
-
-        // Обновить верхний чекбокс включения всех витрин.
-        function updateStorefrontCheckAll() {
-            var $checks = $('.js-lk-storefront-check');
-            var $checked = $checks.filter(':checked');
-            var $checkAll = $('.js-lk-storefront-check-all');
-
-            if (!$checks.length) {
-                $checkAll.prop('checked', false);
-                $checkAll.prop('indeterminate', false);
-                return;
-            }
-
-            $checkAll.prop('checked', $checked.length === $checks.length);
-            $checkAll.prop('indeterminate', $checked.length > 0 && $checked.length < $checks.length);
-        }
-
-        // Пересчитать всю таблицу витрин.
-        function updateStorefrontTable() {
-            $('.js-lk-storefront-row').each(function() {
-                updateStorefrontRow($(this));
-            });
-
-            updateStorefrontCheckAll();
-        }
-
-        // Подсветить статусы после успешного сохранения.
-        function markStorefrontStatusesSaved() {
-            var $statuses = $('.js-lk-storefront-status');
-
-            $statuses.addClass('is-saved');
-
-            setTimeout(function() {
-                $statuses.removeClass('is-saved');
-            }, 700);
-        }
-
-        // Инициализация таблицы витрин.
-        function initStorefrontTable() {
-            $(document)
-                .off('change.lkStorefrontCheck', '.js-lk-storefront-check')
-                .on('change.lkStorefrontCheck', '.js-lk-storefront-check', function() {
-                    updateStorefrontRow($(this).closest('.js-lk-storefront-row'));
-                    updateStorefrontCheckAll();
-                });
-
-            $(document)
-                .off('change.lkStorefrontB2b', '.js-lk-storefront-b2b')
-                .on('change.lkStorefrontB2b', '.js-lk-storefront-b2b', function() {
-                    updateStorefrontRow($(this).closest('.js-lk-storefront-row'));
-                });
-
-            $(document)
-                .off('input.lkStorefrontRoute change.lkStorefrontRoute', '.js-lk-storefront-route')
-                .on('input.lkStorefrontRoute change.lkStorefrontRoute', '.js-lk-storefront-route', function() {
-                    updateStorefrontRow($(this).closest('.js-lk-storefront-row'));
-                });
-
-            $(document)
-                .off('change.lkStorefrontCheckAll', '.js-lk-storefront-check-all')
-                .on('change.lkStorefrontCheckAll', '.js-lk-storefront-check-all', function() {
-                    var checked = $(this).prop('checked');
-
-                    $('.js-lk-storefront-check').prop('checked', checked).each(function() {
-                        updateStorefrontRow($(this).closest('.js-lk-storefront-row'));
-                    });
-
-                    updateStorefrontCheckAll();
-                });
-
-            updateStorefrontTable();
-        }
-
-        // Загрузить страницу настроек через правильный custom_settings endpoint.
-        function loadSettingsPage(url) {
-            $.get(url, function(html) {
-                var $html = $('<div>').append($.parseHTML(html, document, true));
-                var $root = $html.find('.js-lk-settings-root').first();
-
-                if ($root.length) {
-                    $('.js-lk-settings-root').first().replaceWith($root);
-                }
-
-                initSelect2();
-                initFillInput();
-                initStorefrontTable();
-            });
-        }
-
-        // Обработка ссылок "Разделы" и "Авторизация".
-        function initSettingsPageLinks() {
-            $(document)
-                .off('click.lkSettingsPageLink', '.js-lk-settings-page-link')
-                .on('click.lkSettingsPageLink', '.js-lk-settings-page-link', function(e) {
-                    e.preventDefault();
-
-                    loadSettingsPage($(this).attr('href'));
-                });
-        }
-
-        // Универсальное обновление элементов после сохранения настроек.
-        // Любой элемент с data-update="key" получает значение из json.data[key].
-        function updateSavedFields(json) {
-            if (!json || json.status !== 'ok' || !json.data) {
-                return;
-            }
-
-            $('[data-update]').each(function() {
-                var $el = $(this);
-                var key = $el.data('update');
-                var value = json.data[key];
-
-                if (value === undefined) {
-                    return;
-                }
-
-                if ($el.is('input, textarea, select')) {
-                    $el.val(value);
-                    return;
-                }
-
-                if ($el.is('a')) {
-                    $el.attr('href', value);
-                    return;
-                }
-
-                $el.text(value);
-            });
-        }
-
-        // Инициализация при первой загрузке страницы настроек.
-        $(function() {
-            initSelect2();
-            initFillInput();
-            initStorefrontTable();
-            initSettingsPageLinks();
-        });
-
-        // Реинициализация после переходов по табам.
-        $(document).on('click', '.tabs a, .chips a', function() {
-            setTimeout(function() {
-                initSelect2();
-                updateStorefrontTable();
-            }, 0);
-        });
-
-        // Общий обработчик успешного AJAX-сохранения настроек плагина.
-        $(document).ajaxSuccess(function(e, xhr, s, json) {
-            if (s.url.indexOf('id=lk&action=save') === -1) {
-                return;
-            }
-
-            updateSavedFields(json);
-            updateStorefrontTable();
-            initSelect2();
-
-            if (json && json.status === 'ok') {
-                markStorefrontStatusesSaved();
-            }
-        });
-
-    })(jQuery);
-</script>

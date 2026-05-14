@@ -1,47 +1,38 @@
 <!doctype html>
 <html>
-
-{* Head Assets *}
-{if !$is_htmx}
-    {include file="./_parts/html_head_assets.html" inline}
-{/if}
-
-<body class="layout-fixed sidebar-expand-lg">
-
-    {* Modal Page *}
-    {if $action_modal_page}
-        {include file="./_parts/action_modal_page.html" inline}
-    {/if}
-
-    <div id="wa-app" class="app-wrapper vh-100 overflow-hidden">
-
-        {* App Sidebar *}
-        {if $sidebar_enabled}
-            {include file="./FrontendSidebar.html" inline}
-        {/if}
-
-        {* App Header *}
-        {if $header_enabled}
-            {include file="./FrontendHeader.html" inline}
-        {/if}
-
-        {* App Main *}
-        {if $main_enabled}
-            <main id="main" class="app-main p-0">
-                <div class="app-content d-flex flex-column flex-grow-1 overflow-hidden h-100 px-0">
-                    <div class="container-fluid d-flex flex-column flex-grow-1 overflow-hidden h-100 px-0">
-                        {include file="./FrontendMain.html" inline}
-                    </div>
-                </div>
-            </main>
-        {/if}
-
-    </div>
-
-    {* Body Assets *}
-    {if !$is_htmx}
-        {include file="./_parts/html_body_assets.html" inline}
-    {/if}
+<head>
+    <meta charset="utf-8">
+    <title>{$wa->title()|default:'B2B кабинет'|escape}</title>
+    {$wa->css()}
+    <link rel="stylesheet" href="{$lk_static_url}css/frontend.css?v={$wa->version()|escape}">
+</head>
+<body class="lk-body">
+<div class="lk-shell">
+    <aside class="lk-sidebar">
+        <a class="lk-logo" href="{$lk_cabinet_url|escape}">{$lk_route.name|default:'B2B кабинет'|escape}</a>
+        <nav class="lk-menu">
+            <a href="{$lk_cabinet_url|escape}" class="{if $wa->param('action') == 'dashboard'}selected{/if}">Главная</a>
+            {foreach $lk_menu as $item}
+                <a href="{$item.url|escape}" class="{if !empty($item.selected)}selected{/if}">{$item.name|escape}</a>
+            {/foreach}
+        </nav>
+    </aside>
+    <main class="lk-main">
+        <header class="lk-header">
+            <div>
+                {if $lk_context && $lk_context->getActiveCompany()}
+                    {$company = $lk_context->getActiveCompany()}
+                    <strong>{$company.company|default:$company.name|escape}</strong>
+                {else}
+                    <strong>Компания не выбрана</strong>
+                {/if}
+            </div>
+            <div class="lk-user">{$lk_user->getName()|escape}</div>
+        </header>
+        <section class="lk-content">
+            {$content}
+        </section>
+    </main>
+</div>
 </body>
-
 </html>
