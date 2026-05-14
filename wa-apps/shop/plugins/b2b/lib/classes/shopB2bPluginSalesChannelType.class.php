@@ -2,7 +2,7 @@
 
 class shopB2bPluginSalesChannelType extends shopSalesChannelType
 {
-    // Поля стандартной формы настройки канала продаж.
+    // Пля формы настройки канала продаж
     protected function getFormFieldsConfig($values = []): array
     {
         $frontend_from_root = !empty($values['frontend_from_root'])
@@ -46,14 +46,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'class' => 'checkbox',
                 'value' => ifset($values, 'auth_required', 1),
             ],
-
-            'company_required' => [
-                'title' => 'Требовать компанию',
-                'description' => 'Клиент должен быть привязан к компании для работы с B2B-порталом.',
-                'control_type' => waHtmlControl::CHECKBOX,
-                'class' => 'checkbox',
-                'value' => ifset($values, 'company_required', 1),
-            ],
         ];
     }
 
@@ -66,7 +58,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $params['frontend_from_root'] = !empty($params['frontend_from_root']) ? 1 : 0;
         $params['frontend_url'] = trim((string) ifset($params, 'frontend_url', ''));
         $params['auth_required'] = !empty($params['auth_required']) ? 1 : 0;
-        $params['company_required'] = !empty($params['company_required']) ? 1 : 0;
         $params['price_mode'] = trim((string) ifset($params, 'price_mode', 'b2b'));
 
         if ($params['route_key'] === '') {
@@ -165,8 +156,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
         return array_intersect_key($params, [
             'auth_required' => 1,
-            'company_required' => 1,
-            'price_mode' => 1,
         ]);
     }
 

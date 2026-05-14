@@ -31,7 +31,7 @@ class shopB2bPlugin extends shopPlugin
     }
 
     // Описывает неизвестные sales_channel ID вида b2b:{id}.
-    public function salesChannels(&$params)
+    public function salesChannels(array &$params)
     {
         $missing_channel_ids = ifset($params, 'missing_channel_ids', []);
 
