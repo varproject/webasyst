@@ -5,8 +5,13 @@ class shopLkPlugin extends shopPlugin
     public function saveSettings($settings = array())
     {
         shopLkPluginSchema::ensure();
+
         $settings = is_array($settings) ? $settings : array();
-        $main = isset($settings['main']) && is_array($settings['main']) ? $settings['main'] : array();
+
+        $main = isset($settings['main']) && is_array($settings['main'])
+            ? $settings['main']
+            : array();
+
         $main['enabled'] = !empty($main['enabled']) ? 1 : 0;
 
         $service = new shopLkPluginRouteService();
@@ -26,6 +31,7 @@ class shopLkPlugin extends shopPlugin
     public static function getFrontUrl($absolute = false)
     {
         $route = shopLkPluginRouteService::getCurrentRoute();
+
         if (!$route) {
             return wa()->getRouteUrl('shop/frontend', array(), $absolute);
         }

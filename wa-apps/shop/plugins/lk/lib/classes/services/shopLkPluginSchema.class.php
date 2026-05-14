@@ -10,18 +10,11 @@ final class shopLkPluginSchema
             return;
         }
 
+        self::$checked = true;
+
         $model = new waModel();
 
-        foreach (self::getCreateSql() as $sql) {
-            $model->exec($sql);
-        }
-
-        self::$checked = true;
-    }
-
-    protected static function getCreateSql()
-    {
-        return array(
+        $model->exec(
             "CREATE TABLE IF NOT EXISTS `shop_lk_route` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `domain` varchar(255) NOT NULL,
@@ -39,31 +32,31 @@ final class shopLkPluginSchema
                 UNIQUE KEY `storefront_route` (`storefront_key`, `route`),
                 KEY `storefront_key` (`storefront_key`),
                 KEY `enabled` (`enabled`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        );
 
+        self::addColumnIfMissing('shop_lk_route', 'storefront_key', "ALTER TABLE `shop_lk_route` ADD `storefront_key` varchar(32) NOT NULL DEFAULT '' AFTER `shop_url`");
+
+        $model->exec(
             "CREATE TABLE IF NOT EXISTS `shop_lk_company_profile` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `route_id` int(11) NOT NULL,
                 `company_contact_id` int(11) NOT NULL,
                 `legal_name` varchar(255) NOT NULL DEFAULT '',
                 `inn` varchar(32) NOT NULL DEFAULT '',
                 `kpp` varchar(32) NOT NULL DEFAULT '',
                 `ogrn` varchar(32) NOT NULL DEFAULT '',
-                `status` varchar(32) NOT NULL DEFAULT 'active',
-                `payment_type_id` int(11) NULL,
-                `manager_contact_id` int(11) NULL,
-                `create_contact_id` int(11) NOT NULL DEFAULT 0,
+                `status` varchar(32) NOT NULL DEFAULT 'new',
+                `manager_contact_id` int(11) NOT NULL DEFAULT 0,
                 `create_datetime` datetime NOT NULL,
                 `update_datetime` datetime NULL,
-                PRIMARY KEY (`id`),
-                UNIQUE KEY `route_company` (`route_id`, `company_contact_id`),
-                KEY `route_inn` (`route_id`, `inn`),
+                PRIMARY KEY (`company_contact_id`),
+                KEY `inn` (`inn`),
                 KEY `status` (`status`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        );
 
+        $model->exec(
             "CREATE TABLE IF NOT EXISTS `shop_lk_company_member` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `route_id` int(11) NOT NULL,
                 `company_contact_id` int(11) NOT NULL,
                 `contact_id` int(11) NOT NULL,
                 `role` varchar(32) NOT NULL DEFAULT 'member',
@@ -73,50 +66,85 @@ final class shopLkPluginSchema
                 `create_datetime` datetime NOT NULL,
                 `update_datetime` datetime NULL,
                 PRIMARY KEY (`id`),
-                UNIQUE KEY `route_company_contact` (`route_id`, `company_contact_id`, `contact_id`),
-                KEY `contact` (`route_id`, `contact_id`),
-                KEY `company` (`route_id`, `company_contact_id`),
+                UNIQUE KEY `company_contact` (`company_contact_id`, `contact_id`),
+                KEY `contact_id` (`contact_id`),
+                KEY `company_contact_id` (`company_contact_id`),
                 KEY `status` (`status`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        );
 
+        $model->exec(
             "CREATE TABLE IF NOT EXISTS `shop_lk_company_address` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `route_id` int(11) NOT NULL,
                 `company_contact_id` int(11) NOT NULL,
                 `name` varchar(255) NOT NULL DEFAULT '',
-                `type` varchar(32) NOT NULL DEFAULT 'shipping',
-                `country` varchar(3) NOT NULL DEFAULT '',
-                `region` varchar(64) NOT NULL DEFAULT '',
-                `city` varchar(255) NOT NULL DEFAULT '',
-                `street` varchar(255) NOT NULL DEFAULT '',
-                `zip` varchar(32) NOT NULL DEFAULT '',
-                `comment` text NULL,
+                `address` text NULL,
                 `is_default` tinyint(1) NOT NULL DEFAULT 0,
-                `status` varchar(32) NOT NULL DEFAULT 'active',
-                `create_contact_id` int(11) NOT NULL DEFAULT 0,
+                `sort` int(11) NOT NULL DEFAULT 0,
                 `create_datetime` datetime NOT NULL,
                 `update_datetime` datetime NULL,
                 PRIMARY KEY (`id`),
-                KEY `route_company` (`route_id`, `company_contact_id`),
-                KEY `status` (`status`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+                KEY `company_contact_id` (`company_contact_id`),
+                KEY `sort` (`sort`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
+        );
 
+        $model->exec(
             "CREATE TABLE IF NOT EXISTS `shop_lk_payment_type` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `route_id` int(11) NOT NULL,
                 `code` varchar(64) NOT NULL,
-                `name` varchar(255) NOT NULL,
+                `name` varchar(255) NOT NULL DEFAULT '',
                 `description` text NULL,
                 `enabled` tinyint(1) NOT NULL DEFAULT 1,
                 `sort` int(11) NOT NULL DEFAULT 0,
-                `config` mediumtext NULL,
-                `create_datetime` datetime NOT NULL,
-                `update_datetime` datetime NULL,
                 PRIMARY KEY (`id`),
                 UNIQUE KEY `route_code` (`route_id`, `code`),
-                KEY `route_sort` (`route_id`, `sort`),
+                KEY `route_id` (`route_id`),
                 KEY `enabled` (`enabled`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8"
         );
+
+        self::fillStorefrontKeys();
+    }
+
+    protected static function addColumnIfMissing($table, $column, $sql)
+    {
+        $model = new waModel();
+
+        try {
+            $fields = $model->describe($table);
+        } catch (Exception $e) {
+            return;
+        }
+
+        if (empty($fields[$column])) {
+            $model->exec($sql);
+        }
+    }
+
+    protected static function fillStorefrontKeys()
+    {
+        $model = new waModel();
+
+        try {
+            $rows = $model->query("SELECT id, domain, shop_url FROM `shop_lk_route` WHERE storefront_key = '' OR storefront_key IS NULL")->fetchAll();
+        } catch (Exception $e) {
+            return;
+        }
+
+        foreach ($rows as $row) {
+            $domain = shopLkPluginRouteService::normalizeDomain($row['domain']);
+            $shop_url = shopLkPluginRouteService::normalizeShopUrl($row['shop_url']);
+            $key = shopLkPluginRouteService::getStorefrontKey($domain, $shop_url);
+
+            $model->exec(
+                "UPDATE `shop_lk_route` SET storefront_key = s:key WHERE id = i:id",
+                array(
+                    'key' => $key,
+                    'id' => $row['id'],
+                )
+            );
+        }
     }
 }
