@@ -2,6 +2,15 @@
 
 class shopB2bPluginSalesChannelType extends shopSalesChannelType
 {
+    // Штатные поля
+    protected function getBaseFieldsConfig(): array
+    {
+        $res = parent::getBaseFieldsConfig();
+        $res['name']['class'] = 'width-50';
+        $res['description']['class'] = 'smallest width-50';
+        return $res;
+    }
+
     // Пля формы настройки канала продаж
     protected function getFormFieldsConfig($values = []): array
     {
@@ -19,14 +28,16 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'title' => 'Домен',
                 'description' => 'Выберите поселение Shop-Script, через которое будет открываться клиентский B2B-витрина.',
                 'control_type' => waHtmlControl::SELECT,
+                'class' => 'width-50',
                 'options' => $this->getShopRouteOptions(),
                 'value' => ifset($values, 'route_key', ''),
             ],
 
             'frontend_url' => [
                 'title' => 'Адрес витрины',
-                'description' => 'Укажите URL внутри поселения Shop-Script. Например: b2b, clients, portal.',
+                'description' => 'Укажите корневой URL витрины. Например: b2b, clients, portal.',
                 'control_type' => waHtmlControl::INPUT,
+                'class' => 'width-50',
                 'value' => $frontend_url_value,
                 'disabled' => $frontend_from_root,
             ],
@@ -49,6 +60,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         ];
     }
 
+    // Обработка полей перед отправкой в html
     protected function getFormFields(array $channel): array
     {
         if (isset($channel['params']['frontend_url'])) {
