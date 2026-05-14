@@ -98,8 +98,6 @@ final class shopLkPluginSchema
         // Long / obsolete indexes from previous experimental schemas.
         self::dropIndexIfExists($model, 'shop_lk_route', 'domain_shop_route');
         self::dropIndexIfExists($model, 'shop_lk_route', 'domain_shop');
-        self::dropIndexIfExists($model, 'shop_lk_route', 'storefront_route');
-        self::dropIndexIfExists($model, 'shop_lk_route', 'route');
         self::dropIndexIfExists($model, 'shop_lk_route', 'route_hash');
         self::dropIndexIfExists($model, 'shop_lk_route', 'storefront_hash');
 
