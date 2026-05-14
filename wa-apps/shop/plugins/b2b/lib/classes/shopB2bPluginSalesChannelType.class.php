@@ -13,38 +13,21 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
     public function getFormHtml(array $channel): string
     {
-        try {
-            $view = wa('shop')->getView();
+        $view           = wa('shop')->getView();
+        $params         = ifset($channel, 'params', []);
+        $from_root      = !empty($params['frontend_from_root']) || ifset($params, 'frontend_url', '') === '*';
+        $auth_required  = !empty($params['auth_required']) || !array_key_exists('auth_required', $params);
 
-            $template = wa()->getAppPath('plugins/b2b/templates/actions/B2bSalesChannelForm.html', 'shop');
+        $view->assign([
+            'channel'             => $channel,
+            'base_fields'         => $this->getBaseRenderedFields($channel),
+            'route_options'       => $this->getShopRouteOptions(),
+            'frontend_from_root'  => $from_root,
+            'frontend_custom_url' => $this->getFrontendCustomUrl($params),
+            'auth_required'       => $auth_required,
+        ]);
 
-            if (!file_exists($template)) {
-                throw new waException('Template not found: ' . $template);
-            }
-
-            $params = ifset($channel, 'params', []);
-
-            $frontend_from_root = !empty($params['frontend_from_root'])
-                || ifset($params, 'frontend_url', '') === '*';
-
-            $view->assign([
-                'channel' => $channel,
-                'base_fields' => $this->getBaseRenderedFields($channel),
-                'route_options' => $this->getShopRouteOptions(),
-                'frontend_from_root' => $frontend_from_root,
-                'frontend_custom_url' => $this->getFrontendCustomUrl($params),
-                'auth_required' => !empty($params['auth_required']) || !array_key_exists('auth_required', $params),
-            ]);
-
-            return $view->fetch('file:' . $template);
-        } catch (Exception $e) {
-            waLog::log(
-                $e->getMessage() . "\n" . $e->getTraceAsString(),
-                'shop/plugins/b2b/sales-channel-form.log'
-            );
-
-            throw $e;
-        }
+        return $view->fetch('file:' . wa()->getAppPath('plugins/b2b/templates/actions/B2bSalesChannelForm.html', 'shop'));
     }
 
     protected function getBaseRenderedFields(array $channel): array
