@@ -6,9 +6,10 @@ class shopLkPluginCompanyMemberModel extends waModel
 
     public function getCompaniesByContact($route_id, $contact_id)
     {
-        $sql = "SELECT m.*, c.name, c.company, c.email
+        $sql = "SELECT m.*, c.name, c.company, ce.email
                 FROM {$this->table} m
                 JOIN wa_contact c ON c.id = m.company_contact_id
+                LEFT JOIN wa_contact_emails ce ON ce.contact_id = c.id AND ce.sort = 0
                 WHERE m.route_id = i:route_id AND m.contact_id = i:contact_id AND m.status = 'active'
                 ORDER BY c.name, c.company";
         return $this->query($sql, array(
