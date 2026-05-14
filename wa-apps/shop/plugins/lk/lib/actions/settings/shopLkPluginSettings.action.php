@@ -8,11 +8,10 @@ class shopLkPluginSettingsAction extends waViewAction
         $data = $service->getSettingsRows();
         $this->view->assign(array(
             'main' => shopLkPluginRouteService::getMainSettings(),
-            'storefronts' => $data['storefronts'],
-            'routes' => $data['routes'],
+            'storefront_rows' => $data['storefronts'],
+            'copy_sources' => $data['copy_sources'],
             'sections' => shopLkPluginNavigation::getSections(),
-            'copy_url' => '?plugin=lk&module=settings&action=copyRoute',
-            'delete_url' => '?plugin=lk&module=settings&action=deleteRoute',
+            'is_ui2' => wa()->whichUI('shop') == '2.0',
         ));
     }
 }

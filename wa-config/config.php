@@ -6,7 +6,7 @@ return array (
   'default_host_domain' => 'webasyst.loc',
   'zone_jail' => 'ru',
   'image_adapter' => 'Gd',
-  'ui' => '',
-  'ui_disallow_legacy' => true,
+  'ui' => '2.0',
+  'ui_disallow_legacy' => false,
   'installer_in_developer_mode' => true,
 );

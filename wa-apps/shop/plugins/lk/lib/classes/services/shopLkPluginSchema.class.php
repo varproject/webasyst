@@ -18,6 +18,8 @@ final class shopLkPluginSchema
 
         self::repairRouteTable($model);
         self::fillRouteHashes($model);
+        self::deduplicateStorefrontRoutes($model);
+        self::repairRouteIndexes($model);
 
         self::$checked = true;
     }
@@ -37,24 +39,70 @@ final class shopLkPluginSchema
         if (empty($fields['route_hash'])) {
             $model->exec("ALTER TABLE `shop_lk_route` ADD `route_hash` varchar(32) NOT NULL DEFAULT '' AFTER `storefront_hash`");
         }
-
-        // These long indexes existed in the first 2.0.1 schema and fail on older MySQL/InnoDB limits.
-        self::dropIndexIfExists($model, 'shop_lk_route', 'domain_shop_route');
-        self::dropIndexIfExists($model, 'shop_lk_route', 'domain_shop');
-
-        self::addIndexIfNotExists($model, 'shop_lk_route', 'storefront_hash', "KEY `storefront_hash` (`storefront_hash`)");
-        self::addIndexIfNotExists($model, 'shop_lk_route', 'route_hash', "UNIQUE KEY `route_hash` (`route_hash`)");
     }
 
     protected static function fillRouteHashes(waModel $model)
     {
         try {
             $model->exec("UPDATE `shop_lk_route`
+                SET `domain` = LOWER(TRIM(`domain`)),
+                    `shop_url` = TRIM(BOTH '/' FROM `shop_url`)
+            ");
+            $model->exec("UPDATE `shop_lk_route`
+                SET `shop_url` = IF(`shop_url` = '' OR `shop_url` = '*', '', CONCAT(TRIM(BOTH '/' FROM REPLACE(`shop_url`, '*', '')), '/'))
+            ");
+            $model->exec("UPDATE `shop_lk_route`
                 SET `storefront_hash` = MD5(CONCAT(`domain`, '|', `shop_url`)),
                     `route_hash` = MD5(CONCAT(`domain`, '|', `shop_url`, '|', `route`))
                 WHERE `storefront_hash` = '' OR `route_hash` = ''");
         } catch (Exception $e) {
         }
+    }
+
+    protected static function deduplicateStorefrontRoutes(waModel $model)
+    {
+        try {
+            $rows = $model->query("SELECT * FROM `shop_lk_route` ORDER BY `storefront_hash`, `enabled` DESC, `id` ASC")->fetchAll();
+        } catch (Exception $e) {
+            return;
+        }
+
+        $keep = array();
+        $delete = array();
+
+        foreach ($rows as $row) {
+            $hash = (string) ifset($row, 'storefront_hash', '');
+            if ($hash === '') {
+                continue;
+            }
+            if (!isset($keep[$hash])) {
+                $keep[$hash] = (int) $row['id'];
+                continue;
+            }
+            $delete[] = (int) $row['id'];
+        }
+
+        if (!$delete) {
+            return;
+        }
+
+        foreach ($delete as $id) {
+            // No foreign keys are used. Keep this conservative: remove duplicated configs and their payment options.
+            try { $model->exec("DELETE FROM `shop_lk_payment_type` WHERE `route_id` = i:id", array('id' => $id)); } catch (Exception $e) {}
+            try { $model->exec("DELETE FROM `shop_lk_route` WHERE `id` = i:id", array('id' => $id)); } catch (Exception $e) {}
+        }
+    }
+
+    protected static function repairRouteIndexes(waModel $model)
+    {
+        // Long / obsolete indexes from previous experimental schemas.
+        self::dropIndexIfExists($model, 'shop_lk_route', 'domain_shop_route');
+        self::dropIndexIfExists($model, 'shop_lk_route', 'domain_shop');
+        self::dropIndexIfExists($model, 'shop_lk_route', 'route_hash');
+        self::dropIndexIfExists($model, 'shop_lk_route', 'storefront_hash');
+
+        self::addIndexIfNotExists($model, 'shop_lk_route', 'storefront_hash', "UNIQUE KEY `storefront_hash` (`storefront_hash`)");
+        self::addIndexIfNotExists($model, 'shop_lk_route', 'route_hash', "KEY `route_hash` (`route_hash`)");
     }
 
     protected static function dropIndexIfExists(waModel $model, $table, $index)
@@ -90,15 +138,15 @@ final class shopLkPluginSchema
                 `storefront_hash` varchar(32) NOT NULL DEFAULT '',
                 `route_hash` varchar(32) NOT NULL DEFAULT '',
                 `name` varchar(255) NOT NULL DEFAULT '',
-                `enabled` tinyint(1) NOT NULL DEFAULT 1,
-                `b2b_mode` tinyint(1) NOT NULL DEFAULT 1,
+                `enabled` tinyint(1) NOT NULL DEFAULT 0,
+                `b2b_mode` tinyint(1) NOT NULL DEFAULT 0,
                 `lock_mode` varchar(32) NOT NULL DEFAULT 'cabinet',
                 `config` mediumtext NULL,
                 `create_datetime` datetime NOT NULL,
                 `update_datetime` datetime NULL,
                 PRIMARY KEY (`id`),
-                UNIQUE KEY `route_hash` (`route_hash`),
-                KEY `storefront_hash` (`storefront_hash`),
+                UNIQUE KEY `storefront_hash` (`storefront_hash`),
+                KEY `route_hash` (`route_hash`),
                 KEY `enabled` (`enabled`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 

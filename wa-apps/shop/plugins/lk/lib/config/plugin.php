@@ -2,9 +2,9 @@
 
 return array(
     'name'            => 'B2B личный кабинет',
-    'description'     => 'Изолированные B2B-кабинеты Shop-Script по доменам, поселениям и root-роутам.',
+    'description'     => 'Один изолированный B2B/ЛК-кабинет на каждую витрину Shop-Script: домен + поселение.',
     'img'             => 'img/lk.svg',
-    'version'         => '2.0.3',
+    'version'         => '2.0.4',
     'vendor'          => '123456',
     'frontend'        => true,
     'custom_settings' => true,

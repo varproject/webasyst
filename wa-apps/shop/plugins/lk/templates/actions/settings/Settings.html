@@ -1,88 +1,166 @@
 <link rel="stylesheet" href="{$wa_app_static_url}plugins/lk/css/backend.css?v={$wa->version()|escape}">
 <script src="{$wa_app_static_url}plugins/lk/js/backend.js?v={$wa->version()|escape}"></script>
 
-<div class="lk-settings">
+{if $wa->whichUI() == '1.3'}
+    {$lk_ui_class = 'lk-settings-legacy'}
+{else}
+    {$lk_ui_class = 'lk-settings-ui2'}
+{/if}
+
+<div class="lk-settings {$lk_ui_class}">
     <h1>B2B личный кабинет</h1>
 
     <form action="?module=plugins&id=lk&action=save" method="post" id="plugins-settings-form">
         {$wa->csrf()}
 
-        <div class="fields form">
+        <div class="fields form lk-main-switch">
             <div class="field">
                 <div class="name">Плагин</div>
                 <div class="value">
-                    <label><input type="hidden" name="shop_lk[main][enabled]" value="0"><input type="checkbox" name="shop_lk[main][enabled]" value="1" {if !empty($main.enabled)}checked{/if}> Включить</label>
+                    <label>
+                        <input type="hidden" name="shop_lk[main][enabled]" value="0">
+                        <input type="checkbox" name="shop_lk[main][enabled]" value="1" {if !empty($main.enabled)}checked{/if}>
+                        Включить
+                    </label>
+                    <p class="hint">Одна витрина Shop-Script = одна конфигурация личного кабинета.</p>
                 </div>
             </div>
         </div>
 
-        <h2>Изолированные роуты кабинета</h2>
-        <p class="hint">Каждый роут привязан к домену + поселению Shop-Script и хранит собственную конфигурацию, разделы и типы оплаты.</p>
+        <div class="lk-storefronts-box">
+            <table class="zebra lk-storefronts-table js-lk-storefronts-table">
+                <thead>
+                    <tr>
+                        <th class="lk-col-check">Вкл</th>
+                        <th>Домен</th>
+                        <th>Поселение</th>
+                        <th>Адрес ЛК</th>
+                        <th class="lk-col-check">B2B</th>
+                        <th>Режим</th>
+                        <th>Ссылка</th>
+                        <th>Статус</th>
+                        <th>Настройки</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $storefront_rows as $row}
+                        {$key = $row.key}
+                        {$config = $row.config_array|default:[]}
+                        <tr class="js-lk-storefront-row {if !empty($row.enabled)}is-enabled{else}is-disabled{/if} {if !empty($row.b2b_mode)}is-b2b{/if}"
+                            data-key="{$key|escape}"
+                            data-base-url="{$row.domain|escape}/{$row.shop_url|escape}"
+                            data-front-url="{$row.front_url|escape}">
+                            <td class="lk-col-check">
+                                <input type="hidden" name="shop_lk[storefronts][{$key|escape}][domain]" value="{$row.domain|escape}">
+                                <input type="hidden" name="shop_lk[storefronts][{$key|escape}][shop_url]" value="{$row.shop_url|escape}">
+                                <input type="hidden" name="shop_lk[storefronts][{$key|escape}][enabled]" value="0">
+                                <input type="checkbox" class="js-lk-enabled" name="shop_lk[storefronts][{$key|escape}][enabled]" value="1" {if !empty($row.enabled)}checked{/if}>
+                            </td>
+                            <td class="lk-domain">{$row.domain|escape}</td>
+                            <td><code>{$row.shop_label|escape}</code></td>
+                            <td>
+                                <input type="text" class="short js-lk-route-input" name="shop_lk[storefronts][{$key|escape}][route]" value="{$row.route|escape}" placeholder="my">
+                                <div class="hint js-lk-route-hint">{if !empty($row.b2b_mode)}B2B включен: кабинет от корня поселения.{else}Пустое значение будет заменено на my.{/if}</div>
+                            </td>
+                            <td class="lk-col-check">
+                                <input type="hidden" name="shop_lk[storefronts][{$key|escape}][b2b_mode]" value="0">
+                                <input type="checkbox" class="js-lk-b2b" name="shop_lk[storefronts][{$key|escape}][b2b_mode]" value="1" {if !empty($row.b2b_mode)}checked{/if}>
+                            </td>
+                            <td><span class="lk-mode js-lk-mode">{$row.mode_label|escape}</span></td>
+                            <td><a class="js-lk-front-link" href="{$row.front_url|escape}" target="_blank">Открыть →</a></td>
+                            <td><span class="lk-status js-lk-status">{$row.status|escape}</span></td>
+                            <td>
+                                <a href="#" class="js-lk-toggle-details" data-target="lk-details-{$key|escape}">Настройки</a>
+                            </td>
+                        </tr>
+                        <tr id="lk-details-{$key|escape}" class="lk-details-row" style="display:none">
+                            <td colspan="9">
+                                <div class="lk-details-grid">
+                                    <div class="lk-panel">
+                                        <h3>Основное</h3>
+                                        <div class="fields form">
+                                            <div class="field">
+                                                <div class="name">Название</div>
+                                                <div class="value"><input type="text" class="long" name="shop_lk[storefronts][{$key|escape}][name]" value="{$row.name|escape}" placeholder="B2B кабинет"></div>
+                                            </div>
+                                            <div class="field">
+                                                <div class="name">Копировать</div>
+                                                <div class="value">
+                                                    <select name="shop_lk[storefronts][{$key|escape}][copy_from]">
+                                                        <option value="">Не копировать</option>
+                                                        {foreach $copy_sources as $copy_key => $copy_label}
+                                                            {if $copy_key != $key}
+                                                                <option value="{$copy_key|escape}">{$copy_label|escape}</option>
+                                                            {/if}
+                                                        {/foreach}
+                                                    </select>
+                                                    <p class="hint">При сохранении скопирует разделы, авторизацию и типы оплаты из выбранной витрины.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-        {foreach $routes as $route}
-            {$config = $route.config_array|default:[]}
-            <div class="lk-route-card">
-                <div class="lk-route-head">
-                    <h3>{$route.domain|escape}/{$route.shop_url|escape}{$route.route|escape}/</h3>
-                    <a href="{$route.front_url|escape}" target="_blank">Открыть →</a>
-                </div>
-                <input type="hidden" name="shop_lk[routes][{$route.id}][domain]" value="{$route.domain|escape}">
-                <input type="hidden" name="shop_lk[routes][{$route.id}][shop_url]" value="{$route.shop_url|escape}">
-                <div class="fields form">
-                    <div class="field"><div class="name">Включен</div><div class="value"><input type="hidden" name="shop_lk[routes][{$route.id}][enabled]" value="0"><input type="checkbox" name="shop_lk[routes][{$route.id}][enabled]" value="1" {if !empty($route.enabled)}checked{/if}></div></div>
-                    <div class="field"><div class="name">Название</div><div class="value"><input type="text" name="shop_lk[routes][{$route.id}][name]" value="{$route.name|escape}" class="long"></div></div>
-                    <div class="field"><div class="name">Root route</div><div class="value"><input type="text" name="shop_lk[routes][{$route.id}][route]" value="{$route.route|escape}" class="short"></div></div>
-                    <div class="field"><div class="name">B2B</div><div class="value"><input type="hidden" name="shop_lk[routes][{$route.id}][b2b_mode]" value="0"><label><input type="checkbox" name="shop_lk[routes][{$route.id}][b2b_mode]" value="1" {if !empty($route.b2b_mode)}checked{/if}> B2B-режим</label></div></div>
-                    <div class="field"><div class="name">Lock mode</div><div class="value"><select name="shop_lk[routes][{$route.id}][lock_mode]"><option value="cabinet" {if $route.lock_mode == 'cabinet'}selected{/if}>Только кабинет</option><option value="storefront" {if $route.lock_mode == 'storefront'}selected{/if}>Вся витрина</option></select></div></div>
-                </div>
+                                    <div class="lk-panel">
+                                        <h3>Авторизация</h3>
+                                        <div class="fields form">
+                                            <div class="field">
+                                                <div class="name">Заголовок</div>
+                                                <div class="value"><input type="text" class="long" name="shop_lk[storefronts][{$key|escape}][config][auth][title]" value="{$config.auth.title|default:'B2B кабинет'|escape}"></div>
+                                            </div>
+                                            <div class="field">
+                                                <div class="name">Текст</div>
+                                                <div class="value"><textarea name="shop_lk[storefronts][{$key|escape}][config][auth][text]">{$config.auth.text|default:'Войдите для работы с компаниями, адресами и заказами.'|escape}</textarea></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                <h4>Разделы</h4>
-                <table class="zebra lk-small-table">
-                    <tr><th>Вкл</th><th>Раздел</th><th>Путь</th></tr>
-                    {foreach $sections as $sid => $section}
-                        {$s = $config.sections[$sid]|default:[]}
-                        <tr>
-                            <td><input type="hidden" name="shop_lk[routes][{$route.id}][config][sections][{$sid}][enabled]" value="0"><input type="checkbox" name="shop_lk[routes][{$route.id}][config][sections][{$sid}][enabled]" value="1" {if !empty($s.enabled) || !empty($section.always_enabled)}checked{/if} {if !empty($section.always_enabled)}disabled{/if}></td>
-                            <td><input type="text" name="shop_lk[routes][{$route.id}][config][sections][{$sid}][name]" value="{$s.name|default:$section.name|escape}"></td>
-                            <td><input type="text" name="shop_lk[routes][{$route.id}][config][sections][{$sid}][path]" value="{$s.path|default:$section.path|escape}"></td>
+                                <div class="lk-panel">
+                                    <h3>Разделы кабинета</h3>
+                                    <table class="zebra lk-small-table">
+                                        <tr><th>Вкл</th><th>Раздел</th><th>Путь</th></tr>
+                                        {foreach $sections as $sid => $section}
+                                            {$s = $config.sections[$sid]|default:[]}
+                                            <tr>
+                                                <td class="lk-col-check">
+                                                    <input type="hidden" name="shop_lk[storefronts][{$key|escape}][config][sections][{$sid}][enabled]" value="0">
+                                                    <input type="checkbox" name="shop_lk[storefronts][{$key|escape}][config][sections][{$sid}][enabled]" value="1" {if !empty($s.enabled) || !empty($section.always_enabled)}checked{/if} {if !empty($section.always_enabled)}disabled{/if}>
+                                                    {if !empty($section.always_enabled)}<input type="hidden" name="shop_lk[storefronts][{$key|escape}][config][sections][{$sid}][enabled]" value="1">{/if}
+                                                </td>
+                                                <td><input type="text" name="shop_lk[storefronts][{$key|escape}][config][sections][{$sid}][name]" value="{$s.name|default:$section.name|escape}"></td>
+                                                <td><input type="text" name="shop_lk[storefronts][{$key|escape}][config][sections][{$sid}][path]" value="{$s.path|default:$section.path|escape}"></td>
+                                            </tr>
+                                        {/foreach}
+                                    </table>
+                                </div>
+
+                                <div class="lk-panel">
+                                    <h3>Типы оплаты</h3>
+                                    <table class="zebra lk-small-table">
+                                        <tr><th>Вкл</th><th>Код</th><th>Название</th><th>Описание</th><th>Сорт.</th></tr>
+                                        {foreach $row.payments as $payment}
+                                            {$pid = $payment.id}
+                                            <tr>
+                                                <td class="lk-col-check">
+                                                    <input type="hidden" name="shop_lk[storefronts][{$key|escape}][payments][{$pid|escape}][enabled]" value="0">
+                                                    <input type="checkbox" name="shop_lk[storefronts][{$key|escape}][payments][{$pid|escape}][enabled]" value="1" {if !empty($payment.enabled)}checked{/if}>
+                                                </td>
+                                                <td><input type="text" name="shop_lk[storefronts][{$key|escape}][payments][{$pid|escape}][code]" value="{$payment.code|escape}"></td>
+                                                <td><input type="text" name="shop_lk[storefronts][{$key|escape}][payments][{$pid|escape}][name]" value="{$payment.name|escape}"></td>
+                                                <td><input type="text" class="long" name="shop_lk[storefronts][{$key|escape}][payments][{$pid|escape}][description]" value="{$payment.description|escape}"></td>
+                                                <td><input type="text" class="shortest" name="shop_lk[storefronts][{$key|escape}][payments][{$pid|escape}][sort]" value="{$payment.sort|escape}"></td>
+                                            </tr>
+                                        {/foreach}
+                                    </table>
+                                </div>
+                            </td>
                         </tr>
                     {/foreach}
-                </table>
-
-                <h4>Типы оплаты</h4>
-                <table class="zebra lk-small-table">
-                    <tr><th>Вкл</th><th>Код</th><th>Название</th><th>Описание</th><th>Сорт.</th></tr>
-                    {foreach $route.payments as $payment}
-                        <tr>
-                            <td><input type="hidden" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][enabled]" value="0"><input type="checkbox" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][enabled]" value="1" {if !empty($payment.enabled)}checked{/if}></td>
-                            <td><input type="text" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][code]" value="{$payment.code|escape}"></td>
-                            <td><input type="text" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][name]" value="{$payment.name|escape}"></td>
-                            <td><input type="text" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][description]" value="{$payment.description|escape}" class="long"></td>
-                            <td><input type="text" name="shop_lk[routes][{$route.id}][payments][{$payment.id}][sort]" value="{$payment.sort|escape}" class="shortest"></td>
-                        </tr>
-                    {/foreach}
-                </table>
-            </div>
-        {/foreach}
-
-        <div class="lk-route-card highlighted">
-            <h3>Добавить новый роут</h3>
-            <div class="fields form">
-                <div class="field"><div class="name">Витрина</div><div class="value"><select class="js-lk-storefront-select">
-                    <option value="">Выберите витрину</option>
-                    {foreach $storefronts as $sf}
-                        <option value="{$sf.key|escape}" data-domain="{$sf.domain|escape}" data-shop-url="{$sf.shop_url|escape}">{$sf.domain|escape}/{$sf.shop_url|escape}</option>
-                    {/foreach}
-                </select></div></div>
-                <input type="hidden" name="shop_lk[new_route][domain]" class="js-lk-new-domain">
-                <input type="hidden" name="shop_lk[new_route][shop_url]" class="js-lk-new-shop-url">
-                <div class="field"><div class="name">Включен</div><div class="value"><label><input type="checkbox" name="shop_lk[new_route][enabled]" value="1"> Включить после сохранения</label></div></div>
-                <div class="field"><div class="name">Название</div><div class="value"><input type="text" name="shop_lk[new_route][name]" class="long" placeholder="B2B кабинет"></div></div>
-                <div class="field"><div class="name">Root route</div><div class="value"><input type="text" name="shop_lk[new_route][route]" class="short" placeholder="b2b"></div></div>
-            </div>
+                </tbody>
+            </table>
         </div>
 
-        <div class="field submit">
+        <div class="field submit lk-submit">
             <div class="value submit">
                 <input type="submit" class="button green" value="[s`Save`]">
                 <span id="plugins-settings-form-status" style="display:none"></span>

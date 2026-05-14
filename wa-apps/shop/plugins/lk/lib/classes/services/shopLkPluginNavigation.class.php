@@ -35,13 +35,19 @@ final class shopLkPluginNavigation
         return $result;
     }
 
+    public static function firstCabinetUrl(array $route)
+    {
+        return shopLkPluginUrlService::getCabinetUrl($route);
+    }
+
     protected static function actionBySection($id)
     {
-        return array(
+        $map = array(
             'companies' => 'companies',
             'addresses' => 'addresses',
             'payments' => 'payments',
             'orders' => 'orders',
-        )[$id] ?? 'dashboard';
+        );
+        return isset($map[$id]) ? $map[$id] : 'dashboard';
     }
 }

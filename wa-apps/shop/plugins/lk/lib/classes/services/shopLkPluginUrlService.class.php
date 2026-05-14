@@ -16,7 +16,7 @@ final class shopLkPluginUrlService
     public static function getCabinetUrl(array $route, $absolute = false)
     {
         $url = self::getStorefrontUrl($route, $absolute);
-        $root = trim((string) ifset($route, 'route', ''), '/');
+        $root = !empty($route['b2b_mode']) ? '' : trim((string) ifset($route, 'route', ''), '/');
         return $root === '' ? $url : $url.$root.'/';
     }
 
@@ -25,5 +25,27 @@ final class shopLkPluginUrlService
         $base = self::getCabinetUrl($route);
         $section = trim((string) $section, '/');
         return $section === '' ? $base : $base.$section.'/';
+    }
+
+    public static function sectionUrlAbsolute(array $route, $section)
+    {
+        $base = self::getCabinetUrl($route, true);
+        $section = trim((string) $section, '/');
+        return $section === '' ? $base : $base.$section.'/';
+    }
+
+    public static function loginUrl(array $route, $absolute = false)
+    {
+        return $absolute ? self::sectionUrlAbsolute($route, 'login') : self::sectionUrl($route, 'login');
+    }
+
+    public static function signupUrl(array $route, $absolute = false)
+    {
+        return $absolute ? self::sectionUrlAbsolute($route, 'signup') : self::sectionUrl($route, 'signup');
+    }
+
+    public static function forgotUrl(array $route, $absolute = false)
+    {
+        return $absolute ? self::sectionUrlAbsolute($route, 'forgotpassword') : self::sectionUrl($route, 'forgotpassword');
     }
 }

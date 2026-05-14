@@ -13,7 +13,7 @@ abstract class shopLkPluginFrontendBaseAction extends waViewAction
             throw new waException('B2B route not found', 404);
         }
         if (!wa()->getUser()->isAuth()) {
-            $this->redirect(wa()->getRouteUrl('shop/frontend/login'));
+            $this->redirect(shopLkPluginUrlService::loginUrl($route));
         }
         $this->context = new shopLkPluginCabinetContext($route);
         $this->setLayout(new shopLkPluginFrontendLayout($this->context));
@@ -30,6 +30,9 @@ abstract class shopLkPluginFrontendBaseAction extends waViewAction
                 'payments' => shopLkPluginUrlService::sectionUrl($route_for_urls, 'payments'),
                 'payment_save' => shopLkPluginUrlService::sectionUrl($route_for_urls, 'payments/save'),
                 'orders' => shopLkPluginUrlService::sectionUrl($route_for_urls, 'orders'),
+                'login' => shopLkPluginUrlService::loginUrl($route_for_urls),
+                'signup' => shopLkPluginUrlService::signupUrl($route_for_urls),
+                'forgot' => shopLkPluginUrlService::forgotUrl($route_for_urls),
             ),
         ));
     }
