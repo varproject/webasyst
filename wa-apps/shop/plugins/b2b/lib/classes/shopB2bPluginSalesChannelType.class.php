@@ -5,6 +5,15 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     // Поля стандартной формы настройки канала продаж.
     protected function getFormFieldsConfig($values = []): array
     {
+        $frontend_from_root = !empty($values['frontend_from_root'])
+            || ifset($values, 'frontend_url', '') === '*';
+
+        $frontend_url_value = ifset($values, 'frontend_url', 'b2b');
+
+        if ($frontend_url_value === '*') {
+            $frontend_url_value = 'b2b';
+        }
+
         return [
             'route_key' => [
                 'title' => 'Витрина B2B-портала',
@@ -18,13 +27,23 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'title' => 'Адрес B2B-портала',
                 'description' => 'Укажите URL внутри поселения Shop-Script. Например: b2b, clients, portal.',
                 'control_type' => waHtmlControl::INPUT,
-                'value' => ifset($values, 'frontend_url', 'b2b'),
+                'value' => $frontend_url_value,
+                'disabled' => $frontend_from_root,
+            ],
+
+            'frontend_from_root' => [
+                'title' => 'Сделать от корня',
+                'description' => 'B2B-портал будет открываться от корня выбранного поселения.' . $this->getFrontendFromRootScript(),
+                'control_type' => waHtmlControl::CHECKBOX,
+                'class' => 'checkbox',
+                'value' => $frontend_from_root ? 1 : 0,
             ],
 
             'auth_required' => [
                 'title' => 'Требовать авторизацию',
                 'description' => 'Доступ к B2B-порталу будет разрешён только авторизованным клиентам.',
                 'control_type' => waHtmlControl::CHECKBOX,
+                'class' => 'checkbox',
                 'value' => ifset($values, 'auth_required', 1),
             ],
 
@@ -32,6 +51,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'title' => 'Требовать компанию',
                 'description' => 'Клиент должен быть привязан к компании для работы с B2B-порталом.',
                 'control_type' => waHtmlControl::CHECKBOX,
+                'class' => 'checkbox',
                 'value' => ifset($values, 'company_required', 1),
             ],
         ];
@@ -43,6 +63,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $errors = [];
 
         $params['route_key'] = trim((string) ifset($params, 'route_key', ''));
+        $params['frontend_from_root'] = !empty($params['frontend_from_root']) ? 1 : 0;
         $params['frontend_url'] = trim((string) ifset($params, 'frontend_url', ''));
         $params['auth_required'] = !empty($params['auth_required']) ? 1 : 0;
         $params['company_required'] = !empty($params['company_required']) ? 1 : 0;
@@ -52,15 +73,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             $errors[] = [
                 'field' => 'data[params][route_key]',
                 'error_description' => 'Выберите поселение Shop-Script.',
-            ];
-
-            return $errors;
-        }
-
-        if ($params['frontend_url'] === '') {
-            $errors[] = [
-                'field' => 'data[params][frontend_url]',
-                'error_description' => 'Укажите адрес B2B-портала.',
             ];
 
             return $errors;
@@ -77,7 +89,21 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             return $errors;
         }
 
-        $params['frontend_url'] = $this->normalizeFrontendUrl($params['frontend_url']);
+        if ($params['frontend_from_root']) {
+            // Канал забирает корень выбранного поселения.
+            $params['frontend_url'] = '*';
+        } else {
+            if ($params['frontend_url'] === '') {
+                $errors[] = [
+                    'field' => 'data[params][frontend_url]',
+                    'error_description' => 'Укажите адрес B2B-портала.',
+                ];
+
+                return $errors;
+            }
+
+            $params['frontend_url'] = $this->normalizeFrontendUrl($params['frontend_url']);
+        }
 
         // Дублируем данные поселения в params канала.
         $params['domain'] = $route['domain'];
@@ -88,10 +114,31 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         return $errors;
     }
 
+    // Скрипт только включает/выключает поле. Значение поля не очищается.
+    protected function getFrontendFromRootScript(): string
+    {
+        return '
+            <script>
+                (function () {
+                    var checkbox = document.querySelector(\'input[name="data[params][frontend_from_root]"]\');
+                    var input = document.querySelector(\'input[name="data[params][frontend_url]"]\');
+
+                    if (!checkbox || !input) {
+                        return;
+                    }
+
+                    var toggle = function () {
+                        input.disabled = checkbox.checked;
+                    };
+
+                    checkbox.addEventListener("change", toggle);
+                    toggle();
+                })();
+            </script>
+        ';
+    }
+
     // Нормализует URL внутри поселения.
-    // b2b   → b2b/*
-    // b2b/  → b2b/*
-    // b2b/* → b2b/*
     protected function normalizeFrontendUrl($url): string
     {
         $url = trim((string) $url);
