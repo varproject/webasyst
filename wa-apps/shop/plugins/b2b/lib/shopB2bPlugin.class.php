@@ -58,26 +58,26 @@ class shopB2bPlugin extends shopPlugin
     }
 
     // Добавляет пункт B2B в левое меню Shop-Script WA 2.0.
-    // public function backendExtendedMenu(&$params)
-    // {
-    //     if (!wa()->getUser()->isAdmin('shop')) {
-    //         return;
-    //     }
+    public function backendExtendedMenu(&$params)
+    {
+        if (!wa()->getUser()->isAdmin('shop')) {
+            return;
+        }
 
-    //     $shop_backend_url = wa('shop')->getAppUrl(null, true);
+        $shop_backend_url = wa('shop')->getAppUrl(null, true);
 
-    //     $params['menu'][$this->id . '_portal'] = [
-    //         'id' => $this->id . '_portal',
-    //         'name' => 'B2B',
-    //         'icon' => '<i class="fas fa-briefcase"></i>',
-    //         'url' => $shop_backend_url . $this->id . '/',
-    //         'placement' => 'channels',
-    //         'insert_after' => 'storefront',
-    //         'userRights' => [
-    //             'settings',
-    //         ],
-    //     ];
-    // }
+        $params['menu'][$this->id . '_portal'] = [
+            'id' => $this->id . '_portal',
+            'name' => 'B2B',
+            'icon' => '<i class="fas fa-briefcase"></i>',
+            'url' => $shop_backend_url . $this->id . '/',
+            'placement' => 'channels',
+            'insert_after' => 'storefront',
+            'userRights' => [
+                'settings',
+            ],
+        ];
+    }
 
     // Добавляет пункт B2B в правое верхнее меню Shop-Script WA 1.3.
     public function backendMenu($params)

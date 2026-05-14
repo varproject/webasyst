@@ -70,6 +70,88 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         return parent::getFormFields($channel);
     }
 
+
+
+    public function getFormHtml(array $channel): string
+    {
+        try {
+            $view = wa('shop')->getView();
+
+            $template = wa()->getAppPath(
+                'plugins/b2b/templates/actions/B2bSalesChannelForm.html',
+                'shop'
+            );
+
+            if (!file_exists($template)) {
+                throw new waException('Template not found: ' . $template);
+            }
+
+            $view->assign([
+                'channel' => $channel,
+                'base_fields' => $this->getBaseRenderedFields($channel),
+                'b2b_fields' => $this->getB2bRenderedFields($channel),
+            ]);
+
+            return $view->fetch('file:' . $template);
+        } catch (Exception $e) {
+            waLog::log(
+                $e->getMessage() . "\n" . $e->getTraceAsString(),
+                'shop/plugins/b2b/sales-channel-form.log'
+            );
+
+            throw $e;
+        }
+    }
+    protected function getBaseRenderedFields(array $channel): array
+    {
+        $result = [];
+
+        if (empty($channel['id'])) {
+            $channel['name'] = $this->get('name');
+        }
+
+        $field_params = ['namespace' => 'data'] + $this->getFormFieldParams();
+
+        foreach ($this->getBaseFieldsConfig() as $name => $row) {
+            $result[$name] = $this->getControl($name, ifset($channel, $name, ''), $field_params + $row);
+        }
+
+        return $result;
+    }
+
+    protected function getB2bRenderedFields(array $channel): array
+    {
+        $result = [];
+
+        if (isset($channel['params']['frontend_url'])) {
+            $channel['params']['frontend_url'] = trim($channel['params']['frontend_url'], '/*');
+        }
+
+        $field_params = ['namespace' => 'data[params]'] + $this->getFormFieldParams();
+
+        foreach ($this->getFormFieldsConfig(ifset($channel, 'params', [])) as $name => $row) {
+            try {
+                $value = ifset($channel['params'], $name, ifset($row, 'value', ''));
+                $result[$name] = $this->getControl($name, $value, $field_params + $row);
+            } catch (waException $e) {
+                continue;
+            }
+        }
+
+        return $result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     // Проверяет и нормализует параметры канала перед сохранением.
     public function sanitizeAndValidateParams(?int $id, array &$params, $params_mode): array
     {
