@@ -14,6 +14,13 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'value' => ifset($values, 'route_key', ''),
             ],
 
+            'frontend_url' => [
+                'title' => 'Адрес B2B-портала',
+                'description' => 'Укажите URL внутри поселения Shop-Script. Например: b2b/*, clients/*, portal/*.',
+                'control_type' => waHtmlControl::INPUT,
+                'value' => ifset($values, 'frontend_url', 'b2b/*'),
+            ],
+
             'auth_required' => [
                 'title' => 'Требовать авторизацию',
                 'description' => 'Доступ к B2B-порталу будет разрешён только авторизованным клиентам.',
@@ -38,19 +45,30 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     }
 
     // Проверяет и нормализует параметры канала перед сохранением.
+    // Проверяет и нормализует параметры канала перед сохранением.
     public function sanitizeAndValidateParams(?int $id, array &$params, $params_mode): array
     {
         $errors = [];
 
         $params['route_key'] = trim((string) ifset($params, 'route_key', ''));
+        $params['frontend_url'] = trim((string) ifset($params, 'frontend_url', ''));
         $params['auth_required'] = !empty($params['auth_required']) ? 1 : 0;
         $params['company_required'] = !empty($params['company_required']) ? 1 : 0;
         $params['price_mode'] = trim((string) ifset($params, 'price_mode', 'b2b'));
 
-        if ($params_mode === 'set' && $params['route_key'] === '') {
+        if ($params['route_key'] === '') {
             $errors[] = [
                 'field' => 'data[params][route_key]',
-                'error_description' => 'Выберите поселение витрины.',
+                'error_description' => 'Выберите поселение Shop-Script.',
+            ];
+
+            return $errors;
+        }
+
+        if ($params['frontend_url'] === '') {
+            $errors[] = [
+                'field' => 'data[params][frontend_url]',
+                'error_description' => 'Укажите адрес B2B-портала.',
             ];
 
             return $errors;
@@ -61,18 +79,41 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         if (!$route) {
             $errors[] = [
                 'field' => 'data[params][route_key]',
-                'error_description' => 'Выбранное поселение витрины не найдено.',
+                'error_description' => 'Выбранное поселение Shop-Script не найдено.',
             ];
 
             return $errors;
         }
 
+        $params['frontend_url'] = $this->normalizeFrontendUrl($params['frontend_url']);
+
+        // Дублируем данные поселения в params канала.
         $params['domain'] = $route['domain'];
         $params['route_id'] = $route['route_id'];
         $params['route_url'] = $route['url'];
         $params['settlement'] = $route['settlement'];
 
         return $errors;
+    }
+
+    // Нормализует URL внутри поселения.
+    // b2b   → b2b/*
+    // b2b/  → b2b/*
+    // b2b/* → b2b/*
+    protected function normalizeFrontendUrl($url): string
+    {
+        $url = trim((string) $url);
+        $url = trim($url, '/');
+
+        if ($url === '' || $url === '*') {
+            return '*';
+        }
+
+        if (substr($url, -1) === '*') {
+            return rtrim($url, '/');
+        }
+
+        return $url . '/*';
     }
 
     // Дополнительные действия после сохранения канала сейчас не требуются.

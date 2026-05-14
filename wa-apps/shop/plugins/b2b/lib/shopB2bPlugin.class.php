@@ -58,26 +58,26 @@ class shopB2bPlugin extends shopPlugin
     }
 
     // Добавляет пункт B2B в левое меню Shop-Script WA 2.0.
-    public function backendExtendedMenu(&$params)
-    {
-        if (!wa()->getUser()->isAdmin('shop')) {
-            return;
-        }
+    // public function backendExtendedMenu(&$params)
+    // {
+    //     if (!wa()->getUser()->isAdmin('shop')) {
+    //         return;
+    //     }
 
-        $shop_backend_url = wa('shop')->getAppUrl(null, true);
+    //     $shop_backend_url = wa('shop')->getAppUrl(null, true);
 
-        $params['menu'][$this->id . '_portal'] = [
-            'id' => $this->id . '_portal',
-            'name' => 'B2B',
-            'icon' => '<i class="fas fa-briefcase"></i>',
-            'url' => $shop_backend_url . $this->id . '/',
-            'placement' => 'channels',
-            'insert_after' => 'storefront',
-            'userRights' => [
-                'settings',
-            ],
-        ];
-    }
+    //     $params['menu'][$this->id . '_portal'] = [
+    //         'id' => $this->id . '_portal',
+    //         'name' => 'B2B',
+    //         'icon' => '<i class="fas fa-briefcase"></i>',
+    //         'url' => $shop_backend_url . $this->id . '/',
+    //         'placement' => 'channels',
+    //         'insert_after' => 'storefront',
+    //         'userRights' => [
+    //             'settings',
+    //         ],
+    //     ];
+    // }
 
     // Добавляет пункт B2B в правое верхнее меню Shop-Script WA 1.3.
     public function backendMenu($params)
@@ -92,16 +92,61 @@ class shopB2bPlugin extends shopPlugin
         ];
     }
 
-    // Добавляет backend-роут /webasyst/shop/b2b/.
+    // Добавляет backend route и frontend routes B2B-каналов.
     public function routingHandler($route)
     {
-        if (wa()->getEnv() !== 'backend') {
+        if (wa()->getEnv() === 'backend') {
+            return [
+                $this->id . '/' => 'backend/settings',
+            ];
+        }
+
+        $current_route_key = $this->getRouteKeyByRoute($route);
+
+        if (!$current_route_key) {
             return [];
         }
 
-        return [
-            $this->id . '/' => 'backend/settings',
-        ];
+        $channel_model = new shopSalesChannelModel();
+        $params_model = new shopSalesChannelParamsModel();
+
+        $channels = $channel_model->getByField('type', 'b2b', true);
+
+        if (!$channels) {
+            return [];
+        }
+
+        $routes = [];
+
+        foreach ($channels as $channel) {
+            if (empty($channel['status'])) {
+                continue;
+            }
+
+            $channel_params = $params_model->get((int) $channel['id']);
+
+            // Канал должен быть привязан именно к текущему поселению.
+            if (ifset($channel_params, 'route_key', '') !== $current_route_key) {
+                continue;
+            }
+
+            $frontend_url = trim((string) ifset($channel_params, 'frontend_url', ''));
+
+            if ($frontend_url === '') {
+                continue;
+            }
+
+            // Этот URL внутри текущего поселения забирает B2B-плагин.
+            $routes[$frontend_url] = [
+                'module' => 'frontend',
+                // 'action' => 'portal',
+                'b2b_channel_id' => (int) $channel['id'],
+                'sales_channel' => 'b2b:' . $channel['id'],
+                'secure' => !empty($channel_params['auth_required']),
+            ];
+        }
+
+        return $routes;
     }
 
     // После создания заказа проставляет правильный канал продаж.
@@ -207,5 +252,34 @@ class shopB2bPlugin extends shopPlugin
     {
         return ifset($route_a, 'app', '') === ifset($route_b, 'app', '')
             && ifset($route_a, 'url', '') === ifset($route_b, 'url', '');
+    }
+
+    // Возвращает route_key для settlement-а, для которого Shop-Script сейчас собирает routes.
+    protected function getRouteKeyByRoute($route)
+    {
+        if (!is_array($route)) {
+            return null;
+        }
+
+        if (ifset($route, 'app', '') !== 'shop') {
+            return null;
+        }
+
+        $routing = wa()->getRouting();
+        $domain = $routing->getDomain(null, true);
+
+        if (!$domain) {
+            return null;
+        }
+
+        $routes = $routing->getByApp('shop', $domain);
+
+        foreach ($routes as $route_id => $shop_route) {
+            if ($this->isSameRoute($route, $shop_route)) {
+                return $domain . '|' . $route_id;
+            }
+        }
+
+        return null;
     }
 }

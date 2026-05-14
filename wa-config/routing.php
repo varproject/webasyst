@@ -1,5 +1,4 @@
 <?php
-
 return array (
   'webasyst2.loc' => 
   array (
@@ -18,7 +17,7 @@ return array (
       'theme_mobile' => 'default',
       'checkout_version' => '2',
       'locale' => 'ru_RU',
-      'storefront_mode' => '',
+      'storefront_mode' => 'storefront_api',
       'title' => '',
       'meta_keywords' => '',
       'meta_description' => '',
@@ -122,4 +121,3 @@ return array (
     ),
   ),
 );
-//EOF

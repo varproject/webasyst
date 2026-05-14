@@ -1,4 +1,5 @@
 <?php
+
 return array (
   'business' => true,
   'migrate' => true,
@@ -7,8 +8,9 @@ return array (
   'genorder' => true,
   'massef' => true,
   'skcatimage' => true,
-  'lk' => true,
+  'lk' => false,
   'salesanalytics' => true,
   'shoporders' => true,
   'b2b' => true,
 );
+//EOF
