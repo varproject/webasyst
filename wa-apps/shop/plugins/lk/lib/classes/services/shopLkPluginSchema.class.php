@@ -20,6 +20,7 @@ final class shopLkPluginSchema
         self::fillRouteHashes($model);
         self::deduplicateStorefrontRoutes($model);
         self::repairRouteIndexes($model);
+        self::repairPaymentTypeTable($model);
 
         self::$checked = true;
     }
@@ -105,6 +106,60 @@ final class shopLkPluginSchema
 
         self::addIndexIfNotExists($model, 'shop_lk_route', 'storefront_hash', "UNIQUE KEY `storefront_hash` (`storefront_hash`)");
         self::addIndexIfNotExists($model, 'shop_lk_route', 'route_hash', "KEY `route_hash` (`route_hash`)");
+    }
+
+
+    protected static function repairPaymentTypeTable(waModel $model)
+    {
+        try {
+            $model->describe('shop_lk_payment_type');
+        } catch (Exception $e) {
+            return;
+        }
+
+        self::deduplicatePaymentTypes($model);
+
+        // Older broken installs may have no UNIQUE route_code index, which allows the
+        // same default payment methods to be inserted over and over.
+        self::dropIndexIfExists($model, 'shop_lk_payment_type', 'route_code');
+        self::addIndexIfNotExists($model, 'shop_lk_payment_type', 'route_code', "UNIQUE KEY `route_code` (`route_id`, `code`)");
+        self::addIndexIfNotExists($model, 'shop_lk_payment_type', 'route_sort', "KEY `route_sort` (`route_id`, `sort`)");
+    }
+
+    protected static function deduplicatePaymentTypes(waModel $model)
+    {
+        try {
+            $rows = $model->query("SELECT `id`, `route_id`, `code` FROM `shop_lk_payment_type` ORDER BY `route_id`, `code`, `id`")->fetchAll();
+        } catch (Exception $e) {
+            return;
+        }
+
+        $keep = array();
+        $delete = array();
+
+        foreach ($rows as $row) {
+            $route_id = (int) ifset($row, 'route_id', 0);
+            $code = trim((string) ifset($row, 'code', ''));
+
+            if ($route_id <= 0 || $code === '') {
+                continue;
+            }
+
+            $key = $route_id.'|'.$code;
+            if (!isset($keep[$key])) {
+                $keep[$key] = (int) $row['id'];
+                continue;
+            }
+
+            $delete[] = (int) $row['id'];
+        }
+
+        foreach ($delete as $id) {
+            try {
+                $model->exec("DELETE FROM `shop_lk_payment_type` WHERE `id` = i:id", array('id' => $id));
+            } catch (Exception $e) {
+            }
+        }
     }
 
     protected static function dropIndexIfExists(waModel $model, $table, $index)

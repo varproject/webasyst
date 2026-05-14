@@ -4,6 +4,10 @@ final class shopLkPluginRoutingProvider
 {
     public static function getRouting()
     {
+        if (wa()->getEnv() !== 'frontend') {
+            return array();
+        }
+
         if (!shopLkPluginRouteService::isPluginEnabled()) {
             return null;
         }
