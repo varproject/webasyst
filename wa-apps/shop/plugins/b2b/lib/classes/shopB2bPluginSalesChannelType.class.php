@@ -12,30 +12,30 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     {
         return [
             'route_key' => [
-                'title' => _wp('B2B portal storefront'),
-                'description' => _wp('Select the Shop-Script settlement used as the frontend entry point for this B2B portal.'),
+                'title' => 'Витрина B2B-портала',
+                'description' => 'Выберите поселение Shop-Script, через которое будет открываться клиентский B2B-портал.',
                 'control_type' => waHtmlControl::SELECT,
                 'options' => $this->getShopRouteOptions(),
                 'value' => ifset($values, 'route_key', ''),
             ],
 
             'auth_required' => [
-                'title' => _wp('Require authorization'),
-                'description' => _wp('Only authorized customers can access the B2B portal.'),
+                'title' => 'Требовать авторизацию',
+                'description' => 'Доступ к B2B-порталу будет разрешён только авторизованным клиентам.',
                 'control_type' => waHtmlControl::CHECKBOX,
                 'value' => ifset($values, 'auth_required', 1),
             ],
 
             'company_required' => [
-                'title' => _wp('Require company'),
-                'description' => _wp('Customer must be linked to a company to use the portal.'),
+                'title' => 'Требовать компанию',
+                'description' => 'Клиент должен быть привязан к компании для работы с B2B-порталом.',
                 'control_type' => waHtmlControl::CHECKBOX,
                 'value' => ifset($values, 'company_required', 1),
             ],
 
             'price_mode' => [
-                'title' => _wp('Price mode'),
-                'description' => _wp('Internal B2B price mode code.'),
+                'title' => 'Режим цен',
+                'description' => 'Внутренний код режима B2B-цен.',
                 'control_type' => waHtmlControl::INPUT,
                 'value' => ifset($values, 'price_mode', 'b2b'),
             ],
