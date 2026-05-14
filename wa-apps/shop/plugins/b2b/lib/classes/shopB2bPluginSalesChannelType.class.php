@@ -16,9 +16,9 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
             'frontend_url' => [
                 'title' => 'Адрес B2B-портала',
-                'description' => 'Укажите URL внутри поселения Shop-Script. Например: b2b/*, clients/*, portal/*.',
+                'description' => 'Укажите URL внутри поселения Shop-Script. Например: b2b, clients, portal.',
                 'control_type' => waHtmlControl::INPUT,
-                'value' => ifset($values, 'frontend_url', 'b2b/*'),
+                'value' => ifset($values, 'frontend_url', 'b2b'),
             ],
 
             'auth_required' => [
@@ -34,17 +34,9 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'control_type' => waHtmlControl::CHECKBOX,
                 'value' => ifset($values, 'company_required', 1),
             ],
-
-            'price_mode' => [
-                'title' => 'Режим цен',
-                'description' => 'Внутренний код режима B2B-цен.',
-                'control_type' => waHtmlControl::INPUT,
-                'value' => ifset($values, 'price_mode', 'b2b'),
-            ],
         ];
     }
 
-    // Проверяет и нормализует параметры канала перед сохранением.
     // Проверяет и нормализует параметры канала перед сохранением.
     public function sanitizeAndValidateParams(?int $id, array &$params, $params_mode): array
     {

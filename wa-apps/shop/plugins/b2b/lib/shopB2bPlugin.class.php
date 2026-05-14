@@ -22,7 +22,7 @@ class shopB2bPlugin extends shopPlugin
         return [
             [
                 'id' => 'b2b',
-                'name' => 'B2B-портал',
+                'name' => 'B2B-витрина',
                 'class' => 'shopB2bPluginSalesChannelType',
                 'menu_icon' => '<i class="fas fa-briefcase"></i>',
                 'available' => true,
