@@ -1,4 +1,5 @@
 <?php
+
 return array (
   'blog' => true,
   'files' => true,
@@ -13,7 +14,7 @@ return array (
   'logs' => true,
   'cabinet' => false,
   'ui' => true,
-  'apanel' => true,
+  'apanel' => false,
   'akit' => false,
   'aaaaaaa' => true,
   'apiexplorer' => true,
@@ -24,3 +25,4 @@ return array (
   'crm' => true,
   'pocketlists' => true,
 );
+//EOF
