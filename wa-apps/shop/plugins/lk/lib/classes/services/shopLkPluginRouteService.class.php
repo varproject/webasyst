@@ -42,12 +42,12 @@ final class shopLkPluginRouteService
                 }
                 $domain = self::normalizeDomain($domain);
                 $shop_url = self::normalizeShopUrl(ifset($route, 'url', ''));
-                $key = self::getStorefrontKey($domain, $shop_url);
+                $key = md5($domain.'|'.$shop_url);
                 $rows[$key] = array(
                     'key' => $key,
                     'domain' => $domain,
                     'shop_url' => $shop_url,
-                    'label' => $domain . '/' . ($shop_url ?: ''),
+                    'label' => $domain.'/'.($shop_url ?: ''),
                 );
             }
         }
@@ -108,7 +108,7 @@ final class shopLkPluginRouteService
         foreach ($routes as &$row) {
             $row['config_array'] = $model->decodeConfig($row);
             $row['payments'] = $payment_model->getByRoute($row['id']);
-            $row['storefront_key'] = self::getStorefrontKey($row['domain'], $row['shop_url']);
+            $row['storefront_key'] = md5($row['domain'].'|'.$row['shop_url']);
             $row['front_url'] = shopLkPluginUrlService::getCabinetUrl($row, true);
         }
         unset($row);
@@ -174,6 +174,17 @@ final class shopLkPluginRouteService
         );
     }
 
+
+    public static function getStorefrontHash($domain, $shop_url)
+    {
+        return md5(self::normalizeDomain($domain).'|'.self::normalizeShopUrl($shop_url));
+    }
+
+    public static function getRouteHash($domain, $shop_url, $route)
+    {
+        return md5(self::normalizeDomain($domain).'|'.self::normalizeShopUrl($shop_url).'|'.self::normalizeRoute($route));
+    }
+
     public static function normalizeDomain($domain)
     {
         $domain = trim((string) $domain);
@@ -191,7 +202,7 @@ final class shopLkPluginRouteService
             return '';
         }
         $url = preg_replace('~\*$~', '', $url);
-        return trim($url, '/') . '/';
+        return trim($url, '/').'/';
     }
 
     public static function normalizeRoute($route)
@@ -206,9 +217,5 @@ final class shopLkPluginRouteService
         $value = trim($value, '-_/');
         $value = mb_strtolower($value, 'UTF-8');
         return $value !== '' ? $value : $default;
-    }
-    public static function getStorefrontKey($domain, $shop_url)
-    {
-        return md5(self::normalizeDomain($domain) . '|' . self::normalizeShopUrl($shop_url));
     }
 }
