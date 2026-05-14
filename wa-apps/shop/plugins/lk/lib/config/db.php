@@ -3,8 +3,14 @@
 return array(
     'shop_lk_route' => array(
         'id' => array('int', 11, 'null' => 0, 'autoincrement' => 1),
+
+        // Длинные значения НЕ индексируем вместе: на utf8mb4 это ломает MySQL key length.
         'domain' => array('varchar', 255, 'null' => 0),
         'shop_url' => array('varchar', 255, 'null' => 0, 'default' => ''),
+
+        // md5(domain . "|" . shop_url), короткий ключ витрины для индексов.
+        'storefront_key' => array('varchar', 32, 'null' => 0, 'default' => ''),
+
         'route' => array('varchar', 64, 'null' => 0, 'default' => 'my'),
         'name' => array('varchar', 255, 'null' => 0, 'default' => ''),
         'enabled' => array('tinyint', 1, 'null' => 0, 'default' => '1'),
@@ -13,10 +19,11 @@ return array(
         'config' => array('mediumtext'),
         'create_datetime' => array('datetime', 'null' => 0),
         'update_datetime' => array('datetime'),
+
         ':keys' => array(
             'PRIMARY' => 'id',
-            'domain_shop_route' => array('domain', 'shop_url', 'route', 'unique' => 1),
-            'domain_shop' => array('domain', 'shop_url'),
+            'storefront_route' => array('storefront_key', 'route', 'unique' => 1),
+            'storefront_key' => 'storefront_key',
             'enabled' => 'enabled',
         ),
     ),

@@ -26,6 +26,7 @@ final class shopLkPluginSchema
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `domain` varchar(255) NOT NULL,
                 `shop_url` varchar(255) NOT NULL DEFAULT '',
+                `storefront_key` varchar(32) NOT NULL DEFAULT '',
                 `route` varchar(64) NOT NULL DEFAULT 'my',
                 `name` varchar(255) NOT NULL DEFAULT '',
                 `enabled` tinyint(1) NOT NULL DEFAULT 1,
@@ -35,8 +36,8 @@ final class shopLkPluginSchema
                 `create_datetime` datetime NOT NULL,
                 `update_datetime` datetime NULL,
                 PRIMARY KEY (`id`),
-                UNIQUE KEY `domain_shop_route` (`domain`, `shop_url`, `route`),
-                KEY `domain_shop` (`domain`, `shop_url`),
+                UNIQUE KEY `storefront_route` (`storefront_key`, `route`),
+                KEY `storefront_key` (`storefront_key`),
                 KEY `enabled` (`enabled`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
