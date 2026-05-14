@@ -1,0 +1,96 @@
+<script src="{$wa_app_static_url}/plugins/mysaleschannel/js/channel-editor.js?v={$wa->version()}"></script>
+
+<div class="fields form">
+    <form action="{$wa_app_url}?module=channels&action=save" id="js-sales-channel-form" data-app-url="{$wa_app_url}">
+        <div class="fields-group custom-mt-16">
+            {if !empty($channel.id)}
+                <input type="hidden" name="id" value="{$channel.id|escape}">
+            {else}
+                <input type="hidden" name="is_new" value="1">
+            {/if}
+
+            <input type="hidden" name="data[type]" value="{$channel.type|escape}">
+
+            {foreach $form_fields as $name => $control_html}
+                <div class="field">
+                    {$control_html}
+                </div>
+            {/foreach}
+
+            <div class="field">
+                <div class="value submit">
+                    <div class="flexbox">
+                        <div class="wide js-place-for-errors">
+                            <input type="submit" class="button green" value="[`Save`]">
+                        </div>
+
+                        {if !empty($channel.id)}
+                            <div>
+                                <button class="button red js-delete-button">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?v={$wa->version()}"></script>
+<script>
+    $(() => {
+        const $form = $('#js-sales-channel-form');
+        const $submit_button = $form.find(':submit').last();
+
+        const app_url = $form.data('app-url');
+        const delete_url = $form.data('app_url') + '?module=channels&action=delete';
+
+        const controller = new SalesChannelForm({
+            $place_for_errors: $form.find('.js-place-for-errors'),
+            $form
+        });
+
+        $form.on('save_request', function() {
+            $submit_button.prop('disabled', true).after('<div class="spinner"></div>');
+        });
+
+        $form.on('save_success save_fail', function() {
+            $submit_button.prop('disabled', false);
+            $submit_button.siblings('.spinner').remove();
+        });
+
+        {if empty($channel.id)}
+            $form.on('save_success', function(evt, data) {
+                window.location = app_url + 'channels/editor/' + data.result.id;
+            });
+        {else}
+            const channel_id = {$channel.id|json_encode};
+            const $delete_button = $form.find('.js-delete-button');
+
+            $delete_button.on('click', function(event) {
+                event.preventDefault();
+
+                $.waDialog.confirm({
+                    title: {_wp('Delete this sales channel?')|json_encode},
+                    success_button_title: {_wp('Delete')|json_encode},
+                    success_button_class: 'danger',
+                    cancel_button_title: {_wp('Cancel')|json_encode},
+                    cancel_button_class: 'light-gray',
+                    onSuccess: async () => {
+                        $delete_button
+                            .prop('disabled', true)
+                            .after('<div class="spinner"></div>');
+
+                        await $.post(delete_url, {
+                            id: channel_id
+                        });
+
+                        window.location = app_url + '?action=plugins#/';
+                    }
+                });
+            });
+        {/if}
+    });
+</script>

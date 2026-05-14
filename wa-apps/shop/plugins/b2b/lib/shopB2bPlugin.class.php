@@ -139,7 +139,6 @@ class shopB2bPlugin extends shopPlugin
             // Этот URL внутри текущего поселения забирает B2B-плагин.
             $routes[$frontend_url] = [
                 'module' => 'frontend',
-                // 'action' => 'portal',
                 'b2b_channel_id' => (int) $channel['id'],
                 'sales_channel' => 'b2b:' . $channel['id'],
                 'secure' => !empty($channel_params['auth_required']),

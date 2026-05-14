@@ -4,7 +4,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 {
     // Пля формы настройки канала продаж
     protected function getFormFieldsConfig($values = []): array
-    {
+    {        
         $frontend_from_root = !empty($values['frontend_from_root'])
             || ifset($values, 'frontend_url', '') === '*';
 
@@ -16,7 +16,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
         return [
             'route_key' => [
-                'title' => 'Витрина B2B-портала',
+                'title' => 'Домен',
                 'description' => 'Выберите поселение Shop-Script, через которое будет открываться клиентский B2B-портал.',
                 'control_type' => waHtmlControl::SELECT,
                 'options' => $this->getShopRouteOptions(),
@@ -24,7 +24,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             ],
 
             'frontend_url' => [
-                'title' => 'Адрес B2B-портала',
+                'title' => 'Адрес url',
                 'description' => 'Укажите URL внутри поселения Shop-Script. Например: b2b, clients, portal.',
                 'control_type' => waHtmlControl::INPUT,
                 'value' => $frontend_url_value,
@@ -33,7 +33,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
             'frontend_from_root' => [
                 'title' => 'Сделать от корня',
-                'description' => 'B2B-портал будет открываться от корня выбранного поселения.' . $this->getFrontendFromRootScript(),
+                'description' => 'B2B-портал будет открываться от корня выбранного поселения.',
                 'control_type' => waHtmlControl::CHECKBOX,
                 'class' => 'checkbox',
                 'value' => $frontend_from_root ? 1 : 0,
@@ -58,7 +58,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $params['frontend_from_root'] = !empty($params['frontend_from_root']) ? 1 : 0;
         $params['frontend_url'] = trim((string) ifset($params, 'frontend_url', ''));
         $params['auth_required'] = !empty($params['auth_required']) ? 1 : 0;
-        $params['price_mode'] = trim((string) ifset($params, 'price_mode', 'b2b'));
 
         if ($params['route_key'] === '') {
             $errors[] = [
@@ -149,23 +148,13 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     // Дополнительные действия после сохранения канала сейчас не требуются.
     public function onSave(array $channel) {}
 
-    // Публичные параметры канала для Headless API.
-    public function getPublicStorefrontParams(array $channel): array
-    {
-        $params = ifset($channel, 'params', []);
-
-        return array_intersect_key($params, [
-            'auth_required' => 1,
-        ]);
-    }
-
     // Формирует список shop-поселений для select.
     protected function getShopRouteOptions(): array
     {
         $options = [
             [
                 'value' => '',
-                'title' => 'Выберите витрину',
+                'title' => 'Выберите поселение',
             ],
         ];
 

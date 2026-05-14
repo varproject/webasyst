@@ -22,10 +22,6 @@ class shopB2bPluginFrontendAction extends waViewAction
 
         $channel['params'] = $params_model->get($channel_id);
 
-        if (!empty($channel['params']['auth_required']) && !wa()->getUser()->isAuth()) {
-            wa()->getResponse()->redirect(wa()->getRouteUrl('shop/frontend/my'));
-        }
-
         $this->view->assign([
             'channel' => $channel,
             'sales_channel' => 'b2b:' . $channel_id,
