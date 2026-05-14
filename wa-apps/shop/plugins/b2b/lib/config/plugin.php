@@ -1,17 +1,23 @@
 <?php
 return array(
-  'name'            => 'B2B личный кабинет',
+  'name'            => 'B2B / Канал продаж для клиентов',
   'description'     => 'Один изолированный B2B/ЛК-кабинет на каждую витрину Shop-Script: домен + поселение.',
   'img'             => 'img/lk.svg',
   'version'         => '1.0.0',
   'vendor'          => '123456',
   'frontend'        => true,
-  'custom_settings' => true,
+  // 'custom_settings' => true,
 
   'handlers'  => [
-    'backend_menu'   => 'backendMenu', // 1.3 tab main menu
-    'backend_extended_menu' => 'backendExtendedMenu', // 2.0 sidebar main menu
-    'routing' => 'routingHandler',
+    // 'backend_menu'   => 'backendMenu', // 1.3 tab main menu
+    // 'backend_extended_menu' => 'backendExtendedMenu', // 2.0 sidebar main menu
+    // 'routing' => 'routingHandler',
+
+
     'sales_channel_types' => 'salesChannelTypes',
+    'sales_channels' => 'salesChannels',
+
+    // Чтобы после создания заказа гарантированно проставить sales_channel.
+    'order_action.create' => 'orderActionCreate',
   ],
 );
