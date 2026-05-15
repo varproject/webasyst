@@ -38,7 +38,6 @@ class shopB2bPluginFrontendAction extends waViewAction
     }
 
     // Показывает страницу ограничения доступа.
-    // Показывает страницу ограничения доступа.
     protected function showAccessDenied(array $channel)
     {
         $params    = ifset($channel, 'params', []);

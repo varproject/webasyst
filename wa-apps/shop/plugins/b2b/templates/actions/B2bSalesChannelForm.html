@@ -614,28 +614,59 @@
         if ($.fn.select2) {
             $access_customers.select2({
                 width: '100%',
-                placeholder: 'Найти покупателя',
+                placeholder: 'Найти контакт',
                 minimumInputLength: 1,
                 ajax: {
-                    url: {$wa_app_url|json_encode} + '?plugin=b2b&module=backend&action=customers',
+                    url: {$wa_app_url|json_encode} + '?action=autocomplete&type=contact',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term || ''
+                            term: params.term || ''
                         };
                     },
                     processResults: function(response) {
-                        if (!response || response.status !== 'ok' || !response.data) {
+                        if (!Array.isArray(response)) {
                             return {
                                 results: []
                             };
                         }
 
                         return {
-                            results: response.data.results || []
+                            results: response.map(function(item) {
+                                const id = parseInt(item.id || item.value || 0, 10);
+                                const label = item.label || item.name || ('#' + id);
+                                const text = item.name || $('<div>').html(label).text() || (
+                                    '#' + id);
+
+                                return {
+                                    id: id,
+                                    text: text,
+                                    label: label,
+                                    photo_url: item.photo_url || ''
+                                };
+                            }).filter(function(item) {
+                                return item.id > 0;
+                            })
                         };
                     }
+                },
+                templateResult: function(item) {
+                    if (!item.id) {
+                        return item.text;
+                    }
+
+                    if (item.label) {
+                        return $('<span>' + item.label + '</span>');
+                    }
+
+                    return item.text;
+                },
+                templateSelection: function(item) {
+                    return item.text || item.name || item.id;
+                },
+                escapeMarkup: function(markup) {
+                    return markup;
                 }
             });
 

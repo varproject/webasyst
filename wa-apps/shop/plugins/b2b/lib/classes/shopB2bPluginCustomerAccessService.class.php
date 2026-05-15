@@ -21,7 +21,7 @@ class shopB2bPluginCustomerAccessService
         return shopCustomer::getAllCategories();
     }
 
-    // Возвращает выбранных покупателей для Select2.
+    // Возвращает выбранные контакты для Select2.
     public function getSelectedCustomers(array $ids): array
     {
         if (!$ids) {
@@ -31,10 +31,11 @@ class shopB2bPluginCustomerAccessService
         $model = new waModel();
         $sql   = "
             SELECT c.id, c.name, e.email, p.value AS phone
-            FROM shop_customer sc
-                JOIN wa_contact c ON c.id = sc.contact_id
-                LEFT JOIN wa_contact_emails e ON e.contact_id = c.id AND e.sort = 0
-                LEFT JOIN wa_contact_data p ON p.contact_id = c.id AND p.field = 'phone'
+            FROM wa_contact c
+                LEFT JOIN wa_contact_emails e
+                    ON e.contact_id = c.id AND e.sort = 0
+                LEFT JOIN wa_contact_data p
+                    ON p.contact_id = c.id AND p.field = 'phone'
             WHERE c.id IN (i:ids)
             GROUP BY c.id
             ORDER BY c.name
@@ -91,12 +92,12 @@ class shopB2bPluginCustomerAccessService
             return true;
         }
 
-        if ($contact_id <= 0 || !$this->isCustomer($contact_id)) {
+        if ($contact_id <= 0) {
             return false;
         }
 
         if ($mode === 'customers') {
-            return in_array($contact_id, $this->getIds(ifset($params, 'access_customer_ids', '')));
+            return in_array($contact_id, $this->getIds(ifset($params, 'access_customer_ids', '')), true);
         }
 
         $category_ids = $this->getIds(ifset($params, 'access_category_ids', ''));
@@ -117,13 +118,5 @@ class shopB2bPluginCustomerAccessService
             'contact_id'   => $contact_id,
             'category_ids' => $category_ids,
         ])->fetchField() > 0;
-    }
-
-    // Проверяет, что контакт является покупателем магазина.
-    protected function isCustomer($contact_id): bool
-    {
-        $model = new shopCustomerModel();
-
-        return !!$model->getById((int) $contact_id);
     }
 }

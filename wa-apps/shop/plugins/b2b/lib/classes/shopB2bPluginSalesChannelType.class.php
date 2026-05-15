@@ -83,6 +83,19 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             $params['access_denied_page_mode'] = 'plugin';
         }
 
+        if (
+            $params['access_denied_behavior'] === 'page'
+            && $params['access_denied_page_mode'] === 'block'
+            && $params['access_denied_block_id'] === ''
+        ) {
+            $errors[] = [
+                'field'             => 'data[params][access_denied_block_id]',
+                'error_description' => 'Укажите ID блока для страницы.',
+            ];
+
+            return $errors;
+        }
+
         $customer_ids = $access_service->getIds(ifset($params, 'access_customer_ids', []));
         $category_ids = $access_service->getIds(ifset($params, 'access_category_ids', []));
 
