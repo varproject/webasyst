@@ -5,7 +5,7 @@ class shopB2bPlugin extends shopPlugin
     public function __construct($info)
     {
         parent::__construct($info);
-        
+
         // Подключает пользовательские функции и модификаторы плагина.
         foreach (['functions.php', 'modifiers.php'] as $file) {
             $path = $this->path . '/lib/config/' . $file;
@@ -57,13 +57,11 @@ class shopB2bPlugin extends shopPlugin
         return $result;
     }
 
-    // Добавляет backend route и frontend routes B2B-каналов.
+    // Добавляет frontend routes B2B-каналов.
     public function routingHandler($route)
     {
         if (wa()->getEnv() === 'backend') {
-            return [
-                $this->id . '/' => 'backend/settings',
-            ];
+            return [];
         }
 
         $route_key = $this->getRouteKeyByRoute($route);
@@ -72,11 +70,11 @@ class shopB2bPlugin extends shopPlugin
             return [];
         }
 
-        $channel_model = new shopSalesChannelModel();
-        $params_model  = new shopSalesChannelParamsModel();
+        $channel_model  = new shopSalesChannelModel();
+        $params_model   = new shopSalesChannelParamsModel();
         $access_service = new shopB2bPluginCustomerAccessService();
-        $channels      = $channel_model->getByField('type', 'b2b', true);
-        $routes        = [];
+        $channels       = $channel_model->getByField('type', 'b2b', true);
+        $routes         = [];
 
         if (!$channels) {
             return [];
