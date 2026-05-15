@@ -46,38 +46,6 @@ class shopB2bPluginCustomerAccessService
         ])->fetchAll('id');
     }
 
-    // Ищет покупателей магазина для Select2.
-    public function searchCustomers($query, $limit = 20): array
-    {
-        $query = trim((string) $query);
-        $limit = max(1, min(50, (int) $limit));
-
-        if ($query === '') {
-            return [];
-        }
-
-        $model = new shopCustomerModel();
-
-        list($customers, $total) = $model->getList(null, $query, 0, $limit);
-
-        if (!$customers) {
-            return [];
-        }
-
-        $result = [];
-
-        foreach ($customers as $customer) {
-            $result[$customer['id']] = [
-                'id'    => (int) $customer['id'],
-                'name'  => ifset($customer, 'name', ''),
-                'email' => ifset($customer, 'email', ''),
-                'phone' => ifset($customer, 'phone', ''),
-            ];
-        }
-
-        return $result;
-    }
-
     // Проверяет доступ контакта к B2B-каналу.
     public function canAccess($contact_id, array $params): bool
     {
