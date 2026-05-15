@@ -38,21 +38,29 @@ class shopB2bPluginFrontendAction extends waViewAction
     }
 
     // Показывает страницу ограничения доступа.
+    // Показывает страницу ограничения доступа.
     protected function showAccessDenied(array $channel)
     {
-        $block_id = trim((string) ifset($channel, 'params', 'access_denied_block_id', ''));
+        $params    = ifset($channel, 'params', []);
+        $mode      = ifset($params, 'access_denied_page_mode', 'plugin');
+        $block_id  = trim((string) ifset($params, 'access_denied_block_id', ''));
+
+        if (!in_array($mode, ['plugin', 'block'])) {
+            $mode = 'plugin';
+        }
 
         $this->setTemplate(wa()->getAppPath('plugins/b2b/templates/actions/frontend/FrontendAccessDenied.html', 'shop'));
 
         $this->view->assign([
             'channel'                    => $channel,
+            'access_denied_page_mode'    => $mode,
             'access_denied_block_id'     => $block_id,
             'access_denied_block_params' => [
                 'channel'      => $channel,
-                'params'       => $channel['params'],
+                'params'       => $params,
                 'contact'      => wa()->getUser(),
                 'login_url'    => wa()->getRouteUrl('shop/frontend/my'),
-                'register_url' => wa()->getRouteUrl('shop/frontend/signup'),
+                'register_url' => wa()->getRouteUrl('shop/frontend/my'),
             ],
         ]);
     }

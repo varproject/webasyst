@@ -118,6 +118,7 @@
             <input type="hidden" name="data[params][access_denied_behavior]" class="js-b2b-access-denied-behavior"
                 value="{$access_denied_behavior|default:'ignore'|escape}">
 
+            {* Режим доступа *}
             <div class="field">
                 <div class="name">
                     Режим доступа
@@ -135,6 +136,7 @@
                 </div>
             </div>
 
+            {* Для кого кабинет *}
             <div class="field">
                 <div class="name">
                     Для кого кабинет
@@ -160,6 +162,7 @@
                 </div>
             </div>
 
+            {* Покупатели *}
             <div class="field js-b2b-access-customers-field">
                 <div class="name for-input">
                     Покупатели
@@ -181,6 +184,7 @@
                 </div>
             </div>
 
+            {* Категории покупателей *}
             <div class="field js-b2b-access-categories-field">
                 <div class="name for-input">
                     Категории покупателей
@@ -202,6 +206,7 @@
                 </div>
             </div>
 
+            {* Что делать без доступа *}
             <div class="field">
                 <div class="name">
                     Что делать без доступа
@@ -224,19 +229,60 @@
                 </div>
             </div>
 
+            {* Страница доступа *}
             <div class="field js-b2b-access-denied-page-field">
-                <div class="name for-input">
-                    Блок страницы доступа
+                <div class="name">
+                    Страница доступа
                 </div>
-                <div class="value">
-                    <input type="text" name="data[params][access_denied_block_id]" class="small"
-                        value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
 
-                    <p class="hint">
-                        Укажите ID блока из приложения “Сайт”. Например: <code>b2b_access_denied</code>.
-                    </p>
+                <div class="value">
+                    <div class="fields width-100">
+                        <div class="field">
+                            <div class="name for-checkbox">
+                                <label>
+                                    <span class="wa-radio">
+                                        <input type="radio" name="data[params][access_denied_page_mode]" value="plugin"
+                                            class="js-b2b-access-denied-page-mode"
+                                            {if $access_denied_page_mode|default:'plugin' == 'plugin'}checked{/if}>
+                                        <span></span>
+                                    </span>
+                                    Шаблон плагина
+                                </label>
+                            </div>
+                            <div class="value">
+                                <span class="hint">
+                                    Будет показана стандартная страница ограничения доступа из плагина.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="name for-checkbox">
+                                <label>
+                                    <span class="wa-radio">
+                                        <input type="radio" name="data[params][access_denied_page_mode]" value="block"
+                                            class="js-b2b-access-denied-page-mode"
+                                            {if $access_denied_page_mode|default:'plugin' == 'block'}checked{/if}>
+                                        <span></span>
+                                    </span>
+                                    Мой блок
+                                </label>
+                            </div>
+                            <div class="value">
+                                <input type="text" name="data[params][access_denied_block_id]"
+                                    class="small js-b2b-access-denied-block-id"
+                                    value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
+
+                                <p class="hint">
+                                    Укажите ID блока из приложения “Сайт”. Например: <code>b2b_access_denied</code>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
         </div>
 
 
@@ -436,6 +482,9 @@
 
         const updateAccessDeniedState = function() {
             const behavior = String($access_denied_behavior.val() || 'ignore');
+            const page_mode = String($form.find('.js-b2b-access-denied-page-mode:checked').val() ||
+                'plugin');
+            const $block_id = $form.find('.js-b2b-access-denied-block-id');
 
             $access_denied_toggle
                 .find('span')
@@ -446,6 +495,18 @@
                 .addClass('selected');
 
             $access_denied_page_field.toggle(behavior === 'page');
+
+            if (page_mode === 'block') {
+                $block_id
+                    .prop('readonly', false)
+                    .attr('aria-disabled', 'false')
+                    .css('opacity', '');
+            } else {
+                $block_id
+                    .prop('readonly', true)
+                    .attr('aria-disabled', 'true')
+                    .css('opacity', '0.35');
+            }
         };
 
         if ($url_type_toggle.length && $.fn.waToggle) {
@@ -503,6 +564,10 @@
             });
         }
 
+        $form.on('change', '.js-b2b-access-denied-page-mode', function() {
+            updateAccessDeniedState();
+        });
+
         if ($auth_switch.length && $.fn.waSwitch) {
             $auth_switch.waSwitch();
         }
@@ -512,16 +577,30 @@
                 width: '100%',
                 placeholder: 'Найти покупателя',
                 ajax: {
-                    url: {$wa_app_url|json_encode} + '?plugin=b2b&module=backend&action=customers',
+                    url: {$wa_app_url|json_encode} + '?action=autocomplete&type=customer',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term || ''
+                            term: params.term || ''
                         };
                     },
                     processResults: function(data) {
-                        return data;
+                        const results = [];
+
+                        data = data || [];
+
+                        data.forEach(function(item) {
+                            results.push({
+                                id: item.id,
+                                text: item.name || item.value || $('<div>' + (item
+                                    .label || '') + '</div>').text()
+                            });
+                        });
+
+                        return {
+                            results: results
+                        };
                     }
                 }
             });

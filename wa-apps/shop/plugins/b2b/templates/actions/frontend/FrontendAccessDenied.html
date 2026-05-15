@@ -1,6 +1,5 @@
 <div class="b2b-access-denied">
-
-    {if !empty($access_denied_block_id)}
+    {if $access_denied_page_mode|default:'plugin' == 'block' && !empty($access_denied_block_id)}
         {$wa->block($access_denied_block_id, $access_denied_block_params)}
     {else}
         <section class="b2b-access-denied__section">
@@ -29,5 +28,4 @@
             </div>
         </section>
     {/if}
-    
 </div>
