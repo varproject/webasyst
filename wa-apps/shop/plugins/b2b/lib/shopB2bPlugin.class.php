@@ -2,9 +2,10 @@
 
 class shopB2bPlugin extends shopPlugin
 {
-    // Регистрирует тип канала продаж B2B.
-    public function salesChannelTypes(&$params)
+    public function __construct($info)
     {
+        parent::__construct($info);
+        
         // Подключает пользовательские функции и модификаторы плагина.
         foreach (['functions.php', 'modifiers.php'] as $file) {
             $path = $this->path . '/lib/config/' . $file;
@@ -13,7 +14,11 @@ class shopB2bPlugin extends shopPlugin
                 require_once $path;
             }
         }
+    }
 
+    // Регистрирует тип канала продаж B2B.
+    public function salesChannelTypes(&$params)
+    {
         return [
             [
                 'id'        => 'b2b',

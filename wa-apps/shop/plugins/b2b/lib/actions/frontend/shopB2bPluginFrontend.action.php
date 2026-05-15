@@ -5,8 +5,6 @@ class shopB2bPluginFrontendAction extends waViewAction
     // Frontend-страница B2B-витрины.
     public function execute()
     {
-        $this->setLayout(new shopB2bPluginFrontendLayout());
-
         $channel_id = waRequest::param('b2b_channel_id', 0, waRequest::TYPE_INT);
 
         if ($channel_id <= 0) {
@@ -27,9 +25,11 @@ class shopB2bPluginFrontendAction extends waViewAction
 
         if (!$has_access) {
             $this->showAccessDenied($channel);
-
             return;
         }
+
+        // Ставим после has_access, чтобы игнорировать лояут в блоках
+        $this->setLayout(new shopB2bPluginFrontendLayout());
 
         $this->view->assign([
             'channel'       => $channel,

@@ -120,17 +120,18 @@
 
             <div class="field">
                 <div class="name">
-                    Доступ к витрине
+                    Режим доступа
                 </div>
                 <div class="value">
-                    <span class="switch small js-b2b-auth-switch">
-                        <input type="checkbox" name="data[params][auth_required]" value="1"
-                            {if !empty($auth_required)}checked{/if}>
-                    </span>
-
-                    <span class="hint custom-ml-8">
-                        Только после входа
-                    </span>
+                    <div class="switch-with-text">
+                        <span class="switch middle smaller shift-3 js-b2b-auth-switch">
+                            <input type="checkbox" name="data[params][auth_required]" id="auth-switch" value="1"
+                                {if !empty($auth_required)}checked{/if}>
+                        </span>
+                        <label for="auth-switch">Закрытая витрина со входом</label>
+                    </div>
+                    <p class="hint">Включите, чтобы закрыть от гостей и показывать её только авторизованным клиентам.
+                    </p>
                 </div>
             </div>
 

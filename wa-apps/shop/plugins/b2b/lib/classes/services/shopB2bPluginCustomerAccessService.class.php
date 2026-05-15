@@ -32,7 +32,7 @@ class shopB2bPluginCustomerAccessService
         $sql   = "
             SELECT c.id, c.name, e.email
             FROM shop_customer sc
-                JOIN wa_contact c ON c.id = sc.id
+                JOIN wa_contact c ON c.id = sc.contact_id
                 LEFT JOIN wa_contact_emails e ON e.contact_id = c.id AND e.sort = 0
             WHERE c.id IN (i:ids)
             ORDER BY c.name
@@ -58,7 +58,7 @@ class shopB2bPluginCustomerAccessService
         $sql   = "
             SELECT c.id, c.name, e.email
             FROM shop_customer sc
-                JOIN wa_contact c ON c.id = sc.id
+                JOIN wa_contact c ON c.id = sc.contact_id
                 LEFT JOIN wa_contact_emails e ON e.contact_id = c.id AND e.sort = 0
             WHERE c.name LIKE s:query
                 OR e.email LIKE s:query
