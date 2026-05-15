@@ -310,6 +310,9 @@
 
                         <p class="hint custom-ml-24 custom-mt-6 custom-mb-8">
                             Укажите ID блока из приложения “Сайт”.
+                            <a href="javascript:void(0);" class="js-b2b-show-block-vars inline-link">
+                                <b><i class="fas fa-code"></i> Доступны переменные</b>
+                            </a>
                         </p>
                     </div>
                 </div>
@@ -346,6 +349,58 @@
 <script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
 
 <style>
+    .js-b2b-show-block-vars.inline-link {
+        text-decoration: none !important;
+        border-bottom: dashed 1px;
+        padding-bottom: 3px;
+        vertical-align: super;
+        position: relative;
+        top: 2px;
+    }
+
+    .b2b-vars-drawer .drawer-body {
+        max-width: 720px;
+    }
+
+    .b2b-vars-drawer .b2b-vars-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .b2b-vars-drawer .b2b-vars-list>li {
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--border-color-soft);
+    }
+
+    .b2b-vars-drawer .b2b-vars-list>li:last-child {
+        border-bottom: 0;
+    }
+
+    .b2b-vars-drawer .b2b-var-code {
+        display: inline-block;
+        max-width: 100%;
+        padding: 0.25rem 0.45rem;
+        border-radius: 0.35rem;
+        background: var(--background-color-blockquote, #f5f5f5);
+        font-family: monospace;
+        font-size: 0.9rem;
+        word-break: break-all;
+        cursor: pointer;
+    }
+
+    .b2b-vars-drawer .b2b-var-code:hover {
+        background: var(--background-color-input-solid, #eee);
+    }
+
+    .b2b-vars-drawer .b2b-vars-section-title {
+        margin: 1.25rem 0 0.5rem;
+    }
+
+    .b2b-vars-drawer .b2b-vars-section-title:first-child {
+        margin-top: 0;
+    }
+
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         background-color: beige;
         border: 1px solid #aaaaaa26 !important;
@@ -812,3 +867,228 @@
         {/if}
     });
 </script>
+
+{literal}
+    <script>
+        $(function() {
+            "use strict";
+
+            const $form = $('#js-sales-channel-form');
+            const $button = $form.find('.js-b2b-show-block-vars');
+
+            const vars = [{
+                    section: 'Основные переменные',
+                    items: [{
+                            code: '{$channel.name|escape}',
+                            description: 'Название текущего B2B-канала.'
+                        },
+                        {
+                            code: '{$channel.id|escape}',
+                            description: 'ID текущего B2B-канала продаж.'
+                        },
+                        {
+                            code: '{$channel.params.settlement|escape}',
+                            description: 'Поселение, к которому привязан B2B-канал.'
+                        },
+                        {
+                            code: '{$channel.params.frontend_url|escape}',
+                            description: 'URL B2B-витрины внутри выбранного поселения.'
+                        },
+                        {
+                            code: '{$params.access_mode|escape}',
+                            description: 'Текущий режим доступа: all, except_customers, customers или categories.'
+                        }
+                    ]
+                },
+                {
+                    section: 'Текущий контакт',
+                    items: [{
+                            code: '{$contact.name|escape}',
+                            description: 'Имя текущего пользователя/контакта.'
+                        },
+                        {
+                            code: '{$contact.id|escape}',
+                            description: 'ID текущего контакта.'
+                        },
+                        {
+                            code: '{$contact->get("email", "default")|escape}',
+                            description: 'Основной email текущего контакта.'
+                        },
+                        {
+                            code: '{$contact->get("phone", "default")|escape}',
+                            description: 'Основной телефон текущего контакта.'
+                        }
+                    ]
+                },
+                {
+                    section: 'Ссылки',
+                    items: [{
+                            code: '{$login_url|escape}',
+                            description: 'URL входа в личный кабинет.'
+                        },
+                        {
+                            code: '{$register_url|escape}',
+                            description: 'URL регистрации.'
+                        }
+                    ]
+                },
+                {
+                    section: 'Готовые условия',
+                    items: [{
+                            code: '{if $contact.id}Вы вошли как {$contact.name|escape}{else}Вы не авторизованы{/if}',
+                            description: 'Проверка авторизации контакта.'
+                        },
+                        {
+                            code: '{if !empty($login_url)}<a href="{$login_url|escape}">Войти</a>{/if}',
+                            description: 'Кнопка входа.'
+                        },
+                        {
+                            code: '{if !empty($register_url)}<a href="{$register_url|escape}">Зарегистрироваться</a>{/if}',
+                            description: 'Кнопка регистрации.'
+                        },
+                        {
+                            code: '{if !empty($channel.params.settlement)}<p>Витрина: {$channel.params.settlement|escape}</p>{/if}',
+                            description: 'Вывод поселения B2B-витрины.'
+                        }
+                    ]
+                }
+            ];
+
+            const escapeHtml = function(value) {
+                return String(value || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
+        const buildVarsListHtml = function() {
+            let html = '';
+
+            vars.forEach(function(group) {
+                html += '<h4 class="heading b2b-vars-section-title">' + escapeHtml(group.section) +
+                    '</h4>';
+                html += '<ul class="b2b-vars-list">';
+
+                group.items.forEach(function(item) {
+                    html += '' +
+                        '<li>' +
+                        '<div>' +
+                        '<code class="b2b-var-code js-b2b-copy-var" data-code="' +
+                        escapeHtml(item.code) + '">' +
+                        escapeHtml(item.code) +
+                        '</code>' +
+                        '</div>' +
+                        '<p class="hint custom-mt-6 custom-mb-0">' + escapeHtml(item
+                            .description) + '</p>' +
+                        '</li>';
+                });
+
+                html += '</ul>';
+            });
+
+            return html;
+        };
+
+        const buildDrawerHtml = function() {
+            return '' +
+                '<div class="drawer b2b-vars-drawer">' +
+                '<div class="drawer-background"></div>' +
+                '<div class="drawer-body">' +
+                '<a href="#" class="drawer-close js-close-drawer">' +
+                '<i class="fas fa-times"></i>' +
+                '</a>' +
+                '<div class="drawer-block">' +
+                '<header class="drawer-header bordered-bottom">' +
+                '<h2 class="custom-mb-0">Переменные блока B2B</h2>' +
+                '<p class="hint custom-mt-8 custom-mb-0">' +
+                'Эти переменные доступны внутри блока, указанного в поле “Мой блок”. ' +
+                'Клик по переменной копирует её в буфер обмена.' +
+                '</p>' +
+                '</header>' +
+                '<div class="drawer-content">' +
+                '<div class="box">' +
+                '<div class="alert info small">' +
+                '<i class="fas fa-info-circle"></i> ' +
+                'Блок вызывается как <code>{$wa->block("ID_БЛОКА", $params)}</code>. ' +
+                'Ключи массива параметров доступны в блоке как отдельные Smarty-переменные.' +
+                '</div>' +
+                buildVarsListHtml() +
+                '</div>' +
+                '</div>' +
+                '<footer class="drawer-footer bordered-top">' +
+                '<button type="button" class="button light-gray js-close-drawer">Закрыть</button>' +
+                '</footer>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        };
+
+        const showCopiedAlert = function() {
+            let $alerts = $('#js-b2b-vars-alerts');
+
+            if (!$alerts.length) {
+                $alerts = $(
+                    '<div id="js-b2b-vars-alerts" class="alert-fixed-box" style="top:0.5rem;right:3.5rem;">' +
+                    '<div class="alert success js-b2b-copied-alert" style="display:none;">' +
+                    '<i class="fas fa-check-circle"></i> Скопировано' +
+                    '</div>' +
+                    '</div>'
+                ).appendTo('body');
+            }
+
+            const $alert = $alerts.find('.js-b2b-copied-alert');
+
+            $alert.stop(true, true).show();
+
+            setTimeout(function() {
+                $alert.fadeOut(150);
+            }, 1300);
+        };
+
+        const copyText = function(text) {
+            if ($.wa && typeof $.wa.copyToClipboard === 'function') {
+                $.wa.copyToClipboard(text).then(showCopiedAlert);
+                return;
+            }
+
+            const $temp = $('<textarea>')
+                .val(text)
+                .css({
+                    position: 'fixed',
+                    left: '-9999px',
+                    top: '-9999px'
+                })
+                .appendTo('body');
+
+            $temp[0].select();
+            document.execCommand('copy');
+            $temp.remove();
+
+            showCopiedAlert();
+        };
+
+        $button.on('click', function(e) {
+            e.preventDefault();
+
+            const drawer = $.waDrawer({
+                html: buildDrawerHtml(),
+                direction: 'right',
+                width: '680px',
+                lock_body_scroll: true,
+                onBgClick: function(event, $drawer, drawer_instance) {
+                    drawer_instance.close();
+                },
+                onOpen: function($drawer) {
+                    $drawer.on('click', '.js-b2b-copy-var', function(event) {
+                        event.preventDefault();
+
+                        copyText($(this).data('code'));
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+{/literal}
