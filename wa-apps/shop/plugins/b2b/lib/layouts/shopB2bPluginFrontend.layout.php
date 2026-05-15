@@ -11,5 +11,7 @@ class shopB2bPluginFrontendLayout extends waLayout
             // 'b2b_user'        => wa()->getUser(),
             'b2b_static_url'  => wa('shop')->getPlugin('b2b')->getPluginStaticUrl(),
         ]);
+
+        // waRequest::param()
     }
 }
