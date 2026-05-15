@@ -116,6 +116,19 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             return $errors;
         }
 
+        if (
+            $params['access_denied_behavior'] === 'page'
+            && $params['access_denied_page_mode'] === 'block'
+            && !$this->isValidBlockId($params['access_denied_block_id'])
+        ) {
+            $errors[] = [
+                'field'             => 'data[params][access_denied_block_id]',
+                'error_description' => 'ID блока может содержать только латинские буквы, цифры, дефис, подчёркивание и точку.',
+            ];
+
+            return $errors;
+        }
+
         $customer_ids        = $access_service->getIds(ifset($params, 'access_customer_ids', []));
         $except_customer_ids = $access_service->getIds(ifset($params, 'access_except_customer_ids', []));
         $category_ids        = $access_service->getIds(ifset($params, 'access_category_ids', []));
@@ -224,6 +237,14 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $url = mb_strtolower($url, 'UTF-8');
 
         return $url;
+    }
+
+    // Проверяет ID блока приложения «Сайт» перед передачей в $wa->block().
+    protected function isValidBlockId($block_id): bool
+    {
+        $block_id = trim((string) $block_id);
+
+        return $block_id !== '' && preg_match('/^[a-z0-9_.-]+$/i', $block_id);
     }
 
     // Возвращает последний пользовательский URL без routing-mask.
