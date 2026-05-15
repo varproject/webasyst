@@ -16,10 +16,14 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $view           = wa('shop')->getView();
         $params         = ifset($channel, 'params', []);
         $from_root      = !empty($params['frontend_from_root']) || ifset($params, 'frontend_url', '') === '*';
-        $auth_required  = !empty($params['auth_required']) || !array_key_exists('auth_required', $params);
         $access_service = new shopB2bPluginCustomerService();
 
         $access_mode = ifset($params, 'access_mode', 'all');
+        $route_key   = ifset($params, 'route_key', '');
+        $lk_state    = $this->getShopPersonalAccountStateByRouteKey($route_key);
+
+        $auth_required_available = !empty($lk_state['enabled']);
+        $auth_required           = (!empty($params['auth_required']) || !array_key_exists('auth_required', $params)) && $auth_required_available;
 
         $customer_ids        = $access_service->getIds(ifset($params, 'access_customer_ids', ''));
         $except_customer_ids = $access_service->getIds(ifset($params, 'access_except_customer_ids', ''));
@@ -41,6 +45,8 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             'frontend_from_root'         => $from_root,
             'frontend_custom_url'        => $this->getFrontendCustomUrl($params),
             'auth_required'              => $auth_required,
+            'auth_required_available'    => $auth_required_available,
+            'auth_required_message'      => ifset($lk_state, 'message', ''),
             'access_mode'                => $access_mode,
             'access_customer_ids'        => $customer_ids,
             'access_except_customer_ids' => $except_customer_ids,
@@ -193,6 +199,11 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             return $errors;
         }
 
+        $lk_state = $this->getShopPersonalAccountStateByDomain($route['domain']);
+        if (empty($lk_state['enabled'])) {
+            $params['auth_required'] = 0;
+        }
+
         $custom_url = $this->normalizeFrontendCustomUrl(ifset($params, 'frontend_custom_url', ''));
 
         if ($custom_url === '') {
@@ -266,6 +277,66 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         }
 
         return 'b2b';
+    }
+
+    // Проверяет доступность личного кабинета Shop-Script для route_key вида domain|route_id.
+    protected function getShopPersonalAccountStateByRouteKey($route_key): array
+    {
+        $route_key = trim((string) $route_key);
+
+        if ($route_key === '') {
+            return [
+                'enabled' => false,
+                'message' => 'Выберите поселение Shop-Script, чтобы проверить доступность личного кабинета.',
+            ];
+        }
+
+        $route = $this->parseRouteKey($route_key);
+
+        if (!$route) {
+            return [
+                'enabled' => false,
+                'message' => 'Выбранное поселение Shop-Script не найдено.',
+            ];
+        }
+
+        return $this->getShopPersonalAccountStateByDomain($route['domain']);
+    }
+
+    // Проверяет, что в настройках сайта для домена включены авторизация и личный кабинет Shop-Script.
+    protected function getShopPersonalAccountStateByDomain($domain): array
+    {
+        $domain = trim((string) $domain);
+
+        if ($domain === '') {
+            return [
+                'enabled' => false,
+                'message' => 'Домен поселения не определён.',
+            ];
+        }
+
+        $auth_config = wa()->getAuthConfig($domain);
+        if (empty($auth_config['auth'])) {
+            return [
+                'enabled' => false,
+                'message' => 'На сайте для этого домена выключена авторизация. Включите авторизацию и личный кабинет Shop-Script в приложении «Сайт».',
+            ];
+        }
+
+        $domain_config_path = wa('site')->getConfig()->getConfigPath('domains/' . $domain . '.php');
+        $domain_config      = file_exists($domain_config_path) ? include($domain_config_path) : [];
+
+        if (isset($domain_config['personal']['shop']) && empty($domain_config['personal']['shop'])) {
+            return [
+                'enabled' => false,
+                'message' => 'Личный кабинет Shop-Script выключен в настройках сайта для этого домена. Включите его в приложении «Сайт».',
+            ];
+        }
+
+        return [
+            'enabled' => true,
+            'message' => '',
+        ];
     }
 
     // Выполняется после сохранения канала.
