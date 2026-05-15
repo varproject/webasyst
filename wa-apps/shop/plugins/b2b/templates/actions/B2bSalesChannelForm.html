@@ -7,16 +7,13 @@
         {/if}
         <input type="hidden" name="data[type]" value="{$channel.type|escape}">
 
-
         {* Штатные поля *}
         <div class="fields-group custom-mt-16">
             <div class="field">
-                <div class="name">
-                    [`Enabled`]
-                </div>
+                <div class="name">[`Enabled`]</div>
                 <div class="value">
                     <label>
-                        <input type="checkbox" name="data[status]" value="1" {if !empty($channel.status)} checked{/if}>
+                        <input type="checkbox" name="data[status]" value="1" {if !empty($channel.status)}checked{/if}>
                     </label>
                 </div>
             </div>
@@ -28,61 +25,36 @@
             {/foreach}
         </div>
 
-
         {* Настройка адреса *}
         <div class="fields-group custom-mt-24 js-b2b-address-settings">
             <h3 class="heading">Адрес</h3>
 
-            <input type="hidden" name="data[params][frontend_from_root]" class="js-b2b-frontend-from-root"
-                value="{if !empty($frontend_from_root)}1{else}0{/if}">
+            <input type="hidden" name="data[params][frontend_from_root]" class="js-b2b-frontend-from-root" value="{if !empty($frontend_from_root)}1{else}0{/if}">
 
-            {* Тип адреса *}
             <div class="field">
-                <div class="name">
-                    Тип адреса
-                </div>
+                <div class="name">Тип адреса</div>
                 <div class="value">
                     <div class="toggle small js-b2b-url-type-toggle">
-                        <span data-value="custom" {if empty($frontend_from_root)} class="selected" {/if}>
-                            От корня поселения + свой url
-                        </span>
-                        <span data-value="root" {if !empty($frontend_from_root)} class="selected" {/if}>
-                            От корня поселения
-                        </span>
+                        <span data-value="custom" {if empty($frontend_from_root)}class="selected"{/if}>От корня поселения + свой url</span>
+                        <span data-value="root" {if !empty($frontend_from_root)}class="selected"{/if}>От корня поселения</span>
                     </div>
 
                     <p class="hint">
                         <b data-mode="custom" class="js-b2b-url-type-title">От корня поселения + свой URL</b> —
-                        указанный URL станет корнем B2B-витрины внутри выбранного
-                        поселения, например <code>/b2b/</code>; все вложенные адреса, также будут
-                        обрабатываться по правилам текущей витрины. Например указав <code>/my/</code> можно подменить
-                        штатный ЛК магазина.<br>
-                        <b data-mode="root" class="js-b2b-url-type-title">От корня поселения</b> — корнем B2B-витрины
-                        станет само выбранное поселение; витрина будет
-                        обрабатывать всё его адресное пространство, включая вложенные URL.
+                        указанный URL станет корнем B2B-витрины внутри выбранного поселения, например <code>/b2b/</code>; все вложенные адреса также будут обрабатываться по правилам текущей витрины. Например, указав <code>/my/</code>, можно подменить штатный ЛК магазина.<br>
+                        <b data-mode="root" class="js-b2b-url-type-title">От корня поселения</b> — корнем B2B-витрины станет само выбранное поселение; витрина будет обрабатывать всё его адресное пространство, включая вложенные URL.
                     </p>
-                    <style>
-                        .js-b2b-url-type-title.is-selected {
-                            color: var(--green, #22b14c);
-                        }
-                    </style>
-
                 </div>
             </div>
 
-            {* Полный адрес *}
             <div class="field">
-                <div class="name for-input">
-                    Полный адрес
-                </div>
+                <div class="name for-input">Полный адрес</div>
                 <div class="value">
                     <div class="flexbox middle space-8">
                         <div class="wa-select small">
                             <select name="data[params][route_key]" class="js-b2b-route-key">
                                 {foreach $route_options as $option}
-                                    <option value="{$option.value|escape}" data-domain="{$option.domain|default:''|escape}"
-                                        data-route-url="{$option.route_url|default:''|escape}"
-                                        {if !empty($channel.params.route_key) && $channel.params.route_key == $option.value}selected{/if}>
+                                    <option value="{$option.value|escape}" data-domain="{$option.domain|default:''|escape}" data-route-url="{$option.route_url|default:''|escape}" {if !empty($channel.params.route_key) && $channel.params.route_key == $option.value}selected{/if}>
                                         {$option.title|escape}
                                     </option>
                                 {/foreach}
@@ -91,208 +63,127 @@
 
                         <span class="hint">/</span>
 
-                        <input type="text" name="data[params][frontend_custom_url]"
-                            class="small js-b2b-frontend-custom-url width-30 custom-mr-0"
-                            value="{$frontend_custom_url|escape}" placeholder="b2b" autocomplete="off">
+                        <input type="text" name="data[params][frontend_custom_url]" class="small js-b2b-frontend-custom-url width-30 custom-mr-0" value="{$frontend_custom_url|escape}" placeholder="b2b" autocomplete="off">
 
-                        <a class="button nowrap js-b2b-open-storefront small" href="#" target="_blank" rel="noopener"
-                            aria-disabled="true">
-                            Открыть →
-                        </a>
+                        <a class="button nowrap js-b2b-open-storefront small" href="#" target="_blank" rel="noopener" aria-disabled="true">Открыть →</a>
                     </div>
 
-                    <p class="hint">Для url допустимы буквы, цифры и дефис. Например: b2b, clients, opt-2025, закупки и
-                        т.д.</p>
+                    <p class="hint">Для url допустимы буквы, цифры и дефис. Например: b2b, clients, opt-2025, закупки и т.д.</p>
                 </div>
             </div>
-
         </div>
 
         {* Настройка доступа *}
         <div class="fields-group custom-mt-24 js-b2b-access-settings">
             <h5 class="heading">Доступы</h5>
 
-            <input type="hidden" name="data[params][access_mode]" class="js-b2b-access-mode"
-                value="{$access_mode|default:'all'|escape}">
+            <input type="hidden" name="data[params][access_mode]" class="js-b2b-access-mode" value="{$access_mode|default:'all'|escape}">
+            <input type="hidden" name="data[params][access_denied_behavior]" class="js-b2b-access-denied-behavior" value="{$access_denied_behavior|default:'ignore'|escape}">
 
-            <input type="hidden" name="data[params][access_denied_behavior]" class="js-b2b-access-denied-behavior"
-                value="{$access_denied_behavior|default:'ignore'|escape}">
-
-            {* Режим доступа *}
             <div class="field">
-                <div class="name">
-                    Общий доступ
-                </div>
+                <div class="name">Общий доступ</div>
                 <div class="value">
                     <div class="switch-with-text">
                         <span class="switch middle smaller shift-3 js-b2b-auth-switch">
-                            <input type="checkbox" name="data[params][auth_required]" id="auth-switch" value="1"
-                                {if !empty($auth_required)}checked{/if}>
+                            <input type="checkbox" name="data[params][auth_required]" id="auth-switch" value="1" {if !empty($auth_required)}checked{/if}>
                         </span>
                         <label for="auth-switch">Закрытая витрина со входом</label>
                     </div>
-                    <p class="hint">
-                        Включите, чтобы закрыть витрину от гостей и показывать только авторизованным покупателям.
-                    </p>
+                    <p class="hint">Включите, чтобы закрыть витрину от гостей и показывать только авторизованным покупателям.</p>
                 </div>
             </div>
 
-            {* Для кого кабинет *}
             <div class="field">
-                <div class="name">
-                    Пользователи
-                </div>
+                <div class="name">Пользователи</div>
                 <div class="value">
                     <div class="toggle small js-b2b-access-mode-toggle">
-                        <span data-value="all" {if $access_mode|default:'all' == 'all'} class="selected" {/if}>
-                            все
-                        </span>
-
-                        <span data-value="customers" {if $access_mode|default:'all' == 'customers'} class="selected"
-                            {/if}>
-                            только выбранные
-                        </span>
-
-                        <span data-value="except_customers" {if $access_mode|default:'all' == 'except_customers'}
-                            class="selected" {/if}>
-                            кроме выбранных
-                        </span>
-
-                        <span data-value="categories" {if $access_mode|default:'all' == 'categories'} class="selected"
-                            {/if}>
-                            только категории
-                        </span>
+                        <span data-value="all" {if $access_mode|default:'all' == 'all'}class="selected"{/if}>все</span>
+                        <span data-value="except_customers" {if $access_mode|default:'all' == 'except_customers'}class="selected"{/if}>кроме выбранных</span>
+                        <span data-value="customers" {if $access_mode|default:'all' == 'customers'}class="selected"{/if}>только выбранные</span>
+                        <span data-value="categories" {if $access_mode|default:'all' == 'categories'}class="selected"{/if}>только категории</span>
                     </div>
 
-                    <p class="hint">
-                        Выберите ограниченный круг пользователей витрины или оставьте доступ для всех.
-                    </p>
+                    <p class="hint">Выберите ограниченный круг пользователей витрины или оставьте доступ для всех.</p>
                 </div>
             </div>
 
-            {* Кроме выбранных контактов *}
             <div class="field js-b2b-access-except-customers-field">
-                <div class="name for-input">
-                    Кроме выбранных
-                </div>
+                <div class="name for-input">Кроме выбранных</div>
                 <div class="value">
-                    <select name="data[params][access_except_customer_ids][]" class="js-b2b-access-except-customers"
-                        multiple style="width: 100%;">
+                    <select name="data[params][access_except_customer_ids][]" class="js-b2b-access-except-customers" multiple style="width: 100%;">
                         {foreach $access_except_customers as $customer}
                             <option value="{$customer.id|escape}" selected>
-                                {$customer.name|default:'#'|escape}{if !empty($customer.email)} —
-                                {$customer.email|escape}{elseif !empty($customer.phone)} — {$customer.phone|escape}
-                                {/if}
+                                {$customer.name|default:'#'|escape}{if !empty($customer.email)} — {$customer.email|escape}{elseif !empty($customer.phone)} — {$customer.phone|escape}{/if}
                             </option>
                         {/foreach}
                     </select>
-
-                    <p class="hint">
-                        Эти контакты не получат доступ к B2B-витрине. Остальные пользователи будут допущены.
-                    </p>
+                    <p class="hint">Эти контакты не получат доступ к B2B-витрине. Остальные пользователи будут допущены.</p>
                 </div>
             </div>
 
-            {* Только выбранные контакты *}
             <div class="field js-b2b-access-customers-field">
-                <div class="name for-input">
-                    Только выбранные
-                </div>
+                <div class="name for-input">Только выбранные</div>
                 <div class="value">
-                    <select name="data[params][access_customer_ids][]" class="js-b2b-access-customers" multiple
-                        style="width: 100%;">
+                    <select name="data[params][access_customer_ids][]" class="js-b2b-access-customers" multiple style="width: 100%;">
                         {foreach $access_customers as $customer}
                             <option value="{$customer.id|escape}" selected>
-                                {$customer.name|default:'#'|escape}{if !empty($customer.email)} —
-                                {$customer.email|escape}{elseif !empty($customer.phone)} — {$customer.phone|escape}
-                                {/if}
+                                {$customer.name|default:'#'|escape}{if !empty($customer.email)} — {$customer.email|escape}{elseif !empty($customer.phone)} — {$customer.phone|escape}{/if}
                             </option>
                         {/foreach}
                     </select>
-
-                    <p class="hint">
-                        Только эти контакты получат доступ к B2B-витрине.
-                    </p>
+                    <p class="hint">Только эти контакты получат доступ к B2B-витрине.</p>
                 </div>
             </div>
 
-            {* Категории покупателей *}
             <div class="field js-b2b-access-categories-field">
-                <div class="name for-input">
-                    Категории
-                </div>
+                <div class="name for-input">Категории</div>
                 <div class="value">
-                    <select name="data[params][access_category_ids][]" class="js-b2b-access-categories" multiple
-                        style="width: 100%;">
+                    <select name="data[params][access_category_ids][]" class="js-b2b-access-categories" multiple style="width: 100%;">
                         {foreach $customer_categories as $category}
-                            <option value="{$category.id|escape}"
-                                {if in_array($category.id, $access_category_ids)}selected{/if}>
+                            <option value="{$category.id|escape}" {if in_array($category.id, $access_category_ids)}selected{/if}>
                                 {$category.name|escape}{if isset($category.cnt)} ({$category.cnt}){/if}
                             </option>
                         {/foreach}
                     </select>
-
-                    <p class="hint">
-                        Используются категории покупателей Shop-Script, а не группы backend-пользователей.
-                    </p>
+                    <p class="hint">Используются категории покупателей Shop-Script, а не группы backend-пользователей.</p>
                 </div>
             </div>
 
-            {* Для всех остальных *}
             <div class="field">
-                <div class="name">
-                    Для всех остальных
-                </div>
+                <div class="name">Для всех остальных</div>
                 <div class="value">
                     <div class="toggle small js-b2b-access-denied-toggle">
-                        <span data-value="ignore" {if $access_denied_behavior|default:'ignore' == 'ignore'}
-                            class="selected" {/if}>
-                            отключить витрину и игнорировать
-                        </span>
-                        <span data-value="page" {if $access_denied_behavior|default:'ignore' == 'page'} class="selected"
-                            {/if}>
-                            показать страницу информации
-                        </span>
+                        <span data-value="ignore" {if $access_denied_behavior|default:'ignore' == 'ignore'}class="selected"{/if}>отключить витрину и игнорировать</span>
+                        <span data-value="page" {if $access_denied_behavior|default:'ignore' == 'page'}class="selected"{/if}>показать страницу информации</span>
                     </div>
 
                     <p class="hint">
-                        Здесь можно выбрать, что увидит покупатель, который не оказался в списке разрешённых
-                        пользователей или групп.
-                        Можно отключить B2B-витрину для него, тогда адрес отработает штатно Shop-Script, либо показать
-                        страницу информации.
+                        Здесь можно выбрать, что увидит покупатель, который не оказался в списке разрешённых пользователей или групп.
+                        Можно отключить B2B-витрину для него, тогда адрес отработает штатно Shop-Script, либо показать страницу информации.
                     </p>
                 </div>
             </div>
 
-            {* Информация *}
             <div class="field js-b2b-access-denied-page-field">
-                <div class="name">
-                    Страница информации
-                </div>
+                <div class="name">Страница информации</div>
 
                 <div class="value">
                     <div class="custom-mb-8">
                         <label class="flexbox middle space-8">
                             <span class="wa-radio">
-                                <input type="radio" name="data[params][access_denied_page_mode]" value="plugin"
-                                    class="js-b2b-access-denied-page-mode"
-                                    {if $access_denied_page_mode|default:'plugin' == 'plugin'}checked{/if}>
+                                <input type="radio" name="data[params][access_denied_page_mode]" value="plugin" class="js-b2b-access-denied-page-mode" {if $access_denied_page_mode|default:'plugin' == 'plugin'}checked{/if}>
                                 <span></span>
                             </span>
                             <span>Шаблон плагина</span>
                         </label>
 
-                        <p class="hint custom-ml-24 custom-mt-0">
-                            Страница ограничения доступа из плагина.
-                        </p>
+                        <p class="hint custom-ml-24 custom-mt-0">Страница ограничения доступа из плагина.</p>
                     </div>
 
                     <div>
                         <label class="flexbox middle space-8">
                             <span class="wa-radio">
-                                <input type="radio" name="data[params][access_denied_page_mode]" value="block"
-                                    class="js-b2b-access-denied-page-mode"
-                                    {if $access_denied_page_mode|default:'plugin' == 'block'}checked{/if}>
+                                <input type="radio" name="data[params][access_denied_page_mode]" value="block" class="js-b2b-access-denied-page-mode" {if $access_denied_page_mode|default:'plugin' == 'block'}checked{/if}>
                                 <span></span>
                             </span>
                             <span>Мой блок</span>
@@ -300,27 +191,19 @@
 
                         <div class="flexbox middle space-8 custom-ml-24 custom-mt-0">
                             <span class="hint">&#123;$wa->block("</span>
-
-                            <input type="text" name="data[params][access_denied_block_id]"
-                                class="small js-b2b-access-denied-block-id custom-mr-0"
-                                value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
-
+                            <input type="text" name="data[params][access_denied_block_id]" class="small js-b2b-access-denied-block-id custom-mr-0" value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
                             <span class="hint">")&#125;</span>
                         </div>
 
                         <p class="hint custom-ml-24 custom-mt-6 custom-mb-8">
                             Укажите ID блока из приложения “Сайт”.
-                            <a href="javascript:void(0);" class="js-b2b-show-block-vars inline-link">
-                                <b><i class="fas fa-code"></i> Доступны переменные</b>
-                            </a>
+                            <a href="javascript:void(0);" class="js-b2b-show-block-vars inline-link"><b><i class="fas fa-code"></i> Доступны переменные</b></a>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
 
-
-        {* Блок сохранить/удалить *}
         <div class="bottombar sticky s-settings-fixed-bottombar field">
             <div class="value">
                 <div class="flexbox middle">
@@ -338,17 +221,20 @@
                 </div>
             </div>
         </div>
-
     </form>
 </div>
 
-
+{include file="file:`$wa_app_path`plugins/b2b/templates/actions/B2bBlockVarsDrawer.html"}
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
 
 <style>
+    .js-b2b-url-type-title.is-selected {
+        color: var(--green, #22b14c);
+    }
+
     .js-b2b-show-block-vars.inline-link {
         text-decoration: none !important;
         border-bottom: dashed 1px;
@@ -356,49 +242,6 @@
         vertical-align: super;
         position: relative;
         top: 2px;
-    }
-
-    .b2b-vars-drawer .drawer-body {
-        max-width: 720px;
-    }
-
-    .b2b-vars-drawer .b2b-vars-list {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .b2b-vars-drawer .b2b-vars-list>li {
-        padding: 0.85rem 0;
-        border-bottom: 1px solid var(--border-color-soft);
-    }
-
-    .b2b-vars-drawer .b2b-vars-list>li:last-child {
-        border-bottom: 0;
-    }
-
-    .b2b-vars-drawer .b2b-var-code {
-        display: inline-block;
-        max-width: 100%;
-        padding: 0.25rem 0.45rem;
-        border-radius: 0.35rem;
-        background: var(--background-color-blockquote, #f5f5f5);
-        font-family: monospace;
-        font-size: 0.9rem;
-        word-break: break-all;
-        cursor: pointer;
-    }
-
-    .b2b-vars-drawer .b2b-var-code:hover {
-        background: var(--background-color-input-solid, #eee);
-    }
-
-    .b2b-vars-drawer .b2b-vars-section-title {
-        margin: 1.25rem 0 0.5rem;
-    }
-
-    .b2b-vars-drawer .b2b-vars-section-title:first-child {
-        margin-top: 0;
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -409,8 +252,7 @@
         display: inline-block;
         margin-left: 5px;
         margin-top: 5px;
-        padding: 0;
-        padding-left: 20px;
+        padding: 0 0 0 20px;
         position: relative;
         max-width: 100%;
         overflow: hidden;
@@ -422,9 +264,6 @@
     .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
         background-color: transparent;
         border: none;
-        border-right: none;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
         color: #bfbfbf;
         cursor: pointer;
         font-size: 1em;
@@ -438,7 +277,7 @@
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover,
     .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus {
-        background-color: #f1f1f100;
+        background-color: transparent;
         color: #ff0000;
         outline: none;
     }
@@ -481,18 +320,11 @@
                 return '';
             }
 
-            value = value.replace(/\*/g, '');
-            value = value.replace(/^\/+|\/+$/g, '');
-
-            return value;
+            return value.replace(/\*/g, '').replace(/^\/+|\/+$/g, '');
         };
 
         const normalizeCustomUrl = function(value) {
-            value = String(value || '').trim();
-            value = value.replace(/\*/g, '');
-            value = value.replace(/^\/+|\/+$/g, '');
-
-            return value;
+            return String(value || '').trim().replace(/\*/g, '').replace(/^\/+|\/+$/g, '');
         };
 
         const stripHtml = function(value) {
@@ -544,54 +376,31 @@
             const url = buildStorefrontUrl(params);
 
             if (url) {
-                $open_storefront_button
-                    .attr('href', url)
-                    .removeClass('disabled')
-                    .attr('aria-disabled', 'false');
+                $open_storefront_button.attr('href', url).removeClass('disabled').attr('aria-disabled', 'false');
             } else {
-                $open_storefront_button
-                    .attr('href', '#')
-                    .addClass('disabled')
-                    .attr('aria-disabled', 'true');
+                $open_storefront_button.attr('href', '#').addClass('disabled').attr('aria-disabled', 'true');
             }
         };
 
         const updateUrlTypeHint = function() {
             const mode = isRootMode() ? 'root' : 'custom';
 
-            $url_type_titles
-                .removeClass('is-selected')
-                .css('color', '');
-
-            $url_type_titles
-                .filter('[data-mode="' + mode + '"]')
-                .addClass('is-selected')
-                .css('color', 'var(--green, #22b14c)');
+            $url_type_titles.removeClass('is-selected').css('color', '');
+            $url_type_titles.filter('[data-mode="' + mode + '"]').addClass('is-selected').css('color', 'var(--green, #22b14c)');
         };
 
         const updateUrlTypeToggle = function() {
             const mode = isRootMode() ? 'root' : 'custom';
 
-            $url_type_toggle
-                .find('span')
-                .removeClass('selected');
-
-            $url_type_toggle
-                .find('span[data-value="' + mode + '"]')
-                .addClass('selected');
+            $url_type_toggle.find('span').removeClass('selected');
+            $url_type_toggle.find('span[data-value="' + mode + '"]').addClass('selected');
         };
 
         const updateCustomUrlState = function() {
             if (isRootMode()) {
-                $custom_url
-                    .prop('readonly', true)
-                    .attr('aria-disabled', 'true')
-                    .css('opacity', '0.2');
+                $custom_url.prop('readonly', true).attr('aria-disabled', 'true').css('opacity', '0.2');
             } else {
-                $custom_url
-                    .prop('readonly', false)
-                    .attr('aria-disabled', 'false')
-                    .css('opacity', '');
+                $custom_url.prop('readonly', false).attr('aria-disabled', 'false').css('opacity', '');
             }
 
             updateUrlTypeHint();
@@ -601,13 +410,8 @@
         const updateAccessModeState = function() {
             const mode = String($access_mode.val() || 'all');
 
-            $access_mode_toggle
-                .find('span')
-                .removeClass('selected');
-
-            $access_mode_toggle
-                .find('span[data-value="' + mode + '"]')
-                .addClass('selected');
+            $access_mode_toggle.find('span').removeClass('selected');
+            $access_mode_toggle.find('span[data-value="' + mode + '"]').addClass('selected');
 
             $access_except_customers_field.toggle(mode === 'except_customers');
             $access_customers_field.toggle(mode === 'customers');
@@ -618,26 +422,14 @@
             const behavior = String($access_denied_behavior.val() || 'ignore');
             const page_mode = String($access_denied_page_mode.filter(':checked').val() || 'plugin');
 
-            $access_denied_toggle
-                .find('span')
-                .removeClass('selected');
-
-            $access_denied_toggle
-                .find('span[data-value="' + behavior + '"]')
-                .addClass('selected');
-
+            $access_denied_toggle.find('span').removeClass('selected');
+            $access_denied_toggle.find('span[data-value="' + behavior + '"]').addClass('selected');
             $access_denied_page_field.toggle(behavior === 'page');
 
             if (page_mode === 'block') {
-                $access_denied_block_id
-                    .prop('readonly', false)
-                    .attr('aria-disabled', 'false')
-                    .css('opacity', '');
+                $access_denied_block_id.prop('readonly', false).attr('aria-disabled', 'false').css('opacity', '');
             } else {
-                $access_denied_block_id
-                    .prop('readonly', true)
-                    .attr('aria-disabled', 'true')
-                    .css('opacity', '0.35');
+                $access_denied_block_id.prop('readonly', true).attr('aria-disabled', 'true').css('opacity', '0.35');
             }
         };
 
@@ -655,23 +447,18 @@
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
-                        return {
-                            term: params.term || ''
-                        };
+                        return { term: params.term || '' };
                     },
                     processResults: function(response) {
                         if (!Array.isArray(response)) {
-                            return {
-                                results: []
-                            };
+                            return { results: [] };
                         }
 
                         return {
                             results: response.map(function(item) {
                                 const id = parseInt(item.id || item.value || 0, 10);
                                 const label = item.label || item.name || ('#' + id);
-                                const text = item.name || stripHtml(label) || ('#' +
-                                    id);
+                                const text = item.name || stripHtml(label) || ('#' + id);
 
                                 return {
                                     id: id,
@@ -690,11 +477,7 @@
                         return item.text;
                     }
 
-                    if (item.label) {
-                        return $('<span>' + item.label + '</span>');
-                    }
-
-                    return item.text;
+                    return item.label ? $('<span>' + item.label + '</span>') : item.text;
                 },
                 templateSelection: function(item) {
                     return item.text || item.name || item.id;
@@ -708,10 +491,7 @@
         if ($url_type_toggle.length && $.fn.waToggle) {
             $url_type_toggle.waToggle({
                 change: function(event, target) {
-                    const value = $(target).data('value');
-
-                    $frontend_from_root.val(value === 'root' ? '1' : '0');
-
+                    $frontend_from_root.val($(target).data('value') === 'root' ? '1' : '0');
                     updateUrlTypeToggle();
                     updateCustomUrlState();
                 }
@@ -719,14 +499,8 @@
         } else {
             $url_type_toggle.on('click', 'span', function() {
                 const $target = $(this);
-
-                $target
-                    .addClass('selected')
-                    .siblings()
-                    .removeClass('selected');
-
+                $target.addClass('selected').siblings().removeClass('selected');
                 $frontend_from_root.val($target.data('value') === 'root' ? '1' : '0');
-
                 updateUrlTypeToggle();
                 updateCustomUrlState();
             });
@@ -760,9 +534,7 @@
             });
         }
 
-        $form.on('change', '.js-b2b-access-denied-page-mode', function() {
-            updateAccessDeniedState();
-        });
+        $form.on('change', '.js-b2b-access-denied-page-mode', updateAccessDeniedState);
 
         if ($auth_switch.length && $.fn.waSwitch) {
             $auth_switch.waSwitch();
@@ -851,14 +623,10 @@
                     cancel_button_title: {_w("Cancel")|json_encode},
                     cancel_button_class: 'light-gray',
                     onSuccess: function() {
-                        $delete_button.prop('disabled', true).after(
-                            '<div class="spinner"></div>');
+                        $delete_button.prop('disabled', true).after('<div class="spinner"></div>');
 
-                        $.post(delete_url, {
-                            id: channel_id
-                        }, 'json').then(function() {
-                            $submit_button.prop('disabled', false).siblings('.spinner')
-                                .remove();
+                        $.post(delete_url, { id: channel_id }, 'json').then(function() {
+                            $submit_button.prop('disabled', false).siblings('.spinner').remove();
                             window.location = {$wa_app_url|json_encode} + '?action=plugins#/';
                         });
                     }
@@ -867,228 +635,3 @@
         {/if}
     });
 </script>
-
-{literal}
-    <script>
-        $(function() {
-            "use strict";
-
-            const $form = $('#js-sales-channel-form');
-            const $button = $form.find('.js-b2b-show-block-vars');
-
-            const vars = [{
-                    section: 'Основные переменные',
-                    items: [{
-                            code: '{$channel.name|escape}',
-                            description: 'Название текущего B2B-канала.'
-                        },
-                        {
-                            code: '{$channel.id|escape}',
-                            description: 'ID текущего B2B-канала продаж.'
-                        },
-                        {
-                            code: '{$channel.params.settlement|escape}',
-                            description: 'Поселение, к которому привязан B2B-канал.'
-                        },
-                        {
-                            code: '{$channel.params.frontend_url|escape}',
-                            description: 'URL B2B-витрины внутри выбранного поселения.'
-                        },
-                        {
-                            code: '{$params.access_mode|escape}',
-                            description: 'Текущий режим доступа: all, except_customers, customers или categories.'
-                        }
-                    ]
-                },
-                {
-                    section: 'Текущий контакт',
-                    items: [{
-                            code: '{$contact.name|escape}',
-                            description: 'Имя текущего пользователя/контакта.'
-                        },
-                        {
-                            code: '{$contact.id|escape}',
-                            description: 'ID текущего контакта.'
-                        },
-                        {
-                            code: '{$contact->get("email", "default")|escape}',
-                            description: 'Основной email текущего контакта.'
-                        },
-                        {
-                            code: '{$contact->get("phone", "default")|escape}',
-                            description: 'Основной телефон текущего контакта.'
-                        }
-                    ]
-                },
-                {
-                    section: 'Ссылки',
-                    items: [{
-                            code: '{$login_url|escape}',
-                            description: 'URL входа в личный кабинет.'
-                        },
-                        {
-                            code: '{$register_url|escape}',
-                            description: 'URL регистрации.'
-                        }
-                    ]
-                },
-                {
-                    section: 'Готовые условия',
-                    items: [{
-                            code: '{if $contact.id}Вы вошли как {$contact.name|escape}{else}Вы не авторизованы{/if}',
-                            description: 'Проверка авторизации контакта.'
-                        },
-                        {
-                            code: '{if !empty($login_url)}<a href="{$login_url|escape}">Войти</a>{/if}',
-                            description: 'Кнопка входа.'
-                        },
-                        {
-                            code: '{if !empty($register_url)}<a href="{$register_url|escape}">Зарегистрироваться</a>{/if}',
-                            description: 'Кнопка регистрации.'
-                        },
-                        {
-                            code: '{if !empty($channel.params.settlement)}<p>Витрина: {$channel.params.settlement|escape}</p>{/if}',
-                            description: 'Вывод поселения B2B-витрины.'
-                        }
-                    ]
-                }
-            ];
-
-            const escapeHtml = function(value) {
-                return String(value || '')
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        };
-
-        const buildVarsListHtml = function() {
-            let html = '';
-
-            vars.forEach(function(group) {
-                html += '<h4 class="heading b2b-vars-section-title">' + escapeHtml(group.section) +
-                    '</h4>';
-                html += '<ul class="b2b-vars-list">';
-
-                group.items.forEach(function(item) {
-                    html += '' +
-                        '<li>' +
-                        '<div>' +
-                        '<code class="b2b-var-code js-b2b-copy-var" data-code="' +
-                        escapeHtml(item.code) + '">' +
-                        escapeHtml(item.code) +
-                        '</code>' +
-                        '</div>' +
-                        '<p class="hint custom-mt-6 custom-mb-0">' + escapeHtml(item
-                            .description) + '</p>' +
-                        '</li>';
-                });
-
-                html += '</ul>';
-            });
-
-            return html;
-        };
-
-        const buildDrawerHtml = function() {
-            return '' +
-                '<div class="drawer b2b-vars-drawer">' +
-                '<div class="drawer-background"></div>' +
-                '<div class="drawer-body">' +
-                '<a href="#" class="drawer-close js-close-drawer">' +
-                '<i class="fas fa-times"></i>' +
-                '</a>' +
-                '<div class="drawer-block">' +
-                '<header class="drawer-header bordered-bottom">' +
-                '<h2 class="custom-mb-0">Переменные блока B2B</h2>' +
-                '<p class="hint custom-mt-8 custom-mb-0">' +
-                'Эти переменные доступны внутри блока, указанного в поле “Мой блок”. ' +
-                'Клик по переменной копирует её в буфер обмена.' +
-                '</p>' +
-                '</header>' +
-                '<div class="drawer-content">' +
-                '<div class="box">' +
-                '<div class="alert info small">' +
-                '<i class="fas fa-info-circle"></i> ' +
-                'Блок вызывается как <code>{$wa->block("ID_БЛОКА", $params)}</code>. ' +
-                'Ключи массива параметров доступны в блоке как отдельные Smarty-переменные.' +
-                '</div>' +
-                buildVarsListHtml() +
-                '</div>' +
-                '</div>' +
-                '<footer class="drawer-footer bordered-top">' +
-                '<button type="button" class="button light-gray js-close-drawer">Закрыть</button>' +
-                '</footer>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-        };
-
-        const showCopiedAlert = function() {
-            let $alerts = $('#js-b2b-vars-alerts');
-
-            if (!$alerts.length) {
-                $alerts = $(
-                    '<div id="js-b2b-vars-alerts" class="alert-fixed-box" style="top:0.5rem;right:3.5rem;">' +
-                    '<div class="alert success js-b2b-copied-alert" style="display:none;">' +
-                    '<i class="fas fa-check-circle"></i> Скопировано' +
-                    '</div>' +
-                    '</div>'
-                ).appendTo('body');
-            }
-
-            const $alert = $alerts.find('.js-b2b-copied-alert');
-
-            $alert.stop(true, true).show();
-
-            setTimeout(function() {
-                $alert.fadeOut(150);
-            }, 1300);
-        };
-
-        const copyText = function(text) {
-            if ($.wa && typeof $.wa.copyToClipboard === 'function') {
-                $.wa.copyToClipboard(text).then(showCopiedAlert);
-                return;
-            }
-
-            const $temp = $('<textarea>')
-                .val(text)
-                .css({
-                    position: 'fixed',
-                    left: '-9999px',
-                    top: '-9999px'
-                })
-                .appendTo('body');
-
-            $temp[0].select();
-            document.execCommand('copy');
-            $temp.remove();
-
-            showCopiedAlert();
-        };
-
-        $button.on('click', function(e) {
-            e.preventDefault();
-
-            const drawer = $.waDrawer({
-                html: buildDrawerHtml(),
-                direction: 'right',
-                width: '680px',
-                lock_body_scroll: true,
-                onBgClick: function(event, $drawer, drawer_instance) {
-                    drawer_instance.close();
-                },
-                onOpen: function($drawer) {
-                    $drawer.on('click', '.js-b2b-copy-var', function(event) {
-                        event.preventDefault();
-
-                        copyText($(this).data('code'));
-                        });
-                    }
-                });
-            });
-        });
-    </script>
-{/literal}
