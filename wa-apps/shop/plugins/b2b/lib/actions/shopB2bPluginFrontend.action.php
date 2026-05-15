@@ -28,7 +28,7 @@ class shopB2bPluginFrontendAction extends waViewAction
             return;
         }
 
-        // Ставим после has_access, чтобы игнорировать лояут в блоках
+        // Ставим после has_access, чтобы игнорировать layout в блоках страницы ограничения доступа.
         $this->setLayout(new shopB2bPluginFrontendLayout());
 
         $this->view->assign([
@@ -40,12 +40,17 @@ class shopB2bPluginFrontendAction extends waViewAction
     // Показывает страницу ограничения доступа.
     protected function showAccessDenied(array $channel)
     {
-        $params    = ifset($channel, 'params', []);
-        $mode      = ifset($params, 'access_denied_page_mode', 'plugin');
-        $block_id  = trim((string) ifset($params, 'access_denied_block_id', ''));
+        $params   = ifset($channel, 'params', []);
+        $mode     = ifset($params, 'access_denied_page_mode', 'plugin');
+        $block_id = trim((string) ifset($params, 'access_denied_block_id', ''));
 
-        if (!in_array($mode, ['plugin', 'block'])) {
+        if (!in_array($mode, ['plugin', 'block'], true)) {
             $mode = 'plugin';
+        }
+
+        if ($mode === 'block' && !$this->isValidBlockId($block_id)) {
+            $mode     = 'plugin';
+            $block_id = '';
         }
 
         $this->setTemplate(wa()->getAppPath('plugins/b2b/templates/actions/frontend/FrontendAccessDenied.html', 'shop'));
@@ -62,5 +67,13 @@ class shopB2bPluginFrontendAction extends waViewAction
                 'register_url' => wa()->getRouteUrl('shop/frontend/my'),
             ],
         ]);
+    }
+
+    // Проверяет ID блока перед передачей в $wa->block().
+    protected function isValidBlockId($block_id): bool
+    {
+        $block_id = trim((string) $block_id);
+
+        return $block_id !== '' && preg_match('/^[a-z0-9_.-]+$/i', $block_id);
     }
 }
