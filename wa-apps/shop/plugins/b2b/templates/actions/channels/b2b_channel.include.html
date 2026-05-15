@@ -57,8 +57,6 @@
                                     <option value="{$option.value|escape}"
                                         data-domain="{$option.domain|default:''|escape}"
                                         data-route-url="{$option.route_url|default:''|escape}"
-                                        data-personal-account-enabled="{if !empty($option.personal_account_enabled)}1{else}0{/if}"
-                                        data-personal-account-message="{$option.personal_account_message|default:''|escape}"
                                         {if !empty($channel.params.route_key) && $channel.params.route_key == $option.value}selected{/if}>
                                         {$option.title|escape}
                                     </option>
@@ -89,17 +87,12 @@
                 <div class="name">Общий доступ</div>
                 <div class="value">
                     <div class="switch-with-text">
-                        <span class="switch middle smaller shift-3 js-b2b-auth-switch {if empty($auth_required_available)}disabled{/if}">
-                            <input type="checkbox" name="data[params][auth_required]" id="auth-switch" value="1" {if !empty($auth_required)}checked{/if} {if empty($auth_required_available)}disabled{/if}>
+                        <span class="switch middle smaller shift-3 js-b2b-auth-switch">
+                            <input type="checkbox" name="data[params][auth_required]" id="auth-switch" value="1" {if !empty($auth_required)}checked{/if}>
                         </span>
                         <label for="auth-switch">Закрытая витрина со входом</label>
                     </div>
-                    <p class="hint js-b2b-auth-required-enabled-hint" {if empty($auth_required_available)}style="display:none;"{/if}>
-                        Включите, чтобы закрыть витрину от гостей и показывать только авторизованным покупателям.
-                    </p>
-                    <p class="state-caution js-b2b-auth-required-disabled-hint" {if !empty($auth_required_available)}style="display:none;"{/if}>
-                        {$auth_required_message|default:'Личный кабинет Shop-Script не активен для выбранного поселения. Настройте его в приложении «Сайт».'|escape}
-                    </p>
+                    <p class="hint">Включите, чтобы закрыть витрину от гостей и показывать только авторизованным покупателям.</p>
                 </div>
             </div>
 
@@ -260,11 +253,6 @@
         top: 2px;
     }
 
-    .js-b2b-auth-switch.disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-    }
-
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         background-color: beige;
         border: 1px solid #aaaaaa26 !important;
@@ -317,9 +305,6 @@
         const $custom_url = $form.find('.js-b2b-frontend-custom-url');
         const $open_storefront_button = $form.find('.js-b2b-open-storefront');
         const $auth_switch = $form.find('.js-b2b-auth-switch');
-        const $auth_switch_input = $form.find('#auth-switch');
-        const $auth_enabled_hint = $form.find('.js-b2b-auth-required-enabled-hint');
-        const $auth_disabled_hint = $form.find('.js-b2b-auth-required-disabled-hint');
         const $url_type_titles = $form.find('.js-b2b-url-type-title');
 
         const $access_mode = $form.find('.js-b2b-access-mode');
@@ -364,28 +349,8 @@
 
             return {
                 domain: String($option.data('domain') || ''),
-                route_url: String($option.data('route-url') || ''),
-                personal_account_enabled: String($option.data('personal-account-enabled') || '0') === '1',
-                personal_account_message: String($option.data('personal-account-message') || '')
+                route_url: String($option.data('route-url') || '')
             };
-        };
-
-        const updateAuthRequiredState = function() {
-            const route = getSelectedRouteData();
-            const is_enabled = route.personal_account_enabled;
-            const message = route.personal_account_message || 'Личный кабинет Shop-Script не активен для выбранного поселения. Настройте его в приложении «Сайт».';
-
-            $auth_switch.toggleClass('disabled', !is_enabled);
-            $auth_switch_input.prop('disabled', !is_enabled);
-
-            if (!is_enabled) {
-                $auth_switch_input.prop('checked', false);
-                $auth_enabled_hint.hide();
-                $auth_disabled_hint.text(message).show();
-            } else {
-                $auth_enabled_hint.show();
-                $auth_disabled_hint.hide();
-            }
         };
 
         const buildStorefrontUrl = function(params) {
@@ -596,7 +561,6 @@
 
         $route_key.on('change', function() {
             updateStorefrontButton(getCurrentStorefrontParams());
-            updateAuthRequiredState();
         });
 
         $custom_url.on('input change', function() {
@@ -606,7 +570,6 @@
         updateUrlTypeToggle();
         updateCustomUrlState();
         updateStorefrontButton({$channel.params|default:[]|json_encode});
-        updateAuthRequiredState();
         updateAccessModeState();
         updateAccessDeniedState();
 
@@ -647,7 +610,6 @@
             updateUrlTypeToggle();
             updateCustomUrlState();
             updateStorefrontButton(params);
-            updateAuthRequiredState();
             updateAccessModeState();
             updateAccessDeniedState();
         });
