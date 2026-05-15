@@ -109,43 +109,134 @@
         </div>
 
         {* Настрока доступа *}
-        <div class="fields-group custom-mt-24 js-b2b-address-settings">
-            <h3 class="heading">Доступы</h3>
+        <div class="fields-group custom-mt-24 js-b2b-access-settings">
+            <h5 class="heading">Доступы</h5>
 
-            {* Режим доступа *}
+            <input type="hidden" name="data[params][access_mode]" class="js-b2b-access-mode"
+                value="{$access_mode|default:'all'|escape}">
+
+            <input type="hidden" name="data[params][access_denied_behavior]" class="js-b2b-access-denied-behavior"
+                value="{$access_denied_behavior|default:'ignore'|escape}">
+
             <div class="field">
                 <div class="name">
-                    Режим доступа
+                    Доступ к витрине
                 </div>
                 <div class="value">
-                    <div class="switch-with-text">
-                        <span class="switch middle smaller shift-3 js-b2b-auth-switch">
-                            <input type="checkbox" name="data[params][auth_required]" id="auth-switch" value="1"
-                                {if !empty($auth_required)}checked{/if}>
+                    <span class="switch small js-b2b-auth-switch">
+                        <input type="checkbox" name="data[params][auth_required]" value="1"
+                            {if !empty($auth_required)}checked{/if}>
+                    </span>
+
+                    <span class="hint custom-ml-8">
+                        Только после входа
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
+                    Для кого кабинет
+                </div>
+                <div class="value">
+                    <div class="toggle small js-b2b-access-mode-toggle">
+                        <span data-value="all" {if $access_mode|default:'all' == 'all'} class="selected" {/if}>
+                            для всех
                         </span>
-                        <label for="auth-switch">Закрытая витрина со входом</label>
+                        <span data-value="customers" {if $access_mode|default:'all' == 'customers'} class="selected"
+                            {/if}>
+                            выбранные покупатели
+                        </span>
+                        <span data-value="categories" {if $access_mode|default:'all' == 'categories'} class="selected"
+                            {/if}>
+                            категории покупателей
+                        </span>
                     </div>
-                    <p class="hint">Включите, чтобы закрыть от гостей и показывать её только авторизованным клиентам.
+
+                    <p class="hint">
+                        Ограничение применяется только внутри выбранной B2B-витрины.
+                    </p>
+                </div>
+            </div>
+
+            <div class="field js-b2b-access-customers-field">
+                <div class="name for-input">
+                    Покупатели
+                </div>
+                <div class="value">
+                    <select name="data[params][access_customer_ids][]" class="js-b2b-access-customers" multiple
+                        style="width: 100%;">
+                        {foreach $access_customers as $customer}
+                            <option value="{$customer.id|escape}" selected>
+                                {$customer.name|default:'#'|escape}{if !empty($customer.email)} —
+                                {$customer.email|escape}{/if}
+                            </option>
+                        {/foreach}
+                    </select>
+
+                    <p class="hint">
+                        Начните вводить имя или email покупателя.
+                    </p>
+                </div>
+            </div>
+
+            <div class="field js-b2b-access-categories-field">
+                <div class="name for-input">
+                    Категории покупателей
+                </div>
+                <div class="value">
+                    <select name="data[params][access_category_ids][]" class="js-b2b-access-categories" multiple
+                        style="width: 100%;">
+                        {foreach $customer_categories as $category}
+                            <option value="{$category.id|escape}"
+                                {if in_array($category.id, $access_category_ids)}selected{/if}>
+                                {$category.name|escape}{if isset($category.cnt)} ({$category.cnt}){/if}
+                            </option>
+                        {/foreach}
+                    </select>
+
+                    <p class="hint">
+                        Используются категории покупателей Shop-Script, а не группы backend-пользователей.
+                    </p>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">
+                    Что делать без доступа
+                </div>
+                <div class="value">
+                    <div class="toggle small js-b2b-access-denied-toggle">
+                        <span data-value="ignore" {if $access_denied_behavior|default:'ignore' == 'ignore'}
+                            class="selected" {/if}>
+                            игнорировать B2B-роут
+                        </span>
+                        <span data-value="page" {if $access_denied_behavior|default:'ignore' == 'page'} class="selected"
+                            {/if}>
+                            показать страницу доступа
+                        </span>
+                    </div>
+
+                    <p class="hint">
+                        В режиме игнорирования покупатель без доступа попадёт в обычную обработку Shop-Script.
+                    </p>
+                </div>
+            </div>
+
+            <div class="field js-b2b-access-denied-page-field">
+                <div class="name for-input">
+                    Блок страницы доступа
+                </div>
+                <div class="value">
+                    <input type="text" name="data[params][access_denied_block_id]" class="small"
+                        value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
+
+                    <p class="hint">
+                        Укажите ID блока из приложения “Сайт”. Например: <code>b2b_access_denied</code>.
                     </p>
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -177,8 +268,10 @@
 
 
 
-
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
+
 <script>
     $(function() {
         "use strict";
@@ -193,6 +286,17 @@
         const $open_storefront_button = $form.find('.js-b2b-open-storefront');
         const $auth_switch = $form.find('.js-b2b-auth-switch');
         const $url_type_titles = $form.find('.js-b2b-url-type-title');
+
+        const $access_mode = $form.find('.js-b2b-access-mode');
+        const $access_mode_toggle = $form.find('.js-b2b-access-mode-toggle');
+        const $access_customers_field = $form.find('.js-b2b-access-customers-field');
+        const $access_categories_field = $form.find('.js-b2b-access-categories-field');
+        const $access_customers = $form.find('.js-b2b-access-customers');
+        const $access_categories = $form.find('.js-b2b-access-categories');
+
+        const $access_denied_behavior = $form.find('.js-b2b-access-denied-behavior');
+        const $access_denied_toggle = $form.find('.js-b2b-access-denied-toggle');
+        const $access_denied_page_field = $form.find('.js-b2b-access-denied-page-field');
 
         const cleanRoutePart = function(value) {
             value = String(value || '').trim();
@@ -314,6 +418,35 @@
             updateStorefrontButton(getCurrentStorefrontParams());
         };
 
+        const updateAccessModeState = function() {
+            const mode = String($access_mode.val() || 'all');
+
+            $access_mode_toggle
+                .find('span')
+                .removeClass('selected');
+
+            $access_mode_toggle
+                .find('span[data-value="' + mode + '"]')
+                .addClass('selected');
+
+            $access_customers_field.toggle(mode === 'customers');
+            $access_categories_field.toggle(mode === 'categories');
+        };
+
+        const updateAccessDeniedState = function() {
+            const behavior = String($access_denied_behavior.val() || 'ignore');
+
+            $access_denied_toggle
+                .find('span')
+                .removeClass('selected');
+
+            $access_denied_toggle
+                .find('span[data-value="' + behavior + '"]')
+                .addClass('selected');
+
+            $access_denied_page_field.toggle(behavior === 'page');
+        };
+
         if ($url_type_toggle.length && $.fn.waToggle) {
             $url_type_toggle.waToggle({
                 change: function(event, target) {
@@ -341,8 +474,61 @@
             });
         }
 
+        if ($access_mode_toggle.length && $.fn.waToggle) {
+            $access_mode_toggle.waToggle({
+                change: function(event, target) {
+                    $access_mode.val($(target).data('value'));
+                    updateAccessModeState();
+                }
+            });
+        } else {
+            $access_mode_toggle.on('click', 'span', function() {
+                $access_mode.val($(this).data('value'));
+                updateAccessModeState();
+            });
+        }
+
+        if ($access_denied_toggle.length && $.fn.waToggle) {
+            $access_denied_toggle.waToggle({
+                change: function(event, target) {
+                    $access_denied_behavior.val($(target).data('value'));
+                    updateAccessDeniedState();
+                }
+            });
+        } else {
+            $access_denied_toggle.on('click', 'span', function() {
+                $access_denied_behavior.val($(this).data('value'));
+                updateAccessDeniedState();
+            });
+        }
+
         if ($auth_switch.length && $.fn.waSwitch) {
             $auth_switch.waSwitch();
+        }
+
+        if ($.fn.select2) {
+            $access_customers.select2({
+                width: '100%',
+                placeholder: 'Найти покупателя',
+                ajax: {
+                    url: {$wa_app_url|json_encode} + '?plugin=b2b&module=backend&action=customers',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term || ''
+                        };
+                    },
+                    processResults: function(data) {
+                        return data;
+                    }
+                }
+            });
+
+            $access_categories.select2({
+                width: '100%',
+                placeholder: 'Выберите категории покупателей'
+            });
         }
 
         $route_key.on('change', function() {
@@ -356,6 +542,8 @@
         updateUrlTypeToggle();
         updateCustomUrlState();
         updateStorefrontButton({$channel.params|default:[]|json_encode});
+        updateAccessModeState();
+        updateAccessDeniedState();
 
         const controller = new SalesChannelForm({
             $place_for_errors: $form.find('.js-place-for-errors'),
@@ -383,9 +571,19 @@
                 $custom_url.val(params.frontend_custom_url);
             }
 
+            if (params.access_mode) {
+                $access_mode.val(params.access_mode);
+            }
+
+            if (params.access_denied_behavior) {
+                $access_denied_behavior.val(params.access_denied_behavior);
+            }
+
             updateUrlTypeToggle();
             updateCustomUrlState();
             updateStorefrontButton(params);
+            updateAccessModeState();
+            updateAccessDeniedState();
         });
 
         {if empty($channel.id)}

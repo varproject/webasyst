@@ -13,18 +13,28 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     // Рендерит кастомную форму настройки B2B-канала.
     public function getFormHtml(array $channel): string
     {
-        $view          = wa('shop')->getView();
-        $params        = ifset($channel, 'params', []);
-        $from_root     = !empty($params['frontend_from_root']) || ifset($params, 'frontend_url', '') === '*';
-        $auth_required = !empty($params['auth_required']) || !array_key_exists('auth_required', $params);
+        $view           = wa('shop')->getView();
+        $params         = ifset($channel, 'params', []);
+        $from_root      = !empty($params['frontend_from_root']) || ifset($params, 'frontend_url', '') === '*';
+        $auth_required  = !empty($params['auth_required']) || !array_key_exists('auth_required', $params);
+        $access_service = new shopB2bPluginCustomerAccessService();
+        $customer_ids   = $access_service->getIds(ifset($params, 'access_customer_ids', ''));
+        $category_ids   = $access_service->getIds(ifset($params, 'access_category_ids', ''));
 
         $view->assign([
-            'channel'             => $channel,
-            'base_fields'         => $this->getBaseRenderedFields($channel),
-            'route_options'       => $this->getShopRouteOptions(),
-            'frontend_from_root'  => $from_root,
-            'frontend_custom_url' => $this->getFrontendCustomUrl($params),
-            'auth_required'       => $auth_required,
+            'channel'                => $channel,
+            'base_fields'            => $this->getBaseRenderedFields($channel),
+            'route_options'          => $this->getShopRouteOptions(),
+            'frontend_from_root'     => $from_root,
+            'frontend_custom_url'    => $this->getFrontendCustomUrl($params),
+            'auth_required'          => $auth_required,
+            'access_mode'            => ifset($params, 'access_mode', 'all'),
+            'access_customer_ids'    => $customer_ids,
+            'access_category_ids'    => $category_ids,
+            'access_customers'       => $access_service->getSelectedCustomers($customer_ids),
+            'customer_categories'    => $access_service->getCustomerCategories(),
+            'access_denied_behavior' => ifset($params, 'access_denied_behavior', 'ignore'),
+            'access_denied_block_id' => ifset($params, 'access_denied_block_id', ''),
         ]);
 
         return $view->fetch('file:' . wa()->getAppPath('plugins/b2b/templates/actions/B2bSalesChannelForm.html', 'shop'));
@@ -56,6 +66,44 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $params['route_key']          = trim((string) ifset($params, 'route_key', ''));
         $params['frontend_from_root'] = !empty($params['frontend_from_root']) ? 1 : 0;
         $params['auth_required']      = !empty($params['auth_required']) ? 1 : 0;
+        
+        $access_service = new shopB2bPluginCustomerAccessService();
+
+        $params['access_mode']            = ifset($params, 'access_mode', 'all');
+        $params['access_denied_behavior'] = ifset($params, 'access_denied_behavior', 'ignore');
+        $params['access_denied_block_id'] = trim((string) ifset($params, 'access_denied_block_id', ''));
+
+        if (!in_array($params['access_mode'], ['all', 'customers', 'categories'])) {
+            $params['access_mode'] = 'all';
+        }
+
+        if (!in_array($params['access_denied_behavior'], ['ignore', 'page'])) {
+            $params['access_denied_behavior'] = 'ignore';
+        }
+
+        $customer_ids = $access_service->getIds(ifset($params, 'access_customer_ids', []));
+        $category_ids = $access_service->getIds(ifset($params, 'access_category_ids', []));
+
+        if ($params['access_mode'] === 'customers' && !$customer_ids) {
+            $errors[] = [
+                'field'             => 'data[params][access_customer_ids][]',
+                'error_description' => 'Выберите покупателей, которым разрешён доступ.',
+            ];
+
+            return $errors;
+        }
+
+        if ($params['access_mode'] === 'categories' && !$category_ids) {
+            $errors[] = [
+                'field'             => 'data[params][access_category_ids][]',
+                'error_description' => 'Выберите категории покупателей, которым разрешён доступ.',
+            ];
+
+            return $errors;
+        }
+
+        $params['access_customer_ids'] = json_encode($customer_ids);
+        $params['access_category_ids'] = json_encode($category_ids);
 
         if ($params['route_key'] === '') {
             $errors[] = [

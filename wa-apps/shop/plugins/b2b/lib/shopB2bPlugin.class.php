@@ -105,6 +105,7 @@ class shopB2bPlugin extends shopPlugin
 
         $channel_model = new shopSalesChannelModel();
         $params_model  = new shopSalesChannelParamsModel();
+        $access_service = new shopB2bPluginCustomerAccessService();
         $channels      = $channel_model->getByField('type', 'b2b', true);
         $routes        = [];
 
@@ -120,6 +121,13 @@ class shopB2bPlugin extends shopPlugin
             $channel_params = $params_model->get((int) $channel['id']);
             $frontend_url   = trim((string) ifset($channel_params, 'frontend_url', ''));
 
+            $has_access = $access_service->canAccess(wa()->getUser()->getId(), $channel_params);
+            $behavior   = ifset($channel_params, 'access_denied_behavior', 'ignore');
+
+            if (!$has_access && $behavior === 'ignore') {
+                continue;
+            }
+
             // Канал должен быть привязан именно к текущему поселению.
             if (ifset($channel_params, 'route_key', '') !== $route_key || $frontend_url === '') {
                 continue;
@@ -127,10 +135,11 @@ class shopB2bPlugin extends shopPlugin
 
             // Этот URL внутри текущего поселения забирает B2B-плагин.
             $routes[$frontend_url] = [
-                'module'         => 'frontend',
-                'b2b_channel_id' => (int) $channel['id'],
-                'sales_channel'  => 'b2b:' . $channel['id'],
-                'secure'         => !empty($channel_params['auth_required']),
+                'module'             => 'frontend',
+                'b2b_channel_id'     => (int) $channel['id'],
+                'sales_channel'      => 'b2b:' . $channel['id'],
+                'b2b_access_allowed' => $has_access ? 1 : 0,
+                'secure'             => !empty($channel_params['auth_required']),
             ];
         }
 
