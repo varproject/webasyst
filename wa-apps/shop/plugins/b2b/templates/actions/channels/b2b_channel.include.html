@@ -70,6 +70,8 @@
 
                         <a class="button nowrap js-b2b-open-storefront small" href="#" target="_blank" rel="noopener" aria-disabled="true">Открыть →</a>
                     </div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][route_key]"></div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][frontend_custom_url]"></div>
 
                     <p class="hint">Для url допустимы буквы, цифры и дефис. Например: b2b, clients, opt-2025, закупки и т.д.</p>
                 </div>
@@ -92,6 +94,7 @@
                         </span>
                         <label for="auth-switch">Закрытая витрина со входом</label>
                     </div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][auth_required]"></div>
                     <p class="hint">Включите, чтобы закрыть витрину от гостей и показывать только авторизованным покупателям.</p>
                 </div>
             </div>
@@ -105,6 +108,7 @@
                         <span data-value="customers" {if $access_mode|default:'all' == 'customers'}class="selected"{/if}>только выбранные</span>
                         <span data-value="categories" {if $access_mode|default:'all' == 'categories'}class="selected"{/if}>только категории</span>
                     </div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_mode]"></div>
 
                     <p class="hint">Выберите ограниченный круг пользователей витрины или оставьте доступ для всех.</p>
                 </div>
@@ -120,6 +124,7 @@
                             </option>
                         {/foreach}
                     </select>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_except_customer_ids][]"></div>
                     <p class="hint">Эти контакты не получат доступ к B2B-витрине. Остальные пользователи будут допущены.</p>
                 </div>
             </div>
@@ -134,6 +139,7 @@
                             </option>
                         {/foreach}
                     </select>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_customer_ids][]"></div>
                     <p class="hint">Только эти контакты получат доступ к B2B-витрине.</p>
                 </div>
             </div>
@@ -148,6 +154,7 @@
                             </option>
                         {/foreach}
                     </select>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_category_ids][]"></div>
                     <p class="hint">Используются категории покупателей Shop-Script, а не группы backend-пользователей.</p>
                 </div>
             </div>
@@ -159,6 +166,7 @@
                         <span data-value="ignore" {if $access_denied_behavior|default:'ignore' == 'ignore'}class="selected"{/if}>отключить витрину и игнорировать</span>
                         <span data-value="page" {if $access_denied_behavior|default:'ignore' == 'page'}class="selected"{/if}>показать страницу информации</span>
                     </div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_denied_behavior]"></div>
 
                     <p class="hint">
                         Здесь можно выбрать, что увидит покупатель, который не оказался в списке разрешённых пользователей или групп.
@@ -197,6 +205,8 @@
                             <input type="text" name="data[params][access_denied_block_id]" class="small js-b2b-access-denied-block-id custom-mr-0" value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
                             <span class="hint">")&#125;</span>
                         </div>
+                        <div class="js-b2b-field-error" data-error-for="data[params][access_denied_page_mode]"></div>
+                        <div class="js-b2b-field-error" data-error-for="data[params][access_denied_block_id]"></div>
 
                         <p class="hint custom-ml-24 custom-mt-6 custom-mb-8">
                             Укажите ID блока из приложения “Сайт”.
@@ -321,6 +331,7 @@
         const $access_denied_page_field = $form.find('.js-b2b-access-denied-page-field');
         const $access_denied_page_mode = $form.find('.js-b2b-access-denied-page-mode');
         const $access_denied_block_id = $form.find('.js-b2b-access-denied-block-id');
+        const $place_for_errors = $form.find('.js-place-for-errors');
 
         const cleanRoutePart = function(value) {
             value = String(value || '').trim();
@@ -338,6 +349,75 @@
 
         const stripHtml = function(value) {
             return $('<div>').html(String(value || '')).text();
+        };
+
+        const getFieldByName = function(name) {
+            return $form.find('[name="' + String(name).replace(/"/g, '\\"') + '"]');
+        };
+
+        const getErrorPlace = function(field_name) {
+            return $form.find('.js-b2b-field-error').filter(function() {
+                return String($(this).data('error-for')) === String(field_name);
+            }).first();
+        };
+
+        const clearB2bValidationErrors = function() {
+            $form.find('.state-error').removeClass('state-error');
+            $form.find('.state-error-hint, .state-caution-hint, .js-b2b-dynamic-error').remove();
+            $form.find('.js-b2b-field-error').empty();
+        };
+
+        const scrollToB2bError = function($target) {
+            if (!$target || !$target.length) {
+                return;
+            }
+
+            $('html, body').animate({
+                scrollTop: $target.offset().top - ($('#wa-header').height() || 0) - 30
+            }, 500);
+        };
+
+        const showB2bValidationErrors = function(errors) {
+            let $first_target = $();
+
+            (errors || []).forEach(function(error) {
+                const field_name = error.field || '';
+                const message = error.error_description || '';
+
+                if (!message) {
+                    return;
+                }
+
+                const $error = $('<div class="state-error-hint js-b2b-dynamic-error"></div>').text(message);
+                const $field = field_name ? getFieldByName(field_name) : $();
+                const $error_place = field_name ? getErrorPlace(field_name) : $();
+
+                if ($field.length) {
+                    $field.addClass('state-error');
+                }
+
+                if ($error_place.length) {
+                    $error_place.append($error);
+
+                    if (!$first_target.length) {
+                        $first_target = $error_place.closest('.field');
+                    }
+                } else if ($field.length && $field.filter(':visible').length) {
+                    $field.filter(':visible').last().after($error);
+
+                    if (!$first_target.length) {
+                        $first_target = $field.filter(':visible').last().closest('.field');
+                    }
+                } else {
+                    $place_for_errors.append($error);
+
+                    if (!$first_target.length) {
+                        $first_target = $place_for_errors.closest('.field');
+                    }
+                }
+            });
+
+            scrollToB2bError($first_target);
         };
 
         const isRootMode = function() {
@@ -575,10 +655,15 @@
 
         const controller = new SalesChannelForm({
             $place_for_errors: $form.find('.js-place-for-errors'),
-            $form: $form
+            $form: $form,
+            skip_display_errors: true
         });
 
         const $submit_button = $form.find(':submit').last();
+
+        $form.on('save_init', function() {
+            clearB2bValidationErrors();
+        });
 
         $form.on('save_request', function() {
             $submit_button.prop('disabled', true).after('<div class="spinner"></div>');
@@ -586,6 +671,12 @@
 
         $form.on('save_success save_fail', function() {
             $submit_button.prop('disabled', false).siblings('.spinner').remove();
+        });
+
+        $form.on('save_fail', function(event, data) {
+            if (data && data.errors) {
+                showB2bValidationErrors(data.errors);
+            }
         });
 
         $form.on('save_success', function(evt, data) {
@@ -607,6 +698,7 @@
                 $access_denied_behavior.val(params.access_denied_behavior);
             }
 
+            clearB2bValidationErrors();
             updateUrlTypeToggle();
             updateCustomUrlState();
             updateStorefrontButton(params);
