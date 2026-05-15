@@ -62,7 +62,7 @@ return array (
   ),
   'webasyst2.loc' => 
   array (
-    'auth' => true,
+    'auth' => false,
     'fields' => 
     array (
       'firstname' => 

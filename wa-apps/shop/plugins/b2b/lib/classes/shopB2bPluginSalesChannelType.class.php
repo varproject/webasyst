@@ -299,7 +299,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         if (empty($auth_config['auth'])) {
             return [
                 'enabled' => false,
-                'message' => 'На сайте для этого домена выключена авторизация. Включите авторизацию и личный кабинет Shop-Script в приложении «Сайт».',
+                'message' => 'Для этого домена выключена авторизация. Включите личный кабинет в приложении «Сайт».',
             ];
         }
 
