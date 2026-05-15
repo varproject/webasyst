@@ -121,7 +121,7 @@
             {* Режим доступа *}
             <div class="field">
                 <div class="name">
-                    Режим доступа
+                    Общий доступ
                 </div>
                 <div class="value">
                     <div class="switch-with-text">
@@ -131,7 +131,8 @@
                         </span>
                         <label for="auth-switch">Закрытая витрина со входом</label>
                     </div>
-                    <p class="hint">Включите, чтобы закрыть от гостей и показывать её только авторизованным клиентам.
+                    <p class="hint">Включите, чтобы закрыть витрину от гостей и показывать только авторизованным
+                        покупателям.
                     </p>
                 </div>
             </div>
@@ -139,25 +140,25 @@
             {* Для кого кабинет *}
             <div class="field">
                 <div class="name">
-                    Для кого кабинет
+                    Пользователи
                 </div>
                 <div class="value">
                     <div class="toggle small js-b2b-access-mode-toggle">
                         <span data-value="all" {if $access_mode|default:'all' == 'all'} class="selected" {/if}>
-                            для всех
+                            все
                         </span>
                         <span data-value="customers" {if $access_mode|default:'all' == 'customers'} class="selected"
                             {/if}>
-                            выбранные покупатели
+                            только выбранные
                         </span>
                         <span data-value="categories" {if $access_mode|default:'all' == 'categories'} class="selected"
                             {/if}>
-                            категории покупателей
+                            только категории
                         </span>
                     </div>
 
                     <p class="hint">
-                        Ограничение применяется только внутри выбранной B2B-витрины.
+                        Выберите ограниченный круг пользователей витрины или оставьте для всех.
                     </p>
                 </div>
             </div>
@@ -187,7 +188,7 @@
             {* Категории покупателей *}
             <div class="field js-b2b-access-categories-field">
                 <div class="name for-input">
-                    Категории покупателей
+                    Категории
                 </div>
                 <div class="value">
                     <select name="data[params][access_category_ids][]" class="js-b2b-access-categories" multiple
@@ -209,7 +210,7 @@
             {* Что делать без доступа *}
             <div class="field">
                 <div class="name">
-                    Что делать без доступа
+                    Для всех остальных
                 </div>
                 <div class="value">
                     <div class="toggle small js-b2b-access-denied-toggle">
@@ -224,7 +225,8 @@
                     </div>
 
                     <p class="hint">
-                        Покупатель без доступа попадёт на обычную страницу магазина, плагин будет отключен для него.
+                        Покупатель который не попал под условия настроек выше, попадёт на обычную страницу магазина,
+                        плагин просто будет отключен для него и адрес отработает Shop-Script.
                     </p>
                 </div>
             </div>
@@ -269,12 +271,18 @@
                                 </label>
                             </div>
                             <div class="value">
-                                <input type="text" name="data[params][access_denied_block_id]"
-                                    class="small js-b2b-access-denied-block-id"
-                                    value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
+
+
+                                &#123;$wa->block("<input type="text" name="data[params][access_denied_block_id]"
+                                    class="small js-b2b-access-denied-block-id custom-mr-0"
+                                    value="{$access_denied_block_id|default:''|escape}"
+                                    placeholder="b2b_access_denied">")&#125;
+
+
 
                                 <p class="hint">
-                                    Укажите ID блока из приложения “Сайт”. Например: <code>b2b_access_denied</code>.
+                                    Укажите ID блока из приложения “Сайт”. Так же доступны переменные в "Шпаргалке", для
+                                    кастомной реализации вашей страницы.
                                 </p>
                             </div>
                         </div>
