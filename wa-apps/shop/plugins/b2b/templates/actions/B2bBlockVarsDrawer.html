@@ -3,6 +3,21 @@
         max-width: 720px;
     }
 
+    .b2b-vars-drawer .drawer-block {
+        padding-top: 0;
+    }
+
+    .b2b-vars-drawer .b2b-vars-tabs {
+        margin: 0;
+        padding: 0 3.25rem 0 1rem;
+        border-bottom: 1px solid var(--border-color-soft);
+        background: var(--background-color-blank);
+    }
+
+    .b2b-vars-drawer .b2b-vars-content {
+        padding: 1rem;
+    }
+
     .b2b-vars-drawer .b2b-vars-list {
         margin: 0;
         padding: 0;
@@ -12,6 +27,10 @@
     .b2b-vars-drawer .b2b-vars-list > li {
         padding: 0.85rem 0;
         border-bottom: 1px solid var(--border-color-soft);
+    }
+
+    .b2b-vars-drawer .b2b-vars-list > li:first-child {
+        padding-top: 0;
     }
 
     .b2b-vars-drawer .b2b-vars-list > li:last-child {
@@ -33,14 +52,6 @@
     .b2b-vars-drawer .b2b-var-code:hover {
         background: var(--background-color-input-solid, #eee);
     }
-
-    .b2b-vars-drawer .b2b-vars-section-title {
-        margin: 1.25rem 0 0.5rem;
-    }
-
-    .b2b-vars-drawer .b2b-vars-section-title:first-child {
-        margin-top: 0;
-    }
 </style>
 
 <div id="js-b2b-block-vars-drawer-template" style="display: none;">
@@ -49,97 +60,102 @@
         <div class="drawer-body">
             <a href="#" class="drawer-close js-close-drawer"><i class="fas fa-times"></i></a>
             <div class="drawer-block">
-                <header class="drawer-header bordered-bottom">
-                    <h2 class="custom-mb-0">Переменные блока B2B</h2>
-                    <p class="hint custom-mt-8 custom-mb-0">
-                        Эти переменные доступны внутри блока, указанного в поле “Мой блок”.
-                        Клик по переменной копирует её в буфер обмена.
-                    </p>
-                </header>
+                <div class="drawer-content custom-mt-0 custom-p-0">
+                    <ul class="tabs overflow-dropdown small b2b-vars-tabs">
+                        <li class="selected" data-b2b-vars-tab="main">
+                            <a href="javascript:void(0);" class="js-b2b-vars-tab">Основные</a>
+                        </li>
+                        <li data-b2b-vars-tab="contact">
+                            <a href="javascript:void(0);" class="js-b2b-vars-tab">Контакт</a>
+                        </li>
+                        <li data-b2b-vars-tab="links">
+                            <a href="javascript:void(0);" class="js-b2b-vars-tab">Ссылки</a>
+                        </li>
+                        <li data-b2b-vars-tab="conditions">
+                            <a href="javascript:void(0);" class="js-b2b-vars-tab">Условия</a>
+                        </li>
+                    </ul>
 
-                <div class="drawer-content">
-                    <div class="box">
-                        <div class="alert info small">
-                            <i class="fas fa-info-circle"></i>
-                            Блок вызывается как <code>{literal}{$wa->block('ID_БЛОКА', $params)}{/literal}</code>.
-                            Ключи массива параметров доступны в блоке как отдельные Smarty-переменные.
+                    <div class="b2b-vars-content">
+                        <div class="b2b-vars-tab-content" data-b2b-vars-content="main">
+                            <ul class="b2b-vars-list">
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$channel.name|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Название текущего B2B-канала.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$channel.id|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">ID текущего B2B-канала продаж.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$channel.params.settlement|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Поселение, к которому привязан B2B-канал.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$channel.params.frontend_url|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">URL B2B-витрины внутри выбранного поселения.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$params.access_mode|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Текущий режим доступа: all, except_customers, customers или categories.</p>
+                                </li>
+                            </ul>
                         </div>
 
-                        <h4 class="heading b2b-vars-section-title">Основные переменные</h4>
-                        <ul class="b2b-vars-list">
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$channel.name|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Название текущего B2B-канала.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$channel.id|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">ID текущего B2B-канала продаж.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$channel.params.settlement|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Поселение, к которому привязан B2B-канал.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$channel.params.frontend_url|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">URL B2B-витрины внутри выбранного поселения.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$params.access_mode|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Текущий режим доступа: all, except_customers, customers или categories.</p>
-                            </li>
-                        </ul>
+                        <div class="b2b-vars-tab-content" data-b2b-vars-content="contact" style="display: none;">
+                            <ul class="b2b-vars-list">
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$contact.name|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Имя текущего пользователя/контакта.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$contact.id|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">ID текущего контакта.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$contact->get("email", "default")|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Основной email текущего контакта.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$contact->get("phone", "default")|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Основной телефон текущего контакта.</p>
+                                </li>
+                            </ul>
+                        </div>
 
-                        <h4 class="heading b2b-vars-section-title">Текущий контакт</h4>
-                        <ul class="b2b-vars-list">
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$contact.name|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Имя текущего пользователя/контакта.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$contact.id|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">ID текущего контакта.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$contact->get("email", "default")|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Основной email текущего контакта.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$contact->get("phone", "default")|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Основной телефон текущего контакта.</p>
-                            </li>
-                        </ul>
+                        <div class="b2b-vars-tab-content" data-b2b-vars-content="links" style="display: none;">
+                            <ul class="b2b-vars-list">
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$login_url|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">URL входа в личный кабинет.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$register_url|escape}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">URL регистрации.</p>
+                                </li>
+                            </ul>
+                        </div>
 
-                        <h4 class="heading b2b-vars-section-title">Ссылки</h4>
-                        <ul class="b2b-vars-list">
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$login_url|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">URL входа в личный кабинет.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{$register_url|escape}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">URL регистрации.</p>
-                            </li>
-                        </ul>
-
-                        <h4 class="heading b2b-vars-section-title">Готовые условия</h4>
-                        <ul class="b2b-vars-list">
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{if $contact.id}Вы вошли как {$contact.name|escape}{else}Вы не авторизованы{/if}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Проверка авторизации контакта.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{if !empty($login_url)}{/literal}&lt;a href=&quot;{literal}{$login_url|escape}{/literal}&quot;&gt;Войти&lt;/a&gt;{literal}{/if}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Кнопка входа.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{if !empty($register_url)}{/literal}&lt;a href=&quot;{literal}{$register_url|escape}{/literal}&quot;&gt;Зарегистрироваться&lt;/a&gt;{literal}{/if}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Кнопка регистрации.</p>
-                            </li>
-                            <li>
-                                <div><code class="b2b-var-code js-b2b-copy-var">{literal}{if !empty($channel.params.settlement)}{/literal}&lt;p&gt;Витрина: {literal}{$channel.params.settlement|escape}{/literal}&lt;/p&gt;{literal}{/if}{/literal}</code></div>
-                                <p class="hint custom-mt-6 custom-mb-0">Вывод поселения B2B-витрины.</p>
-                            </li>
-                        </ul>
+                        <div class="b2b-vars-tab-content" data-b2b-vars-content="conditions" style="display: none;">
+                            <ul class="b2b-vars-list">
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{if $contact.id}Вы вошли как {$contact.name|escape}{else}Вы не авторизованы{/if}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Проверка авторизации контакта.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{if !empty($login_url)}{/literal}&lt;a href=&quot;{literal}{$login_url|escape}{/literal}&quot;&gt;Войти&lt;/a&gt;{literal}{/if}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Кнопка входа.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{if !empty($register_url)}{/literal}&lt;a href=&quot;{literal}{$register_url|escape}{/literal}&quot;&gt;Зарегистрироваться&lt;/a&gt;{literal}{/if}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Кнопка регистрации.</p>
+                                </li>
+                                <li>
+                                    <div><code class="b2b-var-code js-b2b-copy-var">{literal}{if !empty($channel.params.settlement)}{/literal}&lt;p&gt;Витрина: {literal}{$channel.params.settlement|escape}{/literal}&lt;/p&gt;{literal}{/if}{/literal}</code></div>
+                                    <p class="hint custom-mt-6 custom-mb-0">Вывод поселения B2B-витрины.</p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -216,6 +232,19 @@
                     drawer_instance.close();
                 },
                 onOpen: function($drawer) {
+                    $drawer.on('click', '.js-b2b-vars-tab', function(event) {
+                        event.preventDefault();
+
+                        const $tab = $(this).closest('[data-b2b-vars-tab]');
+                        const tab_id = $tab.data('b2b-vars-tab');
+
+                        $drawer.find('[data-b2b-vars-tab]').removeClass('selected');
+                        $tab.addClass('selected');
+
+                        $drawer.find('[data-b2b-vars-content]').hide();
+                        $drawer.find('[data-b2b-vars-content="' + tab_id + '"]').show();
+                    });
+
                     $drawer.on('click', '.js-b2b-copy-var', function(event) {
                         event.preventDefault();
                         copyText($(this).text());
