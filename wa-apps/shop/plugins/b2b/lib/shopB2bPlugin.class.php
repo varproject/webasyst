@@ -57,42 +57,6 @@ class shopB2bPlugin extends shopPlugin
         return $result;
     }
 
-    // Добавляет пункт B2B в левое меню Shop-Script WA 2.0.
-    public function backendExtendedMenu(&$params)
-    {
-        if (!wa()->getUser()->isAdmin('shop')) {
-            return;
-        }
-
-        $shop_backend_url = wa('shop')->getAppUrl(null, true);
-        $menu_id          = $this->id . '_portal';
-
-        $params['menu'][$menu_id] = [
-            'id'           => $menu_id,
-            'name'         => 'B2B',
-            'icon'         => '<i class="fas fa-briefcase"></i>',
-            'url'          => $shop_backend_url . $this->id . '/',
-            'placement'    => 'channels',
-            'insert_after' => 'storefront',
-            'userRights'   => [
-                'settings',
-            ],
-        ];
-    }
-
-    // Добавляет пункт B2B в правое верхнее меню Shop-Script WA 1.3.
-    public function backendMenu($params)
-    {
-        $selected         = waRequest::get('plugin') == $this->id ? 'selected' : 'no-tab';
-        $shop_backend_url = wa('shop')->getAppUrl(null, true);
-
-        return [
-            'aux_li' => '<li class="small float-right ' . $selected . '" id="s-plugin-b2b">
-                <a href="' . $shop_backend_url . $this->id . '/">B2B портал</a>
-            </li>',
-        ];
-    }
-
     // Добавляет backend route и frontend routes B2B-каналов.
     public function routingHandler($route)
     {
