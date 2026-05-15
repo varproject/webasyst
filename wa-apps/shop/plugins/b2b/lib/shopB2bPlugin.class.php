@@ -72,7 +72,7 @@ class shopB2bPlugin extends shopPlugin
 
         $channel_model  = new shopSalesChannelModel();
         $params_model   = new shopSalesChannelParamsModel();
-        $access_service = new shopB2bPluginCustomerAccessService();
+        $access_service = new shopB2bPluginCustomerService();
         $channels       = $channel_model->getByField('type', 'b2b', true);
         $routes         = [];
 

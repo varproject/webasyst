@@ -13,7 +13,7 @@ class shopB2bPluginFrontendAction extends waViewAction
 
         $channel_model  = new shopSalesChannelModel();
         $params_model   = new shopSalesChannelParamsModel();
-        $access_service = new shopB2bPluginCustomerAccessService();
+        $access_service = new shopB2bPluginCustomerService();
         $channel        = $channel_model->getById($channel_id);
 
         if (!$channel || $channel['type'] !== 'b2b' || empty($channel['status'])) {

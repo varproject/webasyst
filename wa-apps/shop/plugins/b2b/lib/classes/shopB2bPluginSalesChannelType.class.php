@@ -17,7 +17,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $params         = ifset($channel, 'params', []);
         $from_root      = !empty($params['frontend_from_root']) || ifset($params, 'frontend_url', '') === '*';
         $auth_required  = !empty($params['auth_required']) || !array_key_exists('auth_required', $params);
-        $access_service = new shopB2bPluginCustomerAccessService();
+        $access_service = new shopB2bPluginCustomerService();
 
         $access_mode = ifset($params, 'access_mode', 'all');
 
@@ -25,7 +25,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $except_customer_ids = $access_service->getIds(ifset($params, 'access_except_customer_ids', ''));
         $category_ids        = $access_service->getIds(ifset($params, 'access_category_ids', ''));
 
-        // Backward compatibility: раньше режим "кроме выбранных" хранил blacklist в access_customer_ids.
         if (
             $access_mode === 'except_customers'
             && !$except_customer_ids
@@ -54,7 +53,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             'access_denied_block_id'     => ifset($params, 'access_denied_block_id', ''),
         ]);
 
-        return $view->fetch('file:' . wa()->getAppPath('plugins/b2b/templates/actions/B2bSalesChannelForm.html', 'shop'));
+        return $view->fetch('file:' . wa()->getAppPath('plugins/b2b/templates/actions/channels/b2b_channel.include.html', 'shop'));
     }
 
     // Рендерит базовые поля канала через стандартный механизм Shop-Script.
@@ -84,7 +83,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $params['frontend_from_root'] = !empty($params['frontend_from_root']) ? 1 : 0;
         $params['auth_required']      = !empty($params['auth_required']) ? 1 : 0;
 
-        $access_service = new shopB2bPluginCustomerAccessService();
+        $access_service = new shopB2bPluginCustomerService();
 
         $params['access_mode']             = ifset($params, 'access_mode', 'all');
         $params['access_denied_behavior']  = ifset($params, 'access_denied_behavior', 'ignore');

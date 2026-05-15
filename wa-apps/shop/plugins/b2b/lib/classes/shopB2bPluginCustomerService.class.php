@@ -1,6 +1,6 @@
 <?php
 
-class shopB2bPluginCustomerAccessService
+class shopB2bPluginCustomerService
 {
     // Возвращает ID из JSON, массива или строки.
     public function getIds($value): array
