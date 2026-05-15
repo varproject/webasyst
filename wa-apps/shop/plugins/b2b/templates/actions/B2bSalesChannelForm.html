@@ -143,14 +143,22 @@
                     Пользователи
                 </div>
                 <div class="value">
+
                     <div class="toggle small js-b2b-access-mode-toggle">
                         <span data-value="all" {if $access_mode|default:'all' == 'all'} class="selected" {/if}>
                             все
                         </span>
+
+                        <span data-value="except_customers" {if $access_mode|default:'all' == 'except_customers'}
+                            class="selected" {/if}>
+                            кроме выбранных
+                        </span>
+
                         <span data-value="customers" {if $access_mode|default:'all' == 'customers'} class="selected"
                             {/if}>
                             только выбранные
                         </span>
+
                         <span data-value="categories" {if $access_mode|default:'all' == 'categories'} class="selected"
                             {/if}>
                             только категории
@@ -216,25 +224,26 @@
                     <div class="toggle small js-b2b-access-denied-toggle">
                         <span data-value="ignore" {if $access_denied_behavior|default:'ignore' == 'ignore'}
                             class="selected" {/if}>
-                            игнорировать B2B-роут
+                            отключить витрину и игнорировать
                         </span>
                         <span data-value="page" {if $access_denied_behavior|default:'ignore' == 'page'} class="selected"
                             {/if}>
-                            показать страницу доступа
+                            показать страницу информации
                         </span>
                     </div>
 
                     <p class="hint">
-                        Покупатель который не попал под условия настроек выше, попадёт на обычную страницу магазина,
-                        плагин просто будет отключен для него и адрес отработает Shop-Script штатно.
+                        Здесь можно выбрать, что увидит покупатель, который не оказался в списке разрешенных пользователей или групп.
+                        Отключить витрину, тогда адрес просто будт отработан штатно Shop-Script, выбрать
+                        шаблон с информацией от плагина или подгрузить свой кастомный шаблон.
                     </p>
                 </div>
             </div>
 
-            {* Страница доступа *}
+            {* Информация *}
             <div class="field js-b2b-access-denied-page-field">
                 <div class="name">
-                    Страница доступа
+                    Страница информации
                 </div>
 
                 <div class="value">
@@ -250,7 +259,7 @@
                         </label>
 
                         <p class="hint custom-ml-24 custom-mt-0">
-                            Будет показана стандартная страница ограничения доступа из плагина.
+                            Страница ограничения доступа из плагина.
                         </p>
                     </div>
 
@@ -276,8 +285,7 @@
                         </div>
 
                         <p class="hint custom-ml-24 custom-mt-6 custom-mb-8">
-                            Укажите ID блока из приложения “Сайт”. Переменные для блока доступны в штатной шпаргалке
-                            страницы “Сайт → Переменные → Блоки и коды”.
+                            Укажите ID блока из приложения “Сайт”. Доступны переменных плагина, список тут.
                         </p>
                     </div>
                 </div>
@@ -408,6 +416,10 @@
             return value;
         };
 
+        const stripHtml = function(value) {
+            return $('<div>').html(String(value || '')).text();
+        };
+
         const isRootMode = function() {
             return String($frontend_from_root.val()) === '1';
         };
@@ -518,7 +530,7 @@
                 .find('span[data-value="' + mode + '"]')
                 .addClass('selected');
 
-            $access_customers_field.toggle(mode === 'customers');
+            $access_customers_field.toggle(mode === 'except_customers' || mode === 'customers');
             $access_categories_field.toggle(mode === 'categories');
         };
 
@@ -611,6 +623,7 @@
         if ($auth_switch.length && $.fn.waSwitch) {
             $auth_switch.waSwitch();
         }
+
         if ($.fn.select2) {
             $access_customers.select2({
                 width: '100%',
@@ -636,8 +649,7 @@
                             results: response.map(function(item) {
                                 const id = parseInt(item.id || item.value || 0, 10);
                                 const label = item.label || item.name || ('#' + id);
-                                const text = item.name || $('<div>').html(label).text() || (
-                                    '#' + id);
+                                const text = item.name || stripHtml(label) || ('#' + id);
 
                                 return {
                                     id: id,
@@ -752,7 +764,9 @@
                         $delete_button.prop('disabled', true).after(
                             '<div class="spinner"></div>');
 
-                        $.post(delete_url, { id: channel_id }, 'json').then(function() {
+                        $.post(delete_url, {
+                            id: channel_id
+                        }, 'json').then(function() {
                             $submit_button.prop('disabled', false).siblings('.spinner')
                                 .remove();
                             window.location = {$wa_app_url|json_encode} + '?action=plugins#/';

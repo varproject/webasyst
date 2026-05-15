@@ -75,11 +75,15 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $params['access_denied_page_mode'] = ifset($params, 'access_denied_page_mode', 'plugin');
         $params['access_denied_block_id']  = trim((string) ifset($params, 'access_denied_block_id', ''));
 
-        if (!in_array($params['access_denied_behavior'], ['ignore', 'page'])) {
+        if (!in_array($params['access_mode'], ['all', 'except_customers', 'customers', 'categories'], true)) {
+            $params['access_mode'] = 'all';
+        }
+
+        if (!in_array($params['access_denied_behavior'], ['ignore', 'page'], true)) {
             $params['access_denied_behavior'] = 'ignore';
         }
 
-        if (!in_array($params['access_denied_page_mode'], ['plugin', 'block'])) {
+        if (!in_array($params['access_denied_page_mode'], ['plugin', 'block'], true)) {
             $params['access_denied_page_mode'] = 'plugin';
         }
 
@@ -90,7 +94,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         ) {
             $errors[] = [
                 'field'             => 'data[params][access_denied_block_id]',
-                'error_description' => 'Укажите ID блока для страницы.',
+                'error_description' => 'Укажите ID блока для страницы ограничения доступа.',
             ];
 
             return $errors;
@@ -99,10 +103,12 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $customer_ids = $access_service->getIds(ifset($params, 'access_customer_ids', []));
         $category_ids = $access_service->getIds(ifset($params, 'access_category_ids', []));
 
-        if ($params['access_mode'] === 'customers' && !$customer_ids) {
+        if (in_array($params['access_mode'], ['except_customers', 'customers'], true) && !$customer_ids) {
             $errors[] = [
                 'field'             => 'data[params][access_customer_ids][]',
-                'error_description' => 'Выберите покупателей, которым разрешён доступ.',
+                'error_description' => $params['access_mode'] === 'except_customers'
+                    ? 'Выберите контакты, которым нужно запретить доступ.'
+                    : 'Выберите контакты, которым разрешён доступ.',
             ];
 
             return $errors;

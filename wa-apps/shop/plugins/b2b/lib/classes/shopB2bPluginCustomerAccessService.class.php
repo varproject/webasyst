@@ -84,12 +84,27 @@ class shopB2bPluginCustomerAccessService
         $contact_id = (int) $contact_id;
         $mode       = ifset($params, 'access_mode', 'all');
 
-        if (!in_array($mode, ['all', 'customers', 'categories'])) {
+        if (!in_array($mode, ['all', 'except_customers', 'customers', 'categories'], true)) {
             $mode = 'all';
         }
 
         if ($mode === 'all') {
             return true;
+        }
+
+        if ($mode === 'except_customers') {
+            $denied_ids = $this->getIds(ifset($params, 'access_customer_ids', ''));
+
+            if (!$denied_ids) {
+                return true;
+            }
+
+            // Гость не может быть в чёрном списке contact_id.
+            if ($contact_id <= 0) {
+                return true;
+            }
+
+            return !in_array($contact_id, $denied_ids, true);
         }
 
         if ($contact_id <= 0) {
