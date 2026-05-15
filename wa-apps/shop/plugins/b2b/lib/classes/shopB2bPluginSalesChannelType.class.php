@@ -36,14 +36,6 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             'access_denied_behavior'  => ifset($params, 'access_denied_behavior', 'ignore'),
             'access_denied_page_mode' => ifset($params, 'access_denied_page_mode', 'plugin'),
             'access_denied_block_id'  => ifset($params, 'access_denied_block_id', ''),
-            'b2b_cheat_sheet_button'  => $view->getHelper()->getCheatSheetButton([
-                'name'        => 'b2b_access_denied',
-                'app'         => 'shop',
-                'plugin_id'   => 'b2b',
-                'only_plugin' => 1,
-                'key'         => 'b2b.access_denied',
-                'only_key'    => 1,
-            ]),
         ]);
 
         return $view->fetch('file:' . wa()->getAppPath('plugins/b2b/templates/actions/B2bSalesChannelForm.html', 'shop'));

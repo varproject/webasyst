@@ -238,71 +238,52 @@
                 </div>
 
                 <div class="value">
-                    <div class="fields width-100">
+                    <div class="custom-mb-8">
+                        <label class="flexbox middle space-8">
+                            <span class="wa-radio">
+                                <input type="radio" name="data[params][access_denied_page_mode]" value="plugin"
+                                    class="js-b2b-access-denied-page-mode"
+                                    {if $access_denied_page_mode|default:'plugin' == 'plugin'}checked{/if}>
+                                <span></span>
+                            </span>
+                            <span>Шаблон плагина</span>
+                        </label>
 
-                        {* Шаблон плагина *}
-                        <div class="field">
-                            <div class="name for-checkbox">
-                                <label>
-                                    <span class="wa-radio">
-                                        <input type="radio" name="data[params][access_denied_page_mode]" value="plugin"
-                                            class="js-b2b-access-denied-page-mode"
-                                            {if $access_denied_page_mode|default:'plugin' == 'plugin'}checked{/if}>
-                                        <span></span>
-                                    </span>
-                                    Шаблон плагина
-                                </label>
-                            </div>
+                        <p class="hint custom-ml-24 custom-mt-0">
+                            Будет показана стандартная страница ограничения доступа из плагина.
+                        </p>
+                    </div>
 
-                            <div class="value">
-                                <span class="hint">
-                                    Будет показана стандартная страница ограничения доступа из плагина.
-                                </span>
-                            </div>
+                    <div>
+                        <label class="flexbox middle space-8">
+                            <span class="wa-radio">
+                                <input type="radio" name="data[params][access_denied_page_mode]" value="block"
+                                    class="js-b2b-access-denied-page-mode"
+                                    {if $access_denied_page_mode|default:'plugin' == 'block'}checked{/if}>
+                                <span></span>
+                            </span>
+                            <span>Мой блок</span>
+                        </label>
+
+                        <div class="flexbox middle space-8 custom-ml-24 custom-mt-0">
+                            <span class="hint">&#123;$wa->block("</span>
+
+                            <input type="text" name="data[params][access_denied_block_id]"
+                                class="small js-b2b-access-denied-block-id custom-mr-0"
+                                value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
+
+                            <span class="hint">")&#125;</span>
                         </div>
 
-                        {* Мой блок *}
-                        <div class="field">
-                            <div class="name for-checkbox">
-                                <label>
-                                    <span class="wa-radio">
-                                        <input type="radio" name="data[params][access_denied_page_mode]" value="block"
-                                            class="js-b2b-access-denied-page-mode"
-                                            {if $access_denied_page_mode|default:'plugin' == 'block'}checked{/if}>
-                                        <span></span>
-                                    </span>
-                                    Мой блок
-                                </label>
-                            </div>
-
-                            <div class="value">
-                                <div class="flexbox middle space-8">
-                                    &#123;$wa->block("<input type="text" name="data[params][access_denied_block_id]"
-                                        class="small js-b2b-access-denied-block-id custom-mr-0"
-                                        value="{$access_denied_block_id|default:''|escape}"
-                                        placeholder="b2b_access_denied">")&#125;
-
-                                    {if !empty($b2b_cheat_sheet_button)}
-                                        {$b2b_cheat_sheet_button}
-                                    {/if}
-                                </div>
-
-                                <p class="hint">
-                                    Укажите ID блока из приложения “Сайт”. Так же доступны переменные в "Шпаргалке", для
-                                    кастомной реализации вашей страницы.
-                                </p>
-                            </div>
-                        </div>
-
+                        <p class="hint custom-ml-24 custom-mt-6 custom-mb-8">
+                            Укажите ID блока из приложения “Сайт”. Переменные для блока доступны в штатной шпаргалке
+                            страницы “Сайт → Переменные → Блоки и коды”.
+                        </p>
                     </div>
                 </div>
-
             </div>
+
         </div>
-
-
-
-
 
 
 
@@ -635,6 +616,7 @@
             $access_customers.select2({
                 width: '100%',
                 placeholder: 'Найти покупателя',
+                minimumInputLength: 1,
                 ajax: {
                     url: {$wa_app_url|json_encode} + '?plugin=b2b&module=backend&action=customers',
                     dataType: 'json',
@@ -644,9 +626,15 @@
                             q: params.term || ''
                         };
                     },
-                    processResults: function(data) {
-                        return data || {
-                            results: []
+                    processResults: function(response) {
+                        if (!response || response.status !== 'ok' || !response.data) {
+                            return {
+                                results: []
+                            };
+                        }
+
+                        return {
+                            results: response.data.results || []
                         };
                     }
                 }
