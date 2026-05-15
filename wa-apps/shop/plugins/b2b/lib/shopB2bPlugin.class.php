@@ -2,11 +2,10 @@
 
 class shopB2bPlugin extends shopPlugin
 {
-    // Подключает пользовательские функции и модификаторы плагина.
-    public function __construct($info)
+    // Регистрирует тип канала продаж B2B.
+    public function salesChannelTypes(&$params)
     {
-        parent::__construct($info);
-
+        // Подключает пользовательские функции и модификаторы плагина.
         foreach (['functions.php', 'modifiers.php'] as $file) {
             $path = $this->path . '/lib/config/' . $file;
 
@@ -14,16 +13,12 @@ class shopB2bPlugin extends shopPlugin
                 require_once $path;
             }
         }
-    }
 
-    // Регистрирует тип канала продаж B2B.
-    public function salesChannelTypes(&$params)
-    {
         return [
             [
-                'id' => 'b2b',
-                'name' => 'B2B-витрина',
-                'class' => 'shopB2bPluginSalesChannelType',
+                'id'        => 'b2b',
+                'name'      => 'B2B-витрина',
+                'class'     => 'shopB2bPluginSalesChannelType',
                 'menu_icon' => '<i class="fas fa-briefcase"></i>',
                 'available' => true,
             ],
@@ -47,9 +42,9 @@ class shopB2bPlugin extends shopPlugin
             }
 
             $result[] = [
-                'id' => $sales_channel_id,
-                'type' => 'storefront',
-                'name' => 'B2B-портал',
+                'id'       => $sales_channel_id,
+                'type'     => 'storefront',
+                'name'     => 'B2B-витрина',
                 'icon_url' => wa()->getRootUrl(true) . 'wa-apps/shop/plugins/' . $this->id . '/img/b2b-channel.png',
             ];
         }
@@ -65,15 +60,16 @@ class shopB2bPlugin extends shopPlugin
         }
 
         $shop_backend_url = wa('shop')->getAppUrl(null, true);
+        $menu_id          = $this->id . '_portal';
 
-        $params['menu'][$this->id . '_portal'] = [
-            'id' => $this->id . '_portal',
-            'name' => 'B2B',
-            'icon' => '<i class="fas fa-briefcase"></i>',
-            'url' => $shop_backend_url . $this->id . '/',
-            'placement' => 'channels',
+        $params['menu'][$menu_id] = [
+            'id'           => $menu_id,
+            'name'         => 'B2B',
+            'icon'         => '<i class="fas fa-briefcase"></i>',
+            'url'          => $shop_backend_url . $this->id . '/',
+            'placement'    => 'channels',
             'insert_after' => 'storefront',
-            'userRights' => [
+            'userRights'   => [
                 'settings',
             ],
         ];
@@ -82,11 +78,11 @@ class shopB2bPlugin extends shopPlugin
     // Добавляет пункт B2B в правое верхнее меню Shop-Script WA 1.3.
     public function backendMenu($params)
     {
-        $selected = (waRequest::get('plugin') == $this->id) ? 'selected' : 'no-tab';
+        $selected         = waRequest::get('plugin') == $this->id ? 'selected' : 'no-tab';
         $shop_backend_url = wa('shop')->getAppUrl(null, true);
 
         return [
-            'aux_li' => '<li class="small float-right ' . $selected . '" id="s-plugin-debug">
+            'aux_li' => '<li class="small float-right ' . $selected . '" id="s-plugin-b2b">
                 <a href="' . $shop_backend_url . $this->id . '/">B2B портал</a>
             </li>',
         ];
@@ -101,22 +97,20 @@ class shopB2bPlugin extends shopPlugin
             ];
         }
 
-        $current_route_key = $this->getRouteKeyByRoute($route);
+        $route_key = $this->getRouteKeyByRoute($route);
 
-        if (!$current_route_key) {
+        if (!$route_key) {
             return [];
         }
 
         $channel_model = new shopSalesChannelModel();
-        $params_model = new shopSalesChannelParamsModel();
-
-        $channels = $channel_model->getByField('type', 'b2b', true);
+        $params_model  = new shopSalesChannelParamsModel();
+        $channels      = $channel_model->getByField('type', 'b2b', true);
+        $routes        = [];
 
         if (!$channels) {
             return [];
         }
-
-        $routes = [];
 
         foreach ($channels as $channel) {
             if (empty($channel['status'])) {
@@ -124,24 +118,19 @@ class shopB2bPlugin extends shopPlugin
             }
 
             $channel_params = $params_model->get((int) $channel['id']);
+            $frontend_url   = trim((string) ifset($channel_params, 'frontend_url', ''));
 
             // Канал должен быть привязан именно к текущему поселению.
-            if (ifset($channel_params, 'route_key', '') !== $current_route_key) {
-                continue;
-            }
-
-            $frontend_url = trim((string) ifset($channel_params, 'frontend_url', ''));
-
-            if ($frontend_url === '') {
+            if (ifset($channel_params, 'route_key', '') !== $route_key || $frontend_url === '') {
                 continue;
             }
 
             // Этот URL внутри текущего поселения забирает B2B-плагин.
             $routes[$frontend_url] = [
-                'module' => 'frontend',
+                'module'         => 'frontend',
                 'b2b_channel_id' => (int) $channel['id'],
-                'sales_channel' => 'b2b:' . $channel['id'],
-                'secure' => !empty($channel_params['auth_required']),
+                'sales_channel'  => 'b2b:' . $channel['id'],
+                'secure'         => !empty($channel_params['auth_required']),
             ];
         }
 
@@ -167,13 +156,11 @@ class shopB2bPlugin extends shopPlugin
             return;
         }
 
-        $sales_channel = 'b2b:' . $channel['id'];
-
         $order_params_model = new shopOrderParamsModel();
 
         // false нужен, чтобы обновить только переданные параметры и не стереть остальные параметры заказа.
         $order_params_model->set($order_id, [
-            'sales_channel' => $sales_channel,
+            'sales_channel'  => 'b2b:' . $channel['id'],
             'b2b_channel_id' => $channel['id'],
         ], false);
     }
@@ -188,13 +175,12 @@ class shopB2bPlugin extends shopPlugin
         }
 
         $channel_model = new shopSalesChannelModel();
-        $channels = $channel_model->getByField('type', 'b2b', true);
+        $params_model  = new shopSalesChannelParamsModel();
+        $channels      = $channel_model->getByField('type', 'b2b', true);
 
         if (!$channels) {
             return null;
         }
-
-        $params_model = new shopSalesChannelParamsModel();
 
         foreach ($channels as $channel) {
             if (empty($channel['status'])) {
@@ -218,9 +204,8 @@ class shopB2bPlugin extends shopPlugin
     // Возвращает ключ текущего shop-поселения в формате domain|route_id.
     protected function getCurrentShopRouteKey()
     {
-        $routing = wa()->getRouting();
-
-        $domain = $routing->getDomain();
+        $routing       = wa()->getRouting();
+        $domain        = $routing->getDomain();
         $current_route = $routing->getRoute();
 
         if (!$domain || !is_array($current_route)) {
@@ -246,7 +231,7 @@ class shopB2bPlugin extends shopPlugin
         return null;
     }
 
-    // Сравнивает текущий route с route из списка поселений.
+    // Сравнивает два settlement route.
     protected function isSameRoute(array $route_a, array $route_b)
     {
         return ifset($route_a, 'app', '') === ifset($route_b, 'app', '')
@@ -265,7 +250,7 @@ class shopB2bPlugin extends shopPlugin
         }
 
         $routing = wa()->getRouting();
-        $domain = $routing->getDomain(null, true);
+        $domain  = $routing->getDomain(null, true);
 
         if (!$domain) {
             return null;
