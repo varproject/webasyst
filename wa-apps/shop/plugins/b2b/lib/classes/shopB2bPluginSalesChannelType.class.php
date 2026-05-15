@@ -347,28 +347,33 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     {
         $options = [
             [
-                'value'     => '',
-                'title'     => 'Выберите поселение',
-                'domain'    => '',
-                'route_id'  => '',
-                'route_url' => '',
+                'value'                    => '',
+                'title'                    => 'Выберите поселение',
+                'domain'                   => '',
+                'route_id'                 => '',
+                'route_url'                => '',
+                'personal_account_enabled' => false,
+                'personal_account_message' => 'Выберите поселение Shop-Script, чтобы проверить доступность личного кабинета.',
             ],
         ];
 
         $routing = wa()->getRouting();
 
         foreach ($routing->getDomains() as $domain) {
-            $routes = $routing->getByApp('shop', $domain);
+            $routes   = $routing->getByApp('shop', $domain);
+            $lk_state = $this->getShopPersonalAccountStateByDomain($domain);
 
             foreach ($routes as $route_id => $route) {
                 $url = trim((string) ifset($route, 'url', ''));
 
                 $options[] = [
-                    'value'     => $domain . '|' . $route_id,
-                    'title'     => $this->formatSettlementTitle($domain, $url),
-                    'domain'    => $domain,
-                    'route_id'  => $route_id,
-                    'route_url' => $url,
+                    'value'                    => $domain . '|' . $route_id,
+                    'title'                    => $this->formatSettlementTitle($domain, $url),
+                    'domain'                   => $domain,
+                    'route_id'                 => $route_id,
+                    'route_url'                => $url,
+                    'personal_account_enabled' => !empty($lk_state['enabled']),
+                    'personal_account_message' => ifset($lk_state, 'message', ''),
                 ];
             }
         }
