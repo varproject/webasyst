@@ -108,7 +108,7 @@
 
         </div>
 
-        {* Настрока доступа *}
+        {* Настройка доступа *}
         <div class="fields-group custom-mt-24 js-b2b-access-settings">
             <h5 class="heading">Доступы</h5>
 
@@ -131,8 +131,8 @@
                         </span>
                         <label for="auth-switch">Закрытая витрина со входом</label>
                     </div>
-                    <p class="hint">Включите, чтобы закрыть витрину от гостей и показывать только авторизованным
-                        покупателям.
+                    <p class="hint">
+                        Включите, чтобы закрыть витрину от гостей и показывать только авторизованным покупателям.
                     </p>
                 </div>
             </div>
@@ -143,20 +143,19 @@
                     Пользователи
                 </div>
                 <div class="value">
-
                     <div class="toggle small js-b2b-access-mode-toggle">
                         <span data-value="all" {if $access_mode|default:'all' == 'all'} class="selected" {/if}>
                             все
                         </span>
 
-                        <span data-value="except_customers" {if $access_mode|default:'all' == 'except_customers'}
-                            class="selected" {/if}>
-                            кроме выбранных
-                        </span>
-
                         <span data-value="customers" {if $access_mode|default:'all' == 'customers'} class="selected"
                             {/if}>
                             только выбранные
+                        </span>
+
+                        <span data-value="except_customers" {if $access_mode|default:'all' == 'except_customers'}
+                            class="selected" {/if}>
+                            кроме выбранных
                         </span>
 
                         <span data-value="categories" {if $access_mode|default:'all' == 'categories'} class="selected"
@@ -166,15 +165,38 @@
                     </div>
 
                     <p class="hint">
-                        Выберите ограниченный круг пользователей витрины или оставьте для всех.
+                        Выберите ограниченный круг пользователей витрины или оставьте доступ для всех.
                     </p>
                 </div>
             </div>
 
-            {* Покупатели *}
+            {* Кроме выбранных контактов *}
+            <div class="field js-b2b-access-except-customers-field">
+                <div class="name for-input">
+                    Кроме выбранных
+                </div>
+                <div class="value">
+                    <select name="data[params][access_except_customer_ids][]" class="js-b2b-access-except-customers"
+                        multiple style="width: 100%;">
+                        {foreach $access_except_customers as $customer}
+                            <option value="{$customer.id|escape}" selected>
+                                {$customer.name|default:'#'|escape}{if !empty($customer.email)} —
+                                {$customer.email|escape}{elseif !empty($customer.phone)} — {$customer.phone|escape}
+                                {/if}
+                            </option>
+                        {/foreach}
+                    </select>
+
+                    <p class="hint">
+                        Эти контакты не получат доступ к B2B-витрине. Остальные пользователи будут допущены.
+                    </p>
+                </div>
+            </div>
+
+            {* Только выбранные контакты *}
             <div class="field js-b2b-access-customers-field">
                 <div class="name for-input">
-                    Покупатели
+                    Только выбранные
                 </div>
                 <div class="value">
                     <select name="data[params][access_customer_ids][]" class="js-b2b-access-customers" multiple
@@ -182,13 +204,14 @@
                         {foreach $access_customers as $customer}
                             <option value="{$customer.id|escape}" selected>
                                 {$customer.name|default:'#'|escape}{if !empty($customer.email)} —
-                                {$customer.email|escape}{/if}
+                                {$customer.email|escape}{elseif !empty($customer.phone)} — {$customer.phone|escape}
+                                {/if}
                             </option>
                         {/foreach}
                     </select>
 
                     <p class="hint">
-                        Начните вводить имя или email покупателя.
+                        Только эти контакты получат доступ к B2B-витрине.
                     </p>
                 </div>
             </div>
@@ -233,9 +256,10 @@
                     </div>
 
                     <p class="hint">
-                        Здесь можно выбрать, что увидит покупатель, который не оказался в списке разрешенных пользователей или групп.
-                        Отключить витрину, тогда адрес просто будт отработан штатно Shop-Script, выбрать
-                        шаблон с информацией от плагина или подгрузить свой кастомный шаблон.
+                        Здесь можно выбрать, что увидит покупатель, который не оказался в списке разрешённых
+                        пользователей или групп.
+                        Можно отключить B2B-витрину для него, тогда адрес отработает штатно Shop-Script, либо показать
+                        страницу информации.
                     </p>
                 </div>
             </div>
@@ -285,14 +309,12 @@
                         </div>
 
                         <p class="hint custom-ml-24 custom-mt-6 custom-mb-8">
-                            Укажите ID блока из приложения “Сайт”. Доступны переменных плагина, список тут.
+                            Укажите ID блока из приложения “Сайт”.
                         </p>
                     </div>
                 </div>
             </div>
-
         </div>
-
 
 
         {* Блок сохранить/удалить *}
@@ -384,8 +406,10 @@
 
         const $access_mode = $form.find('.js-b2b-access-mode');
         const $access_mode_toggle = $form.find('.js-b2b-access-mode-toggle');
+        const $access_except_customers_field = $form.find('.js-b2b-access-except-customers-field');
         const $access_customers_field = $form.find('.js-b2b-access-customers-field');
         const $access_categories_field = $form.find('.js-b2b-access-categories-field');
+        const $access_except_customers = $form.find('.js-b2b-access-except-customers');
         const $access_customers = $form.find('.js-b2b-access-customers');
         const $access_categories = $form.find('.js-b2b-access-categories');
 
@@ -530,7 +554,8 @@
                 .find('span[data-value="' + mode + '"]')
                 .addClass('selected');
 
-            $access_customers_field.toggle(mode === 'except_customers' || mode === 'customers');
+            $access_except_customers_field.toggle(mode === 'except_customers');
+            $access_customers_field.toggle(mode === 'customers');
             $access_categories_field.toggle(mode === 'categories');
         };
 
@@ -559,6 +584,70 @@
                     .attr('aria-disabled', 'true')
                     .css('opacity', '0.35');
             }
+        };
+
+        const initContactSelect = function($select, placeholder) {
+            if (!$select.length || !$.fn.select2) {
+                return;
+            }
+
+            $select.select2({
+                width: '100%',
+                placeholder: placeholder,
+                minimumInputLength: 1,
+                ajax: {
+                    url: {$wa_app_url|json_encode} + '?action=autocomplete&type=contact',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            term: params.term || ''
+                        };
+                    },
+                    processResults: function(response) {
+                        if (!Array.isArray(response)) {
+                            return {
+                                results: []
+                            };
+                        }
+
+                        return {
+                            results: response.map(function(item) {
+                                const id = parseInt(item.id || item.value || 0, 10);
+                                const label = item.label || item.name || ('#' + id);
+                                const text = item.name || stripHtml(label) || ('#' +
+                                    id);
+
+                                return {
+                                    id: id,
+                                    text: text,
+                                    label: label,
+                                    photo_url: item.photo_url || ''
+                                };
+                            }).filter(function(item) {
+                                return item.id > 0;
+                            })
+                        };
+                    }
+                },
+                templateResult: function(item) {
+                    if (!item.id) {
+                        return item.text;
+                    }
+
+                    if (item.label) {
+                        return $('<span>' + item.label + '</span>');
+                    }
+
+                    return item.text;
+                },
+                templateSelection: function(item) {
+                    return item.text || item.name || item.id;
+                },
+                escapeMarkup: function(markup) {
+                    return markup;
+                }
+            });
         };
 
         if ($url_type_toggle.length && $.fn.waToggle) {
@@ -625,62 +714,8 @@
         }
 
         if ($.fn.select2) {
-            $access_customers.select2({
-                width: '100%',
-                placeholder: 'Найти контакт',
-                minimumInputLength: 1,
-                ajax: {
-                    url: {$wa_app_url|json_encode} + '?action=autocomplete&type=contact',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            term: params.term || ''
-                        };
-                    },
-                    processResults: function(response) {
-                        if (!Array.isArray(response)) {
-                            return {
-                                results: []
-                            };
-                        }
-
-                        return {
-                            results: response.map(function(item) {
-                                const id = parseInt(item.id || item.value || 0, 10);
-                                const label = item.label || item.name || ('#' + id);
-                                const text = item.name || stripHtml(label) || ('#' + id);
-
-                                return {
-                                    id: id,
-                                    text: text,
-                                    label: label,
-                                    photo_url: item.photo_url || ''
-                                };
-                            }).filter(function(item) {
-                                return item.id > 0;
-                            })
-                        };
-                    }
-                },
-                templateResult: function(item) {
-                    if (!item.id) {
-                        return item.text;
-                    }
-
-                    if (item.label) {
-                        return $('<span>' + item.label + '</span>');
-                    }
-
-                    return item.text;
-                },
-                templateSelection: function(item) {
-                    return item.text || item.name || item.id;
-                },
-                escapeMarkup: function(markup) {
-                    return markup;
-                }
-            });
+            initContactSelect($access_except_customers, 'Найти контакт для запрета доступа');
+            initContactSelect($access_customers, 'Найти контакт для разрешения доступа');
 
             $access_categories.select2({
                 width: '100%',

@@ -18,24 +18,40 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $from_root      = !empty($params['frontend_from_root']) || ifset($params, 'frontend_url', '') === '*';
         $auth_required  = !empty($params['auth_required']) || !array_key_exists('auth_required', $params);
         $access_service = new shopB2bPluginCustomerAccessService();
-        $customer_ids   = $access_service->getIds(ifset($params, 'access_customer_ids', ''));
-        $category_ids   = $access_service->getIds(ifset($params, 'access_category_ids', ''));
+
+        $access_mode = ifset($params, 'access_mode', 'all');
+
+        $customer_ids        = $access_service->getIds(ifset($params, 'access_customer_ids', ''));
+        $except_customer_ids = $access_service->getIds(ifset($params, 'access_except_customer_ids', ''));
+        $category_ids        = $access_service->getIds(ifset($params, 'access_category_ids', ''));
+
+        // Backward compatibility: раньше режим "кроме выбранных" хранил blacklist в access_customer_ids.
+        if (
+            $access_mode === 'except_customers'
+            && !$except_customer_ids
+            && !array_key_exists('access_except_customer_ids', $params)
+        ) {
+            $except_customer_ids = $customer_ids;
+            $customer_ids        = [];
+        }
 
         $view->assign([
-            'channel'                 => $channel,
-            'base_fields'             => $this->getBaseRenderedFields($channel),
-            'route_options'           => $this->getShopRouteOptions(),
-            'frontend_from_root'      => $from_root,
-            'frontend_custom_url'     => $this->getFrontendCustomUrl($params),
-            'auth_required'           => $auth_required,
-            'access_mode'             => ifset($params, 'access_mode', 'all'),
-            'access_customer_ids'     => $customer_ids,
-            'access_category_ids'     => $category_ids,
-            'access_customers'        => $access_service->getSelectedCustomers($customer_ids),
-            'customer_categories'     => $access_service->getCustomerCategories(),
-            'access_denied_behavior'  => ifset($params, 'access_denied_behavior', 'ignore'),
-            'access_denied_page_mode' => ifset($params, 'access_denied_page_mode', 'plugin'),
-            'access_denied_block_id'  => ifset($params, 'access_denied_block_id', ''),
+            'channel'                    => $channel,
+            'base_fields'                => $this->getBaseRenderedFields($channel),
+            'route_options'              => $this->getShopRouteOptions(),
+            'frontend_from_root'         => $from_root,
+            'frontend_custom_url'        => $this->getFrontendCustomUrl($params),
+            'auth_required'              => $auth_required,
+            'access_mode'                => $access_mode,
+            'access_customer_ids'        => $customer_ids,
+            'access_except_customer_ids' => $except_customer_ids,
+            'access_category_ids'        => $category_ids,
+            'access_customers'           => $access_service->getSelectedCustomers($customer_ids),
+            'access_except_customers'    => $access_service->getSelectedCustomers($except_customer_ids),
+            'customer_categories'        => $access_service->getCustomerCategories(),
+            'access_denied_behavior'     => ifset($params, 'access_denied_behavior', 'ignore'),
+            'access_denied_page_mode'    => ifset($params, 'access_denied_page_mode', 'plugin'),
+            'access_denied_block_id'     => ifset($params, 'access_denied_block_id', ''),
         ]);
 
         return $view->fetch('file:' . wa()->getAppPath('plugins/b2b/templates/actions/B2bSalesChannelForm.html', 'shop'));
@@ -100,15 +116,33 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             return $errors;
         }
 
-        $customer_ids = $access_service->getIds(ifset($params, 'access_customer_ids', []));
-        $category_ids = $access_service->getIds(ifset($params, 'access_category_ids', []));
+        $customer_ids        = $access_service->getIds(ifset($params, 'access_customer_ids', []));
+        $except_customer_ids = $access_service->getIds(ifset($params, 'access_except_customer_ids', []));
+        $category_ids        = $access_service->getIds(ifset($params, 'access_category_ids', []));
 
-        if (in_array($params['access_mode'], ['except_customers', 'customers'], true) && !$customer_ids) {
+        // Backward compatibility: старый blacklist мог прийти в access_customer_ids.
+        if (
+            $params['access_mode'] === 'except_customers'
+            && !$except_customer_ids
+            && !array_key_exists('access_except_customer_ids', $params)
+        ) {
+            $except_customer_ids = $customer_ids;
+            $customer_ids        = [];
+        }
+
+        if ($params['access_mode'] === 'except_customers' && !$except_customer_ids) {
+            $errors[] = [
+                'field'             => 'data[params][access_except_customer_ids][]',
+                'error_description' => 'Выберите контакты, которым нужно запретить доступ.',
+            ];
+
+            return $errors;
+        }
+
+        if ($params['access_mode'] === 'customers' && !$customer_ids) {
             $errors[] = [
                 'field'             => 'data[params][access_customer_ids][]',
-                'error_description' => $params['access_mode'] === 'except_customers'
-                    ? 'Выберите контакты, которым нужно запретить доступ.'
-                    : 'Выберите контакты, которым разрешён доступ.',
+                'error_description' => 'Выберите контакты, которым разрешён доступ.',
             ];
 
             return $errors;
@@ -123,8 +157,9 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             return $errors;
         }
 
-        $params['access_customer_ids'] = json_encode($customer_ids);
-        $params['access_category_ids'] = json_encode($category_ids);
+        $params['access_customer_ids']        = json_encode($customer_ids);
+        $params['access_except_customer_ids'] = json_encode($except_customer_ids);
+        $params['access_category_ids']        = json_encode($category_ids);
 
         if ($params['route_key'] === '') {
             $errors[] = [

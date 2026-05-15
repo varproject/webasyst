@@ -93,13 +93,18 @@ class shopB2bPluginCustomerAccessService
         }
 
         if ($mode === 'except_customers') {
-            $denied_ids = $this->getIds(ifset($params, 'access_customer_ids', ''));
+            $denied_ids = $this->getIds(ifset($params, 'access_except_customer_ids', ''));
+
+            // Backward compatibility: старые каналы могли хранить blacklist в access_customer_ids.
+            if (!$denied_ids && !array_key_exists('access_except_customer_ids', $params)) {
+                $denied_ids = $this->getIds(ifset($params, 'access_customer_ids', ''));
+            }
 
             if (!$denied_ids) {
                 return true;
             }
 
-            // Гость не может быть в чёрном списке contact_id.
+            // Гость не может совпасть с contact_id из blacklist.
             if ($contact_id <= 0) {
                 return true;
             }
