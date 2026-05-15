@@ -2,21 +2,21 @@
 
 class shopB2bPluginSalesChannelType extends shopSalesChannelType
 {
-    // Штатные поля.
+    // Возвращает штатные поля канала с мелкой настройкой внешнего вида.
     protected function getBaseFieldsConfig(): array
     {
-        $res = parent::getBaseFieldsConfig();
-        $res['description']['class'] = 'smallest';
-
-        return $res;
+        $base = parent::getBaseFieldsConfig();
+        $base['description']['class'] = 'smallest';
+        return $base;
     }
 
+    // Рендерит кастомную форму настройки B2B-канала.
     public function getFormHtml(array $channel): string
     {
-        $view           = wa('shop')->getView();
-        $params         = ifset($channel, 'params', []);
-        $from_root      = !empty($params['frontend_from_root']) || ifset($params, 'frontend_url', '') === '*';
-        $auth_required  = !empty($params['auth_required']) || !array_key_exists('auth_required', $params);
+        $view          = wa('shop')->getView();
+        $params        = ifset($channel, 'params', []);
+        $from_root     = !empty($params['frontend_from_root']) || ifset($params, 'frontend_url', '') === '*';
+        $auth_required = !empty($params['auth_required']) || !array_key_exists('auth_required', $params);
 
         $view->assign([
             'channel'             => $channel,
@@ -30,6 +30,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         return $view->fetch('file:' . wa()->getAppPath('plugins/b2b/templates/actions/B2bSalesChannelForm.html', 'shop'));
     }
 
+    // Рендерит базовые поля канала через стандартный механизм Shop-Script.
     protected function getBaseRenderedFields(array $channel): array
     {
         $result = [];
@@ -52,13 +53,13 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     {
         $errors = [];
 
-        $params['route_key'] = trim((string) ifset($params, 'route_key', ''));
+        $params['route_key']          = trim((string) ifset($params, 'route_key', ''));
         $params['frontend_from_root'] = !empty($params['frontend_from_root']) ? 1 : 0;
-        $params['auth_required'] = !empty($params['auth_required']) ? 1 : 0;
+        $params['auth_required']      = !empty($params['auth_required']) ? 1 : 0;
 
         if ($params['route_key'] === '') {
             $errors[] = [
-                'field' => 'data[params][route_key]',
+                'field'             => 'data[params][route_key]',
                 'error_description' => 'Выберите поселение Shop-Script.',
             ];
 
@@ -69,7 +70,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
         if (!$route) {
             $errors[] = [
-                'field' => 'data[params][route_key]',
+                'field'             => 'data[params][route_key]',
                 'error_description' => 'Выбранное поселение Shop-Script не найдено.',
             ];
 
@@ -86,36 +87,22 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             $custom_url = 'b2b';
         }
 
-        // Последний пользовательский URL храним отдельно, чтобы он не терялся при режиме "от корня".
+        // Храним последний пользовательский URL отдельно, чтобы он не терялся в режиме от корня.
         $params['frontend_custom_url'] = $custom_url;
 
         if ($params['frontend_from_root']) {
-            // Канал забирает корень выбранного поселения.
-            // frontend_custom_url при этом сохраняется.
             $params['frontend_url'] = '*';
         } else {
-            $params['frontend_url'] = $this->normalizeFrontendUrl($custom_url);
+            $params['frontend_url'] = $custom_url === '' ? '*' : $custom_url . '/*';
         }
 
-        // Дублируем данные поселения в params канала.
-        $params['domain'] = $route['domain'];
-        $params['route_id'] = $route['route_id'];
-        $params['route_url'] = $route['url'];
+        // Дублируем данные поселения в params канала для быстрого чтения после сохранения.
+        $params['domain']     = $route['domain'];
+        $params['route_id']   = $route['route_id'];
+        $params['route_url']  = $route['url'];
         $params['settlement'] = $route['settlement'];
 
         return $errors;
-    }
-
-    // Нормализует route pattern внутри поселения для routing.
-    protected function normalizeFrontendUrl($url): string
-    {
-        $url = $this->normalizeFrontendCustomUrl($url);
-
-        if ($url === '') {
-            return '*';
-        }
-
-        return $url . '/*';
     }
 
     // Нормализует пользовательский URL для хранения и показа в поле ввода.
@@ -135,7 +122,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         return $url;
     }
 
-    // Возвращает последний пользовательский URL без routing-mask `/*`.
+    // Возвращает последний пользовательский URL без routing-mask.
     protected function getFrontendCustomUrl(array $params): string
     {
         $url = $this->normalizeFrontendCustomUrl(ifset($params, 'frontend_custom_url', ''));
@@ -157,7 +144,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         return 'b2b';
     }
 
-    // Дополнительные действия после сохранения канала сейчас не требуются.
+    // Выполняется после сохранения канала.
     public function onSave(array $channel) {}
 
     // Формирует список shop-поселений для select.
@@ -165,10 +152,10 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     {
         $options = [
             [
-                'value' => '',
-                'title' => 'Выберите поселение',
-                'domain' => '',
-                'route_id' => '',
+                'value'     => '',
+                'title'     => 'Выберите поселение',
+                'domain'    => '',
+                'route_id'  => '',
                 'route_url' => '',
             ],
         ];
@@ -182,10 +169,10 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 $url = trim((string) ifset($route, 'url', ''));
 
                 $options[] = [
-                    'value' => $this->buildRouteKey($domain, $route_id),
-                    'title' => $this->formatSettlementTitle($domain, $url),
-                    'domain' => $domain,
-                    'route_id' => $route_id,
+                    'value'     => $domain . '|' . $route_id,
+                    'title'     => $this->formatSettlementTitle($domain, $url),
+                    'domain'    => $domain,
+                    'route_id'  => $route_id,
                     'route_url' => $url,
                 ];
             }
@@ -205,7 +192,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
         list($domain, $route_id) = explode('|', $route_key, 2);
 
-        $domain = trim($domain);
+        $domain   = trim($domain);
         $route_id = trim($route_id);
 
         if ($domain === '' || $route_id === '') {
@@ -219,21 +206,15 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         }
 
         $route = $routes[$route_id];
-        $url = trim((string) ifset($route, 'url', ''));
+        $url   = trim((string) ifset($route, 'url', ''));
 
         return [
-            'domain' => $domain,
-            'route_id' => $route_id,
-            'url' => $url,
+            'domain'     => $domain,
+            'route_id'   => $route_id,
+            'url'        => $url,
             'settlement' => $this->formatSettlementTitle($domain, $url),
-            'route' => $route,
+            'route'      => $route,
         ];
-    }
-
-    // Формирует ключ привязки канала к поселению.
-    protected function buildRouteKey($domain, $route_id): string
-    {
-        return $domain . '|' . $route_id;
     }
 
     // Формирует человекочитаемое название поселения.

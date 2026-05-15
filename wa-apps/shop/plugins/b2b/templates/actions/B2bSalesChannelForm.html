@@ -1,14 +1,14 @@
 <div class="fields form">
     <form action="{$wa_app_url}?module=channels&action=save" id="js-sales-channel-form">
-
         {if !empty($channel.id)}
             <input type="hidden" name="id" value="{$channel.id|escape}">
         {else}
             <input type="hidden" name="is_new" value="1">
         {/if}
-
         <input type="hidden" name="data[type]" value="{$channel.type|escape}">
 
+
+        {* Штатные поля *}
         <div class="fields-group custom-mt-16">
             <div class="field">
                 <div class="name">
@@ -28,12 +28,15 @@
             {/foreach}
         </div>
 
+
+        {* Настрока витрины *}
         <div class="fields-group custom-mt-24 js-b2b-address-settings">
             <h3 class="heading">Настройка витрины</h3>
 
             <input type="hidden" name="data[params][frontend_from_root]" class="js-b2b-frontend-from-root"
                 value="{if !empty($frontend_from_root)}1{else}0{/if}">
 
+            {* Тип адреса *}
             <div class="field">
                 <div class="name">
                     Тип адреса
@@ -67,6 +70,7 @@
                 </div>
             </div>
 
+            {* Полный адрес *}
             <div class="field">
                 <div class="name for-input">
                     Полный адрес
@@ -102,6 +106,7 @@
                 </div>
             </div>
 
+            {* Режим доступа *}
             <div class="field">
                 <div class="name">
                     Режим доступа
@@ -120,7 +125,9 @@
             </div>
         </div>
 
-        {* блок сохранить/удалить *}
+
+
+        {* Блок сохранить/удалить *}
         <div class="bottombar sticky s-settings-fixed-bottombar field">
             <div class="value">
                 <div class="flexbox middle">
