@@ -239,8 +239,11 @@
 
                         <p class="hint custom-ml-24 custom-mt-6 custom-mb-8">
                             Укажите ID блока из приложения “Сайт”.
-                            <a href="javascript:void(0);" class="js-b2b-show-block-vars inline-link"><b><i
-                                        class="fas fa-code"></i> Доступны переменные</b></a>
+                            {if $show_block_var|default:false}
+                                <a href="javascript:void(0);" class="js-b2b-show-block-vars inline-link">
+                                    <b><i class="fas fa-code"></i> Доступные переменные для блока.</b>
+                                </a>
+                            {/if}
                         </p>
                     </div>
                 </div>
@@ -267,7 +270,9 @@
     </form>
 </div>
 
-{include file="./B2bBlockVarsDrawer.html" inline}
+{if $show_block_var|default:false}
+    {include file="./B2bBlockVarsDrawer.html" inline}
+{/if}
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
