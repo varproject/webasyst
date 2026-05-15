@@ -35,8 +35,8 @@ return array (
       'button_caption' => 'Регистрация',
       'confirm_email' => true,
     ),
-    'route_url' => 'apanel-2/*',
-    'app' => 'apanel',
+    'route_url' => '*',
+    'app' => 'shop',
     'auth_type' => 'user_password',
     'signup_confirm' => true,
     'signup_notify' => true,
@@ -62,7 +62,7 @@ return array (
   ),
   'webasyst2.loc' => 
   array (
-    'auth' => true,
+    'auth' => false,
     'fields' => 
     array (
       'firstname' => 
@@ -96,7 +96,7 @@ return array (
       'confirm_email' => true,
     ),
     'route_url' => '*',
-    'app' => 'site',
+    'app' => 'shop',
     'auth_type' => 'user_password',
     'signup_confirm' => true,
     'signup_notify' => true,

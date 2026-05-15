@@ -29,9 +29,9 @@
         </div>
 
 
-        {* Настрока витрины *}
+        {* Настрока адреса *}
         <div class="fields-group custom-mt-24 js-b2b-address-settings">
-            <h3 class="heading">Настройка витрины</h3>
+            <h3 class="heading">Адрес</h3>
 
             <input type="hidden" name="data[params][frontend_from_root]" class="js-b2b-frontend-from-root"
                 value="{if !empty($frontend_from_root)}1{else}0{/if}">
@@ -106,6 +106,12 @@
                 </div>
             </div>
 
+        </div>
+
+        {* Настрока доступа *}
+        <div class="fields-group custom-mt-24 js-b2b-address-settings">
+            <h3 class="heading">Доступы</h3>
+
             {* Режим доступа *}
             <div class="field">
                 <div class="name">
@@ -124,6 +130,26 @@
                 </div>
             </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -148,6 +174,9 @@
 
     </form>
 </div>
+
+
+
 
 <script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
 <script>

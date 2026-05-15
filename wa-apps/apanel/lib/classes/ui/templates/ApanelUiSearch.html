@@ -1,9 +1,0 @@
-<form method="get" action="{$action_url|escape}" class="d-flex align-items-center mb-0">
-
-    {if $hidden_id !== ''}
-        <input type="hidden" name="id" value="{$hidden_id|escape}">
-    {/if}
-
-    <input type="text" name="query" value="{$query|escape}" class="form-control form-control-sm"
-        placeholder="{$placeholder|escape}" style="min-width: 260px;"; {if !empty($disabled)}disabled="disabled" {/if}>
-</form>

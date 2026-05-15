@@ -14,7 +14,6 @@ return array (
   'logs' => true,
   'cabinet' => false,
   'ui' => true,
-  'apanel' => false,
   'akit' => false,
   'aaaaaaa' => true,
   'apiexplorer' => true,

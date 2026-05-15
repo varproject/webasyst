@@ -5,6 +5,7 @@ class shopB2bPluginFrontendAction extends waViewAction
     // Frontend-страница B2B-портала.
     public function execute()
     {
+        $this->setLayout(new shopB2bPluginFrontendLayout());
         $channel_id = waRequest::param('b2b_channel_id', 0, waRequest::TYPE_INT);
 
         if ($channel_id <= 0) {

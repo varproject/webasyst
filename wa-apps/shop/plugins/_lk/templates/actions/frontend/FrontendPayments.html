@@ -1,0 +1,21 @@
+<h1>Типы оплаты</h1>
+
+{if empty($payments)}
+    <div class="lk-alert">Для этого кабинета не настроены типы оплаты.</div>
+{else}
+    <form method="post" action="{$lk_urls.payment_save|escape}">
+        {$wa->csrf()}
+        <div class="lk-grid">
+            {foreach $payments as $payment}
+                <label class="lk-card">
+                    <input type="radio" name="payment_type_id" value="{$payment.id|escape}" {if !empty($profile.payment_type_id) && $profile.payment_type_id == $payment.id}checked{/if}>
+                    <strong>{$payment.name|escape}</strong>
+                    <p>{$payment.description|escape}</p>
+                </label>
+            {/foreach}
+        </div>
+        {if $can_manage}
+            <button class="lk-button primary" type="submit">Сохранить тип оплаты компании</button>
+        {/if}
+    </form>
+{/if}

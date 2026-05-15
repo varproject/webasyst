@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{$wa->title()|default:'B2B кабинет'|escape}</title>
+    {$wa->css()}
+    <link rel="stylesheet" href="{$lk_static_url}css/frontend.css?v={$wa->version()|escape}">
+</head>
+<body class="lk-body">
+<div class="lk-shell">
+
+    <aside class="lk-sidebar">
+        <a class="lk-logo" href="{$lk_cabinet_url|escape}">{$lk_route.name|default:'B2B кабинет'|escape}</a>
+        <nav class="lk-menu">
+            <a href="{$lk_cabinet_url|escape}" class="{if $wa->param('action') == 'dashboard'}selected{/if}">Главная</a>
+            {foreach $lk_menu as $item}
+                <a href="{$item.url|escape}" class="{if !empty($item.selected)}selected{/if}">{$item.name|escape}</a>
+            {/foreach}
+        </nav>
+    </aside>
+    
+    <main class="lk-main">
+        <header class="lk-header">
+            <div>
+                {if $lk_context && $lk_context->getActiveCompany()}
+                    {$company = $lk_context->getActiveCompany()}
+                    <strong>{$company.company|default:$company.name|escape}</strong>
+                {else}
+                    <strong>Компания не выбрана</strong>
+                {/if}
+            </div>
+            <div class="lk-user">{$lk_user->getName()|escape}</div>
+        </header>
+        <section class="lk-content">
+            {$content}
+        </section>
+    </main>
+</div>
+</body>
+</html>
