@@ -30,11 +30,13 @@ class shopB2bPluginCustomerAccessService
 
         $model = new waModel();
         $sql   = "
-            SELECT c.id, c.name, e.email
+            SELECT c.id, c.name, e.email, p.value AS phone
             FROM shop_customer sc
                 JOIN wa_contact c ON c.id = sc.contact_id
                 LEFT JOIN wa_contact_emails e ON e.contact_id = c.id AND e.sort = 0
+                LEFT JOIN wa_contact_data p ON p.contact_id = c.id AND p.field = 'phone'
             WHERE c.id IN (i:ids)
+            GROUP BY c.id
             ORDER BY c.name
         ";
 
@@ -53,9 +55,15 @@ class shopB2bPluginCustomerAccessService
             return [];
         }
 
-        $model     = new shopCustomerModel();
-        $customers = $model->getList(null, $query, 0, $limit);
-        $result    = [];
+        $model = new shopCustomerModel();
+
+        list($customers, $total) = $model->getList(null, $query, 0, $limit);
+
+        if (!$customers) {
+            return [];
+        }
+
+        $result = [];
 
         foreach ($customers as $customer) {
             $result[$customer['id']] = [
