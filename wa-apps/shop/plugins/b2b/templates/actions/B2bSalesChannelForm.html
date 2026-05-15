@@ -239,6 +239,8 @@
 
                 <div class="value">
                     <div class="fields width-100">
+
+                        {* Шаблон плагина *}
                         <div class="field">
                             <div class="name for-checkbox">
                                 <label>
@@ -251,13 +253,15 @@
                                     Шаблон плагина
                                 </label>
                             </div>
+
                             <div class="value">
                                 <span class="hint">
-                                    Будет показана страница ограничения доступа из плагина.
+                                    Будет показана стандартная страница ограничения доступа из плагина.
                                 </span>
                             </div>
                         </div>
 
+                        {* Мой блок *}
                         <div class="field">
                             <div class="name for-checkbox">
                                 <label>
@@ -270,15 +274,18 @@
                                     Мой блок
                                 </label>
                             </div>
+
                             <div class="value">
+                                <div class="flexbox middle space-8">
+                                    &#123;$wa->block("<input type="text" name="data[params][access_denied_block_id]"
+                                        class="small js-b2b-access-denied-block-id custom-mr-0"
+                                        value="{$access_denied_block_id|default:''|escape}"
+                                        placeholder="b2b_access_denied">")&#125;
 
-
-                                &#123;$wa->block("<input type="text" name="data[params][access_denied_block_id]"
-                                    class="small js-b2b-access-denied-block-id custom-mr-0"
-                                    value="{$access_denied_block_id|default:''|escape}"
-                                    placeholder="b2b_access_denied">")&#125;
-
-
+                                    {if !empty($b2b_cheat_sheet_button)}
+                                        {$b2b_cheat_sheet_button}
+                                    {/if}
+                                </div>
 
                                 <p class="hint">
                                     Укажите ID блока из приложения “Сайт”. Так же доступны переменные в "Шпаргалке", для
@@ -286,11 +293,11 @@
                                 </p>
                             </div>
                         </div>
+
                     </div>
                 </div>
+
             </div>
-
-
         </div>
 
 
@@ -371,7 +378,6 @@
     }
 </style>
 
-
 <script>
     $(function() {
         "use strict";
@@ -397,6 +403,8 @@
         const $access_denied_behavior = $form.find('.js-b2b-access-denied-behavior');
         const $access_denied_toggle = $form.find('.js-b2b-access-denied-toggle');
         const $access_denied_page_field = $form.find('.js-b2b-access-denied-page-field');
+        const $access_denied_page_mode = $form.find('.js-b2b-access-denied-page-mode');
+        const $access_denied_block_id = $form.find('.js-b2b-access-denied-block-id');
 
         const cleanRoutePart = function(value) {
             value = String(value || '').trim();
@@ -535,9 +543,7 @@
 
         const updateAccessDeniedState = function() {
             const behavior = String($access_denied_behavior.val() || 'ignore');
-            const page_mode = String($form.find('.js-b2b-access-denied-page-mode:checked').val() ||
-                'plugin');
-            const $block_id = $form.find('.js-b2b-access-denied-block-id');
+            const page_mode = String($access_denied_page_mode.filter(':checked').val() || 'plugin');
 
             $access_denied_toggle
                 .find('span')
@@ -550,12 +556,12 @@
             $access_denied_page_field.toggle(behavior === 'page');
 
             if (page_mode === 'block') {
-                $block_id
+                $access_denied_block_id
                     .prop('readonly', false)
                     .attr('aria-disabled', 'false')
                     .css('opacity', '');
             } else {
-                $block_id
+                $access_denied_block_id
                     .prop('readonly', true)
                     .attr('aria-disabled', 'true')
                     .css('opacity', '0.35');
@@ -630,29 +636,17 @@
                 width: '100%',
                 placeholder: 'Найти покупателя',
                 ajax: {
-                    url: {$wa_app_url|json_encode} + '?action=autocomplete&type=customer',
+                    url: {$wa_app_url|json_encode} + '?plugin=b2b&module=backend&action=customers',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            term: params.term || ''
+                            q: params.term || ''
                         };
                     },
                     processResults: function(data) {
-                        const results = [];
-
-                        data = data || [];
-
-                        data.forEach(function(item) {
-                            results.push({
-                                id: item.id,
-                                text: item.name || item.value || $('<div>' + (item
-                                    .label || '') + '</div>').text()
-                            });
-                        });
-
-                        return {
-                            results: results
+                        return data || {
+                            results: []
                         };
                     }
                 }

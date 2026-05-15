@@ -18,6 +18,8 @@ class shopB2bPluginBackendCustomersController extends waJsonController
 
             if (!empty($customer['email'])) {
                 $text .= ' — ' . $customer['email'];
+            } elseif (!empty($customer['phone'])) {
+                $text .= ' — ' . $customer['phone'];
             }
 
             $items[] = [

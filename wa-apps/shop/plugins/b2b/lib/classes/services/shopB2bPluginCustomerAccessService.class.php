@@ -53,23 +53,20 @@ class shopB2bPluginCustomerAccessService
             return [];
         }
 
-        $model = new waModel();
-        $like  = '%' . $model->escape($query, 'like') . '%';
-        $sql   = "
-            SELECT c.id, c.name, e.email
-            FROM shop_customer sc
-                JOIN wa_contact c ON c.id = sc.contact_id
-                LEFT JOIN wa_contact_emails e ON e.contact_id = c.id AND e.sort = 0
-            WHERE c.name LIKE s:query
-                OR e.email LIKE s:query
-            GROUP BY c.id
-            ORDER BY c.name
-            LIMIT {$limit}
-        ";
+        $model     = new shopCustomerModel();
+        $customers = $model->getList(null, $query, 0, $limit);
+        $result    = [];
 
-        return $model->query($sql, [
-            'query' => $like,
-        ])->fetchAll('id');
+        foreach ($customers as $customer) {
+            $result[$customer['id']] = [
+                'id'    => (int) $customer['id'],
+                'name'  => ifset($customer, 'name', ''),
+                'email' => ifset($customer, 'email', ''),
+                'phone' => ifset($customer, 'phone', ''),
+            ];
+        }
+
+        return $result;
     }
 
     // Проверяет доступ контакта к B2B-каналу.
@@ -77,6 +74,10 @@ class shopB2bPluginCustomerAccessService
     {
         $contact_id = (int) $contact_id;
         $mode       = ifset($params, 'access_mode', 'all');
+
+        if (!in_array($mode, ['all', 'customers', 'categories'])) {
+            $mode = 'all';
+        }
 
         if ($mode === 'all') {
             return true;
@@ -90,28 +91,24 @@ class shopB2bPluginCustomerAccessService
             return in_array($contact_id, $this->getIds(ifset($params, 'access_customer_ids', '')));
         }
 
-        if ($mode === 'categories') {
-            $category_ids = $this->getIds(ifset($params, 'access_category_ids', ''));
+        $category_ids = $this->getIds(ifset($params, 'access_category_ids', ''));
 
-            if (!$category_ids) {
-                return false;
-            }
-
-            $model = new waModel();
-            $sql   = "
-                SELECT COUNT(*)
-                FROM wa_contact_categories
-                WHERE contact_id = i:contact_id
-                    AND category_id IN (i:category_ids)
-            ";
-
-            return (int) $model->query($sql, [
-                'contact_id'   => $contact_id,
-                'category_ids' => $category_ids,
-            ])->fetchField() > 0;
+        if (!$category_ids) {
+            return false;
         }
 
-        return false;
+        $model = new waModel();
+        $sql   = "
+            SELECT COUNT(*)
+            FROM wa_contact_categories
+            WHERE contact_id = i:contact_id
+                AND category_id IN (i:category_ids)
+        ";
+
+        return (int) $model->query($sql, [
+            'contact_id'   => $contact_id,
+            'category_ids' => $category_ids,
+        ])->fetchField() > 0;
     }
 
     // Проверяет, что контакт является покупателем магазина.
