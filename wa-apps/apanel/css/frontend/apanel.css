@@ -1,0 +1,67 @@
+.apanel-storefront {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f6f8;
+    color: #1f2937;
+}
+
+.apanel-shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px;
+}
+
+.apanel-screen,
+.apanel-empty-state {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.apanel-screen h1,
+.apanel-empty-state h1 {
+    margin: 0 0 12px;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.apanel-screen p,
+.apanel-empty-state p {
+    margin: 0;
+    color: #6b7280;
+}
+
+
+
+.apanel-storefront-login .apanel-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+}
+
+.apanel-login-screen {
+    width: 100%;
+    max-width: 420px;
+}
+
+.apanel-login-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+}
+
+.apanel-login-card h1 {
+    margin: 0 0 24px;
+    font-size: 24px;
+    line-height: 1.2;
+}
+
+.apanel-login-links {
+    margin-top: 16px;
+    font-size: 14px;
+}

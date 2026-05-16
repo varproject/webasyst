@@ -1,0 +1,26 @@
+{* Дерево категории *}
+{if $main_body_tree_enabled}
+    <div id="main_body_tree" class="col-auto apanel-menu-container list-group list-group-flush h-100 p-0 border-end">
+        <div class="tree-category d-flex flex-column h-100 overflow-y-auto p-2">
+            <div class="tree-content">
+                {if !empty($main_body_tree_items)}
+                    {foreach $main_body_tree_items as $item}
+                        {$item}
+                    {/foreach}
+                {/if}
+            </div>
+        </div>
+    </div>
+{/if}
+
+{* Контент *}
+{if $main_body_table_enabled && !empty($main_body_table_items)}
+    <div id="main_body_table" class="col h-100 overflow-y-auto py-0 px-0 min-h-0"
+        style="overflow-y: scroll;">
+        {foreach $main_body_table_items as $item}
+            {$item}
+        {/foreach}
+    </div>
+{else}
+    {$content|default:''}
+{/if}

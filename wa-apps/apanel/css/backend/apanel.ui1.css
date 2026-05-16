@@ -1,0 +1,667 @@
+/* Webasyst backend UI common elements & header
+  (account title, installed apps, user corner)
+-------------------------------------------------- */
+#wa {
+    width: 100%;
+    height: 100%;
+    height: auto !important;
+    min-height: 100%;
+    min-width: 760px;
+}
+
+#wa-header {
+    height: 83px;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+#wa-usercorner a, #wa-usercorner a:visited {
+    color: #03c;
+    outline: 0 none;
+}
+
+#wa-header.wa-moreapps {}
+
+#wa-app {
+    overflow: hidden;
+    clear: both;
+    *zoom: 1;
+    *width: 100%;
+}
+
+#wa-app:before,
+#wa-app:after {
+    content: "";
+    display: table;
+}
+
+#wa-app:after {
+    clear: both;
+}
+
+#wa-launchpad {
+    background: #000;
+    font-size: 0.9em;
+    padding: 0;
+}
+
+#wa-launchpad ul {
+    margin: 0;
+    padding: 7px;
+    height: 12px;
+}
+
+#wa-launchpad ul li {
+    list-style: none;
+    float: left;
+}
+
+#wa-launchpad a {
+    color: #888;
+    margin-right: 20px;
+    margin-top: 5px;
+    text-decoration: none;
+}
+
+#wa-launchpad li.selected a {
+    color: #eee;
+}
+
+a#wa-launchpad-add {
+    float: right;
+    margin-right: 12px;
+    color: #888;
+    text-decoration: none;
+}
+
+#wa-announcement {
+    background: #ffd;
+    font-size: 0.9em;
+    padding: 0;
+    position: relative;
+    box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.13);
+}
+
+#wa-announcement p {
+    padding: 10px;
+    margin: 0;
+    border-bottom: 1px solid #ccb;
+}
+
+#wa-announcement.critical {
+    background: #fcc;
+}
+
+#wa-announcement.critical p {
+    border-color: #caa;
+}
+
+#wa-announcement a.wa-announcement-close {
+    float: right;
+    display: inline-block;
+    margin-right: 12px;
+    margin-top: 7px;
+    margin-left: 13px;
+    color: #aa6;
+    text-decoration: none;
+    font-size: 1.6em;
+}
+
+#wa-announcement .w-webasyst-id-banner {
+    background: #e2ffdb;
+}
+
+#wa-announcement .w-webasyst-id-banner a.wa-announcement-close {
+    color: #71aa64;
+}
+
+#wa-announcement .w-webasyst-id-banner .icon16.waid-green {
+    background-image: url("../../img/webasyst-wand-bold.svg");
+    background-size: 16px 16px;
+}
+
+#wa-account {
+    width: 200px;
+    font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+}
+
+#wa-account {
+    float: left;
+    text-align: center;
+}
+
+#wa-account h3 {
+    font-weight: normal;
+    font-size: 16px;
+    text-decoration: none;
+    margin: 15px 0 5px;
+}
+
+#wa-account a {
+    padding: 0;
+    font-size: .8em;
+    color: #03c;
+    outline: 0 none;
+    font-size: 11px !important;
+    text-decoration: none;
+}
+
+#wa-account a.wa-dashboard-link {
+    display: block;
+    line-height: 1.5em;
+}
+
+#wa-account a.wa-dashboard-link:hover h3 {
+    color: red !important;
+}
+
+#wa-account a.wa-frontend-link {
+    opacity: 0;
+    transition: 0.5s opacity;
+    position: absolute;
+}
+
+#wa-account a.wa-frontend-link i {
+    margin-left: 0.2em;
+    margin-top: 0.1em;
+}
+
+#wa-account:hover a.wa-frontend-link {
+    opacity: 1;
+    transition-delay: 0.5s;
+}
+
+#wa-usercorner {
+    width: 206px;
+    float: right;
+    padding: 10px 10px;
+    line-height: 1;
+}
+
+#wa-usercorner .profile.image32px .details {
+    min-height: 60px;
+}
+
+#wa-usercorner a {
+    text-decoration: none;
+}
+
+#wa-usercorner a.hint {
+    margin-right: 5px;
+}
+
+#wa-usercorner img {
+    border-radius: 50%;
+}
+
+a#wa-my-username {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#wa-applist {
+    margin: 2px 200px 0px 200px;
+    padding-top: 5px;
+    padding-right: 25px;
+    position: relative;
+}
+
+#wa-applist ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+#wa-applist ul li {
+    display: inline-block;
+    width: 72px;
+    margin-right: 3px;
+    text-align: center;
+    vertical-align: top;
+    position: relative;
+}
+
+#wa-applist ul li:last-child {
+    margin-right: 0;
+}
+
+#wa-applist ul li a {
+    display: block;
+    font-size: 11px;
+    line-height: 1.05em;
+    text-align: center;
+    text-decoration: none;
+    color: #777;
+    padding-bottom: 13px;
+    font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+}
+
+#wa-applist ul li a:hover {
+    color: #ee2200;
+}
+
+#wa-applist ul li a .indicator {
+    position: absolute;
+    top: 0px;
+    right: 3px;
+    background: #f00;
+    color: #fff;
+}
+
+#wa-applist ul li a img {
+    border: 0;
+    display: block;
+    margin: 0 auto 5px;
+    width: 48px;
+    height: 48px;
+}
+
+#wa-applist ul li.selected a {
+    font-weight: bold;
+    color: #000;
+    font-size: 11px;
+}
+
+#wa-applist a#wa-moreapps {
+    padding: 0;
+    background: url('../../../wa-content/img/moreapps.png');
+    opacity: 0.2;
+    background-size: 96px 48px;
+    display: block;
+    width: 48px;
+    height: 48px;
+}
+
+#wa-applist a#wa-moreapps.uarr {
+    background-position: -48px 0;
+}
+
+#wa-applist:hover a#wa-moreapps {
+    opacity: 0.3;
+}
+
+#wa-applist a#wa-moreapps:hover {
+    opacity: 0.5;
+}
+
+#wa-header.minimized {
+    height: 18px;
+    margin-top: 5px;
+    margin-bottom: -2px;
+}
+
+#wa-header.minimized #wa-applist ul li a {
+    line-height: 14px;
+}
+
+#wa-header.minimized a#wa-my-username {
+    line-height: 16px;
+}
+
+#wa-header.minimized #wa-account h3 {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0;
+}
+
+#wa-header.minimized #wa-account a {
+    display: none;
+}
+
+#wa-header.minimized #wa-usercorner {
+    padding: 0;
+}
+
+#wa-header.minimized #wa-usercorner em {
+    display: none;
+}
+
+#wa-header.minimized #wa-userprofile,
+#wa-header.minimized #wa-useractionlinks {
+    float: left;
+    margin-right: 5px;
+}
+
+#wa-header.minimized #wa-applist {
+    padding-top: 0;
+}
+
+#wa-header.minimized img {
+    display: none;
+}
+
+#wa-header.minimized .indicator {
+    position: relative;
+    top: 0;
+    padding: 0 4px;
+    line-height: 14px;
+    right: 2px;
+}
+
+#wa-header.minimized a#wa-moreapps {
+    top: 0;
+}
+
+/*
+ * CORE WEBASYST CLASSES
+ * ---------------------
+ * Core Webasyst app classes for both atom elements (links, spans) and block elements (menus, tables, tabs, lists).
+*/
+
+/* ATOM elements: links, spans, etc.
+-------------------------------------------- */
+.large {
+    font-size: 1.2em;
+}
+
+.small {
+    font-size: 0.8em;
+}
+
+.visible {
+    display: block !important;
+}
+
+.bold {
+    font-weight: bold !important;
+}
+
+.no-bold {
+    font-weight: normal !important;
+}
+
+.italic {
+    font-style: italic !important;
+}
+
+.no-italic {
+    font-style: normal !important;
+}
+
+.underline {
+    text-decoration: underline !important;
+}
+
+.no-underline {
+    text-decoration: none !important;
+}
+
+.strike,
+.strike * {
+    text-decoration: line-through !important;
+}
+
+.hidden {
+    display: none;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.valign-top {
+    vertical-align: top !important;
+}
+
+.valign-middle {
+    vertical-align: middle !important;
+}
+
+.valign-bottom {
+    vertical-align: bottom !important;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clear,
+.clear-all,
+.clear-both {
+    clear: both;
+}
+
+.clear-left {
+    clear: left;
+}
+
+.clear-right {
+    clear: right;
+}
+
+.highlighted {
+    background: #ffc;
+}
+
+.heading,
+.heading a {
+    font-family: 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+    color: #999;
+    text-transform: uppercase;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.gray,
+.grey,
+a.gray,
+a.grey,
+.gray a,
+.grey a {
+    color: #aaa;
+}
+
+.red {
+    color: #f00;
+}
+
+.black {
+    color: #000;
+}
+
+.hint,
+a.hint,
+span.hint {
+    color: #aaa;
+    font-size: 0.8em;
+}
+
+.hint a {
+    color: #888;
+}
+
+.hint a,
+a.hint {
+    text-decoration: underline !important;
+}
+
+.hr {
+    border-top: 1px solid #ddd;
+    margin: 5px 10px;
+    padding: 0;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.break-words {
+    word-break: break-all;
+}
+
+a.inline-link {
+    text-decoration: none !important;
+}
+
+a.inline-link b {
+    border-bottom: 1px dotted;
+    font-weight: normal;
+    position: relative;
+    top: -0.13em;
+}
+
+a.inline-link b i {
+    font-style: normal;
+    position: relative;
+    top: 0.13em;
+}
+
+a.back {
+    font-size: 11px;
+    background: rgba(0, 0, 0, 0.07);
+    color: #777;
+    padding: 5px 5px 3px;
+    position: relative;
+    top: -3px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.count {
+    float: right;
+    color: #999;
+    font-size: 0.82em;
+    display: inline-block;
+    position: relative;
+    top: 0.05em;
+    margin: 0 0 -0.5em;
+}
+
+.selected .count {
+    color: #777;
+}
+
+.highlighted.count {
+    color: #777;
+}
+
+.indicator {
+    -moz-border-radius: 9px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    background: #ffb;
+    color: #000;
+    font-size: 10px;
+    line-height: 1em;
+    padding: 2px 4px;
+    display: inline-block;
+    position: relative;
+    top: -0.65em;
+    font-weight: bold;
+}
+
+.indicator.red {
+    background: red;
+    color: #fff !important;
+}
+
+.count.indicator {
+    top: 0;
+    font-size: 11px;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.userpic,
+.userpic20 {
+    border-radius: 50%;
+}
+
+.status {
+    margin: 2px 0 5px;
+    padding: 0;
+    color: #666666;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.editable:hover {
+    background: #eed;
+    cursor: text;
+}
+
+.errormsg {
+    display: block;
+    font-size: 0.9em;
+    font-weight: bold;
+    font-style: italic;
+    color: red;
+}
+
+.successmsg {
+    display: block;
+    font-size: 0.9em;
+    font-weight: bold;
+    font-style: italic;
+    color: green;
+}
+
+.transparent-sprite {
+    background: url('../../img/transparent-sprite.png');
+}
+
+
+/* PROFILE
+-------------------------------------------- */
+.profile .image {
+    float: left;
+}
+
+.profile .details {
+    margin-left: 55px;
+}
+
+.profile.image20px .details {
+    margin-left: 28px;
+    min-height: 25px;
+}
+
+.profile.image20px img.userpic {
+    width: 20px;
+    height: 20px;
+}
+
+.profile.image32px .details {
+    margin-left: 37px;
+    min-height: 37px;
+}
+
+.profile.image32px img.userpic {
+    width: 32px;
+    height: 32px;
+}
+
+.profile.image50px .details {
+    margin-left: 65px;
+    min-height: 55px;
+}
+
+.profile.image50px img.userpic {
+    width: 50px;
+    height: 50px;
+}
+
+.profile.image96px .details {
+    margin-left: 105px;
+    min-height: 105px;
+}
+
+.profile.image96px img.userpic {
+    width: 96px;
+    height: 96px;
+}

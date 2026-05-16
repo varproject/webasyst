@@ -1,0 +1,29 @@
+{* JS jQuery *}
+{if !$has_fullscreen}
+    <script src="{$wa_app_static_url}js/vendors/jquery-3.7.1.min.js?v={$wa->version()}"></script>
+{/if}
+
+{* JS Vendors *}
+<script src="{$wa_app_static_url}js/vendors/htmx-2.0.4.min.js" defer></script>
+<script src="{$wa_app_static_url}js/vendors/popperjs-2.11.8.min.js" defer></script>
+<script src="{$wa_app_static_url}js/vendors/bootstrap-5.3.3.min.js" defer></script>
+<script src="{$wa_app_static_url}js/vendors/adminlte.js" defer></script>
+<script src="{$wa_app_static_url}js/vendors/sortable-1.15.2.min.js" defer></script>
+
+{* <script src="{$wa_app_static_url}js/vendors/select2-4.1.0-rc.min.js" defer></script> *}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.documentElement.classList.remove('lte-preload');
+    });
+</script>
+
+{* JS Helpers (Загружаем первыми, т.к. компоненты зависят от них) *}
+<script src="{$wa_app_static_url}js/helpers/apanel.helpers.js?v={$wa->version()}" defer></script>
+
+{* JS Components *}
+<script src="{$wa_app_static_url}js/components/apanel.select2.js?v={$wa->version()}" defer></script>
+<script src="{$wa_app_static_url}js/components/apanel.sortable.js?v={$wa->version()}" defer></script>
+
+{* JS Init (Запускает всё) *}
+<script src="{$wa_app_static_url}js/backend/apanel.ui.init.js?v={$wa->version()}" defer></script>

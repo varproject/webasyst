@@ -1,0 +1,517 @@
+<section class="wapv-b2b">
+    <style>
+        .wapv-b2b {
+            --bg: #ffffff;
+            --bg-soft: #f7f9fc;
+            --line: #e8edf5;
+            --text: #172033;
+            --muted: #5f6b85;
+            --blue: #2f6bff;
+            --blue2: #62b6ff;
+            --violet: #7c5cff;
+            --green: #21c48a;
+            --orange: #ff9f43;
+            --pink: #ff5fa2;
+            --shadow: 0 18px 50px rgba(32, 58, 99, .10);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .wapv-b2b__hero {
+            display: grid;
+            grid-template-columns: 1.06fr .94fr;
+            gap: 24px;
+            padding: 28px;
+            align-items: stretch;
+        }
+
+        .wapv-b2b__content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 380px;
+        }
+
+        .wapv-b2b__tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+            margin-bottom: 16px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            border: 1px solid #dce7ff;
+            font-weight: 700;
+            color: #1dbf73;
+            background: linear-gradient(90deg, #1dbf73, #4ab9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .wapv-b2b__tag i {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #00d58a, #54b4eb);
+            box-shadow: 0 0 0 4px rgba(47, 107, 255, .10);
+            display: inline-block;
+        }
+
+        .wapv-b2b__title {
+            margin: 0 0 14px;
+            font-size: clamp(34px, 4vw, 58px);
+            line-height: 1.02;
+            letter-spacing: -0.04em;
+            text-align: left;
+        }
+
+        .wapv-b2b__lead {
+            margin: 0 0 22px;
+            max-width: 60ch;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.62;
+            text-align: left;
+        }
+
+        .wapv-b2b__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .wapv-b2b__btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
+            padding: 0 18px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 15px;
+            transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+        }
+
+        .wapv-b2b__btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .wapv-b2b__btn--primary {
+            color: #fff !important;
+            border: 1px solid var(--line);
+            background: linear-gradient(90deg, #1dbf73, #4ab9ff);
+        }
+
+        .wapv-b2b__btn--ghost {
+            color: #fff !important;
+            border: 1px solid var(--line);
+            background: linear-gradient(135deg, var(--blue), var(--violet));
+        }
+
+        .wapv-b2b__features {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 4px;
+        }
+
+        .wapv-b2b__feature {
+            display: flex;
+            gap: 14px;
+            padding: 16px;
+            border-radius: 20px;
+            background: var(--bg);
+            border: 1px solid var(--line);
+            box-shadow: 0 8px 18px rgba(31, 55, 92, .05);
+        }
+
+        .wapv-b2b__icon {
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18);
+        }
+
+        .wapv-b2b__icon svg {
+            width: 24px;
+            height: 24px;
+            display: block;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .wapv-b2b__feature h3 {
+            margin: 0 0 5px;
+            font-size: 16px;
+            line-height: 1.25;
+            text-align: left;
+        }
+
+        .wapv-b2b__feature p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .wapv-b2b__visual {
+            position: relative;
+            min-height: 380px;
+            border-radius: 26px;
+            overflow: hidden;
+            background:
+                radial-gradient(900px 420px at 15% 10%, rgba(98, 182, 255, .20), transparent 40%),
+                radial-gradient(680px 320px at 95% 15%, rgba(124, 92, 255, .18), transparent 34%),
+                linear-gradient(180deg, #fbfdff 0%, #f3f8ff 100%);
+            border: 1px solid var(--line);
+        }
+
+        .wapv-b2b__visual::before {
+            content: "";
+            position: absolute;
+            inset: auto -70px -70px auto;
+            width: 260px;
+            height: 260px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, rgba(47, 107, 255, .12), rgba(47, 107, 255, 0) 68%);
+        }
+
+        .wapv-b2b__card {
+            position: absolute;
+            inset: 20px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, .78);
+            border: 1px solid rgba(255, 255, 255, .9);
+            box-shadow: 0 18px 40px rgba(40, 70, 120, .08);
+            backdrop-filter: blur(8px);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .wapv-b2b__top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .wapv-b2b__brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            font-size: 13px;
+            color: #25314d;
+        }
+
+        .wapv-b2b__logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            overflow: hidden;
+            flex: 0 0 46px;
+            background: #fff;
+            border: 1px solid var(--line);
+        }
+
+        .wapv-b2b__logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .wapv-b2b__pill {
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: #eef4ff;
+            border: 1px solid #dce7ff;
+            color: #3559d6;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .wapv-b2b__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .wapv-b2b__panel {
+            border-radius: 20px;
+            padding: 16px;
+            background: #fff;
+            border: 1px solid var(--line);
+            min-height: 168px;
+        }
+
+        .wapv-b2b__panel h4 {
+            margin: 0 0 12px;
+            font-size: 15px;
+            color: #1f2a44;
+        }
+
+        .wapv-b2b__list {
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-align: left;
+        }
+
+        .wapv-b2b__list li {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            color: #4e5d7a;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .wapv-b2b__list li::before {
+            content: "";
+            width: 9px;
+            height: 9px;
+            margin-top: 6px;
+            border-radius: 999px;
+            flex: 0 0 9px;
+            background: linear-gradient(135deg, var(--green), var(--blue2));
+            box-shadow: 0 0 0 4px rgba(33, 196, 138, .10);
+        }
+
+        .wapv-b2b__bars {
+            display: flex;
+            align-items: end;
+            gap: 10px;
+            height: 118px;
+            padding-top: 6px;
+        }
+
+        .wapv-b2b__bar {
+            flex: 1 1 0;
+            height: 100%;
+            border-radius: 16px 16px 10px 10px;
+            background: #edf3ff;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #dde8ff;
+        }
+
+        .wapv-b2b__bar::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: var(--h);
+            border-radius: 16px 16px 10px 10px;
+            background: linear-gradient(180deg, var(--blue2), var(--violet));
+        }
+
+        .wapv-b2b__note {
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #f4f8ff, #f8fbff);
+            border: 1px solid var(--line);
+            color: #59677f;
+            font-size: 18px;
+            line-height: 1.55;
+        }
+
+        .wapv-b2b__footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+            padding: 0 28px 28px;
+            color: #6a768d;
+            font-size: 13px;
+        }
+
+        .wapv-b2b__footer a {
+            color: #3559d6;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        @media (max-width: 980px) {
+            .wapv-b2b__hero {
+                grid-template-columns: 1fr;
+            }
+
+            .wapv-b2b__content,
+            .wapv-b2b__visual {
+                min-height: auto;
+            }
+
+            .wapv-b2b__visual {
+                min-height: 360px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .wapv-b2b__hero {
+                padding: 18px;
+            }
+
+            .wapv-b2b__footer {
+                padding: 0 18px 18px;
+            }
+
+            .wapv-b2b__features {
+                grid-template-columns: 1fr;
+            }
+
+            .wapv-b2b__grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .b2b-icon {
+            width: 1.25em;
+            height: 1.25em;
+            background-image: url(../../img/webasyst-wand-bold.svg);
+            background-size: 100%;
+            vertical-align: -0.25em;
+            margin-right: 0.25em;
+        }
+    </style>
+
+    <div class="wapv-b2b__hero">
+        <div class="wapv-b2b__content">
+            <div class="wapv-b2b__tag"><i></i> B2B-портал, для Shop-Script на Webasyst.</div>
+
+            <h2 class="wapv-b2b__title">
+                <img style="position: absolute; width: 220px; left: 488px; top: 285px;"
+                    src="{$b2b_static_url}img/b2b.svg" alt="WAPV">
+                Оптовый кабинет, для ваших клиентов.
+            </h2>
+            <p class="wapv-b2b__lead">
+                Закрытая профессиональная витрина, которая работает 24/7.
+            </p>
+
+            <div class="wapv-b2b__actions">
+                <a class="wapv-b2b__btn wapv-b2b__btn--primary" href="https://www.shop-script.ru/" target="_blank">
+                    <img style="width: 20px;" src="{$b2b_static_url}img/webasyst.svg" alt="WAPV">
+                    Shop-Script
+                </a>
+                <a class="wapv-b2b__btn wapv-b2b__btn--ghost" href="{$wa_app_url}channels/new/b2b" rel="noopener"><i
+                        class="fas fa-plus"></i> Создать канал продаж</a>
+            </div>
+
+            <div class="wapv-b2b__features">
+                <div class="wapv-b2b__feature">
+                    <div class="wapv-b2b__icon" style="background: linear-gradient(135deg, #2f6bff, #62b6ff);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h3>Прием заказов 24/7</h3>
+                        <p>Клиенты закупаются сами в любое время, без звонков и ручного приема заявок.</p>
+                    </div>
+                </div>
+
+                <div class="wapv-b2b__feature">
+                    <div class="wapv-b2b__icon" style="background: linear-gradient(135deg, #21c48a, #62d2a2);">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div>
+                        <h3>Личные цены и скидки</h3>
+                        <p>Наследует настройки скидок магазина, добавляет собственные решения.</p>
+                    </div>
+                </div>
+
+                <div class="wapv-b2b__feature">
+                    <div class="wapv-b2b__icon" style="background: linear-gradient(135deg, #ff9f43, #ffce6b);">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div>
+                        <h3>Актуальные остатки</h3>
+                        <p>Интеграция с "Мой склад", возможность резервирования и учета региональности.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="wapv-b2b__feature">
+                    <div class="wapv-b2b__icon" style="background: linear-gradient(135deg, #ff5fa2, #ff82c8);">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <div>
+                        <h3>Документооборот</h3>
+                        <p>Счета и акты генерируются автоматически. Клиент сам скачивает без менеджера.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wapv-b2b__visual">
+            <div class="wapv-b2b__card">
+                <div class="wapv-b2b__top">
+                    <div class="wapv-b2b__brand">
+                        <div class="wapv-b2b__logo">
+                            <img src="{$b2b_static_url}img/b2b.svg" alt="WAPV">
+                        </div>
+                        <div>ВИТРИНА V{$plugin_version}</div>
+                    </div>
+                    <div class="wapv-b2b__pill"><i class="fas fa-cog"></i> Настройки канала продаж</div>
+                </div>
+
+                <div class="wapv-b2b__grid">
+                    <div class="wapv-b2b__panel">
+                        <h4>Что получает клиент</h4>
+                        <ul class="wapv-b2b__list">
+                            <li>Свой прайс и персональные условия.</li>
+                            <li>Удобный B2B-интерфейс для оптовых заказов.</li>
+                            <li>Быстрое повторение прошлых закупок.</li>
+                        </ul>
+                    </div>
+
+                    <div class="wapv-b2b__panel">
+                        <h4>Каналы продаж</h4>
+                        <div class="wapv-b2b__bars">
+                            <div class="wapv-b2b__bar" style="--h: 68%;"></div>
+                            <div class="wapv-b2b__bar" style="--h: 42%;"></div>
+                            <div class="wapv-b2b__bar" style="--h: 84%;"></div>
+                            <div class="wapv-b2b__bar" style="--h: 58%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wapv-b2b__note">
+                    Плагин встраивается в экосистему Shop-Script и управляется через настройки канала продаж Webasyst.
+                    Можно быстро адаптировать внешний вид под фирменный стиль и сценарий оптовых клиентов. Интегрируется
+                    с внешними сервисами.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wapv-b2b__footer">
+        <div>Разработчик: <a href="https://wapv.ru/" target="_blank" rel="noopener">WAPV.RU</a></div>
+        <div>Партнер Webasyst с 2018 года.</div>
+    </div>
+</section>

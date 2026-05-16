@@ -1,0 +1,161 @@
+<table class="table table-hover table-sm mb-0">
+
+    <thead class="table-light small sticky-top z-0">
+        <tr>
+
+            {if !empty($show_checkbox)}
+                <th class="width-1 text-center" style="vertical-align: middle;">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox_all">
+                </th>
+            {/if}
+
+            {foreach $columns as $key => $col}
+                {if $col.visible|default:true}
+                    <th class="fw-bold {$col.thclass|default:''|escape}">
+                        {$col.title|escape}
+                    </th>
+                {/if}
+            {/foreach}
+
+            {if !empty($show_actions)}
+                <th class="width-100 text-end">
+                    {apanelGetIcon::svg('apanel-icon-settings-outline')}
+                </th>
+            {/if}
+
+        </tr>
+    </thead>
+
+    <tbody{$tbody_attrs_html nofilter}>
+
+        {if !empty($items)}
+            {foreach $items as $item}
+                <tr data-id="{$item._row_id|default:''|escape}">
+
+                    {if !empty($show_checkbox)}
+                        <td class="min-width text-center">
+                            <input class="form-check-input" type="checkbox" value="{$item._row_id|default:''|escape}"
+                                id="checkbox_{$item._row_id|default:''|escape}" data-id="{$item._row_id|default:''|escape}">
+                        </td>
+                    {/if}
+
+                    {foreach $columns as $key => $col}
+                        {if $col.visible|default:true}
+
+                            {if isset($item[$key])}
+                                {assign var="_value" value=$item[$key]}
+                            {else}
+                                {assign var="_value" value=$col.empty|default:'—'}
+                            {/if}
+
+                            {assign var="_url" value=''}
+
+                            {if !empty($col.url_key) && !empty($item[$col.url_key])}
+                                {assign var="_url" value=$item[$col.url_key]}
+                            {elseif !empty($col.url_pattern) && !empty($item._row_id)}
+                                {assign var="_url" value=$col.url_pattern|replace:'%id%':$item._row_id}
+                            {/if}
+
+                            <td class="text-nowrap {$col.tdclass|default:''|escape}">
+
+                                {if $col.type == 'datetime'}
+                                    <span class="text-nowrap">
+                                        {if !empty($_value)}
+                                            {$_value|wa_datetime:"humandatetime"}
+                                        {else}
+                                            {$col.empty|default:'—'|escape}
+                                        {/if}
+                                    </span>
+
+                                {elseif $col.type == 'title'}
+                                    <span class="text-nowrap fw-bold">
+                                        {if !empty($_url)}
+                                            <a href="{$_url|escape}" class="text-decoration-none">
+                                                {$_value|escape}
+                                            </a>
+                                        {else}
+                                            {$_value|escape}
+                                        {/if}
+                                    </span>
+
+                                {elseif $col.type == 'bool'}
+                                    {if !empty($_value)}
+                                        <span class="text-nowrap text-success">Активен</span>
+                                    {else}
+                                        <span class="text-nowrap text-muted">Выключен</span>
+                                    {/if}
+
+                                {elseif $col.type == 'html'}
+                                    <span class="text-nowrap">{$_value nofilter}</span>
+
+                                {elseif $col.type == 'number'}
+                                    <span class="text-nowrap">{$_value|escape}</span>
+
+                                {elseif $col.type == 'href'}
+                                    <span class="text-nowrap">
+                                        <a href="{$_value|escape}" target="_blank">{$_value|escape}</a>
+                                    </span>
+
+                                {elseif $col.type == 'price'}
+                                    <span class="text-nowrap">{$_value|escape}</span>
+
+                                {else}
+                                    <span class="text-nowrap">{$_value|escape}</span>
+                                {/if}
+
+                            </td>
+                        {/if}
+                    {/foreach}
+
+                    {if !empty($show_actions)}
+                        <td class="text-nowrap min-width text-center">
+                            {if !empty($item._action_url)}
+                                <a href="{$item._action_url|escape}">
+                                    {if !empty($action_icon)}
+                                        {$action_icon nofilter}
+                                    {else}
+                                        {apanelGetIcon::svg('apanel-icon-edit')}
+                                    {/if}
+                                </a>
+                            {/if}
+                        </td>
+                    {/if}
+
+                </tr>
+            {/foreach}
+        {else}
+            <tr>
+                <td colspan="{$colspan|escape}" class="text-center text-muted py-4">
+                    {$empty_text|escape}
+                </td>
+            </tr>
+        {/if}
+
+        </tbody>
+</table>
+
+<style>
+    body.is-sorting {
+        user-select: none !important;
+        cursor: grabbing !important;
+    }
+
+    .js-sort-handle {
+        cursor: grab;
+        user-select: none;
+    }
+
+    .sortable-fallback {
+        background: #fff !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        display: table !important;
+        opacity: 0.95 !important;
+    }
+
+    .asvg.js-sort-handle {
+        margin-left: -7px;
+        position: relative;
+        top: -1px;
+        opacity: 0.5;
+    }
+</style>
