@@ -22,15 +22,18 @@ class shopB2bPluginChannelSettingsTabs
         foreach ($tabs as $id => &$tab) {
             $tab['id'] = $id;
             $tab['active'] = $id === $active;
-            $tab['url'] = self::getTabUrl($channel_id, $tab['module']);
-            $tab['save_url'] = self::getTabUrl($channel_id, $tab['module'], 'save');
+            $tab['panel_id'] = 'b2b-channel-tab-' . $id;
+            $tab['url'] = '#' . $tab['panel_id'];
+            $tab['save_url'] = '';
+            $tab['content_url'] = self::getContentUrl($channel_id, $tab['module']);
+            $tab['save_endpoint'] = self::getContentUrl($channel_id, $tab['module'], 'save');
         }
         unset($tab);
 
         return $tabs;
     }
 
-    public static function getTabUrl($channel_id, $module, $action = null): string
+    public static function getContentUrl($channel_id, $module, $action = null): string
     {
         $url = wa()->getAppUrl('shop') . '?plugin=b2b&module=' . urlencode($module) . '&channel_id=' . (int) $channel_id;
 
