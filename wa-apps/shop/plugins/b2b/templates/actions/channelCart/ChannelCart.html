@@ -2,6 +2,7 @@
     {$wa->csrf()}
     <input type="hidden" name="id" value="{$channel_id|escape}">
     <input type="hidden" name="params_mode" value="update">
+    <input type="hidden" name="data[params][_b2b_settings_tab]" value="cart">
 
     <div class="fields-group">
         <div class="field"><div class="name">Включена</div><div class="value"><label><input type="checkbox" name="data[params][b2b_cart_enabled]" value="1" {if !empty($settings.enabled)}checked{/if}> показывать корзину</label></div></div>
