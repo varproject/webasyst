@@ -26,6 +26,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
             'base_fields' => $this->getBaseRenderedFields($channel),
             'tabs' => $tabs,
             'active_tab' => 'main',
+            'show_tabs' => false,
             'tabs_template' => wa()->getAppPath('plugins/b2b/templates/actions/channels/SettingsTabs.inc.html', 'shop'),
             'save_url' => ifset($tabs, 'main', 'save_url', ''),
         ));
