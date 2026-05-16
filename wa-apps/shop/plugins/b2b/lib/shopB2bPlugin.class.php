@@ -91,6 +91,8 @@ class shopB2bPlugin extends shopPlugin
             $has_access = $access_service->canAccess(wa()->getUser()->getId(), $channel_params);
             $behavior   = ifset($channel_params, 'access_denied_behavior', 'ignore');
 
+            
+            
             if (!$has_access && $behavior === 'ignore') {
                 continue;
             }

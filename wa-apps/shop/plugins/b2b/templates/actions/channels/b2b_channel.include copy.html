@@ -1,0 +1,806 @@
+<div class="fields form">
+    <form action="{$wa_app_url}?module=channels&action=save" id="js-sales-channel-form">
+        {if !empty($channel.id)}
+            <input type="hidden" name="id" value="{$channel.id|escape}">
+        {else}
+            <input type="hidden" name="is_new" value="1">
+        {/if}
+        <input type="hidden" name="data[type]" value="{$channel.type|escape}">
+
+        {* Штатные поля *}
+        <div class="fields-group custom-mt-16">
+            <div class="field">
+                <div class="name">[`Enabled`]</div>
+                <div class="value">
+                    <label>
+                        <input type="checkbox" name="data[status]" value="1" {if !empty($channel.status)}checked{/if}>
+                    </label>
+                </div>
+            </div>
+
+            {foreach $base_fields as $name => $control_html}
+                <div class="field">
+                    {$control_html}
+                </div>
+            {/foreach}
+        </div>
+
+        {* Настройка витрины *}
+        <div class="fields-group custom-mt-24 js-b2b-address-settings">
+            <h3 class="heading">Витрина</h3>
+
+            <input type="hidden" name="data[params][frontend_from_root]" class="js-b2b-frontend-from-root"
+                value="{if !empty($frontend_from_root)}1{else}0{/if}">
+
+            <div class="field">
+                <div class="name">Режим работы</div>
+                <div class="value">
+                    <div class="switch-with-text">
+                        <span class="switch middle smaller shift-3 js-b2b-auth-switch">
+                            <input type="checkbox" name="data[params][auth_required]" id="auth-switch" value="1"
+                                {if !empty($auth_required)}checked{/if}>
+                        </span>
+                        <label for="auth-switch">Закрытая витрина со входом</label>
+                    </div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][auth_required]"></div>
+                    <p class="hint">Включите, чтобы закрыть витрину от гостей и показывать только авторизованным
+                        покупателям.</p>
+                </div>
+
+            </div>
+
+            <div class="field">
+                <div class="name">Тип адреса</div>
+                <div class="value">
+                    <div class="toggle small js-b2b-url-type-toggle">
+                        <span data-value="custom" {if empty($frontend_from_root)}class="selected" {/if}>От корня
+                            поселения + свой url</span>
+                        <span data-value="root" {if !empty($frontend_from_root)}class="selected" {/if}>От корня
+                            поселения</span>
+                    </div>
+
+                    <p class="hint">
+                        <b data-mode="custom" class="js-b2b-url-type-title">От корня поселения + свой URL</b> —
+                        указанный URL станет корнем B2B-витрины внутри выбранного поселения, например
+                        <code>/b2b/</code>; все вложенные адреса также будут обрабатываться по правилам текущей витрины.
+                        Например, указав <code>/my/</code>, можно подменить штатный ЛК магазина.<br>
+                        <b data-mode="root" class="js-b2b-url-type-title">От корня поселения</b> — корнем B2B-витрины
+                        станет само выбранное поселение; витрина будет обрабатывать всё его адресное пространство,
+                        включая вложенные URL.
+                    </p>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name for-input">Полный адрес</div>
+                <div class="value">
+                    <div class="flexbox middle space-8">
+                        <div class="wa-select small">
+                            <select name="data[params][route_key]" class="js-b2b-route-key">
+                                {foreach $route_options as $option}
+                                    <option value="{$option.value|escape}" data-domain="{$option.domain|default:''|escape}"
+                                        data-route-url="{$option.route_url|default:''|escape}"
+                                        {if !empty($channel.params.route_key) && $channel.params.route_key == $option.value}selected{/if}>
+                                        {$option.title|escape}
+                                    </option>
+                                {/foreach}
+                            </select>
+                        </div>
+
+                        <span class="hint">/</span>
+
+                        <input type="text" name="data[params][frontend_custom_url]"
+                            class="small js-b2b-frontend-custom-url width-30 custom-mr-0"
+                            value="{$frontend_custom_url|escape}" placeholder="b2b" autocomplete="off">
+
+                        <a class="button nowrap js-b2b-open-storefront small" href="#" target="_blank" rel="noopener"
+                            aria-disabled="true">Открыть →</a>
+                    </div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][route_key]"></div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][frontend_custom_url]"></div>
+
+                    <p class="hint">Для url допустимы буквы, цифры и дефис. Например: b2b, clients, opt-2025, закупки и
+                        т.д.</p>
+                </div>
+            </div>
+        </div>
+
+        {* Настройка пользователей *}
+        <div class="fields-group custom-mt-24 js-b2b-access-settings">
+            <h5 class="heading">Пользователи</h5>
+
+            <input type="hidden" name="data[params][access_mode]" class="js-b2b-access-mode"
+                value="{$access_mode|default:'all'|escape}">
+            <input type="hidden" name="data[params][access_denied_behavior]" class="js-b2b-access-denied-behavior"
+                value="{$access_denied_behavior|default:'ignore'|escape}">
+
+            <div class="field">
+                <div class="name">Доступ</div>
+                <div class="value">
+                    <div class="toggle small js-b2b-access-mode-toggle">
+                        <span data-value="all" {if $access_mode|default:'all' == 'all'}class="selected" {/if}>для
+                            всех</span>
+                        <span data-value="except_customers"
+                            {if $access_mode|default:'all' == 'except_customers'}class="selected" {/if}>кроме
+                            выбранных</span>
+                        <span data-value="customers" {if $access_mode|default:'all' == 'customers'}class="selected"
+                            {/if}>только выбранные</span>
+                        <span data-value="categories" {if $access_mode|default:'all' == 'categories'}class="selected"
+                            {/if}>только категории</span>
+                    </div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_mode]"></div>
+
+                    <p class="hint">Выберите ограниченный круг пользователей витрины или оставьте доступ для всех.</p>
+                </div>
+            </div>
+
+            <div class="field js-b2b-access-except-customers-field">
+                <div class="name for-input">Кроме выбранных</div>
+                <div class="value">
+                    <select name="data[params][access_except_customer_ids][]" class="js-b2b-access-except-customers"
+                        multiple style="width: 100%;">
+                        {foreach $access_except_customers as $customer}
+                            <option value="{$customer.id|escape}" selected>
+                                {$customer.name|default:'#'|escape}{if !empty($customer.email)} —
+                                {$customer.email|escape}{elseif !empty($customer.phone)} — {$customer.phone|escape}
+                                {/if}
+                            </option>
+                        {/foreach}
+                    </select>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_except_customer_ids][]"></div>
+                    <p class="hint">Эти контакты не получат доступ к B2B-витрине. Остальные пользователи будут допущены.
+                    </p>
+                </div>
+            </div>
+
+            <div class="field js-b2b-access-customers-field">
+                <div class="name for-input">Только выбранные</div>
+                <div class="value">
+                    <select name="data[params][access_customer_ids][]" class="js-b2b-access-customers" multiple
+                        style="width: 100%;">
+                        {foreach $access_customers as $customer}
+                            <option value="{$customer.id|escape}" selected>
+                                {$customer.name|default:'#'|escape}{if !empty($customer.email)} —
+                                {$customer.email|escape}{elseif !empty($customer.phone)} — {$customer.phone|escape}
+                                {/if}
+                            </option>
+                        {/foreach}
+                    </select>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_customer_ids][]"></div>
+                    <p class="hint">Только эти контакты получат доступ к B2B-витрине.</p>
+                </div>
+            </div>
+
+            <div class="field js-b2b-access-categories-field">
+                <div class="name for-input">Категории</div>
+                <div class="value">
+                    <select name="data[params][access_category_ids][]" class="js-b2b-access-categories" multiple
+                        style="width: 100%;">
+                        {foreach $customer_categories as $category}
+                            <option value="{$category.id|escape}"
+                                {if in_array($category.id, $access_category_ids)}selected{/if}>
+                                {$category.name|escape}{if isset($category.cnt)} ({$category.cnt}){/if}
+                            </option>
+                        {/foreach}
+                    </select>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_category_ids][]"></div>
+                    <p class="hint">Используются категории покупателей Shop-Script, а не группы backend-пользователей.
+                    </p>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="name">Для всех остальных</div>
+                <div class="value">
+                    <div class="toggle small js-b2b-access-denied-toggle">
+                        <span data-value="ignore"
+                            {if $access_denied_behavior|default:'ignore' == 'ignore'}class="selected" {/if}>отключить
+                            витрину и игнорировать</span>
+                        <span data-value="page" {if $access_denied_behavior|default:'ignore' == 'page'}class="selected"
+                            {/if}>показать страницу информации</span>
+                    </div>
+                    <div class="js-b2b-field-error" data-error-for="data[params][access_denied_behavior]"></div>
+
+                    <p class="hint">
+                        Здесь можно выбрать, что увидит покупатель, который не оказался в списке разрешённых
+                        пользователей или групп.
+                        Можно отключить B2B-витрину для него, тогда адрес отработает штатно Shop-Script, либо показать
+                        страницу информации.
+                    </p>
+                </div>
+            </div>
+
+            <div class="field js-b2b-access-denied-page-field">
+                <div class="name">Страница информации</div>
+
+                <div class="value">
+                    <div class="custom-mb-8">
+                        <label class="flexbox middle space-8">
+                            <span class="wa-radio">
+                                <input type="radio" name="data[params][access_denied_page_mode]" value="plugin"
+                                    class="js-b2b-access-denied-page-mode"
+                                    {if $access_denied_page_mode|default:'plugin' == 'plugin'}checked{/if}>
+                                <span></span>
+                            </span>
+                            <span>Шаблон плагина</span>
+                        </label>
+
+                        <p class="hint custom-ml-24 custom-mt-0">Страница ограничения доступа из плагина.</p>
+                    </div>
+
+                    <div>
+                        <label class="flexbox middle space-8">
+                            <span class="wa-radio">
+                                <input type="radio" name="data[params][access_denied_page_mode]" value="block"
+                                    class="js-b2b-access-denied-page-mode"
+                                    {if $access_denied_page_mode|default:'plugin' == 'block'}checked{/if}>
+                                <span></span>
+                            </span>
+                            <span>Мой блок</span>
+                        </label>
+
+                        <div class="flexbox middle space-8 custom-ml-24 custom-mt-0">
+                            <span class="hint">&#123;$wa->block("</span>
+                            <input type="text" name="data[params][access_denied_block_id]"
+                                class="small js-b2b-access-denied-block-id custom-mr-0"
+                                value="{$access_denied_block_id|default:''|escape}" placeholder="b2b_access_denied">
+                            <span class="hint">")&#125;</span>
+                        </div>
+                        <div class="js-b2b-field-error" data-error-for="data[params][access_denied_page_mode]"></div>
+                        <div class="js-b2b-field-error" data-error-for="data[params][access_denied_block_id]"></div>
+
+                        <p class="hint custom-ml-24 custom-mt-6 custom-mb-8">
+                            Укажите ID блока из приложения “Сайт”.
+                            {if $show_block_var|default:false}
+                                <a href="javascript:void(0);" class="js-b2b-show-block-vars inline-link">
+                                    <b><i class="fas fa-code"></i> Доступные переменные для блока.</b>
+                                </a>
+                            {/if}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {* Кнопки сохранения *}
+        <div class="bottombar sticky s-settings-fixed-bottombar field">
+            <div class="value">
+                <div class="flexbox middle">
+                    <div class="wide js-place-for-errors">
+                        <input type="submit" class="button js-form-submit green" value="Сохранить">
+                    </div>
+
+                    {if !empty($channel.id)}
+                        <div class="nowrap">
+                            <button class="button red outlined js-delete-button" type="button">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{if $show_block_var|default:false}
+    {include file="./B2bBlockVarsDrawer.html" inline}
+{/if}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
+
+<style>
+    .js-b2b-url-type-title.is-selected {
+        color: var(--green, #22b14c);
+    }
+
+    .js-b2b-show-block-vars.inline-link {
+        text-decoration: none !important;
+        border-bottom: dashed 1px;
+        padding-bottom: 3px;
+        vertical-align: super;
+        position: relative;
+        top: 2px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: beige;
+        border: 1px solid #aaaaaa26 !important;
+        border-radius: 4px;
+        box-sizing: border-box;
+        display: inline-block;
+        margin-left: 5px;
+        margin-top: 5px;
+        padding: 0 0 0 20px;
+        position: relative;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+        white-space: nowrap;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        background-color: transparent;
+        border: none;
+        color: #bfbfbf;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        padding: 3px 6px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        box-shadow: none;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover,
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus {
+        background-color: transparent;
+        color: #ff0000;
+        outline: none;
+    }
+</style>
+
+<script>
+    $(function() {
+        "use strict";
+
+        const delete_url = {$wa_app_url|json_encode} + '?module=channels&action=delete';
+
+        const $form = $('#js-sales-channel-form');
+        const $url_type_toggle = $form.find('.js-b2b-url-type-toggle');
+        const $frontend_from_root = $form.find('.js-b2b-frontend-from-root');
+        const $route_key = $form.find('.js-b2b-route-key');
+        const $custom_url = $form.find('.js-b2b-frontend-custom-url');
+        const $open_storefront_button = $form.find('.js-b2b-open-storefront');
+        const $auth_switch = $form.find('.js-b2b-auth-switch');
+        const $url_type_titles = $form.find('.js-b2b-url-type-title');
+
+        const $access_mode = $form.find('.js-b2b-access-mode');
+        const $access_mode_toggle = $form.find('.js-b2b-access-mode-toggle');
+        const $access_except_customers_field = $form.find('.js-b2b-access-except-customers-field');
+        const $access_customers_field = $form.find('.js-b2b-access-customers-field');
+        const $access_categories_field = $form.find('.js-b2b-access-categories-field');
+        const $access_except_customers = $form.find('.js-b2b-access-except-customers');
+        const $access_customers = $form.find('.js-b2b-access-customers');
+        const $access_categories = $form.find('.js-b2b-access-categories');
+
+        const $access_denied_behavior = $form.find('.js-b2b-access-denied-behavior');
+        const $access_denied_toggle = $form.find('.js-b2b-access-denied-toggle');
+        const $access_denied_page_field = $form.find('.js-b2b-access-denied-page-field');
+        const $access_denied_page_mode = $form.find('.js-b2b-access-denied-page-mode');
+        const $access_denied_block_id = $form.find('.js-b2b-access-denied-block-id');
+        const $place_for_errors = $form.find('.js-place-for-errors');
+
+        const cleanRoutePart = function(value) {
+            value = String(value || '').trim();
+
+            if (!value || value === '*') {
+                return '';
+            }
+
+            return value.replace(/\*/g, '').replace(/^\/+|\/+$/g, '');
+        };
+
+        const normalizeCustomUrl = function(value) {
+            return String(value || '').trim().replace(/\*/g, '').replace(/^\/+|\/+$/g, '');
+        };
+
+        const stripHtml = function(value) {
+            return $('<div>').html(String(value || '')).text();
+        };
+
+        const getFieldByName = function(name) {
+            return $form.find('[name="' + String(name).replace(/"/g, '\\"') + '"]');
+            };
+
+            const getErrorPlace = function(field_name) {
+                return $form.find('.js-b2b-field-error').filter(function() {
+                    return String($(this).data('error-for')) === String(field_name);
+                }).first();
+            };
+
+            const clearB2bValidationErrors = function() {
+                $form.find('.state-error').removeClass('state-error');
+                $form.find('.state-error-hint, .state-caution-hint, .js-b2b-dynamic-error').remove();
+                $form.find('.js-b2b-field-error').empty();
+            };
+
+            const scrollToB2bError = function($target) {
+                if (!$target || !$target.length) {
+                    return;
+                }
+
+                $('html, body').animate({
+                    scrollTop: $target.offset().top - ($('#wa-header').height() || 0) - 30
+                }, 500);
+            };
+
+            const showB2bValidationErrors = function(errors) {
+                let $first_target = $();
+
+                (errors || []).forEach(function(error) {
+                    const field_name = error.field || '';
+                    const message = error.error_description || '';
+
+                    if (!message) {
+                        return;
+                    }
+
+                    const $error = $('<div class="state-error-hint js-b2b-dynamic-error"></div>').text(
+                        message);
+                    const $field = field_name ? getFieldByName(field_name) : $();
+                    const $error_place = field_name ? getErrorPlace(field_name) : $();
+
+                    if ($field.length) {
+                        $field.addClass('state-error');
+                    }
+
+                    if ($error_place.length) {
+                        $error_place.append($error);
+
+                        if (!$first_target.length) {
+                            $first_target = $error_place.closest('.field');
+                        }
+                    } else if ($field.length && $field.filter(':visible').length) {
+                        $field.filter(':visible').last().after($error);
+
+                        if (!$first_target.length) {
+                            $first_target = $field.filter(':visible').last().closest('.field');
+                        }
+                    } else {
+                        $place_for_errors.append($error);
+
+                        if (!$first_target.length) {
+                            $first_target = $place_for_errors.closest('.field');
+                        }
+                    }
+                });
+
+                scrollToB2bError($first_target);
+            };
+
+            const isRootMode = function() {
+                return String($frontend_from_root.val()) === '1';
+            };
+
+            const getSelectedRouteData = function() {
+                const $option = $route_key.find(':selected');
+
+                return {
+                    domain: String($option.data('domain') || ''),
+                    route_url: String($option.data('route-url') || '')
+                };
+            };
+
+            const buildStorefrontUrl = function(params) {
+                params = params || {};
+
+                const domain = String(params.domain || '').replace(/^\/+|\/+$/g, '');
+                const route_url = cleanRoutePart(params.route_url || '');
+                const frontend_url = cleanRoutePart(params.frontend_url || '');
+
+                if (!domain) {
+                    return '';
+                }
+
+                const path = [route_url, frontend_url].filter(Boolean).join('/');
+                const protocol = window.location.protocol || 'https:';
+
+                return protocol + '//' + domain + '/' + (path ? path + '/' : '');
+            };
+
+            const getCurrentStorefrontParams = function() {
+                const route = getSelectedRouteData();
+                const custom_url = normalizeCustomUrl($custom_url.val());
+
+                return {
+                    domain: route.domain,
+                    route_url: route.route_url,
+                    frontend_url: isRootMode() ? '*' : custom_url + '/*'
+                };
+            };
+
+            const updateStorefrontButton = function(params) {
+                const url = buildStorefrontUrl(params);
+
+                if (url) {
+                    $open_storefront_button.attr('href', url).removeClass('disabled').attr('aria-disabled',
+                        'false');
+                } else {
+                    $open_storefront_button.attr('href', '#').addClass('disabled').attr('aria-disabled',
+                        'true');
+                }
+            };
+
+            const updateUrlTypeHint = function() {
+                const mode = isRootMode() ? 'root' : 'custom';
+
+                $url_type_titles.removeClass('is-selected').css('color', '');
+                $url_type_titles.filter('[data-mode="' + mode + '"]').addClass('is-selected').css('color',
+                    'var(--green, #22b14c)');
+            };
+
+            const updateUrlTypeToggle = function() {
+                const mode = isRootMode() ? 'root' : 'custom';
+
+                $url_type_toggle.find('span').removeClass('selected');
+                $url_type_toggle.find('span[data-value="' + mode + '"]').addClass('selected');
+            };
+
+            const updateCustomUrlState = function() {
+                if (isRootMode()) {
+                    $custom_url.prop('readonly', true).attr('aria-disabled', 'true').css('opacity', '0.2');
+                } else {
+                    $custom_url.prop('readonly', false).attr('aria-disabled', 'false').css('opacity', '');
+                }
+
+                updateUrlTypeHint();
+                updateStorefrontButton(getCurrentStorefrontParams());
+            };
+
+            const updateAccessModeState = function() {
+                const mode = String($access_mode.val() || 'all');
+
+                $access_mode_toggle.find('span').removeClass('selected');
+                $access_mode_toggle.find('span[data-value="' + mode + '"]').addClass('selected');
+
+                $access_except_customers_field.toggle(mode === 'except_customers');
+                $access_customers_field.toggle(mode === 'customers');
+                $access_categories_field.toggle(mode === 'categories');
+            };
+
+            const updateAccessDeniedState = function() {
+                const behavior = String($access_denied_behavior.val() || 'ignore');
+                const page_mode = String($access_denied_page_mode.filter(':checked').val() || 'plugin');
+
+                $access_denied_toggle.find('span').removeClass('selected');
+                $access_denied_toggle.find('span[data-value="' + behavior + '"]').addClass('selected');
+                $access_denied_page_field.toggle(behavior === 'page');
+
+                if (page_mode === 'block') {
+                    $access_denied_block_id.prop('readonly', false).attr('aria-disabled', 'false').css(
+                        'opacity', '');
+                } else {
+                    $access_denied_block_id.prop('readonly', true).attr('aria-disabled', 'true').css('opacity',
+                        '0.35');
+                }
+            };
+
+            const initContactSelect = function($select, placeholder) {
+                if (!$select.length || !$.fn.select2) {
+                    return;
+                }
+
+                $select.select2({
+                    width: '100%',
+                    placeholder: placeholder,
+                    minimumInputLength: 1,
+                    ajax: {
+                        url: {$wa_app_url|json_encode} + '?action=autocomplete&type=contact',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return { term: params.term || '' };
+                        },
+                        processResults: function(response) {
+                            if (!Array.isArray(response)) {
+                                return { results: [] };
+                            }
+
+                            return {
+                                results: response.map(function(item) {
+                                    const id = parseInt(item.id || item.value || 0, 10);
+                                    const label = item.label || item.name || ('#' + id);
+                                    const text = item.name || stripHtml(label) || ('#' +
+                                        id);
+
+                                    return {
+                                        id: id,
+                                        text: text,
+                                        label: label,
+                                        photo_url: item.photo_url || ''
+                                    };
+                                }).filter(function(item) {
+                                    return item.id > 0;
+                                })
+                            };
+                        }
+                    },
+                    templateResult: function(item) {
+                        if (!item.id) {
+                            return item.text;
+                        }
+
+                        return item.label ? $('<span>' + item.label + '</span>') : item.text;
+                    },
+                    templateSelection: function(item) {
+                        return item.text || item.name || item.id;
+                    },
+                    escapeMarkup: function(markup) {
+                        return markup;
+                    }
+                });
+            };
+
+            if ($url_type_toggle.length && $.fn.waToggle) {
+                $url_type_toggle.waToggle({
+                    change: function(event, target) {
+                        $frontend_from_root.val($(target).data('value') === 'root' ? '1' : '0');
+                        updateUrlTypeToggle();
+                        updateCustomUrlState();
+                    }
+                });
+            } else {
+                $url_type_toggle.on('click', 'span', function() {
+                    const $target = $(this);
+                    $target.addClass('selected').siblings().removeClass('selected');
+                    $frontend_from_root.val($target.data('value') === 'root' ? '1' : '0');
+                    updateUrlTypeToggle();
+                    updateCustomUrlState();
+                });
+            }
+
+            if ($access_mode_toggle.length && $.fn.waToggle) {
+                $access_mode_toggle.waToggle({
+                    change: function(event, target) {
+                        $access_mode.val($(target).data('value'));
+                        updateAccessModeState();
+                    }
+                });
+            } else {
+                $access_mode_toggle.on('click', 'span', function() {
+                    $access_mode.val($(this).data('value'));
+                    updateAccessModeState();
+                });
+            }
+
+            if ($access_denied_toggle.length && $.fn.waToggle) {
+                $access_denied_toggle.waToggle({
+                    change: function(event, target) {
+                        $access_denied_behavior.val($(target).data('value'));
+                        updateAccessDeniedState();
+                    }
+                });
+            } else {
+                $access_denied_toggle.on('click', 'span', function() {
+                    $access_denied_behavior.val($(this).data('value'));
+                    updateAccessDeniedState();
+                });
+            }
+
+            $form.on('change', '.js-b2b-access-denied-page-mode', updateAccessDeniedState);
+
+            if ($auth_switch.length && $.fn.waSwitch) {
+                $auth_switch.waSwitch();
+            }
+
+            if ($.fn.select2) {
+                initContactSelect($access_except_customers, 'Найти контакт для запрета доступа');
+                initContactSelect($access_customers, 'Найти контакт для разрешения доступа');
+
+                $access_categories.select2({
+                    width: '100%',
+                    placeholder: 'Выберите категории покупателей'
+                });
+            }
+
+            $route_key.on('change', function() {
+                updateStorefrontButton(getCurrentStorefrontParams());
+            });
+
+            $custom_url.on('input change', function() {
+                updateStorefrontButton(getCurrentStorefrontParams());
+            });
+
+            updateUrlTypeToggle();
+            updateCustomUrlState();
+            updateStorefrontButton({$channel.params|default:[]|json_encode});
+            updateAccessModeState();
+            updateAccessDeniedState();
+
+            const controller = new SalesChannelForm({
+                $place_for_errors: $form.find('.js-place-for-errors'),
+                $form: $form,
+                skip_display_errors: true
+            });
+
+            const $submit_button = $form.find(':submit').last();
+
+            $form.on('save_init', function() {
+                clearB2bValidationErrors();
+            });
+
+            $form.on('save_request', function() {
+                $submit_button.prop('disabled', true).after('<div class="spinner"></div>');
+            });
+
+            $form.on('save_success save_fail', function() {
+                $submit_button.prop('disabled', false).siblings('.spinner').remove();
+            });
+
+            $form.on('save_fail', function(event, data) {
+                if (data && data.errors) {
+                    showB2bValidationErrors(data.errors);
+                }
+            });
+
+            $form.on('save_success', function(evt, data) {
+                const params = data.result && data.result.params ? data.result.params : {};
+
+                if (params.frontend_from_root !== undefined) {
+                    $frontend_from_root.val(String(params.frontend_from_root) === '1' ? '1' : '0');
+                }
+
+                if (params.frontend_custom_url) {
+                    $custom_url.val(params.frontend_custom_url);
+                }
+
+                if (params.access_mode) {
+                    $access_mode.val(params.access_mode);
+                }
+
+                if (params.access_denied_behavior) {
+                    $access_denied_behavior.val(params.access_denied_behavior);
+                }
+
+                clearB2bValidationErrors();
+                updateUrlTypeToggle();
+                updateCustomUrlState();
+                updateStorefrontButton(params);
+                updateAccessModeState();
+                updateAccessDeniedState();
+            });
+
+            {if empty($channel.id)}
+                $form.on('save_success', function(evt, data) {
+                    window.location = {$wa_app_url|json_encode} + 'channels/editor/' + data.result.id;
+                });
+
+
+
+                
+                {else}
+                const channel_id = {$channel.id|json_encode};
+                const $delete_button = $form.find('.js-delete-button');
+
+                $delete_button.on('click', function(e) {
+                    e.preventDefault();
+
+                    $.waDialog.confirm({
+                        title:
+
+
+                            
+                    {_w("Delete permanently?")|json_encode},
+                            success_button_title:
+
+
+                            
+                    {_w("Delete")|json_encode},
+                            success_button_class: 'danger',
+                        cancel_button_title:
+
+
+                            
+                    {_w("Cancel")|json_encode},
+                            cancel_button_class: 'light-gray',
+                        onSuccess: function() {
+                            $delete_button.prop('disabled', true).after(
+                                '<div class="spinner"></div>');
+
+                            $.post(delete_url, { id: channel_id }, 'json').then(function() {
+                                $submit_button.prop('disabled', false).siblings('.spinner')
+                                    .remove();
+                                window.location = {$wa_app_url|json_encode} + '?action=plugins#/';
+                            });
+                        }
+                    });
+                });
+            {/if}
+        });
+    </script>
