@@ -1,79 +1,13 @@
 <?php
 
-class shopB2bPluginFrontendAction extends waViewAction
+class shopB2bPluginFrontendAction extends shopB2bPluginFrontendBaseAction
 {
-    // Frontend-страница B2B-витрины.
     public function execute()
     {
-        $channel_id = waRequest::param('b2b_channel_id', 0, waRequest::TYPE_INT);
-
-        if ($channel_id <= 0) {
-            throw new waException('B2B-канал не найден.', 404);
-        }
-
-        $channel_model  = new shopSalesChannelModel();
-        $params_model   = new shopSalesChannelParamsModel();
-        $access_service = new shopB2bPluginCustomerService();
-        $channel        = $channel_model->getById($channel_id);
-
-        if (!$channel || $channel['type'] !== 'b2b' || empty($channel['status'])) {
-            throw new waException('B2B-канал не найден или выключен.', 404);
-        }
-
-        $channel['params'] = $params_model->get($channel_id);
-        $has_access        = $access_service->canAccess(wa()->getUser()->getId(), $channel['params']);
-
-        if (!$has_access) {
-            $this->showAccessDenied($channel);
+        $this->prepareB2b('home');
+        if (empty($this->access['allowed'])) {
             return;
         }
-
-        // Ставим после has_access, чтобы игнорировать layout в блоках страницы ограничения доступа.
-        $this->setLayout(new shopB2bPluginFrontendLayout());
-
-        $this->view->assign([
-            'channel'       => $channel,
-            'sales_channel' => 'b2b:' . $channel_id,
-        ]);
-    }
-
-    // Показывает страницу ограничения доступа.
-    protected function showAccessDenied(array $channel)
-    {
-        $params   = ifset($channel, 'params', []);
-        $mode     = ifset($params, 'access_denied_page_mode', 'plugin');
-        $block_id = trim((string) ifset($params, 'access_denied_block_id', ''));
-
-        if (!in_array($mode, ['plugin', 'block'], true)) {
-            $mode = 'plugin';
-        }
-
-        if ($mode === 'block' && !$this->isValidBlockId($block_id)) {
-            $mode     = 'plugin';
-            $block_id = '';
-        }
-
-        $this->setTemplate(wa()->getAppPath('plugins/b2b/templates/actions/frontend/FrontendAccessDenied.html', 'shop'));
-
-        $this->view->assign([
-            'channel'                    => $channel,
-            'access_denied_page_mode'    => $mode,
-            'access_denied_block_id'     => $block_id,
-            'access_denied_block_params' => [
-                'channel'      => $channel,
-                'params'       => $params,
-                'contact'      => wa()->getUser(),
-                'login_url'    => wa()->getRouteUrl('shop/frontend/my'),
-                'register_url' => wa()->getRouteUrl('shop/frontend/my'),
-            ],
-        ]);
-    }
-
-    // Проверяет ID блока перед передачей в $wa->block().
-    protected function isValidBlockId($block_id): bool
-    {
-        $block_id = trim((string) $block_id);
-
-        return $block_id !== '' && preg_match('/^[a-z0-9_.-]+$/i', $block_id);
+        $this->setTemplate(wa()->getAppPath('plugins/b2b/templates/actions/frontend/Frontend.html', 'shop'));
     }
 }

@@ -1,37 +1,6 @@
-<ul class="tabs wide nowrap custom-pt-8">
-    <li class="{if $wa->get('tab') == ''}selected{/if}">
-        <a href="{$wa->currentUrl(0,1)}">
-            Главное
-        </a>
-    </li>
-    <li class="{if $wa->get('tab') == 2}selected{/if}">
-        <a href="?tab=2">
-            Пользователи
-        </a>
-    </li>
-    <li class="{if $wa->get('tab') == 3}selected{/if}">
-        <a href="?tab=3">
-            Каталог
-        </a>
-    </li>
-    <li class="{if $wa->get('tab') == 4}selected{/if}">
-        <a href="?tab=4">
-            <i class="fas fa-globe"></i>
-            Страницы
-        </a>
-    </li>
-    <li class="{if $wa->get('tab') == 5}selected{/if}">
-        <a href="?tab=5">
-            Поддержка
-        </a>
-    </li>
-    <li>
-        <button class="button small"><i class="icon fas fa-external-link-alt"></i> Открыть витрину</button>
-    </li>
-</ul>
-
-<style>
-    .not-blank {
-        background: #ffffff;
-    }
-</style>
+<div class="b2b-channel-settings not-blank">
+    {include file=$tabs_template}
+    <div class="b2b-channel-settings__content custom-mt-16">
+        {$tab_content}
+    </div>
+</div>

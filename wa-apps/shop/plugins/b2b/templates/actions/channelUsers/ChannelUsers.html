@@ -1,0 +1,66 @@
+{include file=$tabs_template}
+<form method="post" action="{$save_url|escape}" class="fields b2b-channel-tab-form" data-b2b-channel-tab-form>
+    {$wa->csrf()}<input type="hidden" name="channel_id" value="{$channel_id|escape}">
+
+    <div class="fields-group">
+        <div class="field">
+            <div class="name">Режим доступа</div>
+            <div class="value">
+                <label><input type="radio" name="settings[b2b_access_mode]" value="public" {if $settings.access_mode == 'public'}checked{/if}> публичная витрина</label><br>
+                <label><input type="radio" name="settings[b2b_access_mode]" value="authorized" {if $settings.access_mode == 'authorized'}checked{/if}> только авторизованные</label><br>
+                <label><input type="radio" name="settings[b2b_access_mode]" value="restricted" {if $settings.access_mode == 'restricted'}checked{/if}> ограниченный доступ</label>
+            </div>
+        </div>
+        <div class="field">
+            <div class="name">Гость</div>
+            <div class="value">
+                <select name="settings[b2b_access_guest_behavior]">
+                    <option value="allow" {if $settings.guest_behavior == 'allow'}selected{/if}>пустить</option>
+                    <option value="login" {if $settings.guest_behavior == 'login'}selected{/if}>отправить на вход</option>
+                    <option value="deny" {if $settings.guest_behavior == 'deny'}selected{/if}>запретить</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="fields-group">
+        <h5 class="heading">Белый список</h5>
+        <div class="field">
+            <div class="name">Контакты</div>
+            <div class="value"><input type="text" name="settings[b2b_access_allow_contact_ids]" value="{$settings.allow_contact_ids|implode:','|escape}" placeholder="ID через запятую"></div>
+        </div>
+        <div class="field">
+            <div class="name">Группы покупателей</div>
+            <div class="value">
+                {foreach $customer_categories as $category}
+                    <label><input type="checkbox" name="settings[b2b_access_allow_category_ids][]" value="{$category.id|escape}" {if in_array($category.id, $settings.allow_category_ids)}checked{/if}> {$category.name|escape}</label><br>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+
+    <div class="fields-group">
+        <h5 class="heading">Чёрный список</h5>
+        <div class="field">
+            <div class="name">Контакты</div>
+            <div class="value"><input type="text" name="settings[b2b_access_deny_contact_ids]" value="{$settings.deny_contact_ids|implode:','|escape}" placeholder="ID через запятую"></div>
+        </div>
+        <div class="field">
+            <div class="name">Группы покупателей</div>
+            <div class="value">
+                {foreach $customer_categories as $category}
+                    <label><input type="checkbox" name="settings[b2b_access_deny_category_ids][]" value="{$category.id|escape}" {if in_array($category.id, $settings.deny_category_ids)}checked{/if}> {$category.name|escape}</label><br>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+
+    <div class="fields-group">
+        <h5 class="heading">Отказ доступа</h5>
+        <div class="field"><div class="name">Поведение</div><div class="value"><select name="settings[b2b_access_denied_behavior]"><option value="page" {if $settings.denied_behavior == 'page'}selected{/if}>страница</option><option value="404" {if $settings.denied_behavior == '404'}selected{/if}>404</option><option value="redirect" {if $settings.denied_behavior == 'redirect'}selected{/if}>redirect</option><option value="ignore" {if $settings.denied_behavior == 'ignore'}selected{/if}>ignore</option></select></div></div>
+        <div class="field"><div class="name">Страница</div><div class="value"><select name="settings[b2b_access_denied_page_mode]"><option value="plugin" {if $settings.denied_page_mode == 'plugin'}selected{/if}>встроенная</option><option value="block" {if $settings.denied_page_mode == 'block'}selected{/if}>Site block</option></select></div></div>
+        <div class="field"><div class="name">ID блока</div><div class="value"><input type="text" name="settings[b2b_access_denied_block_id]" value="{$settings.denied_block_id|escape}"></div></div>
+        <div class="field"><div class="name">Redirect URL</div><div class="value"><input type="text" name="settings[b2b_access_denied_redirect_url]" value="{$settings.denied_redirect_url|escape}"></div></div>
+    </div>
+    <div class="bottombar sticky"><button type="submit" class="button green">Сохранить</button></div>
+</form>
