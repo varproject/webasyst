@@ -1,7 +1,9 @@
 {if !empty($base_fields)}
     <div class="fields-group">
         {foreach $base_fields as $field_html}
-            {$field_html}
+            <div class="field">
+                {$field_html}
+            </div>
         {/foreach}
     </div>
 {/if}

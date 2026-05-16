@@ -18,8 +18,15 @@
         <div class="bottombar sticky s-settings-fixed-bottombar field">
             <div class="value">
                 <div class="flexbox middle">
-                    <div class="wide js-place-for-errors">
+                    <div class="wide flexbox middle space-8">
                         <input type="submit" class="button js-form-submit green" value="Сохранить">
+                        <div class="js-place-for-errors"></div>
+
+                        {if !empty($settings.open_url)}
+                            <a class="button small" href="{$settings.open_url|escape}" target="_blank" rel="noopener">
+                                <i class="icon fas fa-external-link-alt"></i> Открыть витрину
+                            </a>
+                        {/if}
                     </div>
 
                     {if !empty($channel.id)}
@@ -75,10 +82,12 @@
                     cancel_button_title: {_w("Cancel")|json_encode},
                     cancel_button_class: 'light-gray',
                     onSuccess: function() {
-                        $delete_button.prop('disabled', true).after('<div class="spinner"></div>');
+                        $delete_button.prop('disabled', true).after(
+                            '<div class="spinner"></div>');
 
                         $.post(delete_url, { id: channel_id }, 'json').then(function() {
-                            $submit_button.prop('disabled', false).siblings('.spinner').remove();
+                            $submit_button.prop('disabled', false).siblings('.spinner')
+                                .remove();
                             window.location = {$wa_app_url|json_encode} + '?action=plugins#/';
                         });
                     }
