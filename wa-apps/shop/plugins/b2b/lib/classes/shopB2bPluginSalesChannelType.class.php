@@ -108,8 +108,28 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
     public function sanitizeAndValidateParams(?int $id, array &$params, $params_mode): array
     {
-        $service = new shopB2bPluginChannelMainSettingsService();
-        return $service->sanitizeSalesChannelParams($id, $params);
+        $tab_id = shopB2bPluginChannelSettingsTabs::normalizeTabId(ifset($params, '_b2b_settings_tab', 'main'));
+        unset($params['_b2b_settings_tab']);
+
+        if ($tab_id === 'pages') {
+            return array();
+        }
+
+        $config = $this->getTabRenderConfig($tab_id);
+        /** @var shopB2bPluginChannelSettingsService $service */
+        $service = new $config['service']();
+
+        $current = $id ? $service->getParams((int) $id) : array();
+        $input = array_merge($current, $params);
+        $normalized = $service->normalize($input);
+        $errors = $service->validate((int) $id, $normalized);
+
+        if ($errors) {
+            return $errors;
+        }
+
+        $params = $normalized;
+        return array();
     }
 
     public function onSave(array $channel) {}
