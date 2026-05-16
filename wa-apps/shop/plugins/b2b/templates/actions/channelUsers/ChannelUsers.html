@@ -29,7 +29,7 @@
         <h5 class="heading">Белый список</h5>
         <div class="field">
             <div class="name">Контакты</div>
-            <div class="value"><input type="text" name="data[params][b2b_access_allow_contact_ids]" value="{$settings.allow_contact_ids|implode:','|escape}" placeholder="ID через запятую"></div>
+            <div class="value"><input type="text" name="data[params][b2b_access_allow_contact_ids]" value="{foreach $settings.allow_contact_ids as $id}{$id|escape}{if !$id@last},{/if}{/foreach}" placeholder="ID через запятую"></div>
         </div>
         <div class="field">
             <div class="name">Группы покупателей</div>
@@ -45,7 +45,7 @@
         <h5 class="heading">Чёрный список</h5>
         <div class="field">
             <div class="name">Контакты</div>
-            <div class="value"><input type="text" name="data[params][b2b_access_deny_contact_ids]" value="{$settings.deny_contact_ids|implode:','|escape}" placeholder="ID через запятую"></div>
+            <div class="value"><input type="text" name="data[params][b2b_access_deny_contact_ids]" value="{foreach $settings.deny_contact_ids as $id}{$id|escape}{if !$id@last},{/if}{/foreach}" placeholder="ID через запятую"></div>
         </div>
         <div class="field">
             <div class="name">Группы покупателей</div>
