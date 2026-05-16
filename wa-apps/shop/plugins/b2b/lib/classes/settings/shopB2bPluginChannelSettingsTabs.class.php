@@ -22,25 +22,57 @@ class shopB2bPluginChannelSettingsTabs
         foreach ($tabs as $id => &$tab) {
             $tab['id'] = $id;
             $tab['active'] = $id === $active;
-            $tab['panel_id'] = 'b2b-channel-tab-' . $id;
-            $tab['url'] = '#' . $tab['panel_id'];
-            $tab['save_url'] = '';
-            $tab['content_url'] = self::getContentUrl($channel_id, $tab['module']);
-            $tab['save_endpoint'] = self::getContentUrl($channel_id, $tab['module'], 'save');
+            $tab['url'] = self::getEditorTabUrl($channel_id, $id);
+            $tab['save_url'] = self::getShopChannelSaveUrl();
         }
         unset($tab);
 
         return $tabs;
     }
 
-    public static function getContentUrl($channel_id, $module, $action = null): string
+    public static function getTabIds(): array
     {
-        $url = wa()->getAppUrl('shop') . '?plugin=b2b&module=' . urlencode($module) . '&channel_id=' . (int) $channel_id;
+        return array_keys(self::getRawTabs());
+    }
 
-        if ($action) {
-            $url .= '&action=' . urlencode($action);
+    public static function normalizeTabId($tab_id): string
+    {
+        $tab_id = trim((string) $tab_id);
+        return in_array($tab_id, self::getTabIds(), true) ? $tab_id : 'main';
+    }
+
+    public static function getEditorTabUrl($channel_id, $tab_id): string
+    {
+        $channel_id = (int) $channel_id;
+        if ($channel_id <= 0) {
+            return '#';
+        }
+
+        $tab_id = self::normalizeTabId($tab_id);
+        $url = wa()->getAppUrl('shop') . 'channels/editor/' . $channel_id . '/';
+
+        if ($tab_id !== 'main') {
+            $url .= '?b2b_tab=' . urlencode($tab_id);
         }
 
         return $url;
+    }
+
+    public static function getShopChannelSaveUrl(): string
+    {
+        return wa()->getAppUrl('shop') . '?module=channels&action=save';
+    }
+
+    protected static function getRawTabs(): array
+    {
+        return array(
+            'main' => true,
+            'users' => true,
+            'catalog' => true,
+            'pages' => true,
+            'blog' => true,
+            'support' => true,
+            'cart' => true,
+        );
     }
 }
