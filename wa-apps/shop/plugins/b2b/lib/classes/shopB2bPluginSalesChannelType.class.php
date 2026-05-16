@@ -24,9 +24,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $main_data = $main_service->getViewData($channel);
         $tabs = shopB2bPluginChannelSettingsTabs::getTabs($channel_id, $active_tab);
         $tab_config = $this->getTabRenderConfig($active_tab);
-
-        /** @var shopB2bPluginChannelSettingsService $tab_service */
-        $tab_service = new $tab_config['service']();
+        $tab_service = $this->createSettingsService($tab_config['service']);
         $tab_data = $tab_service->getViewData($channel);
 
         $tab_view = wa('shop')->getView();
@@ -116,8 +114,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         }
 
         $config = $this->getTabRenderConfig($tab_id);
-        /** @var shopB2bPluginChannelSettingsService $service */
-        $service = new $config['service']();
+        $service = $this->createSettingsService($config['service']);
 
         $current = $id ? $service->getParams((int) $id) : array();
         $input = array_merge($current, $params);
@@ -130,6 +127,20 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
         $params = $normalized;
         return array();
+    }
+
+    protected function createSettingsService(string $class): shopB2bPluginChannelSettingsService
+    {
+        if (!class_exists($class)) {
+            throw new waException('B2B settings service not found: ' . $class, 500);
+        }
+
+        $service = new $class();
+        if (!$service instanceof shopB2bPluginChannelSettingsService) {
+            throw new waException('Invalid B2B settings service: ' . $class, 500);
+        }
+
+        return $service;
     }
 
     public function onSave(array $channel) {}
