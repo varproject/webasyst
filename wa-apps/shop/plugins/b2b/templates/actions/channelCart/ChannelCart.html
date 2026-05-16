@@ -1,13 +1,15 @@
-{include file=$tabs_template}
 <form method="post" action="{$save_url|escape}" class="fields b2b-channel-tab-form" data-b2b-channel-tab-form>
-    {$wa->csrf()}<input type="hidden" name="channel_id" value="{$channel_id|escape}">
+    {$wa->csrf()}
+    <input type="hidden" name="id" value="{$channel_id|escape}">
+    <input type="hidden" name="params_mode" value="update">
+
     <div class="fields-group">
-        <div class="field"><div class="name">Включена</div><div class="value"><label><input type="checkbox" name="settings[b2b_cart_enabled]" value="1" {if !empty($settings.enabled)}checked{/if}> показывать корзину</label></div></div>
-        <div class="field"><div class="name">URL</div><div class="value"><input type="text" name="settings[b2b_cart_url]" value="{$settings.url|escape}"></div></div>
-        <div class="field"><div class="name">Название</div><div class="value"><input type="text" name="settings[b2b_cart_title]" value="{$settings.title|escape}"></div></div>
-        <div class="field"><div class="name">Оформление</div><div class="value"><label><input type="checkbox" name="settings[b2b_cart_checkout_enabled]" value="1" {if !empty($settings.checkout_enabled)}checked{/if}> разрешить оформление заказа</label></div></div>
-        <div class="field"><div class="name">Минимумы</div><div class="value"><input type="text" name="settings[b2b_cart_min_order_amount]" value="{$settings.min_order_amount|escape}" placeholder="сумма"><br><input type="text" name="settings[b2b_cart_min_order_items]" value="{$settings.min_order_items|escape}" placeholder="кол-во позиций"></div></div>
-        <div class="field"><div class="name">Меню</div><div class="value"><label><input type="checkbox" name="settings[b2b_cart_show_in_menu]" value="1" {if !empty($settings.show_in_menu)}checked{/if}> показывать в меню</label></div></div>
+        <div class="field"><div class="name">Включена</div><div class="value"><label><input type="checkbox" name="data[params][b2b_cart_enabled]" value="1" {if !empty($settings.enabled)}checked{/if}> показывать корзину</label></div></div>
+        <div class="field"><div class="name">URL</div><div class="value"><input type="text" name="data[params][b2b_cart_url]" value="{$settings.url|escape}"></div></div>
+        <div class="field"><div class="name">Название</div><div class="value"><input type="text" name="data[params][b2b_cart_title]" value="{$settings.title|escape}"></div></div>
+        <div class="field"><div class="name">Оформление</div><div class="value"><label><input type="checkbox" name="data[params][b2b_cart_checkout_enabled]" value="1" {if !empty($settings.checkout_enabled)}checked{/if}> разрешить оформление заказа</label></div></div>
+        <div class="field"><div class="name">Минимумы</div><div class="value"><input type="text" name="data[params][b2b_cart_min_order_amount]" value="{$settings.min_order_amount|escape}" placeholder="сумма"><br><input type="text" name="data[params][b2b_cart_min_order_items]" value="{$settings.min_order_items|escape}" placeholder="кол-во позиций"></div></div>
+        <div class="field"><div class="name">Меню</div><div class="value"><label><input type="checkbox" name="data[params][b2b_cart_show_in_menu]" value="1" {if !empty($settings.show_in_menu)}checked{/if}> показывать в меню</label></div></div>
     </div>
     <div class="bottombar sticky"><button type="submit" class="button green">Сохранить</button></div>
 </form>
