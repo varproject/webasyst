@@ -32,6 +32,26 @@ class shopB2bPluginChannelSettingsService
         $this->params_model->update($channel_id, $params);
     }
 
+    public function getViewData(array $channel): array
+    {
+        return array('settings' => ifset($channel, 'params', array()));
+    }
+
+    public function normalize(array $input): array
+    {
+        return $input;
+    }
+
+    public function validate(int $channel_id, array $settings): array
+    {
+        return array();
+    }
+
+    public function save(int $channel_id, array $input): void
+    {
+        $this->updateParams($channel_id, $this->normalize($input));
+    }
+
     public function getIdList($value): array
     {
         if (is_string($value)) {
@@ -135,5 +155,11 @@ class shopB2bPluginChannelSettingsService
     {
         $block_id = trim((string) $block_id);
         return $block_id !== '' && preg_match('/^[a-z0-9_.-]+$/i', $block_id);
+    }
+
+    protected function getDomainConfig(string $domain): array
+    {
+        $path = wa()->getConfig()->getConfigPath('domains/' . $domain . '.php', true, 'site');
+        return file_exists($path) ? (array) include($path) : array();
     }
 }
