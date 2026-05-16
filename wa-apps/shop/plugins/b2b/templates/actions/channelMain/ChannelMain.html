@@ -18,7 +18,8 @@
             <div class="value">
                 <select name="data[params][b2b_main_route_key]">
                     {foreach $route_options as $option}
-                        <option value="{$option.value|escape}" {if $option.value == $settings.route_key}selected{/if}>{$option.title|escape}</option>
+                        <option value="{$option.value|escape}" {if $option.value == $settings.route_key}selected{/if}>
+                            {$option.title|escape}</option>
                     {/foreach}
                 </select>
             </div>
@@ -26,13 +27,15 @@
         <div class="field">
             <div class="name">Открывать от корня</div>
             <div class="value">
-                <label><input type="checkbox" name="data[params][b2b_main_frontend_from_root]" value="1" {if !empty($settings.frontend_from_root)}checked{/if}> использовать корень поселения</label>
+                <label><input type="checkbox" name="data[params][b2b_main_frontend_from_root]" value="1"
+                        {if !empty($settings.frontend_from_root)}checked{/if}> использовать корень поселения</label>
             </div>
         </div>
         <div class="field">
             <div class="name">URL витрины</div>
             <div class="value">
-                <input type="text" name="data[params][b2b_main_frontend_custom_url]" value="{$settings.frontend_custom_url|escape}" placeholder="b2b">
+                <input type="text" name="data[params][b2b_main_frontend_custom_url]"
+                    value="{$settings.frontend_custom_url|escape}" placeholder="b2b">
                 <p class="hint">Используется, если витрина не открывается от корня.</p>
             </div>
         </div>

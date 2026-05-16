@@ -8,9 +8,9 @@ return array(
     'frontend'    => true,
 
     'handlers' => array(
+        'routing'             => 'routingHandler',
         'sales_channel_types' => 'salesChannelTypes',
         'sales_channels'      => 'salesChannels',
-        'routing'             => 'routingHandler',
         'order_action.create' => 'orderActionCreate',
     ),
 );
