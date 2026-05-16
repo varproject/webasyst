@@ -1,47 +1,36 @@
-<form method="post" action="{$save_url|escape}" class="fields b2b-channel-tab-form" data-b2b-channel-tab-form>
-    {$wa->csrf()}
-    <input type="hidden" name="id" value="{$channel_id|escape}">
-    <input type="hidden" name="params_mode" value="update">
-    <input type="hidden" name="data[params][_b2b_settings_tab]" value="main">
-
-    {if !empty($base_fields)}
-        <div class="fields-group">
-            {foreach $base_fields as $field_html}
-                {$field_html}
-            {/foreach}
-        </div>
-    {/if}
-
+{if !empty($base_fields)}
     <div class="fields-group">
-        <div class="field">
-            <div class="name">Поселение Shop-Script</div>
-            <div class="value">
-                <select name="data[params][b2b_main_route_key]">
-                    {foreach $route_options as $option}
-                        <option value="{$option.value|escape}" {if $option.value == $settings.route_key}selected{/if}>
-                            {$option.title|escape}</option>
-                    {/foreach}
-                </select>
-            </div>
-        </div>
-        <div class="field">
-            <div class="name">Открывать от корня</div>
-            <div class="value">
-                <label><input type="checkbox" name="data[params][b2b_main_frontend_from_root]" value="1"
-                        {if !empty($settings.frontend_from_root)}checked{/if}> использовать корень поселения</label>
-            </div>
-        </div>
-        <div class="field">
-            <div class="name">URL витрины</div>
-            <div class="value">
-                <input type="text" name="data[params][b2b_main_frontend_custom_url]"
-                    value="{$settings.frontend_custom_url|escape}" placeholder="b2b">
-                <p class="hint">Используется, если витрина не открывается от корня.</p>
-            </div>
-        </div>
+        {foreach $base_fields as $field_html}
+            {$field_html}
+        {/foreach}
     </div>
+{/if}
 
-    <div class="bottombar sticky">
-        <button type="submit" class="button green">Сохранить</button>
+<div class="fields-group">
+    <div class="field">
+        <div class="name">Поселение Shop-Script</div>
+        <div class="value">
+            <select name="data[params][b2b_main_route_key]">
+                {foreach $route_options as $option}
+                    <option value="{$option.value|escape}" {if $option.value == $settings.route_key}selected{/if}>
+                        {$option.title|escape}</option>
+                {/foreach}
+            </select>
+        </div>
     </div>
-</form>
+    <div class="field">
+        <div class="name">Открывать от корня</div>
+        <div class="value">
+            <label><input type="checkbox" name="data[params][b2b_main_frontend_from_root]" value="1"
+                    {if !empty($settings.frontend_from_root)}checked{/if}> использовать корень поселения</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">URL витрины</div>
+        <div class="value">
+            <input type="text" name="data[params][b2b_main_frontend_custom_url]"
+                value="{$settings.frontend_custom_url|escape}" placeholder="b2b">
+            <p class="hint">Используется, если витрина не открывается от корня.</p>
+        </div>
+    </div>
+</div>
