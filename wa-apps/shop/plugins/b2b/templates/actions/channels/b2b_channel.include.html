@@ -1,6 +1,43 @@
-<div class="b2b-channel-settings not-blank">
+<div class="b2b-channel-settings not-blank" id="js-b2b-channel-settings">
     {include file=$tabs_template}
     <div class="b2b-channel-settings__content custom-mt-16">
         {$tab_content}
     </div>
 </div>
+
+<script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
+<script>
+    (function($) {
+        var $wrapper = $('#js-b2b-channel-settings');
+        var $form = $wrapper.find('form.b2b-channel-tab-form').first();
+
+        if (!$form.length || typeof SalesChannelForm !== 'function') {
+            return;
+        }
+
+        var $submit = $form.find(':submit').last();
+        var $errors = $form.find('.js-place-for-errors');
+
+        if (!$errors.length) {
+            $errors = $('<div class="js-place-for-errors"></div>');
+            $submit.closest('.bottombar, .field, .value').prepend($errors);
+        }
+
+        new SalesChannelForm({
+            $form: $form,
+            $place_for_errors: $errors
+        });
+
+        $form.on('save_request', function() {
+            $submit.prop('disabled', true).after('<span class="spinner custom-ml-8"></span>');
+        });
+
+        $form.on('save_success save_fail', function() {
+            $submit.prop('disabled', false).siblings('.spinner').remove();
+        });
+
+        $form.on('save_success', function() {
+            $.shop && $.shop.trace && $.shop.trace('B2B channel settings saved');
+        });
+    })(jQuery);
+</script>
