@@ -9,12 +9,15 @@
         <input type="hidden" name="data[type]" value="{$channel.type|escape}">
         <input type="hidden" name="data[params][_b2b_settings_tab]" value="{$active_tab|default:'main'|escape}">
 
-        {include file=$tabs_template}
+        {* Шапка вкладок *}
+        {include file='./ChannelSettingsTabs.html'}
 
+        {* Формы *}
         <div class="b2b-channel-settings__content custom-mt-16">
             {$tab_content}
         </div>
 
+        {* Кнопки *}
         <div class="bottombar sticky s-settings-fixed-bottombar field">
             <div class="value">
                 <div class="flexbox middle">
@@ -39,22 +42,22 @@
                 </div>
             </div>
         </div>
+
     </form>
 </div>
 
-<script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?{$wa->version()}"></script>
+<script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?v={$wa->version()}"></script>
 <script>
-    $(function() {
-        "use strict";
-
-        const delete_url = {$wa_app_url|json_encode} + '?module=channels&action=delete';
+    $(() => {
         const $form = $('#js-sales-channel-form');
         const $submit_button = $form.find(':submit').last();
-        const active_tab = {$active_tab|default:'main'|json_encode};
 
-        new SalesChannelForm({
+        const app_url = $form.data('app-url');
+        const delete_url = $form.data('app_url') + '?module=channels&action=delete';
+
+        const controller = new SalesChannelForm({
             $place_for_errors: $form.find('.js-place-for-errors'),
-            $form: $form
+            $form
         });
 
         $form.on('save_request', function() {
@@ -62,45 +65,37 @@
         });
 
         $form.on('save_success save_fail', function() {
-            $submit_button.prop('disabled', false).siblings('.spinner').remove();
+            $submit_button.prop('disabled', false);
+            $submit_button.siblings('.spinner').remove();
         });
 
-        $form.on('save_success', function(evt, data) {
-            if (active_tab === 'main') {
-                const open_url = $.trim($form.find('[name="_b2b_open_url"]').val() || '');
-                if (open_url) {
-                    window.location = open_url;
-                    return;
-                }
-            }
-
-            {if empty($channel.id)}
-                if (data && data.result && data.result.id) {
-                    window.location = {$wa_app_url|json_encode} + 'channels/editor/' + data.result.id;
-                }
-            {/if}
-        });
-
-        {if !empty($channel.id)}
+        {if empty($channel.id)}
+            $form.on('save_success', function(evt, data) {
+                window.location = app_url + 'channels/editor/' + data.result.id;
+            });
+        {else}
             const channel_id = {$channel.id|json_encode};
             const $delete_button = $form.find('.js-delete-button');
 
-            $delete_button.on('click', function(e) {
-                e.preventDefault();
+            $delete_button.on('click', function(event) {
+                event.preventDefault();
 
                 $.waDialog.confirm({
-                    title: {_w("Delete permanently?")|json_encode},
-                    success_button_title: {_w("Delete")|json_encode},
+                    title: {_wp('Delete this sales channel?')|json_encode},
+                    success_button_title: {_wp('Delete')|json_encode},
                     success_button_class: 'danger',
-                    cancel_button_title: {_w("Cancel")|json_encode},
+                    cancel_button_title: {_wp('Cancel')|json_encode},
                     cancel_button_class: 'light-gray',
-                    onSuccess: function() {
-                        $delete_button.prop('disabled', true).after('<div class="spinner"></div>');
+                    onSuccess: async () => {
+                        $delete_button
+                            .prop('disabled', true)
+                            .after('<div class="spinner"></div>');
 
-                        $.post(delete_url, { id: channel_id }, 'json').then(function() {
-                            $submit_button.prop('disabled', false).siblings('.spinner').remove();
-                            window.location = {$wa_app_url|json_encode} + '?action=plugins#/';
+                        await $.post(delete_url, {
+                            id: channel_id
                         });
+
+                        window.location = app_url + '?action=plugins#/';
                     }
                 });
             });

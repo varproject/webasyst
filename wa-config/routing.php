@@ -1,4 +1,5 @@
 <?php
+
 return array (
   'webasyst2.loc' => 
   array (
@@ -13,7 +14,6 @@ return array (
     array (
       'url' => 'apanel/*',
       'app' => 'apanel',
-      'temporarily_off' => true,
     ),
     2 => 
     array (
@@ -52,7 +52,6 @@ return array (
     array (
       'url' => 'apanel-3/*',
       'app' => 'apanel',
-      'temporarily_off' => true,
     ),
     2 => 
     array (
@@ -61,7 +60,6 @@ return array (
       1111111 => '55555555',
       'theme' => NULL,
       'theme_mobile' => NULL,
-      'temporarily_off' => true,
     ),
     3 => 
     array (
@@ -91,14 +89,12 @@ return array (
       '_name' => '444Торговля',
       'url' => 'apanel/*',
       'app' => 'apanel',
-      'temporarily_off' => true,
     ),
     5 => 
     array (
       'url' => 'apanel-1/*',
       'app' => 'apanel',
       '_name' => 'B2B для клиентов',
-      'temporarily_off' => true,
     ),
     6 => 
     array (
@@ -127,7 +123,6 @@ return array (
     array (
       'url' => 'b2b/*',
       'app' => 'apanel',
-      'temporarily_off' => true,
     ),
     2 => 
     array (
@@ -155,6 +150,12 @@ return array (
   ),
   'test.webasyst.loc' => 
   array (
+    0 => 
+    array (
+      'url' => 'apanel/*',
+      'app' => 'apanel',
+      'locale' => 'ru_RU',
+    ),
     1 => 
     array (
       'url' => '*',
@@ -180,3 +181,4 @@ return array (
     ),
   ),
 );
+//EOF

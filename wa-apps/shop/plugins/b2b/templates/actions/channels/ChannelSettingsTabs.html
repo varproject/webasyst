@@ -1,0 +1,17 @@
+<ul class="tabs wide nowrap b2b-channel-tabs custom-pt-8">
+    {foreach $tabs as $tab}
+        <li class="{if !empty($tab.active)}selected{/if}">
+            {if !empty($tab.url) || $tab@first}
+                <a href="{$tab.url|escape}" data-b2b-tab="{$tab.id|escape}">
+                    {if !empty($tab.icon)}<i class="icon {$tab.icon|escape}"></i>{/if}
+                    {$tab.label|escape}
+                </a>
+            {else}
+                <span class="opacity-30">
+                    {if !empty($tab.icon)}<i class="icon {$tab.icon|escape}"></i>{/if}
+                    {$tab.label|escape}
+                </span>
+            {/if}
+        </li>
+    {/foreach}
+</ul>

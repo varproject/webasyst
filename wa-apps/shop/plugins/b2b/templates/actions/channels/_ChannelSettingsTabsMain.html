@@ -14,15 +14,14 @@
         <div class="value">
             <select name="data[params][b2b_main_route_key]" class="js-b2b-route-key">
                 {foreach $route_options as $option}
-                    <option value="{$option.value|escape}"
-                            data-domain="{$option.domain|escape}"
-                            data-route-url="{$option.route_url|escape}"
-                            {if $option.value == $settings.route_key}selected{/if}>
+                    <option value="{$option.value|escape}" data-domain="{$option.domain|escape}"
+                        data-route-url="{$option.route_url|escape}" {if $option.value == $settings.route_key}selected{/if}>
                         {$option.title|escape}
                     </option>
                 {/foreach}
             </select>
-            <p class="hint">Выберите поселение Shop-Script на домене, где включены авторизация и личный кабинет Shop-Script.</p>
+            <p class="hint">Выберите поселение Shop-Script на домене, где включены авторизация и личный кабинет
+                Shop-Script.</p>
         </div>
     </div>
     <div class="field">
@@ -30,35 +29,27 @@
         <div class="value">
             <input type="hidden" name="data[params][b2b_main_frontend_from_root]" value="0">
             <label>
-                <input type="checkbox"
-                       class="js-b2b-from-root"
-                       name="data[params][b2b_main_frontend_from_root]"
-                       value="1"
-                       {if !empty($settings.frontend_from_root)}checked{/if}>
+                <input type="checkbox" class="js-b2b-from-root" name="data[params][b2b_main_frontend_from_root]"
+                    value="1" {if !empty($settings.frontend_from_root)}checked{/if}>
                 использовать корень поселения
             </label>
-            <p class="hint state-caution-hint">Сейчас режим от корня запрещён при сохранении: он конфликтует с основным маршрутом Shop-Script.</p>
+            <p class="hint state-caution-hint">Сейчас режим от корня запрещён при сохранении: он конфликтует с основным
+                маршрутом Shop-Script.</p>
         </div>
     </div>
     <div class="field">
         <div class="name">URL витрины</div>
         <div class="value">
-            <input type="text"
-                   class="js-b2b-custom-url"
-                   name="data[params][b2b_main_frontend_custom_url]"
-                   value="{$settings.frontend_custom_url|escape}"
-                   placeholder="b2b">
+            <input type="text" class="js-b2b-custom-url" name="data[params][b2b_main_frontend_custom_url]"
+                value="{$settings.frontend_custom_url|escape}" placeholder="b2b">
             <p class="hint">Используется, если витрина не открывается от корня.</p>
         </div>
     </div>
     <div class="field">
         <div class="name">Итоговый адрес</div>
         <div class="value">
-            <input type="text"
-                   class="js-b2b-open-url"
-                   name="_b2b_open_url"
-                   value="{$settings.open_url|escape}"
-                   readonly>
+            <input type="text" class="js-b2b-open-url" name="_b2b_open_url" value="{$settings.open_url|escape}"
+                readonly>
             <p class="hint">После успешного сохранения главный таб откроет этот адрес.</p>
         </div>
     </div>
@@ -95,7 +86,8 @@
                 parts.push(customUrl);
             }
 
-            openUrlInput.value = domain ? window.location.protocol + '//' + domain + '/' + (parts.length ? parts.join('/') + '/' : '') : '';
+            openUrlInput.value = domain ? window.location.protocol + '//' + domain + '/' + (parts.length ? parts
+                .join('/') + '/' : '') : '';
         }
 
         routeSelect.addEventListener('change', updateOpenUrl);

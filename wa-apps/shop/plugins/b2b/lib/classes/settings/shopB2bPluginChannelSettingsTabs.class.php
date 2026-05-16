@@ -2,53 +2,47 @@
 
 class shopB2bPluginChannelSettingsTabs
 {
-    public static function getTabs($channel_id, $active = 'main'): array
+    // Возвращает вкладки настроек
+    public static function getTabs(int $channel_id): array
     {
-        $channel_id = (int) $channel_id;
-        $tabs = array(
-            'main' => array('label' => 'Главное', 'icon' => '', 'module' => 'channelMain', 'sort' => 10),
-            'users' => array('label' => 'Пользователи', 'icon' => '', 'module' => 'channelUsers', 'sort' => 20),
-            'catalog' => array('label' => 'Каталог', 'icon' => '', 'module' => 'channelCatalog', 'sort' => 30),
-            'pages' => array('label' => 'Страницы', 'icon' => 'fas fa-globe', 'module' => 'channelPages', 'sort' => 40),
-            'blog' => array('label' => 'Блог', 'icon' => 'fas fa-newspaper', 'module' => 'channelBlog', 'sort' => 50),
-            'support' => array('label' => 'Поддержка', 'icon' => '', 'module' => 'channelSupport', 'sort' => 60),
-            'cart' => array('label' => 'Корзина', 'icon' => 'fas fa-shopping-cart', 'module' => 'channelCart', 'sort' => 70),
-        );
+        $active = waRequest::get('b2b_tab', 'main', waRequest::TYPE_STRING_TRIM);
+        $tabs = [];
 
-        uasort($tabs, function ($a, $b) {
-            return (int) $a['sort'] <=> (int) $b['sort'];
-        });
+        $raw_data = [
+            'main'    => ['label' => 'Главная', 'icon' => ''],
+            'users'   => ['label' => 'Пользователи', 'icon' => ''],
+            'catalog' => ['label' => 'Каталог', 'icon' => ''],
+            'pages'   => ['label' => 'Страницы', 'icon' => 'fas fa-globe'],
+            'blog'    => ['label' => 'Блог', 'icon' => 'fas fa-newspaper'],
+            'support' => ['label' => 'Поддержка', 'icon' => ''],
+            'cart'    => ['label' => 'Корзина', 'icon' => 'fas fa-shopping-cart']
+        ];
 
-        foreach ($tabs as $id => &$tab) {
-            $tab['id'] = $id;
-            $tab['active'] = $id === $active;
-            $tab['url'] = self::getEditorTabUrl($channel_id, $id);
-            $tab['save_url'] = self::getShopChannelSaveUrl();
+        foreach ($raw_data as $key => $tab) {
+            $tabs[$key] = [
+                'id'     => $key,
+                'label'  => $tab['label'],
+                'active' => $key === $active,
+                'class'  => 'shopB2bPluginChannels' . ucfirst($key) . 'Action',
+                'tpl'    => 'ChannelSettingsTabs' . ucfirst($key) . '.html',
+                'url'    => self::getTabUrl($channel_id, $key),
+            ];
         }
-        unset($tab);
 
-        return $tabs;
+
+        return [
+            'all' => $tabs ?? [],
+            'active' => $tabs[$active] ?? [],
+        ];
     }
 
-    public static function getTabIds(): array
+    // Возвращает корректный url вкладки
+    public static function getTabUrl(int $channel_id, string $tab_id): string
     {
-        return array_keys(self::getRawTabs());
-    }
-
-    public static function normalizeTabId($tab_id): string
-    {
-        $tab_id = trim((string) $tab_id);
-        return in_array($tab_id, self::getTabIds(), true) ? $tab_id : 'main';
-    }
-
-    public static function getEditorTabUrl($channel_id, $tab_id): string
-    {
-        $channel_id = (int) $channel_id;
         if ($channel_id <= 0) {
-            return '#';
+            return '';
         }
 
-        $tab_id = self::normalizeTabId($tab_id);
         $url = wa()->getAppUrl('shop') . 'channels/editor/' . $channel_id . '/';
 
         if ($tab_id !== 'main') {
@@ -56,23 +50,5 @@ class shopB2bPluginChannelSettingsTabs
         }
 
         return $url;
-    }
-
-    public static function getShopChannelSaveUrl(): string
-    {
-        return wa()->getAppUrl('shop') . '?module=channels&action=save';
-    }
-
-    protected static function getRawTabs(): array
-    {
-        return array(
-            'main' => true,
-            'users' => true,
-            'catalog' => true,
-            'pages' => true,
-            'blog' => true,
-            'support' => true,
-            'cart' => true,
-        );
     }
 }

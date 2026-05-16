@@ -48,8 +48,9 @@ class shopB2bPlugin extends shopPlugin
     // Заглушка для страницы настроек плагина
     public function getSettingsDisclaimerHtml()
     {
-        $view = wa('shop')->getView();
-        $plugin = wa('shop')->getPlugin('b2b');
+        $wa = wa('shop');
+        $view = $wa->getView();
+        $plugin = $wa->getPlugin('b2b');
 
         $view->assign([
             'b2b_static_url' => $plugin->getPluginStaticUrl(),
@@ -57,5 +58,21 @@ class shopB2bPlugin extends shopPlugin
         ]);
 
         return $view->fetch('file:plugins/b2b/templates/layouts/plugin-presentation.html');
+    }
+
+    public function routingHandler(array $route)
+    {
+        $routes = [];
+        if (wa()->getEnv() === 'backend') {
+            return [
+                // 'channels/new/b2b/?*' => 'tttttttttt'
+            ];
+        } else {
+            $routes = $this->routing($route);
+        }
+
+        // dd($routes);
+
+        return $routes;
     }
 }
