@@ -50,6 +50,7 @@
         const delete_url = {$wa_app_url|json_encode} + '?module=channels&action=delete';
         const $form = $('#js-sales-channel-form');
         const $submit_button = $form.find(':submit').last();
+        const active_tab = {$active_tab|default:'main'|json_encode};
 
         new SalesChannelForm({
             $place_for_errors: $form.find('.js-place-for-errors'),
@@ -64,11 +65,23 @@
             $submit_button.prop('disabled', false).siblings('.spinner').remove();
         });
 
-        {if empty($channel.id)}
-            $form.on('save_success', function(evt, data) {
-                window.location = {$wa_app_url|json_encode} + 'channels/editor/' + data.result.id;
-            });
-        {else}
+        $form.on('save_success', function(evt, data) {
+            if (active_tab === 'main') {
+                const open_url = $.trim($form.find('[name="_b2b_open_url"]').val() || '');
+                if (open_url) {
+                    window.location = open_url;
+                    return;
+                }
+            }
+
+            {if empty($channel.id)}
+                if (data && data.result && data.result.id) {
+                    window.location = {$wa_app_url|json_encode} + 'channels/editor/' + data.result.id;
+                }
+            {/if}
+        });
+
+        {if !empty($channel.id)}
             const channel_id = {$channel.id|json_encode};
             const $delete_button = $form.find('.js-delete-button');
 
@@ -82,12 +95,10 @@
                     cancel_button_title: {_w("Cancel")|json_encode},
                     cancel_button_class: 'light-gray',
                     onSuccess: function() {
-                        $delete_button.prop('disabled', true).after(
-                            '<div class="spinner"></div>');
+                        $delete_button.prop('disabled', true).after('<div class="spinner"></div>');
 
                         $.post(delete_url, { id: channel_id }, 'json').then(function() {
-                            $submit_button.prop('disabled', false).siblings('.spinner')
-                                .remove();
+                            $submit_button.prop('disabled', false).siblings('.spinner').remove();
                             window.location = {$wa_app_url|json_encode} + '?action=plugins#/';
                         });
                     }
