@@ -10,7 +10,7 @@ return array(
     // 'custom_settings' => true,
 
     'handlers' => array(
-        'routing'             => 'routingHandler',
+        // 'routing'             => 'routingHandler',
         'sales_channels'      => 'salesChannels',
         'sales_channel_types' => 'salesChannelTypes',
         'order_action.create' => 'orderActionCreate',

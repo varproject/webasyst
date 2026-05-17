@@ -1,8 +1,12 @@
 <?php
 
+if (wa()->getEnv() !== 'frontend') {
+    return null;
+}
+
 return array(
-    'b2b/' => array(
-        'module' => 'frontend',
+    '*' => array(
+        // 'module' => 'frontend',
         'action' => 'b2b',
         'plugin' => 'b2b',
         'secure' => true,

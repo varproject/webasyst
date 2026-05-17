@@ -1,12 +1,6 @@
 <?php
 
-class shopB2bPluginChannelsMainAction extends waViewAction
+class shopB2bPluginChannelsMainAction extends shopB2bPluginChannelsAction
 {
-    public function execute()
-    {
-        dd(55555555555);
-        $this->view->assign(array(
-            'active_company' => '',
-        ));
-    }
+    public function execute() {}
 }

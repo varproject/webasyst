@@ -3,10 +3,11 @@
 class shopB2bPluginChannelSettingsTabs
 {
     // Возвращает вкладки настроек
-    public static function getTabs(int $channel_id): array
+    public static function getTabs(array $channel): array
     {
-        $active = waRequest::get('b2b_tab', 'main', waRequest::TYPE_STRING_TRIM);
-        $tabs = [];
+        $tabs       = [];
+        $channel_id = (int) $channel['id'] ?? 0;
+        $active     = waRequest::get('b2b_tab', 'main', waRequest::TYPE_STRING_TRIM);
 
         $raw_data = [
             'main'    => ['label' => 'Главная', 'icon' => ''],
@@ -37,7 +38,7 @@ class shopB2bPluginChannelSettingsTabs
     }
 
     // Возвращает корректный url вкладки
-    public static function getTabUrl(int $channel_id, string $tab_id): string
+    protected static function getTabUrl(int $channel_id, string $tab_id): string
     {
         if ($channel_id <= 0) {
             return '';

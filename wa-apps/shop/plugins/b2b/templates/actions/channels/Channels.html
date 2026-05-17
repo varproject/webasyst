@@ -1,0 +1,121 @@
+{* Основная обертка для настройки канала продаж *}
+<div class="b2b-channel-settings not-blank fields form" id="js-b2b-channel-settings">
+    <form action="{$wa_app_url}?module=channels&action=save" id="js-sales-channel-form">
+        {if !empty($channel.id)}
+            <input type="hidden" name="id" value="{$channel.id|escape}">
+            <input type="hidden" name="params_mode" value="update">
+        {else}
+            <input type="hidden" name="is_new" value="1">
+        {/if}
+        <input type="hidden" name="data[type]" value="{$channel.type|escape}">
+        <input type="hidden" name="data[params][_b2b_settings_tab]" value="{$active_tab|default:'main'|escape}">
+
+        {* Шапка вкладок *}
+        <ul class="tabs wide nowrap b2b-channel-tabs custom-pt-8">
+            {foreach $channel_tabs as $tab}
+                <li class="{if !empty($tab.active)}selected{/if}">
+                    {if !empty($tab.url) || $tab@first}
+                        <a href="{$tab.url|escape}" data-b2b-tab="{$tab.id|escape}">
+                            {if !empty($tab.icon)}<i class="icon {$tab.icon|escape}"></i>{/if}
+                            {$tab.label|escape}
+                        </a>
+                    {else}
+                        <span class="opacity-30">
+                            {if !empty($tab.icon)}<i class="icon {$tab.icon|escape}"></i>{/if}
+                            {$tab.label|escape}
+                        </span>
+                    {/if}
+                </li>
+            {/foreach}
+        </ul>
+
+        {* Формы html *}
+        <div class="b2b-channel-settings__content custom-mt-16">
+            {$channel_tab_form_html|default:'Нет активных настроек.'}
+        </div>
+
+        {* Кнопки *}
+        <div class="bottombar sticky s-settings-fixed-bottombar field">
+            <div class="value">
+                <div class="flexbox middle">
+                    <div class="wide flexbox middle space-8">
+                        <input type="submit" class="button js-form-submit green" value="Сохранить">
+                        <div class="js-place-for-errors"></div>
+
+                        {if !empty($settings.open_url)}
+                            <a class="button small" href="{$settings.open_url|escape}" target="_blank" rel="noopener">
+                                <i class="icon fas fa-external-link-alt"></i> Открыть витрину
+                            </a>
+                        {/if}
+                    </div>
+
+                    {if !empty($channel.id)}
+                        <div class="nowrap">
+                            <button class="button red outlined js-delete-button" type="button">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script type="text/javascript" src="{$wa_app_static_url}js/backend/channels/channels.js?v={$wa->version()}"></script>
+<script>
+    $(() => {
+        const $form = $('#js-sales-channel-form');
+        const $submit_button = $form.find(':submit').last();
+
+        const app_url = $form.data('app-url');
+        const delete_url = $form.data('app_url') + '?module=channels&action=delete';
+
+        const controller = new SalesChannelForm({
+            $place_for_errors: $form.find('.js-place-for-errors'),
+            $form
+        });
+
+        $form.on('save_request', function() {
+            $submit_button.prop('disabled', true).after('<div class="spinner"></div>');
+        });
+
+        $form.on('save_success save_fail', function() {
+            $submit_button.prop('disabled', false);
+            $submit_button.siblings('.spinner').remove();
+        });
+
+        {if empty($channel.id)}
+            $form.on('save_success', function(evt, data) {
+                window.location = app_url + 'channels/editor/' + data.result.id;
+            });
+        {else}
+            const channel_id = {$channel.id|json_encode};
+            const $delete_button = $form.find('.js-delete-button');
+
+            $delete_button.on('click', function(event) {
+                event.preventDefault();
+
+                $.waDialog.confirm({
+                    title: {_wp('Delete this sales channel?')|json_encode},
+                    success_button_title: {_wp('Delete')|json_encode},
+                    success_button_class: 'danger',
+                    cancel_button_title: {_wp('Cancel')|json_encode},
+                    cancel_button_class: 'light-gray',
+                    onSuccess: async () => {
+                        $delete_button
+                            .prop('disabled', true)
+                            .after('<div class="spinner"></div>');
+
+                        await $.post(delete_url, {
+                            id: channel_id
+                        });
+
+                        window.location = app_url + '?action=plugins#/';
+                    }
+                });
+            });
+        {/if}
+    });
+</script>

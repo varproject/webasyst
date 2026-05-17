@@ -1,12 +1,20 @@
-{if !empty($base_fields)}
-    <div class="fields-group">
-        {foreach $base_fields as $field_html}
-            <div class="field">
-                {$field_html}
-            </div>
-        {/foreach}
+<div class="fields-group">
+    <div class="field">
+        <div class="name">Название</div>
+        <div class="value">
+            <input type="text" name="data[params][name]" value="{$settings.name|default:''|escape}">
+            <p class="hint">Название канала продаж для внутреннего использования и фильтрации заказов.</p>
+        </div>
     </div>
-{/if}
+    <div class="field">
+        <div class="name">Название</div>
+        <div class="value">
+            <textarea name="data[params][description]"
+                class="small">{$settings.description|default:''|escape}</textarea>
+            <p class="hint">Необязательно. Не видно вашим клиентам.</p>
+        </div>
+    </div>
+</div>
 
 <div class="fields-group js-b2b-main-settings">
     <div class="field">

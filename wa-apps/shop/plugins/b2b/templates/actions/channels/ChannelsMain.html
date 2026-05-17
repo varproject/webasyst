@@ -1,0 +1,9 @@
+{if !empty($base_form_fields_html)}
+    <div class="fields-group">
+        {foreach $base_form_fields_html as $field_html}
+            <div class="field">
+                {$field_html}
+            </div>
+        {/foreach}
+    </div>
+{/if}

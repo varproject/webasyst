@@ -60,18 +60,28 @@ class shopB2bPlugin extends shopPlugin
         return $view->fetch('file:plugins/b2b/templates/layouts/plugin-presentation.html');
     }
 
+
+
     public function routingHandler(array $route)
     {
         $routes = [];
+        
         if (wa()->getEnv() === 'backend') {
             return [
-                // 'channels/new/b2b/?*' => 'tttttttttt'
+                // 'channels/new/b2b/?*' => 'channels'
             ];
         } else {
-            $routes = $this->routing($route);
+            $routes = [
+                '*' => array(
+                    // 'module' => 'frontend',
+                    'action' => 'b2b55555555555',
+                    'plugin' => 'b2b',
+                    'secure' => true,
+                ),
+            ];
         }
 
-        // dd($routes);
+        dd($routes);
 
         return $routes;
     }

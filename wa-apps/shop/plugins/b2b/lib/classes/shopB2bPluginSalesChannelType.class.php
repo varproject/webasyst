@@ -11,30 +11,50 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
 
     public function getFormHtml(array $channel): string
     {
-        $tab_tpl_dir        = wa()->getAppPath('plugins/b2b/templates/actions/channels/', 'shop');
+        return new waLazyDisplay(new shopB2bPluginChannelsAction([
+            'channel' => $channel,
+            'base_form_fields_html' => $this->getBaseRenderedFields($channel),
+        ]));
+    }
 
-        $channel_id         = (int) $channel['id'] ?? 0;
+    // public function getFormHtml(array $channel): string
+    // {
+    //     $tab_view           = wa('shop')->getView();
+    //     $tab_tpl_dir        = wa()->getAppPath('plugins/b2b/templates/actions/channels/', 'shop');
 
-        $tab_data           = shopB2bPluginChannelSettingsTabs::getTabs($channel_id);
-        $tab_items          = $tab_data['all'] ?? [];
-        $active_tab         = $tab_data['active'] ?? [];
+    //     $channel_id         = (int) $channel['id'] ?? 0;
 
-        $active_tab_tpl     = $tab_tpl_dir . ($active_tab['tpl'] ?? '');
-        // $active_tab_content = $tab_view->fetch($active_tab_tpl);
+    //     $tab_data           = shopB2bPluginChannelSettingsTabs::getTabs($channel_id);
+    //     $tab_items          = $tab_data['all'] ?? [];
+    //     $active_tab         = $tab_data['active'] ?? [];
 
-        $active_tab_module = $active_tab['class'];
-        $active_tab_html = new waLazyDisplay(new $active_tab_module());
+    //     $active_tab_tpl     = $tab_tpl_dir . ($active_tab['tpl'] ?? '');
+    //     $active_tab_content = $tab_view->fetch($active_tab_tpl);
 
-        // dd($active_tab_html);
-        // dd(wa()->getPlugin('b2b'));
+    //     $tab_view->assign([
+    //         'channel'     => $channel,
+    //         'tabs'        => $tab_items,
+    //         'tab_content' => $active_tab_content,
+    //     ]);
 
-        $tab_view           = wa('shop')->getView();
-        $tab_view->assign([
-            'channel'     => $channel,
-            'tabs'        => $tab_items,
-            // 'tab_content' => $active_tab_html,
-        ]);
+    //     return $tab_view->fetch($tab_tpl_dir . 'ChannelSettings.html');
+    // }
 
-        return $tab_view->fetch($tab_tpl_dir . 'ChannelSettings.html');
+    // Возвращает базовые поля формы настроек
+    protected function getBaseRenderedFields(array $channel): array
+    {
+        $result = [];
+
+        if (empty($channel['id'])) {
+            $channel['name'] = $this->get('name');
+        }
+
+        $field_params = ['namespace' => 'data'] + $this->getFormFieldParams();
+
+        foreach ($this->getBaseFieldsConfig() as $name => $row) {
+            $result[$name] = $this->getControl($name, ifset($channel, $name, ''), $field_params + $row);
+        }
+
+        return $result;
     }
 }
