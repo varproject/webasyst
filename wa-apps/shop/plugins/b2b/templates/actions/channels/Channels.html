@@ -8,11 +8,11 @@
             <input type="hidden" name="is_new" value="1">
         {/if}
         <input type="hidden" name="data[type]" value="{$channel.type|escape}">
-        <input type="hidden" name="data[params][_b2b_settings_tab]" value="{$active_tab|default:'main'|escape}">
+        {* <input type="hidden" name="data[params][_b2b_settings_tab]" value="{$active|default:'main'|escape}"> *}
 
         {* Шапка вкладок *}
         <ul class="tabs wide nowrap b2b-channel-tabs custom-pt-8">
-            {foreach $channel_tabs as $tab}
+            {foreach $tabs as $tab}
                 <li class="{if !empty($tab.active)}selected{/if}">
                     {if !empty($tab.url) || $tab@first}
                         <a href="{$tab.url|escape}" data-b2b-tab="{$tab.id|escape}">
@@ -31,7 +31,7 @@
 
         {* Формы html *}
         <div class="b2b-channel-settings__content custom-mt-16">
-            {$channel_tab_form_html|default:'Нет активных настроек.'}
+            {$form_html|default:'Нет активных настроек.'}
         </div>
 
         {* Кнопки *}

@@ -7,8 +7,11 @@
             <p>Эта витрина доступна только выбранным покупателям или группам покупателей.</p>
             <p>Свяжитесь с менеджером, чтобы получить доступ.</p>
             <div class="b2b-access-denied__actions">
-                {if !empty($access_denied_block_params.login_url)}<a href="{$access_denied_block_params.login_url|escape}" class="button">Войти</a>{/if}
-                {if !empty($access_denied_block_params.register_url)}<a href="{$access_denied_block_params.register_url|escape}" class="button light-gray">Зарегистрироваться</a>{/if}
+                {if !empty($access_denied_block_params.login_url)}<a href="{$access_denied_block_params.login_url|escape}"
+                    class="button">Войти</a>{/if}
+                {if !empty($access_denied_block_params.register_url)}<a
+                        href="{$access_denied_block_params.register_url|escape}"
+                    class="button light-gray">Зарегистрироваться</a>{/if}
             </div>
         </section>
     {/if}
