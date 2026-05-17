@@ -69,8 +69,8 @@
         const $form = $('#js-sales-channel-form');
         const $submit_button = $form.find(':submit').last();
 
-        const app_url = $form.data('app-url');
-        const delete_url = $form.data('app_url') + '?module=channels&action=delete';
+        const app_url = {$wa_app_url|json_encode};
+        const delete_url = app_url + '?module=channels&action=delete';
 
         const controller = new SalesChannelForm({
             $place_for_errors: $form.find('.js-place-for-errors'),

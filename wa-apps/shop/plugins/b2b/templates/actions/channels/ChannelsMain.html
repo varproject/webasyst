@@ -1,5 +1,6 @@
 {if !empty($base_form_fields_html)}
     <div class="fields-group">
+        <input type="hidden" name="data[status]" value="0">
         {foreach $base_form_fields_html as $field_html}
             <div class="field">
                 {$field_html}

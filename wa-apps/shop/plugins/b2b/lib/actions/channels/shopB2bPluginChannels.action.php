@@ -14,7 +14,7 @@ class shopB2bPluginChannelsAction extends waViewAction
 
         // Инициализируем вкладки
         $this->getTabs($this->channel);
-
+        
         parent::__construct($params);
     }
 
@@ -32,7 +32,6 @@ class shopB2bPluginChannelsAction extends waViewAction
             'channel_tab_form_html' => $tab_form_html,
             'base_form_fields_html' => $this->base_form_fields_html,
         ]);
-        // dd($this->channel_tab);
     }
 
     // Возвращает вкладки настроек

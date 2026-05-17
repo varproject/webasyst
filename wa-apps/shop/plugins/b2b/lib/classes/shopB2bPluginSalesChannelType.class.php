@@ -6,16 +6,57 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     {
         $base = parent::getBaseFieldsConfig();
         $base['description']['class'] = 'smallest';
-        return $base;
+
+        return ['status' => [
+            'title' => _w('Enabled'),
+            'control_type' => waHtmlControl::CHECKBOX,
+        ]] + $base;
     }
 
     public function getFormHtml(array $channel): string
     {
-        return new waLazyDisplay(new shopB2bPluginChannelsAction([
+        dd($channel);
+        return (string) new waLazyDisplay(new shopB2bPluginChannelsAction([
             'channel' => $channel,
             'base_form_fields_html' => $this->getBaseRenderedFields($channel),
         ]));
     }
+
+    public function sanitizeAndValidateParams(?int $id, array &$params, $params_mode): array
+    {
+        // if ($params_mode == 'set' && empty($params['stock_id'])) {
+        //     $errors['stock_id'] = [
+        //         'error_description' => _wp('This is a required field.'),
+        //         'field' => 'data[params][stock_id]',
+        //     ];
+        // }
+
+        return array_values($errors ?? []);
+    }
+
+    // Возвращает базовые поля формы настроек
+    protected function getBaseRenderedFields(array $channel): array
+    {
+        $result = [];
+
+        if (empty($channel['id'])) {
+            $channel['name'] = $this->get('name');
+        }
+
+        $field_params = ['namespace' => 'data'] + $this->getFormFieldParams();
+
+        foreach ($this->getBaseFieldsConfig() as $name => $row) {
+            $result[$name] = $this->getControl($name, ifset($channel, $name, ''), $field_params + $row);
+        }
+
+        return $result;
+    }
+
+
+
+
+
+
 
     // public function getFormHtml(array $channel): string
     // {
@@ -40,21 +81,4 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
     //     return $tab_view->fetch($tab_tpl_dir . 'ChannelSettings.html');
     // }
 
-    // Возвращает базовые поля формы настроек
-    protected function getBaseRenderedFields(array $channel): array
-    {
-        $result = [];
-
-        if (empty($channel['id'])) {
-            $channel['name'] = $this->get('name');
-        }
-
-        $field_params = ['namespace' => 'data'] + $this->getFormFieldParams();
-
-        foreach ($this->getBaseFieldsConfig() as $name => $row) {
-            $result[$name] = $this->getControl($name, ifset($channel, $name, ''), $field_params + $row);
-        }
-
-        return $result;
-    }
 }
