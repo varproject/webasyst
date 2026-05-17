@@ -22,16 +22,17 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
         $data       = $this->getTabs($channel);
         $tabs       = $data['all'] ?? [];
         $active     = $data['active'] ?? [];
-        $form_html  = $view->fetch($view_dir . ($active_tab['tpl'] ?? ''));
         $base_form  = $this->getBaseRenderedFields($channel);
 
         $view->assign([
             'channel'   => $channel,
             'tabs'      => $tabs,
             'active'    => $active,
-            'form_html' => $form_html,
             'base_form' => $base_form,
         ]);
+
+        // Рендер формы текущей вкладки
+        $view->assign('form_html', $view->fetch($view_dir . ($active['tpl'] ?? '')));
 
         return $view->fetch($view_dir . 'Channels.html');
     }
@@ -102,7 +103,7 @@ class shopB2bPluginSalesChannelType extends shopSalesChannelType
                 'id'     => $key,
                 'label'  => $tab['label'],
                 'active' => ($key === $active_tab_id),
-                'action' => 'shopB2bPluginChannels' . ucfirst($key) . 'Action',
+                'tpl'    => 'Channels' . ucfirst($key) . '.html',
                 'url'    => $this->getTabUrl($channel_id, $key),
             ];
         }
