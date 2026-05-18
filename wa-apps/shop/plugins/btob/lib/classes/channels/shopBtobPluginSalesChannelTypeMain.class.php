@@ -1,6 +1,6 @@
 <?php
 
-class shopBtobPluginSalesChannelTabMain
+class shopBtobPluginSalesChannelTypeMain
 {
     public function assign()
     {

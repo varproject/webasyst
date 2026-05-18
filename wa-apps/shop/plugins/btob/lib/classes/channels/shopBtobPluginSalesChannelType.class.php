@@ -46,7 +46,7 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
         $view->assign('form_html', $view->fetch($view_dir . ($active['tpl'] ?? '')));
 
         // Рендер общей обертки
-        return $view->fetch($view_dir . 'Channels.html');
+        return $view->fetch($view_dir . 'SalesChannelType.html');
     }
 
 
@@ -114,8 +114,8 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
                 'id'     => $key,
                 'label'  => $tab['label'],
                 'active' => ($key === $active_tab_id),
-                'tpl'    => 'Channels' . ucfirst($key) . '.html',
-                'class'  => 'shopBtobPluginSalesChannelTab' . ucfirst($key),
+                'tpl'    => 'SalesChannelType' . ucfirst($key) . '.html',
+                'class'  => 'shopBtobPluginSalesChannelType' . ucfirst($key),
                 'url'    => $this->getTabUrl($channel_id, $key),
             ];
         }
