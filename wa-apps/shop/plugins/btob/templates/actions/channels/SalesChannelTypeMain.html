@@ -1,7 +1,7 @@
-{if !empty($base_form)}
+{if !empty($base_fields)}
     <div class="fields-group">
         <input type="hidden" name="data[status]" value="0">
-        {foreach $base_form as $field_html}
+        {foreach $base_fields as $field_html}
             <div class="field">
                 {$field_html}
             </div>
@@ -9,25 +9,24 @@
     </div>
 {/if}
 
+{* {$routes|dd} *}
+
 <div class="fields-group js-btob-main-settings">
     <div class="field">
-        <div class="name">Поселение Shop-Script</div>
+        <div class="name">Поселение</div>
         <div class="value">
             <select name="data[params][btob_main_route_key]" class="js-btob-route-key">
-                {foreach $route_options as $option}
-                    <option value="{$option.value|escape}" data-domain="{$option.domain|escape}"
-                        data-route-url="{$option.route_url|escape}" {if $option.value == $settings.route_key}selected {/if}>
-                        {$option.title|escape}
+                {foreach $routes as $route}
+                    <option value="{$route.value|escape}"
+                        {if $route.value == $settings.btob_main_route_key|default:''}selected{/if}>
+                        {$route.title|escape}
                     </option>
-
-
                 {/foreach}
             </select>
-            <p class="hint">Выберите поселение Shop-Script на домене, где включены авторизация и личный кабинет
-                Shop-Script.</p>
+            <p class="hint">Выберите поселение Shop-Script.</p>
         </div>
     </div>
-
+    {* 
     <div class="field">
         <div class="name">Открывать от корня</div>
         <div class="value">
@@ -58,48 +57,6 @@
                 readonly>
             <p class="hint">После успешного сохранения главный таб откроет этот адрес.</p>
         </div>
-    </div>
+    </div> *}
 
 </div>
-
-<script>
-    (function() {
-        var root = document.currentScript.previousElementSibling;
-        if (!root || !root.classList.contains('js-btob-main-settings')) {
-            return;
-        }
-
-        var routeSelect = root.querySelector('.js-btob-route-key');
-        var fromRootInput = root.querySelector('.js-btob-from-root');
-        var customUrlInput = root.querySelector('.js-btob-custom-url');
-        var openUrlInput = root.querySelector('.js-btob-open-url');
-
-        function cleanPath(value) {
-            value = String(value || '').replace(/\*/g, '').replace(/^\/+|\/+$/g, '');
-            return value;
-        }
-
-        function updateOpenUrl() {
-            var option = routeSelect.options[routeSelect.selectedIndex];
-            var domain = option ? option.getAttribute('data-domain') : '';
-            var settlement = option ? cleanPath(option.getAttribute('data-route-url')) : '';
-            var customUrl = fromRootInput.checked ? '' : cleanPath(customUrlInput.value || 'btob');
-            var parts = [];
-
-            if (settlement) {
-                parts.push(settlement);
-            }
-            if (customUrl) {
-                parts.push(customUrl);
-            }
-
-            openUrlInput.value = domain ? window.location.protocol + '//' + domain + '/' + (parts.length ? parts
-                .join('/') + '/' : '') : '';
-        }
-
-        routeSelect.addEventListener('change', updateOpenUrl);
-        fromRootInput.addEventListener('change', updateOpenUrl);
-        customUrlInput.addEventListener('input', updateOpenUrl);
-        updateOpenUrl();
-    })();
-</script>

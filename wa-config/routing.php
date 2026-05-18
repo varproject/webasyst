@@ -1,8 +1,30 @@
 <?php
-
 return array (
   'webasyst2.loc' => 
   array (
+    3 => 
+    array (
+      '_name' => 'Онлайн-магазин',
+      'url' => 'shop/*',
+      'app' => 'shop',
+      'theme' => 'default',
+      'theme_mobile' => 'default',
+      'checkout_version' => '2',
+      'locale' => 'ru_RU',
+      'storefront_mode' => '',
+      'title' => '',
+      'meta_keywords' => '',
+      'meta_description' => '',
+      'og_title' => '',
+      'og_image' => '',
+      'og_video' => '',
+      'og_description' => '',
+      'og_type' => '',
+      'og_url' => '',
+      'products_per_page' => '',
+      'currency' => 'RUB',
+      'checkout_storefront_id' => '1bf2d094dc2ce4c3130ef64fb1bcd64a',
+    ),
     0 => 
     array (
       'url' => 'cabinet/*',
@@ -188,4 +210,3 @@ return array (
     ),
   ),
 );
-//EOF

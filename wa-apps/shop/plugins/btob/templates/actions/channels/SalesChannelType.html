@@ -8,7 +8,9 @@
             <input type="hidden" name="is_new" value="1">
         {/if}
         <input type="hidden" name="data[type]" value="{$channel.type|escape}">
-        {* <input type="hidden" name="data[params][_btob_settings_tab]" value="{$active|default:'main'|escape}"> *}
+
+        {* Обязательно передаем текущий класс обработчик полей перед сохранения *}
+        <input type="hidden" name="data[params][btob_handler_class]" value="{$active_class|escape}">
 
         {* Шапка вкладок *}
         <ul class="tabs wide nowrap btob-channel-tabs custom-pt-8">
@@ -42,11 +44,11 @@
                         <input type="submit" class="button js-form-submit green" value="Сохранить">
                         <div class="js-place-for-errors"></div>
 
-                        {if !empty($settings.open_url)}
+                        {* {if !empty($settings.open_url)}
                             <a class="button small" href="{$settings.open_url|escape}" target="_blank" rel="noopener">
                                 <i class="icon fas fa-external-link-alt"></i> Открыть витрину
                             </a>
-                        {/if}
+                        {/if} *}
                     </div>
 
                     {if !empty($channel.id)}

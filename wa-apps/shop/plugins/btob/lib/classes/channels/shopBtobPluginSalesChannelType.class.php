@@ -2,6 +2,62 @@
 
 class shopBtobPluginSalesChannelType extends shopSalesChannelType
 {
+    public function getFormHtml(array $channel): string
+    {
+        $view       = wa('shop')->getView();
+        $view_dir   = wa()->getAppPath('plugins/btob/templates/actions/channels/', 'shop');
+
+        // Вкладки и формы
+        $tab_data       = $this->getTabs($channel, $view_dir);
+        $base_fields    = $this->getBaseRenderedFields($channel);
+        $settings       = $channel['params'] ?? [];
+
+        $tabs           = $tab_data['all'] ?? [];
+        $active_tab     = $tab_data['active'] ?? [];
+        $active_class   = $tab_data['active']['class'] ?? '';
+
+        // Общие параметры настроек
+        $view->assign([
+            'channel'       => $channel,
+            'tabs'          => $tabs,
+            'base_fields'   => $base_fields,
+            'settings'      => $settings,
+            'active_class'  => $active_class,
+        ]);
+
+        // Рендер формы текущей вкладки
+        if (class_exists($active_class)) {
+            $instance = new $active_class();
+            if ($instance instanceof shopBtobPluginSalesChannelTypeInterface) {
+                $instance->renderForm($view, $channel, $settings);
+                $view->assign('form_html', $view->fetch($active_tab['template']));
+            } else {
+                throw new waException("Класс $active_class должен реализовывать shopBtobPluginSalesChannelTypeInterface");
+            }
+        }
+
+        // Рендер общей обертки
+        return $view->fetch($view_dir . 'SalesChannelType.html');
+    }
+
+    // Валидация форм настроек, делигируется на класс текущей вкладки
+    public function sanitizeAndValidateParams(?int $id, array &$params, mixed $params_mode): array
+    {
+        $handler = $params['btob_handler_class'] ?? '';
+
+        if (class_exists($handler)) {
+            $instance = new $handler();
+            if ($instance instanceof shopBtobPluginSalesChannelTypeInterface) {
+                $errors = $instance->validateParams($id, $params, $params_mode);
+            } else {
+                throw new waException("Класс $handler должен реализовывать shopBtobPluginSalesChannelTypeInterface");
+            }
+        }
+
+        return array_values($errors ?? []);
+    }
+
+    // Оверайд базовых полей
     protected function getBaseFieldsConfig(): array
     {
         $base = parent::getBaseFieldsConfig();
@@ -12,67 +68,6 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
             'control_type' => waHtmlControl::CHECKBOX,
         ]] + $base;
     }
-
-    public function getFormHtml(array $channel): string
-    {
-        $view       = wa('shop')->getView();
-        $view_dir   = wa()->getAppPath('plugins/btob/templates/actions/channels/', 'shop');
-
-        // Вкладки и формы
-        $data       = $this->getTabs($channel);
-        $tabs       = $data['all'] ?? [];
-        $active     = $data['active'] ?? [];
-        $class_name = $data['active']['class'] ?? '';
-        $base_form  = $this->getBaseRenderedFields($channel);
-
-        // Основные поля настроек
-        $view->assign([
-            'channel'   => $channel,
-            'tabs'      => $tabs,
-            'active'    => $active,
-            'base_form' => $base_form,
-        ]);
-
-        // Получение переменных текущей вкладки
-        if (class_exists($class_name)) {
-            $instance = new $class_name();
-            if (method_exists($instance, 'assign')) {
-                $result = $instance->assign($channel, $tabs, $active);
-                $view->assign($result);
-            }
-        }
-
-        // Рендер формы текущей вкладки
-        $view->assign('form_html', $view->fetch($view_dir . ($active['tpl'] ?? '')));
-
-        // Рендер общей обертки
-        return $view->fetch($view_dir . 'SalesChannelType.html');
-    }
-
-
-
-    // Валидация формы настроек
-    // public function sanitizeAndValidateParams(?int $id, array &$params, $params_mode): array
-    // {
-    //     $tab = $params['_btob_settings_tab'] ?? 'main';
-    //     $class = '';
-
-    //     // if (!class_exists($class)) {
-    //     //     return [];
-    //     // }
-
-    //     // $action = new $class();
-
-    //     // if (method_exists($action, 'normalizeParams')) {
-    //     //     $params = $action->normalizeParams($params, $params_mode, $id);
-    //     // }
-
-    //     // return method_exists($action, 'validateParams')
-    //     //     ? $action->validateParams($params, $params_mode, $id)
-    //     //     : [];
-
-    //     return [];
-    // }
 
     // Рендер базовых полей. Вернет html
     protected function getBaseRenderedFields(array $channel): array
@@ -93,7 +88,7 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
     }
 
     // Возвращает вкладки настроек
-    protected function getTabs(array $channel)
+    protected function getTabs(array $channel, string $view_dir)
     {
         $channel_id = (int)($channel['id'] ?? 0);
         $active_tab_id = waRequest::get('btob_tab', 'main', waRequest::TYPE_STRING_TRIM);
@@ -111,12 +106,12 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
         $tabs = [];
         foreach ($raw_data as $key => $tab) {
             $tabs[$key] = [
-                'id'     => $key,
-                'label'  => $tab['label'],
-                'active' => ($key === $active_tab_id),
-                'tpl'    => 'SalesChannelType' . ucfirst($key) . '.html',
-                'class'  => 'shopBtobPluginSalesChannelType' . ucfirst($key),
-                'url'    => $this->getTabUrl($channel_id, $key),
+                'id'        => $key,
+                'label'     => $tab['label'],
+                'active'    => ($key === $active_tab_id),
+                'template'  => $view_dir . 'SalesChannelType' . ucfirst($key) . '.html',
+                'class'     => 'shopBtobPluginSalesChannelType' . ucfirst($key),
+                'url'       => $this->getTabUrl($channel_id, $key),
             ];
         }
 
