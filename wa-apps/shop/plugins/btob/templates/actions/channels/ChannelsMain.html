@@ -10,105 +10,96 @@
 {/if}
 
 <div class="fields-group js-btob-main-settings">
-
-    {* <div class="field">
-                <div class="name">Поселение Shop-Script</div>
-                <div class="value">
-                    <select name="data[params][btob_main_route_key]" class="js-btob-route-key">
-                        {foreach $route_options as $option}
-                                    <option value="{$option.value|escape}" data-domain="{$option.domain|escape}"
-                                        data-route-url="{$option.route_url|escape}" 
-
-            {if $option.value == $settings.route_key}selected
-
-            {/if}>
-                                        {$option.title|escape}
-                                    </option>
+    <div class="field">
+        <div class="name">Поселение Shop-Script</div>
+        <div class="value">
+            <select name="data[params][btob_main_route_key]" class="js-btob-route-key">
+                {foreach $route_options as $option}
+                    <option value="{$option.value|escape}" data-domain="{$option.domain|escape}"
+                        data-route-url="{$option.route_url|escape}" {if $option.value == $settings.route_key}selected {/if}>
+                        {$option.title|escape}
+                    </option>
 
 
-        {/foreach}
-                    </select>
-                    <p class="hint">Выберите поселение Shop-Script на домене, где включены авторизация и личный кабинет
-                        Shop-Script.</p>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="name">Открывать от корня</div>
-                <div class="value">
-                    <input type="hidden" name="data[params][btob_main_frontend_from_root]" value="0">
-                    <label>
-                        <input type="checkbox" class="js-btob-from-root" name="data[params][btob_main_frontend_from_root]"
-                            value="1" 
-
-        {if !empty($settings.frontend_from_root)}checked
-
-        {/if}>
-                        использовать корень поселения
-                    </label>
-                    <p class="hint state-caution-hint">Сейчас режим от корня запрещён при сохранении: он конфликтует с основным
-                        маршрутом Shop-Script.</p>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="name">URL витрины</div>
-                <div class="value">
-                    <input type="text" class="js-btob-custom-url" name="data[params][btob_main_frontend_custom_url]"
-                        value="{$settings.frontend_custom_url|escape}" placeholder="btob">
-                    <p class="hint">Используется, если витрина не открывается от корня.</p>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="name">Итоговый адрес</div>
-                <div class="value">
-                    <input type="text" class="js-btob-open-url" name="_btob_open_url" value="{$settings.open_url|escape}"
-                        readonly>
-                    <p class="hint">После успешного сохранения главный таб откроет этот адрес.</p>
-                </div>
-            </div> *}
-
+                {/foreach}
+            </select>
+            <p class="hint">Выберите поселение Shop-Script на домене, где включены авторизация и личный кабинет
+                Shop-Script.</p>
+        </div>
     </div>
 
-    <script>
-        (function() {
-            var root = document.currentScript.previousElementSibling;
-            if (!root || !root.classList.contains('js-btob-main-settings')) {
-                return;
+    <div class="field">
+        <div class="name">Открывать от корня</div>
+        <div class="value">
+            <input type="hidden" name="data[params][btob_main_frontend_from_root]" value="0">
+            <label>
+                <input type="checkbox" class="js-btob-from-root" name="data[params][btob_main_frontend_from_root]"
+                    value="1" {if !empty($settings.frontend_from_root)}checked {/if}>
+                использовать корень поселения
+            </label>
+            <p class="hint state-caution-hint">Сейчас режим от корня запрещён при сохранении: он конфликтует с основным
+                маршрутом Shop-Script.</p>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="name">URL витрины</div>
+        <div class="value">
+            <input type="text" class="js-btob-custom-url" name="data[params][btob_main_frontend_custom_url]"
+                value="{$settings.frontend_custom_url|escape}" placeholder="btob">
+            <p class="hint">Используется, если витрина не открывается от корня.</p>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="name">Итоговый адрес</div>
+        <div class="value">
+            <input type="text" class="js-btob-open-url" name="_btob_open_url" value="{$settings.open_url|escape}"
+                readonly>
+            <p class="hint">После успешного сохранения главный таб откроет этот адрес.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        var root = document.currentScript.previousElementSibling;
+        if (!root || !root.classList.contains('js-btob-main-settings')) {
+            return;
+        }
+
+        var routeSelect = root.querySelector('.js-btob-route-key');
+        var fromRootInput = root.querySelector('.js-btob-from-root');
+        var customUrlInput = root.querySelector('.js-btob-custom-url');
+        var openUrlInput = root.querySelector('.js-btob-open-url');
+
+        function cleanPath(value) {
+            value = String(value || '').replace(/\*/g, '').replace(/^\/+|\/+$/g, '');
+            return value;
+        }
+
+        function updateOpenUrl() {
+            var option = routeSelect.options[routeSelect.selectedIndex];
+            var domain = option ? option.getAttribute('data-domain') : '';
+            var settlement = option ? cleanPath(option.getAttribute('data-route-url')) : '';
+            var customUrl = fromRootInput.checked ? '' : cleanPath(customUrlInput.value || 'btob');
+            var parts = [];
+
+            if (settlement) {
+                parts.push(settlement);
+            }
+            if (customUrl) {
+                parts.push(customUrl);
             }
 
-            var routeSelect = root.querySelector('.js-btob-route-key');
-            var fromRootInput = root.querySelector('.js-btob-from-root');
-            var customUrlInput = root.querySelector('.js-btob-custom-url');
-            var openUrlInput = root.querySelector('.js-btob-open-url');
+            openUrlInput.value = domain ? window.location.protocol + '//' + domain + '/' + (parts.length ? parts
+                .join('/') + '/' : '') : '';
+        }
 
-            function cleanPath(value) {
-                value = String(value || '').replace(/\*/g, '').replace(/^\/+|\/+$/g, '');
-                return value;
-            }
-
-            function updateOpenUrl() {
-                var option = routeSelect.options[routeSelect.selectedIndex];
-                var domain = option ? option.getAttribute('data-domain') : '';
-                var settlement = option ? cleanPath(option.getAttribute('data-route-url')) : '';
-                var customUrl = fromRootInput.checked ? '' : cleanPath(customUrlInput.value || 'btob');
-                var parts = [];
-
-                if (settlement) {
-                    parts.push(settlement);
-                }
-                if (customUrl) {
-                    parts.push(customUrl);
-                }
-
-                openUrlInput.value = domain ? window.location.protocol + '//' + domain + '/' + (parts.length ? parts
-                    .join('/') + '/' : '') : '';
-            }
-
-            routeSelect.addEventListener('change', updateOpenUrl);
-            fromRootInput.addEventListener('change', updateOpenUrl);
-            customUrlInput.addEventListener('input', updateOpenUrl);
-            updateOpenUrl();
-        })();
-    </script>
+        routeSelect.addEventListener('change', updateOpenUrl);
+        fromRootInput.addEventListener('change', updateOpenUrl);
+        customUrlInput.addEventListener('input', updateOpenUrl);
+        updateOpenUrl();
+    })();
+</script>

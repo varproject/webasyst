@@ -22,8 +22,10 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
         $data       = $this->getTabs($channel);
         $tabs       = $data['all'] ?? [];
         $active     = $data['active'] ?? [];
+        $class_name = $data['active']['class'] ?? '';
         $base_form  = $this->getBaseRenderedFields($channel);
 
+        // Основные поля настроек
         $view->assign([
             'channel'   => $channel,
             'tabs'      => $tabs,
@@ -31,9 +33,19 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
             'base_form' => $base_form,
         ]);
 
+        // Получение переменных текущей вкладки
+        if (class_exists($class_name)) {
+            $instance = new $class_name();
+            if (method_exists($instance, 'assign')) {
+                $result = $instance->assign($channel, $tabs, $active);
+                $view->assign($result);
+            }
+        }
+
         // Рендер формы текущей вкладки
         $view->assign('form_html', $view->fetch($view_dir . ($active['tpl'] ?? '')));
 
+        // Рендер общей обертки
         return $view->fetch($view_dir . 'Channels.html');
     }
 
@@ -44,7 +56,6 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
     // {
     //     $tab = $params['_btob_settings_tab'] ?? 'main';
     //     $class = '';
-
 
     //     // if (!class_exists($class)) {
     //     //     return [];
@@ -104,6 +115,7 @@ class shopBtobPluginSalesChannelType extends shopSalesChannelType
                 'label'  => $tab['label'],
                 'active' => ($key === $active_tab_id),
                 'tpl'    => 'Channels' . ucfirst($key) . '.html',
+                'class'  => 'shopBtobPluginSalesChannelTab' . ucfirst($key),
                 'url'    => $this->getTabUrl($channel_id, $key),
             ];
         }

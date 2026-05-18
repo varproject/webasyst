@@ -11,6 +11,6 @@ return array (
   'lk' => false,
   'salesanalytics' => true,
   'shoporders' => true,
-  'b2b' => true,
+  'btob' => true,
 );
 //EOF

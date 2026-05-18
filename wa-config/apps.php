@@ -23,6 +23,6 @@ return array (
   'erp' => true,
   'crm' => true,
   'pocketlists' => true,
-  'apanel' => true,
+  'apanel' => false,
 );
 //EOF
