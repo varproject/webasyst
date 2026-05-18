@@ -1,0 +1,5 @@
+<section class="btob-front btob-front-support">
+    <h1>{$channel.params.btob_support_title|default:'Поддержка'|escape}</h1>
+    {if !empty($channel.params.btob_support_text)}
+    <div>{$channel.params.btob_support_text|escape|nl2br}</div>{/if}
+</section>

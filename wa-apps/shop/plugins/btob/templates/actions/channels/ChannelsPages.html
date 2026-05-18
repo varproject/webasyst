@@ -1,0 +1,33 @@
+<div class="article btob-channel-pages">
+    <div class="article-body">
+        <h4>Статические страницы</h4>
+        <p class="hint">Страницы B2B могут быть собственными, связанными со страницей Shop/Site, блоком Site или
+            ссылкой.</p>
+        <table class="zebra single-lined">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>URL</th>
+                    <th>Источник</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $pages as $page}
+                    <tr>
+                        <td>{$page.title|escape}</td>
+                        <td>{$page.url|escape}</td>
+                        <td>{$page.source|escape}</td>
+                        <td>{if !empty($page.status)}вкл{else}выкл{/if}</td>
+                    </tr>
+                {foreachelse}
+                    <tr>
+                        <td colspan="4"><em class="hint">Страницы ещё не созданы.</em></td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        <p><button type="button" class="button small light-gray" disabled>Добавление страницы будет подключено отдельным
+                CRUD action</button></p>
+    </div>
+</div>

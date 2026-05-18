@@ -1,0 +1,88 @@
+<?php
+
+class shopBtobPlugin extends shopPlugin
+{
+    public function __construct(array $info)
+    {
+        parent::__construct($info);
+
+        static $initialized = false;
+
+        if (!$initialized) {
+            $functions = $this->path . '/lib/config/functions.php';
+            if (file_exists($functions)) {
+                require_once $functions;
+            }
+
+            $modifiers = $this->path . '/lib/config/modifiers.php';
+            if (file_exists($modifiers)) {
+                require_once $modifiers;
+            }
+
+            $initialized = true;
+        }
+    }
+
+    // Создание нового типа канала продаж
+    public function salesChannelTypes(array &$params): array
+    {
+        return array(array(
+            'id'        => 'btob',
+            'class'     => 'shopBtobPluginSalesChannelType',
+            'name'      => 'B2B-витрина',
+            'menu_icon' => '<i class="fas fa-briefcase"></i>',
+            'available' => true,
+        ));
+    }
+
+    // Обработка имени канала для интерфейса шопа
+    public function salesChannels(array $params): array
+    {
+        return array(array(
+            'id'   => 'storefront:btob',
+            'name' => 'B2B-кабинет',
+            'type' => 'storefront',
+        ));
+    }
+
+    // Заглушка для страницы настроек плагина
+    public function getSettingsDisclaimerHtml()
+    {
+        $wa = wa('shop');
+        $view = $wa->getView();
+        $plugin = $wa->getPlugin('btob');
+
+        $view->assign([
+            'btob_static_url' => $plugin->getPluginStaticUrl(),
+            'plugin_version' => preg_replace('/^(\d+\.\d+\.\d+).*/', '$1', $plugin->getVersion()),
+        ]);
+
+        return $view->fetch('file:plugins/btob/templates/layouts/plugin-presentation.html');
+    }
+
+
+
+    public function routingHandler(array $route)
+    {
+        $routes = [];
+
+        if (wa()->getEnv() === 'backend') {
+            return [
+                // 'channels/new/btob/?*' => 'channels'
+            ];
+        } else {
+            $routes = [
+                '*' => array(
+                    // 'module' => 'frontend',
+                    'action' => 'btob55555555555',
+                    'plugin' => 'btob',
+                    'secure' => true,
+                ),
+            ];
+        }
+
+        dd($routes);
+
+        return $routes;
+    }
+}

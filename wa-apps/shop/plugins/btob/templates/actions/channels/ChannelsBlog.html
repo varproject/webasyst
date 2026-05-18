@@ -1,0 +1,51 @@
+<div class="fields-group">
+    <div class="field">
+        <div class="name">Включён</div>
+        <div class="value"><label><input type="checkbox" name="data[params][btob_blog_enabled]" value="1"
+                    {if !empty($settings.enabled)}checked{/if}> показывать блог</label></div>
+    </div>
+    <div class="field">
+        <div class="name">URL</div>
+        <div class="value"><input type="text" name="data[params][btob_blog_url]" value="{$settings.url|escape}"></div>
+    </div>
+    <div class="field">
+        <div class="name">Название</div>
+        <div class="value"><input type="text" name="data[params][btob_blog_title]" value="{$settings.title|escape}">
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">Источник</div>
+        <div class="value"><select name="data[params][btob_blog_source_mode]">
+                <option value="blog" {if $settings.source_mode == 'blog'}selected{/if}>конкретный блог</option>
+                <option value="settlement" {if $settings.source_mode == 'settlement'}selected{/if}>поселение Blog
+                </option>
+                <option value="manual" {if $settings.source_mode == 'manual'}selected{/if}>ручная подборка</option>
+            </select></div>
+    </div>
+    <div class="field">
+        <div class="name">Blog ID</div>
+        <div class="value"><input type="number" name="data[params][btob_blog_blog_id]"
+                value="{$settings.blog_id|escape}"></div>
+    </div>
+    <div class="field">
+        <div class="name">Route key</div>
+        <div class="value"><input type="text" name="data[params][btob_blog_route_key]"
+                value="{$settings.blog_route_key|escape}"></div>
+    </div>
+    <div class="field">
+        <div class="name">Записей на странице</div>
+        <div class="value"><input type="number" name="data[params][btob_blog_posts_per_page]"
+                value="{$settings.posts_per_page|escape}" min="1"></div>
+    </div>
+    <div class="field">
+        <div class="name">Вывод</div>
+        <div class="value"><label><input type="checkbox" name="data[params][btob_blog_show_author]" value="1"
+                    {if !empty($settings.show_author)}checked{/if}> автор</label><br><label><input type="checkbox"
+                    name="data[params][btob_blog_show_datetime]" value="1"
+                    {if !empty($settings.show_datetime)}checked{/if}> дата</label><br><label><input type="checkbox"
+                    name="data[params][btob_blog_show_comments]" value="1"
+                    {if !empty($settings.show_comments)}checked{/if}> комментарии</label><br><label><input
+                    type="checkbox" name="data[params][btob_blog_show_in_menu]" value="1"
+                    {if !empty($settings.show_in_menu)}checked{/if}> в меню</label></div>
+    </div>
+</div>

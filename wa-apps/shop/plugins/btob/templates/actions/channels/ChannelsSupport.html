@@ -1,0 +1,48 @@
+<div class="fields-group">
+    <div class="field">
+        <div class="name">Включён</div>
+        <div class="value"><label><input type="checkbox" name="data[params][btob_support_enabled]" value="1"
+                    {if !empty($settings.enabled)}checked{/if}> показывать поддержку</label></div>
+    </div>
+    <div class="field">
+        <div class="name">URL</div>
+        <div class="value"><input type="text" name="data[params][btob_support_url]" value="{$settings.url|escape}">
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">Название</div>
+        <div class="value"><input type="text" name="data[params][btob_support_title]" value="{$settings.title|escape}">
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">Менеджер</div>
+        <div class="value"><input type="number" name="data[params][btob_support_manager_contact_id]"
+                value="{$settings.manager_contact_id|escape}"></div>
+    </div>
+    <div class="field">
+        <div class="name">Контакты</div>
+        <div class="value"><input type="email" name="data[params][btob_support_email]" value="{$settings.email|escape}"
+                placeholder="email"><br><input type="text" name="data[params][btob_support_phone]"
+                value="{$settings.phone|escape}" placeholder="телефон"><br><input type="text"
+                name="data[params][btob_support_telegram]" value="{$settings.telegram|escape}"
+                placeholder="Telegram"><br><input type="text" name="data[params][btob_support_whatsapp]"
+                value="{$settings.whatsapp|escape}" placeholder="WhatsApp"></div>
+    </div>
+    <div class="field">
+        <div class="name">Текст</div>
+        <div class="value"><textarea name="data[params][btob_support_text]">{$settings.text|escape}</textarea></div>
+    </div>
+    <div class="field">
+        <div class="name">Форма</div>
+        <div class="value"><label><input type="checkbox" name="data[params][btob_support_form_enabled]" value="1"
+                    {if !empty($settings.form_enabled)}checked{/if}> включить форму</label><br><select
+                name="data[params][btob_support_form_mode]">
+                <option value="plugin" {if $settings.form_mode == 'plugin'}selected{/if}>plugin</option>
+                <option value="site_block" {if $settings.form_mode == 'site_block'}selected{/if}>Site block</option>
+                <option value="external" {if $settings.form_mode == 'external'}selected{/if}>external</option>
+            </select><br><input type="text" name="data[params][btob_support_form_block_id]"
+                value="{$settings.form_block_id|escape}" placeholder="block id"><br><input type="text"
+                name="data[params][btob_support_form_external_url]" value="{$settings.form_external_url|escape}"
+                placeholder="external url"></div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="btob-access-denied">
+    {if $access_denied_page_mode|default:'plugin' == 'block' && !empty($access_denied_block_id)}
+        {$wa->block($access_denied_block_id, $access_denied_block_params)}
+    {else}
+        <section class="btob-access-denied__section">
+            <h1>Доступ к B2B-витрине ограничен</h1>
+            <p>Эта витрина доступна только выбранным покупателям или группам покупателей.</p>
+            <p>Свяжитесь с менеджером, чтобы получить доступ.</p>
+            <div class="btob-access-denied__actions">
+                {if !empty($access_denied_block_params.login_url)}<a href="{$access_denied_block_params.login_url|escape}"
+                    class="button">Войти</a>{/if}
+                {if !empty($access_denied_block_params.register_url)}<a
+                        href="{$access_denied_block_params.register_url|escape}"
+                    class="button light-gray">Зарегистрироваться</a>{/if}
+            </div>
+        </section>
+    {/if}
+</div>
